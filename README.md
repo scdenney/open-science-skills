@@ -10,6 +10,20 @@ To use these skills with **Claude Code**:
 1. Clone this repository or copy the `.skills/` folder into your research project.
 2. When running Claude Code in that directory, you can activate these skills manually (e.g., `/transparent-methods-reporter`) or allow Claude to auto-invoke them based on your prompts.
 
+## Core Idea
+Scientific research is a "slow-moving process" that requires carving problems at their "analytical joints." This library prevents "methods-driven" AI assistance by forcing the agent to:
+- Identify the **Data Generating Process (DGP)** before suggesting analyses.
+- Move from a theoretical **"Why"** to an experimental **"If-Then."**
+- Adhere to the **APSA Experimental Section** 19-item reporting checklist.
+
+## Repository Structure
+The repository is organized into a `.skills` directory. Each sub-folder represents a specific domain of expertise containing a `SKILL.md` file.
+
+* **`.skills/scientific-narrative-builder/`** – Logic for introductions, literature reviews, and uncovering "invisible" factors.
+* **`.skills/causal-hypothesis-architect/`** – Guidance on falsifiability, counterfactuals, and Directed Acyclic Graphs (DAGs).
+* **`.skills/transparent-methods-reporter/`** – Implementation of the 19-item checklist and CONSORT standards.
+* **`.skills/design-conjoint-expert/`** – Specialized logic for multidimensional choice experiments and AMCE estimation.
+
 ---
 
 ## Sources & Bibliography
@@ -28,5 +42,3 @@ The instructions within these skills are codified from the following authoritati
 * **Sniderman, P. M.** (2018). "Some Advances in the Design of Survey Experiments." *Annual Review of Political Science*.
 * **Stantcheva, S.** (2023). "How to Run Surveys: A Guide to Creating Your Own Identifying Variation." *Annual Review of Economics*.
 * **Stefanelli, A., & Lukac, M.** (2020). "Subjects, Trials, and Levels: Statistical Power in Conjoint Experiments."
-
----
