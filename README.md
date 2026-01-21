@@ -27,7 +27,7 @@ The repository is organized into a `.skills` directory. Each sub-folder represen
 ---
 
 ## Sources & Bibliography
-The instructions within these skills are codified from the following authoritative sources:
+The instructions within these skills are drawn from the following sources:
 
 * **Berinsky, A. J.** (2017). Measuring Public Opinion with Surveys. *Annual Review of Political Science*.
 * **Blair, G., Coppock, A., & Moor, M.** (2020). When to Worry about Sensitivity Bias: A Social Reference Theory and Evidence from 30 Years of List Experiments. *APSR*.
