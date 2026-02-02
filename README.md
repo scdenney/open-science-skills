@@ -5,6 +5,8 @@ This repository contains a collection of **Agentic Skills** (formatted as `.md` 
 ## Development
 These skills were developed with some machine assistance from Gemini 3.0, specifically using a personally curated library of foundational methodological texts. This is my first attempt at "skills" development. I will iteratively improve and expand the files here as needed. 
 
+_As of now (Feb. 2026), this is more of a test. I don't consider the skills files fully developed -- yet._
+
 ## Usage
 To use these skills with **Claude Code**:
 1. Clone this repository or copy the `.skills/` folder into your research project.
