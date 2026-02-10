@@ -3,7 +3,7 @@
 This repository contains a collection of **Agentic Skills** (formatted as `.md` documents) designed for use with systems like **Claude Code**. These skills "teach" an AI assistant how to adhere to the high standards of experimental social science, from initial hypothesis generation to final methods reporting. This can be used to evaluate and otherwise support the writing and evaluation of pre-registered reports and research writing.
 
 ## Development
-These skills were developed with some machine assistance from Gemini 3.0, specifically using a personally curated library of foundational methodological texts. This is my first attempt at "skills" development. I will iteratively improve and expand the files here as needed. 
+These skills were developed with some machine assistance from Gemini 3.0, specifically using a personally curated library of foundational methodological texts, and Opus 4.6. This is my first attempt at "skills" development. I will iteratively improve and expand the files here as needed. 
 
 _As of now (Feb. 2026), this is more of a test. I don't consider the skills files fully developed -- yet._
 
