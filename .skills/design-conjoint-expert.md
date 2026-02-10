@@ -1,49 +1,82 @@
 ---
 name: design-conjoint-expert
-description: Specialized logic for multidimensional choice experiments. Covers attribute architecture (orthogonality, nesting, restrictions), AMCE and marginal mean estimation, interaction effects, power analysis, design variants (paired-choice, factorial vignettes, between-subjects conversion), and regression models for conjoint data.
+description: Specialized logic for multidimensional choice experiments. Covers attribute architecture (orthogonality, nesting, restrictions), AMCE and marginal mean estimation, interaction effects, power analysis with closed-form formulas and simulation tools, design variants (paired-choice, factorial vignettes, between-subjects conversion), treatment validation, and regression models for conjoint data.
 ---
 
 # Conjoint Design Expert
 
-Use this skill when designing or reporting a conjoint experiment. It ensures the design is multidimensional, balanced, and statistically powered.
+Use this skill when designing or reporting a conjoint experiment. It ensures the design is multidimensional, balanced, and statistically powered. Design choices must be justified against alternatives, not adopted because they are fashionable -- "the fundamentals of what makes for a 'good' experiment do not change" (Druckman 2022).
 
 ## Instructions for the Agent
 
 ### 1. Attribute Architecture
 - **Orthogonality:** Ensure every attribute is independent of every other attribute to allow for the estimation of causal effects for each component.
-- **Randomization of Order:** Order attributes randomly for each respondent to prevent "primacy" or "recency" effects, unless a specific logical flow is theoretically required.
-- **Attribute Density:** Monitor for respondent fatigue. While 10 attributes are a common upper limit, evaluate if the complexity of the levels increases cognitive load.
+- **Randomization of Order:** Order attributes randomly at the *respondent level* (not the task level) to prevent "primacy" or "recency" effects while avoiding the cognitive overload of finding information in different orders across tasks (Stantcheva 2023). A specific logical flow may override this if theoretically required.
+- **D-Optimal Designs:** Consider D-optimal or constrained randomization schemes rather than pure randomization. D-optimal designs "choose the sets of administered conditions that maximize statistical power" and may be preferable when the number of possible attribute combinations is large relative to the sample size (Stantcheva 2023).
+- **Attribute Density:** Monitor for respondent fatigue. Stefanelli and Lukac (2020) cite evidence that conjoint results remain stable with up to 10 attributes, and Bansak et al. (2018) find that response quality does not degrade with up to 30 tasks in MTurk data (Stantcheva 2023). However, evaluate whether the complexity of the levels increases cognitive load beyond the attribute count alone.
 - **Nested/Constrained Randomization:** Not all attributes need to be fully crossed. When ecological validity demands it, certain attribute levels can be linked or nested within other attributes (e.g., origin countries nested within policy domain). This is acceptable when: (a) the nesting is theoretically justified, (b) the primary attributes of interest remain fully independently randomized, and (c) the analyst acknowledges that nested attributes cannot be cleanly separated from their parent attribute. See Auspurg & Hinz (2015) on restricted randomization in factorial surveys.
 - **Attribute-Level Restrictions:** Exclude implausible combinations that would confuse respondents or produce artifactual responses. Document all restrictions in the pre-analysis plan.
+- **Medium-Level Specificity:** Attribute levels should be concrete enough to be meaningful but not so specific that they introduce unintended confounds. Describe treatments at a "medium level of specificity" -- "fully described but not overly described" (Sniderman 2018). Avoid vague descriptions (e.g., "a policy that helps the economy") and overly narrow ones (e.g., "a $2.3B infrastructure bill for Route 95 in Pennsylvania").
 
 ### 2. Statistical Power and Error Logic
-- **Effective N:** Calculate sample size based on (Respondents $\times$ Tasks $\times$ Profiles).
-- **Type S and Type M Errors:** When power is low, beware of "Type S" (Sign) errors (getting the direction wrong) and "Type M" (Magnitude) errors (exaggerating the effect size).
-- **Minimum Detectable Effect (MDE):** Set the MDE based on the attribute with the highest number of levels, as this level will be the most difficult to estimate precisely.
+- **Effective N:** Calculate sample size based on (Respondents $\times$ Tasks $\times$ Profiles). However, respondents and tasks are *not interchangeable* -- adding respondents improves precision more than adding tasks per respondent due to within-respondent correlation. When in doubt, prioritize more respondents over more tasks (Stefanelli and Lukac 2020).
+- **Closed-Form Formula:** The standard error of an AMCE is approximately: SE = $\sqrt{\text{Var}(Y) \times L / N_{\text{eff}}}$, where $L$ is the number of levels for the attribute and $N_{\text{eff}}$ is the effective number of profile evaluations (Schuessler and Freitag 2020). This provides a quick diagnostic for whether precision is adequate.
+- **Interaction Power:** Estimating interaction effects requires approximately *twice* the sample size needed for main AMCEs. Budget accordingly when interaction hypotheses are confirmatory. The standard error of an interaction coefficient is approximately $\sqrt{2}$ times the SE of the corresponding main effect (Schuessler and Freitag 2020).
+- **Empirical AMCE Benchmarks:** Typical AMCEs in published conjoint studies range from 0.02 to 0.10 (percentage-point changes in selection probability), with a median around 0.05. Very large AMCEs (> 0.15) are rare. Use these benchmarks when setting the smallest effect size of interest (SESOI) if no prior data are available.
+- **Minimum Detectable Effect (MDE):** Set the MDE based on the attribute with the highest number of levels, as this level will be the most difficult to estimate precisely. Report whether the MDE falls within the range of plausible AMCEs given prior literature.
+- **Type S and Type M Errors:** When power is low, beware of "Type S" (Sign) errors (getting the direction wrong) and "Type M" (Magnitude) errors (exaggerating the effect size). At 50% power for a true effect of d = 0.5, the probability of a Type S error is approximately 1/18, and the expected Type M error (exaggeration ratio) is approximately 1.5 (Lakens 2025, citing Gelman and Carlin 2014).
+- **N_eff < 3,000 Danger Zone:** Designs with fewer than 3,000 effective profile evaluations are at high risk of being underpowered for detecting typical AMCE magnitudes. Below this threshold, conduct an explicit sensitivity analysis showing what effects *can* be detected.
+- **Levels-Power Tradeoff:** Each additional level for an attribute reduces the effective number of observations per level. Adding a 5th level to an attribute with 4 levels reduces per-level precision by 20%. Only add levels when each is theoretically necessary.
+- **Cohen's d Warning:** Do not use Cohen's d benchmarks (small = 0.2, medium = 0.5, large = 0.8) to calibrate conjoint power analyses. AMCEs are measured in percentage-point changes in choice probability, not in standard deviation units. Translating between the two requires knowing Var(Y), which depends on the choice task structure.
+- **Tools:** Use the `cjpowR` R package (Freitag 2021) or the associated Shiny app for simulation-based power analysis. These allow specification of the number of attributes, levels, tasks, and profiles, and return power curves for main effects and interactions.
+- **Compromise Power Analysis:** When the respondent pool is fixed (e.g., hard-to-reach populations, elite samples), use a compromise power analysis that balances Type I and Type II error rates. An alpha > 0.05 may be defensible when it minimizes the combined error rate (Lakens 2025).
 
-### 3. Estimating Effects
+### 3. Treatment Validation and Realism
+- **Experimental vs. Mundane Realism:** Distinguish between *experimental realism* (does the task engage respondents psychologically?) and *mundane realism* (does the task resemble real-world decisions?). Mundane realism is neither necessary nor sufficient for validity -- what matters is that the treatment creates the intended psychological state (Druckman 2022, citing Aronson and Carlsmith 1968). For conjoints, tabular displays may lack mundane realism but achieve experimental realism if respondents attend to and process the information.
+- **Information Availability, Access, and Processing:** Validate that respondents (1) have *access* to the attribute information (can they see it?), (2) *attend* to it (do they read it?), and (3) *process* it as intended (do they interpret it the way the researcher assumes?). Attention checks and comprehension probes address conditions 1-2; pilot studies and cognitive interviews address condition 3 (Druckman 2022).
+- **Names-as-Cues Warning:** When attributes include proper names, cultural referents, or country names, these may carry unintended associations beyond the dimension of interest. Pilot-test whether respondents associate additional meanings with the selected names or labels.
+- **Pretreatment Mock Vignette:** Consider presenting respondents with a non-experimental practice vignette before the conjoint block to familiarize them with the task format. This reduces learning effects across early tasks.
+
+### 4. Estimating Effects
 - **Reference Categories:** Clearly identify the "baseline" or "reference" level for every attribute.
-- **Average Marginal Component Effects (AMCE):** Frame results as the average change in the probability of being selected when an attribute changes from the reference level to the level of interest.
-- **Marginal Means (MMs):** In addition to AMCEs, report marginal means — the model-predicted probability that a profile is selected when a given attribute level is shown, averaged over all other attributes. MMs provide absolute levels of support rather than relative differences, and are particularly useful for subgroup comparisons (Leeper, Hobolt, and Tilley 2020).
-- **Interaction Effects:** When the design includes theoretically motivated interactions (e.g., procedure $\times$ composition), estimate interaction models and present results as conditional marginal means — separate AMCE/MM estimates for each level of the moderating attribute. Visualize with parallel/divergent line plots.
+- **SESOI in AMCE Terms:** For every confirmatory hypothesis, state the smallest meaningful AMCE -- the smallest percentage-point change in choice probability that would be theoretically or practically significant. If 2 percentage points is considered trivially small, state this as the lower bound. Justify the SESOI based on prior conjoint studies, theoretical significance, or policy relevance (Lakens 2025).
+- **Average Marginal Component Effects (AMCE):** Frame results as the average change in the probability of being selected when an attribute changes from the reference level to the level of interest. Note that the AMCE "critically depends on the distribution used to average over profile attributes" (Stantcheva 2023) -- this is typically the uniform distribution imposed by the randomization, which may not match real-world attribute distributions.
+- **Marginal Means (MMs):** In addition to AMCEs, report marginal means -- the model-predicted probability that a profile is selected when a given attribute level is shown, averaged over all other attributes. MMs provide absolute levels of support rather than relative differences, and are particularly useful for subgroup comparisons (Leeper, Hobolt, and Tilley 2020).
+- **Interaction Effects:** When the design includes theoretically motivated interactions (e.g., procedure $\times$ composition), estimate interaction models and present results as conditional marginal means -- separate AMCE/MM estimates for each level of the moderating attribute. Visualize with parallel/divergent line plots.
+- **Equivalence Testing for Null Predictions:** When the hypothesis predicts that an attribute has *no meaningful effect* (e.g., a manipulation check attribute), use the TOST equivalence testing procedure with a pre-specified equivalence range in raw AMCE units rather than simply reporting a non-significant p-value (Lakens 2025).
 
-### 4. Design Variants
+### 5. Design Variants
 - **Paired-Choice vs. Rating:** Conjoint tasks can use forced binary choice (select one of two profiles) or rating scales (rate each profile independently). Forced choice produces a binary DV suitable for LPM estimation of AMCEs. Ratings provide continuous DVs that capture intensity. Best practice: use forced choice as primary DV with ratings as secondary/robustness check.
-- **Factorial Vignette Design:** An alternative to tabular conjoint displays. Attributes are assembled into short paragraph-form vignettes rather than presented as attribute tables. This enhances realism and respondent engagement while preserving experimental control (Auspurg & Hinz 2015). Appropriate when: profiles describe complex scenarios (e.g., policy decisions) rather than simple object comparisons.
+- **Factorial Vignette Design:** An alternative to tabular conjoint displays. Attributes are assembled into short paragraph-form vignettes rather than presented as attribute tables. This enhances realism and respondent engagement while preserving experimental control (Auspurg & Hinz 2015). Vignettes also reduce social desirability bias because "characteristics can be smoothly hidden in stories," whereas conjoint tables make attributes highly salient (Stantcheva 2023). Appropriate when: profiles describe complex scenarios (e.g., policy decisions) rather than simple object comparisons.
+- **External Validity Evidence:** Hainmueller et al. (2015) validated conjoint and vignette designs against a real Swiss referendum on citizenship. Paired-choice designs performed better than rating designs in predicting real-world voting behavior (Stantcheva 2023). This supports using forced choice as primary DV.
 - **Between-Subjects to Conjoint Conversion:** When a between-subjects vignette experiment suffers from confounds (outcomes not held constant across conditions), consider converting to a conjoint. Benefits: (a) holds outcomes constant through independent randomization, (b) specifies concrete content rather than vague descriptions, (c) gains statistical power through repeated within-respondent measurements, (d) enables estimation of interaction effects.
+- **When NOT to Use a Conjoint:** Conjoints are not always the best design. Avoid conjoints when: (a) the research question concerns a single treatment dimension (a simple vignette experiment suffices), (b) the attributes cannot be independently randomized without producing incoherent profiles, or (c) the theoretical mechanism operates through holistic impression formation rather than attribute-by-attribute evaluation (Sniderman 2018).
 
-### 5. Regression Models for Conjoint Data
+### 6. PAP Flexibility for Conjoints
+- **Flexible Pre-Analysis Plans:** Conjoint experiments involve many analytical choices (which attributes to interact, how to subset marginal means, which respondent-level moderators to test). The pre-analysis plan should distinguish clearly between: (a) *locked* specifications (the primary hypothesis tests, which cannot be changed), (b) *conditional* specifications (analyses that will be conducted if certain conditions are met, e.g., "if the main effect is significant, test the following interactions"), and (c) *exploratory* analyses (clearly labeled as hypothesis-generating).
+- **Cross-Category Comparison:** When comparing effects of qualitatively different attributes (e.g., comparing the AMCE of "gender" to the AMCE of "education"), note that such comparisons are only meaningful if the levels span comparable ranges of the underlying dimension. AMCEs depend on the choice of levels -- changing which levels are included changes the AMCE.
+
+### 7. Regression Models for Conjoint Data
 - **Baseline AMCE Model:** Y_itj = $\alpha_i$ + $\beta$(Attributes_tj) + $\varepsilon_{itj}$. Respondent fixed effects ($\alpha_i$), SEs clustered by respondent. $\beta$ coefficients are AMCEs.
 - **Interaction Models:** Add attribute $\times$ attribute interaction terms to test conditional effects. Present as conditional marginal means plots.
 - **Cross-Group Comparison:** Estimate per-group AMCEs (e.g., per country) separately, then pool with group $\times$ attribute interactions for formal heterogeneity tests.
 - **Secondary DV Replication:** Replicate all models using continuous rating outcome as robustness check.
+- **Sensitivity Checks:** Beyond secondary DV replication, consider: specification curves across alternative reference categories, models with and without respondent fixed effects, and subgroup analyses by task number to assess fatigue effects.
 
 ## Quality Checks
 - [ ] **Independence:** Is the randomization of attribute levels truly independent?
-- [ ] **Power:** Was the sample size calculated using the level with the smallest predicted effect?
+- [ ] **Power:** Was the sample size calculated using the level with the smallest predicted effect? Was the MDE checked against empirical AMCE benchmarks?
+- [ ] **Respondent Priority:** Was the power analysis based on adding respondents rather than tasks when possible?
+- [ ] **Interaction Budget:** If interaction hypotheses are confirmatory, was the sample size doubled relative to the main-effect requirement?
 - [ ] **Baseline:** Are the reference categories for all attributes explicitly stated?
+- [ ] **SESOI:** Is the smallest meaningful AMCE stated and justified for each confirmatory hypothesis?
 - [ ] **Ecological Validity:** Are all attribute combinations plausible? Have implausible combinations been restricted?
+- [ ] **Treatment Validation:** Were attribute levels pilot-tested for information access, attention, and intended interpretation?
 - [ ] **Nesting Documented:** If any attributes are nested or linked, is this documented and justified?
 - [ ] **Interaction Pre-Specified:** Are theoretically motivated interactions specified in the pre-analysis plan?
 - [ ] **Multiple DVs:** Is the primary DV (forced choice or rating) clearly identified, with secondary DVs labeled as robustness checks?
 - [ ] **Vignette Assembly:** If using factorial vignettes, do the assembled paragraphs read coherently for all attribute combinations?
+- [ ] **PAP Tiers:** Does the pre-analysis plan distinguish locked, conditional, and exploratory specifications?
+- [ ] **SDB Trade-Off:** Has the choice between vignette format (lower SDB) and conjoint table format (higher attribute salience) been justified (Stantcheva 2023)?
+- [ ] **Randomization Level:** Is attribute order randomized at the respondent level (not the task level) to reduce cognitive overload (Stantcheva 2023)?
+- [ ] **AMCE Distribution:** Is the marginalizing distribution for AMCE interpretation documented, and its correspondence to real-world attribute distributions discussed?

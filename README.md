@@ -16,15 +16,16 @@ To use these skills with **Claude Code**:
 Scientific research is a "slow-moving process" that requires carving problems at their "analytical joints." This library prevents "methods-driven" AI assistance by forcing the agent to:
 - Identify the **Data Generating Process (DGP)** before suggesting analyses.
 - Move from a theoretical **"Why"** to an experimental **"If-Then."**
-- Adhere to the **APSA Experimental Section** 19-item reporting checklist.
+- Adhere to the **APSA Experimental Section** reporting checklist, **JARS** preregistration standards, and **DA-RT** transparency principles (40-item checklist).
 
 ## Repository Structure
-The repository is organized into a `.skills` directory. Each sub-folder represents a specific domain of expertise containing a `SKILL.md` file.
+The repository is organized into a `.skills` directory containing five skill files.
 
-* **`.skills/scientific-narrative-builder/`** – Logic for introductions, literature reviews, and uncovering "invisible" factors.
-* **`.skills/causal-hypothesis-architect/`** – Guidance on falsifiability, counterfactuals, and Directed Acyclic Graphs (DAGs).
-* **`.skills/transparent-methods-reporter/`** – Implementation of the 19-item checklist and CONSORT standards.
-* **`.skills/design-conjoint-expert/`** – Specialized logic for multidimensional choice experiments and AMCE estimation.
+* **`.skills/scientific-narrative-builder.md`** – Logic for introductions, literature reviews, the "Why-to-If-Then" funnel, cumulative research framing, and multi-experiment narrative coherence.
+* **`.skills/causal-hypothesis-architect.md`** – Guidance on falsifiability, counterfactuals, DAGs, the FPCI, three-level hypothesis specification, equivalence testing, SESOI requirements, and multi-experiment hypothesis architecture.
+* **`.skills/transparent-methods-reporter.md`** – Implementation of a 40-item reporting checklist covering CONSORT standards, JARS preregistration elements, DA-RT transparency, and conjoint-specific reporting.
+* **`.skills/design-conjoint-expert.md`** – Specialized logic for multidimensional choice experiments, including closed-form power formulas, empirical AMCE benchmarks, treatment validation, and simulation tools (cjpowR).
+* **`.skills/cross-national-comparative-designer.md`** – Guides cross-national survey experiment design with per-country power analysis, sensitivity bias auditing, instrument localization, and cross-national analytical strategies.
 
 ---
 
