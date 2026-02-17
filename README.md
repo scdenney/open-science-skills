@@ -25,13 +25,15 @@ Scientific research is a "slow-moving process" that requires carving problems at
 - Adhere to the **APSA Experimental Section** reporting checklist, **JARS** preregistration standards, and **DA-RT** transparency principles (40-item checklist).
 
 ## Repository Structure
-The repository is organized into a `.skills` directory containing six skill files.
+The repository is organized into a `.skills` directory containing eight skill files.
 
 * **`.skills/narrative-building.md`** – Logic for introductions, literature reviews, the "Why-to-If-Then" funnel, cumulative research framing, and multi-experiment narrative coherence.
 * **`.skills/hypothesis-building.md`** – Guidance on falsifiability, counterfactuals, DAGs, the FPCI, three-level hypothesis specification, equivalence testing, SESOI requirements, and multi-experiment hypothesis architecture.
 * **`.skills/methods-reporting.md`** – Implementation of a 40-item reporting checklist covering CONSORT standards, JARS preregistration elements, DA-RT transparency, and conjoint-specific reporting.
 * **`.skills/conjoint-design.md`** – Specialized logic for multidimensional choice experiments, including closed-form power formulas, empirical AMCE benchmarks, treatment validation, and simulation tools (cjpowR).
 * **`.skills/conjoint-diagnostics.md`** – Systematic diagnostic checklist for evaluating conjoint experiments, covering design, estimation, measurement error, external validity, and interpretation.
+* **`.skills/survey-design.md`** – Guides survey instrument design: question construction, scale design, survey flow, pretesting, respondent burden, social desirability mitigation, and treatment delivery.
+* **`.skills/pre-registration-writing.md`** – Guides writing a complete pre-analysis plan: registry selection, PAP structure, analytical strategy specification, code pre-registration, contingency planning, and deviation documentation.
 * **`.skills/cross-national-design.md`** – Guides cross-national survey experiment design with per-country power analysis, sensitivity bias auditing, instrument localization, and cross-national analytical strategies.
 
 ---
