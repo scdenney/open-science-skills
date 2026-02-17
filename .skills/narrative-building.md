@@ -1,5 +1,5 @@
 ---
-name: scientific-narrative-builder
+name: narrative-building
 description: Expert logic for drafting scientific introductions and literature reviews. Focuses on "substantive savvy," uncovering "invisible" beliefs, the "Why-to-If-Then" funnel, cumulative research framing, and multi-experiment narrative coherence across levels of analysis.
 ---
 

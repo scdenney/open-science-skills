@@ -1,5 +1,5 @@
 ---
-name: design-conjoint-expert
+name: conjoint-design
 description: Specialized logic for multidimensional choice experiments. Covers attribute architecture (orthogonality, nesting, restrictions), AMCE and marginal mean estimation, interaction effects, power analysis with closed-form formulas and simulation tools, design variants (paired-choice, factorial vignettes, between-subjects conversion), treatment validation, and regression models for conjoint data.
 ---
 

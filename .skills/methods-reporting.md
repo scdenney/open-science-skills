@@ -1,5 +1,5 @@
 ---
-name: transparent-methods-reporter
+name: methods-reporting
 description: Implements high-transparency reporting standards for experimental social science, including conjoint and factorial vignette designs. Ensures adherence to best methods section practices drawing on the **APSA Experimental Section** checklist, the **JARS** preregistration standards, and the **DA-RT** transparency principles.
 ---
 
@@ -80,7 +80,7 @@ This section applies when the experiment uses a conjoint or factorial vignette d
 ### 7. Validity Framework
 - **Four Validity Types:** Evaluate the design against Druckman's (2022) four validity types: (1) *construct validity* (do measures capture the intended concepts?), (2) *statistical conclusion validity* (are the statistical inferences correct?), (3) *internal validity* (is the causal claim warranted?), and (4) *external validity* (does the finding generalize?). Random assignment provides internal validity; representative sampling provides generalizability -- these are independent contributions (Mutz 2011).
 - **Deviation Reporting:** When deviating from a preregistered plan, document: (a) what changed, (b) why, (c) the impact on *severity* (does the deviation make the test more or less capable of falsifying the hypothesis?), and (d) the impact on *validity* (does the deviation improve or degrade the design's ability to measure what it claims?). Not all deviations reduce quality -- fixing a validity problem can *increase* test severity (Lakens 2025).
-- **Design Improvement Framing:** If the design was revised in response to peer or workshop feedback, frame the improvement as a theoretical advance rather than a correction. For example: "The redesigned experiment enables a direct test of whether [mechanism] withstands [alternative explanation]" (see scientific-narrative-builder skill).
+- **Design Improvement Framing:** If the design was revised in response to peer or workshop feedback, frame the improvement as a theoretical advance rather than a correction. For example: "The redesigned experiment enables a direct test of whether [mechanism] withstands [alternative explanation]" (see narrative-building skill).
 
 ### 8. Open Science Infrastructure
 - **DA-RT Three Pillars:** Adhere to the Data Access and Research Transparency principles: (1) *data access* -- share replication data, (2) *production transparency* -- document how data were generated, and (3) *analytic transparency* -- provide complete analysis code (APSA Guide to Professional Ethics, cited in Druckman 2022).

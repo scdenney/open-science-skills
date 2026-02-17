@@ -1,5 +1,5 @@
 ---
-name: causal-hypothesis-architect
+name: hypothesis-building
 description: Guides the transformation of theoretical concepts into falsifiable, counterfactual-based hypotheses with formal estimands, explicit model mappings, and clear separation of confirmatory and exploratory tests. Focuses on identifying the Data Generating Process (DGP), the Fundamental Problem of Causal Inference (FPCI), avoiding naive causal claims, and structuring hypothesis architectures for multi-experiment pre-analysis plans.
 ---
 
