@@ -1,12 +1,15 @@
-# Conjoint Experiment Diagnostics
+---
+name: conjoint-diagnostics
+description: Systematic diagnostic checklist for evaluating choice-based conjoint experiments. Use when (1) reviewing a conjoint paper or manuscript, (2) auditing a conjoint analysis script or dataset, (3) assessing measurement error and IRR in conjoint data, (4) evaluating external validity of a conjoint design, or (5) checking interpretation of AMCEs, marginal means, and interaction effects. Covers design, estimation, measurement error correction, external validity, and reporting.
+---
 
-You are a methodological reviewer for choice-based conjoint (CBC) experiments in the social sciences. When given a conjoint paper, analysis script, or dataset, systematically evaluate it against the diagnostic checklist below. Provide concrete, actionable assessments with references to the relevant methodological literature.
+# Conjoint Experiment Diagnostics
 
 ## Instructions
 
-When reviewing a conjoint study, work through each section below. For each item, assess whether the study addresses it adequately, partially, or not at all. Flag items that pose threats to inference and prioritize recommendations by severity.
+Work through each section below for the conjoint study under review. Assess whether the study addresses each item adequately, partially, or not at all. Flag items that pose threats to inference and prioritize recommendations by severity.
 
-If you are provided with R scripts or data, inspect the actual implementation, not just what the paper claims. Check for discrepancies between described and implemented methods.
+If provided with R scripts or data, inspect the actual implementation, not just what the paper claims. Check for discrepancies between described and implemented methods.
 
 ---
 
@@ -45,11 +48,9 @@ If you are provided with R scripts or data, inspect the actual implementation, n
 ## 2. Estimation Diagnostics
 
 ### 2.1 Estimand Clarity
-- Is the quantity of interest clearly defined? (AMCE, MM, AMIE, pAMCE)
-- **AMCE**: Average Marginal Component Effect. The causal effect of changing one attribute level, averaged over all other attributes. Depends on the distribution of other attributes used for averaging. (Hainmueller et al. 2014)
-- **MM**: Marginal Mean. The average choice probability for a given attribute level, averaged over all other attributes. Reference-category free. (Leeper et al. 2020)
-- **AMIE**: Average Marginal Interaction Effect. Interaction effect whose magnitude is invariant to baseline choice. (Egami & Imai 2019)
-- **pAMCE**: Population AMCE. AMCE computed with respect to a target population profile distribution rather than uniform randomization. (de la Cuesta et al. 2022)
+- Verify the estimand is clearly defined (AMCE, MM, AMIE, or pAMCE) and the choice is justified.
+- Check whether AMCEs are interpreted with awareness that they depend on the attribute distribution used for averaging (Hainmueller et al. 2014).
+- Check whether MMs are used where reference-category-free comparisons are needed (Leeper et al. 2020).
 
 ### 2.2 Reference Levels
 - Are reference levels clearly specified and substantively meaningful?
@@ -161,58 +162,3 @@ A well-reported conjoint study should include:
 - [ ] Pre-registration status and any deviations
 - [ ] Software and packages used for estimation
 
----
-
-## Key References
-
-### Foundational
-- Hainmueller, Hopkins & Yamamoto (2014). "Causal Inference in Conjoint Analysis." *Political Analysis* 22(1): 1-30.
-- Bansak, Hainmueller, Hopkins & Yamamoto (2021). "Conjoint Survey Experiments." In *Advances in Experimental Political Science*, Cambridge UP.
-
-### AMCE Debate
-- Abramson, Kocak & Magazinnik (2022). "What Do We Learn about Voter Preferences from Conjoint Experiments?" *AJPS* 66(4): 1008-1020.
-- Bansak, Hainmueller, Hopkins & Yamamoto (2023). "Using Conjoint Experiments to Analyze Election Outcomes." *Political Analysis* 31(3): 380-395.
-- Ganter (2023). "Identification of Preferences in Forced-Choice Conjoint Experiments." *Political Analysis* 31(1): 98-112.
-
-### Subgroup Analysis
-- Leeper, Hobolt & Tilley (2020). "Measuring Subgroup Preferences in Conjoint Experiments." *Political Analysis* 28(2): 207-221.
-- Robinson & Duch (2024). "How to Detect Heterogeneity in Conjoint Experiments." *Journal of Politics* 86(2): 412-427.
-- Goplerud, Imai & Pashley (2025). "Estimating Heterogeneous Causal Effects of High-Dimensional Treatments." *Annals of Applied Statistics* 19(2).
-
-### Measurement Error
-- Clayton, Horiuchi, Kaufman, King & Komisarchik (2023). "Correcting Measurement Error Bias in Conjoint Survey Experiments." *AJPS*.
-
-### External Validity
-- de la Cuesta, Egami & Imai (2022). "Improving the External Validity of Conjoint Analysis." *Political Analysis* 30(1): 19-45.
-- Fu & Li (2024). "Generalization Issues in Conjoint Experiment: Attention and Salience." arXiv:2405.06779.
-
-### Design
-- Bansak, Hainmueller, Hopkins & Yamamoto (2018). "The Number of Choice Tasks and Survey Satisficing in Conjoint Experiments." *Political Analysis* 26(1): 112-119.
-- Bansak, Hainmueller, Hopkins & Yamamoto (2021). "Beyond the Breaking Point? Survey Satisficing in Conjoint Experiments." *PSRM* 9(1): 53-71.
-- Bansak & Jenke (2025). "Odd Profiles in Conjoint Experimental Designs." *Political Analysis*.
-
-### Multiple Testing
-- Liu & Shiraito (2023). "Multiple Hypothesis Testing in Conjoint Analysis." *Political Analysis* 31(3): 380-395.
-
-### Power Analysis
-- Schuessler & Freitag (2020). "Power Analysis for Conjoint Experiments." cjpowR R package.
-- Stefanelli & Lukac (2020). "Subjects, Trials, and Levels: Statistical Power in Conjoint Experiments." SocArXiv.
-
-### Interactions
-- Egami & Imai (2019). "Causal Interaction in Factorial Experiments." *JASA* 114(526): 529-540.
-- Ham, Imai & Janson (2024). "Using Machine Learning to Test Causal Hypotheses in Conjoint Analysis." *Political Analysis* 32(1): 1-16.
-
-### Forced Choice and Abstention
-- Visconti & Yang (2024). "The Limitations of Using Forced Choice in Electoral Conjoint Experiments."
-- Miller & Ziegler (2024). "Preferential Abstention in Conjoint Experiments." *Research & Politics* 11(4).
-- Treger (2025). "Changing the Lens: The Contingency of Results from Conjoint Experiments." *Research & Politics* 12(1).
-
-### Software
-- `cregg` (Leeper): AMCE, MM, diff-in-MM estimation. https://thomasleeper.com/cregg/
-- `projoint` (Clayton et al.): Measurement error correction. https://github.com/yhoriuchi/projoint
-- `cjpowR` (Schuessler & Freitag): Power analysis. https://github.com/m-freitag/cjpowR
-- `cjbart` (Robinson & Duch): Heterogeneity detection. https://github.com/tsrobinson/cjbart
-- `FactorHet` (Goplerud et al.): Heterogeneous effects. https://cran.r-project.org/package=FactorHet
-- `CRTConjoint` (Ham et al.): Conditional randomization tests. https://cran.r-project.org/package=CRTConjoint
-- `factorEx` (de la Cuesta et al.): Population AMCEs. https://cran.r-project.org/package=factorEx
-- Conjoint SDT (Strezhnev): Qualtrics design tool. https://github.com/astrezhnev/conjointsdt

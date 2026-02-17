@@ -3,9 +3,15 @@
 This repository contains a collection of **Agentic Skills** (formatted as `.md` documents) designed for use with systems like **Claude Code**. These skills "teach" an AI assistant how to adhere to the high standards of experimental social science, from initial hypothesis generation to final methods reporting. This can be used to evaluate and otherwise support the writing and evaluation of pre-registered reports and research writing.
 
 ## Development
-These skills were developed with some machine assistance from Gemini 3.0, specifically using a personally curated library of foundational methodological texts, and Opus 4.6. This is my first attempt at "skills" development. I will iteratively improve and expand the files here as needed. 
+These skills were developed with some machine assistance from Gemini 3.0, specifically using a personally curated library of foundational methodological texts, and Opus 4.6. I will iteratively improve and expand the files here as needed.
 
-_As of now (Feb. 2026), this is more of a test. I don't consider the skills files fully developed -- yet._
+## Skill Design Principles
+These skills follow the best practices outlined in Anthropic's [Skill Creator Guide](https://github.com/anthropics/skills/blob/main/skills/skill-creator/SKILL.md). Key principles applied:
+
+- **Concise context**: Only include knowledge Claude doesn't already have; favor procedural directives over textbook definitions.
+- **Trigger-rich descriptions**: The YAML `description` field contains all "when to use" information so Claude can activate skills accurately.
+- **Progressive disclosure**: Core instructions live in the skill file; the full bibliography lives in [SOURCES.md](SOURCES.md).
+- **Imperative voice**: Instructions use imperative/infinitive form throughout.
 
 ## Usage
 To use these skills with **Claude Code**:

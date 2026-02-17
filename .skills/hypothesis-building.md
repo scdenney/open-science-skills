@@ -1,20 +1,18 @@
 ---
 name: hypothesis-building
-description: Guides the transformation of theoretical concepts into falsifiable, counterfactual-based hypotheses with formal estimands, explicit model mappings, and clear separation of confirmatory and exploratory tests. Focuses on identifying the Data Generating Process (DGP), the Fundamental Problem of Causal Inference (FPCI), avoiding naive causal claims, and structuring hypothesis architectures for multi-experiment pre-analysis plans.
+description: Guides the transformation of theoretical concepts into falsifiable, counterfactual-based hypotheses with formal estimands. Use when (1) drafting hypotheses for a pre-analysis plan, (2) specifying estimands and linking them to regression models, (3) choosing between NHST, equivalence, and minimum-effect tests, (4) structuring a multi-experiment hypothesis architecture, or (5) classifying hypotheses as primary, secondary, or exploratory. Ensures every claim has a named estimand, a SESOI, and a three-level specification (conceptual, operationalized, statistical).
 ---
 
 # Causal Hypothesis Architect
 
-Use this skill to ensure that every research claim is a rigorous "Popperian" test rather than a vague prediction. It forces the agent to define the causal path and the specific observations that would prove the theory wrong. Theory construction must precede hypothesis specification -- one can only arrive at a meaningful pre-analysis plan by spending time thinking about the question, reviewing the literature, and developing theory (Druckman 2022).
-
-## Instructions for the Agent
+## Instructions
 
 ### 1. The Identification Challenge
-- **The Fundamental Problem of Causal Inference (FPCI):** The fundamental challenge is that we can never observe the same unit in both the treated and untreated state simultaneously. Random assignment solves the FPCI by ensuring the treatment and control groups are, in expectation, identical on all pre-treatment characteristics (Druckman 2022).
+- **Verify FPCI Resolution:** Confirm that random assignment (or the identification strategy) solves the Fundamental Problem of Causal Inference for this design (Druckman 2022).
 - **Four Prerequisites for Experiments:** Before proceeding, verify that the design meets the four prerequisites for causal inference from experiments: (1) *random assignment* to conditions, (2) *exclusion restriction* (the only difference between conditions is the treatment itself), (3) *SUTVA* (Stable Unit Treatment Value Assumption -- one subject's treatment does not affect another's outcome), and (4) *noninterference* between units (Druckman 2022).
 - **Define the Data Generating Process (DGP):** Before drafting the hypothesis, describe the set of rules that governs how the data is created. What are the underlying mechanics of the world being studied?
-- **Map the Causal Diagram:** Visualize the relationship using a Directed Acyclic Graph (DAG), if possible and appropriate. This is especially important for causal designs using observational data. Identify "Backdoor Paths", such as variables that correlate with both the cause and the effect. In a properly randomized experiment, the DAG simplifies dramatically because treatment is independent of all pre-treatment variables (Mutz 2011).
-- **Closing the Backdoors:** State clearly which variables must be controlled for to isolate the treatment effect. If using an experiment, explain how random assignment "closes" these paths. The "third variable problem" -- the possibility that a confound explains the observed association -- is the core reason experiments are the gold standard for causal inference (Mutz 2011).
+- **Map the Causal Diagram:** Where appropriate, draw a DAG. Identify backdoor paths and confirm whether randomization closes them (Mutz 2011).
+- **Close the Backdoors:** State which variables must be controlled for to isolate the treatment effect. If using an experiment, explain how random assignment closes these paths (Mutz 2011).
 - **SATE vs. PATE:** Distinguish between the Sample Average Treatment Effect (SATE) and the Population Average Treatment Effect (PATE). A convenience-sample experiment estimates a SATE; a population-based experiment on a representative sample estimates the PATE directly by design, without requiring statistical modeling or extrapolation (Mutz 2011; Druckman 2022).
 
 ### 2. Hypothesis Formulation
@@ -30,10 +28,10 @@ Use this skill to ensure that every research claim is a rigorous "Popperian" tes
 - **Three-Level Specification:** Specify each hypothesis at three levels (Lakens 2025): (1) *conceptual* (the theoretical claim in plain language), (2) *operationalized* (the specific measures and contrasts), and (3) *statistical* (the exact test, estimand, and decision rule). The pre-analysis plan should bridge all three levels.
 
 ### 3. Hypothesis Testing Logic
-- **Four Types of Tests:** Recognize that not all hypothesis tests use Null Hypothesis Significance Testing (NHST). Four types exist (Lakens 2025): (1) *NHST* (test whether the effect differs from zero), (2) *interval test* (test whether the effect falls within a specified range), (3) *equivalence test* (test whether the effect is small enough to be considered absent), and (4) *minimum effect test* (test whether the effect exceeds a meaningful threshold). Choose the type that matches the theoretical claim.
+- **Choose the Test Type:** Select among NHST, interval, equivalence, and minimum-effect tests based on the theoretical claim (Lakens 2025). Not every hypothesis calls for NHST.
 - **Equivalence Testing for Null Predictions:** When a hypothesis predicts "no meaningful effect," use the TOST (Two One-Sided Tests) procedure rather than interpreting a non-significant p-value as evidence of absence. Specify the equivalence bounds in raw effect size units and justify them. The R `TOSTER` package implements this procedure (Lakens 2025).
-- **The Four-Outcome Grid:** When combining NHST with equivalence testing, four outcomes are possible: (1) inconclusive (neither test significant), (2) effect present (NHST sig, equivalence not sig), (3) effect absent (equivalence sig, NHST not sig), (4) effect trivially small (both significant -- statistically different from zero but practically equivalent to zero). State in advance which outcome would corroborate, falsify, or leave the hypothesis inconclusive (Lakens 2025).
-- **Severity as Evaluation Standard:** A hypothesis is better tested when the preregistered analysis has high power AND the prediction is specific enough to be wrong in multiple ways. The *severity* of a test is determined by how likely a prediction is to be proven wrong when it is wrong, and proven right when it is right (Lakens 2025).
+- **The Four-Outcome Grid:** When combining NHST with equivalence testing, state in advance which of the four outcomes (inconclusive, effect present, effect absent, trivially small) would corroborate, falsify, or leave the hypothesis inconclusive (Lakens 2025).
+- **Severity as Evaluation Standard:** Ensure the preregistered analysis has high power and the prediction is specific enough to be wrong in multiple ways (Lakens 2025).
 - **Compromise Power for Fixed N:** When sample size is constrained by resources or population size, use a compromise power analysis that minimizes the combined Type I + Type II error rate. An alpha > 0.05 may be defensible if it reduces total error (Lakens 2025).
 
 ### 4. Scope and Generalization
