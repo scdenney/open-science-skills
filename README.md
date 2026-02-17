@@ -35,8 +35,3 @@ The repository is organized into a `.skills` directory containing eight skill fi
 * **`.skills/survey-design.md`** – Guides survey instrument design: question construction, scale design, survey flow, pretesting, respondent burden, social desirability mitigation, and treatment delivery.
 * **`.skills/pre-registration-writing.md`** – Guides writing a complete pre-analysis plan: registry selection, PAP structure, analytical strategy specification, code pre-registration, contingency planning, and deviation documentation.
 * **`.skills/cross-national-design.md`** – Guides cross-national survey experiment design with per-country power analysis, sensitivity bias auditing, instrument localization, and cross-national analytical strategies.
-
----
-
-## Sources & Bibliography
-See [SOURCES.md](SOURCES.md) for the full bibliography, organized by topic area.
