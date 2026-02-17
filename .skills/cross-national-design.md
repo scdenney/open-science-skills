@@ -1,5 +1,5 @@
 ---
-name: cross-national-comparative-designer
+name: cross-national-design
 description: Guides the design of cross-national comparative survey experiments. Focuses on theoretically motivated case selection, instrument localization, ecological validity, cross-national analytical strategies, per-country power considerations, and sensitivity to context-dependent measurement bias.
 ---
 
