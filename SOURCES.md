@@ -1,6 +1,6 @@
 # Sources & Bibliography
 
-The instructions within these skills are drawn from the following sources, organized by topic area.
+The instructions within these skills are drawn from the following sources, organized by topic area. Sources may appear in multiple subsections when they are relevant to more than one skill area.
 
 ---
 
@@ -33,6 +33,23 @@ Sources specific to conjoint experiment methodology, estimation, and diagnostics
 * **Leeper, T. J., Hobolt, S. B., & Tilley, J.** (2020). "Measuring Subgroup Preferences in Conjoint Experiments." *Political Analysis*, 28(2), 207–221.
 * **Liu, Y., & Shiraito, Y.** (2023). "Multiple Hypothesis Testing in Conjoint Analysis." *Political Analysis*, 31(3), 380–395.
 * **Stefanelli, A., & Lukac, M.** (2020). "Subjects, Trials, and Levels: Statistical Power in Conjoint Experiments." SocArXiv.
+
+## Survey Design
+
+Sources specific to survey instrument design, question construction, and respondent measurement:
+
+* **Blair, G., Coppock, A., & Moor, M.** (2020). When to Worry about Sensitivity Bias: A Social Reference Theory and Evidence from 30 Years of List Experiments. *APSR*.
+* **Mutz, D. C.** (2011). *Population-Based Survey Experiments*. Princeton University Press.
+* **Sniderman, P. M.** (2018). "Some Advances in the Design of Survey Experiments." *Annual Review of Political Science*.
+* **Stantcheva, S.** (2023). "How to Run Surveys: A Guide to Creating Your Own Identifying Variation." *Annual Review of Economics*.
+
+## Pre-Registration and Pre-Analysis Plans
+
+Sources specific to pre-registration, pre-analysis plan writing, and research transparency:
+
+* **Christensen, G., Freese, J., & Miguel, E.** (2019). *Transparent and Reproducible Social Science Research: How to Do Open Science*. University of California Press.
+* **Druckman, J. N.** (2022). *Experimental Thinking: A Primer on Social Science Experiments*. Cambridge University Press.
+* **Lakens, D.** (2025). *Improving Your Statistical Inferences*.
 
 ## Methods Reporting
 
