@@ -1,13 +1,11 @@
 ---
 name: cross-national-design
-description: Guides the design of cross-national comparative survey experiments. Focuses on theoretically motivated case selection, instrument localization, ecological validity, cross-national analytical strategies, per-country power considerations, and sensitivity to context-dependent measurement bias.
+description: Guides the design of cross-national comparative survey experiments. Use when (1) selecting countries for a multi-country study, (2) localizing experimental instruments across languages and institutional contexts, (3) calibrating origin-country stimuli for immigration experiments, (4) conducting per-country power analyses, or (5) planning a cross-national analytical strategy with pooled and per-country models. Covers case selection, instrument localization, ecological validity, power management, and sensitivity bias auditing.
 ---
 
 # Cross-National Comparative Designer
 
-Use this skill when designing a survey experiment that will be fielded in multiple countries. It ensures that case selection is theoretically motivated, that experimental materials are properly localized, and that the analytical strategy handles cross-national comparison rigorously. If treatment effects are heterogeneous even within a single country (across age, gender, race), they are likely even more heterogeneous across countries with different institutional structures, cultures, and political contexts (Mutz 2011).
-
-## Instructions for the Agent
+## Instructions
 
 ### 1. Case Selection and Theoretical Justification
 - **Variation by Design:** Cases should be selected to vary on theoretically relevant dimensions (e.g., regime type, institutional structure, immigration history, partisan polarization), not for convenience or data availability. Each case should serve a specific theoretical function.

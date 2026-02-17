@@ -1,13 +1,11 @@
 ---
 name: narrative-building
-description: Expert logic for drafting scientific introductions and literature reviews. Focuses on "substantive savvy," uncovering "invisible" beliefs, the "Why-to-If-Then" funnel, cumulative research framing, and multi-experiment narrative coherence across levels of analysis.
+description: Expert logic for drafting scientific introductions and literature reviews. Use when (1) transforming a research interest into a grounded scientific introduction, (2) writing or reviewing a literature review, (3) structuring a multi-experiment narrative, (4) establishing the "Why-to-If-Then" funnel from theory to hypothesis, or (5) framing a cumulative research program. Prevents "methods-driven" writing by ensuring substantive foundations precede design choices.
 ---
 
 # Scientific Narrative Builder
 
-Use this skill to transform a general research interest into a substantively grounded scientific introduction. This skill prevents "methods-driven" writing and ensures every experiment is treated as part of a larger, cumulative scientific process. Open science initiatives "rarely mention the first four steps (prior to the research design)" -- the narrative work of establishing a question, reviewing literature, specifying outcomes, and developing theory is *foundational* to good design, not an afterthought (Druckman 2022).
-
-## Instructions for the Agent
+## Instructions
 
 ### 1. Inquiry: Establishing Substantive Savvy
 - **Identify the "Invisible":** Treat surveys and experiments not just as data collection, but as a process to uncover "invisible factors", specifically perceptions, knowledge, beliefs, and reasoning that administrative data cannot capture.

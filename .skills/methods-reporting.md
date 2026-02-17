@@ -1,13 +1,11 @@
 ---
 name: methods-reporting
-description: Implements high-transparency reporting standards for experimental social science, including conjoint and factorial vignette designs. Ensures adherence to best methods section practices drawing on the **APSA Experimental Section** checklist, the **JARS** preregistration standards, and the **DA-RT** transparency principles.
+description: Implements high-transparency reporting standards for experimental social science. Use when (1) drafting or auditing a methods section, (2) preparing a pre-analysis plan or pre-registration, (3) documenting a conjoint or factorial vignette design, (4) building a CONSORT sample flow, or (5) ensuring compliance with APSA Experimental Section, JARS, and DA-RT standards. Includes a 45-item mandatory checklist.
 ---
 
 # Transparent Methods Reporter
 
-Use this skill to draft or audit the methodology section. It ensures the report provides sufficient information for a reader to follow the research steps and independently assess the validity of the conclusions. Reporting standards should be consulted *at the design stage*, not as an afterthought when writing up -- they structure both the presentation of data and the design of studies (Christensen, Freese, and Miguel 2019).
-
-## Instructions for the Agent
+## Instructions
 
 ### 1. Design Documentation and Pre-Registration
 This section covers upstream documentation that makes transparent reporting possible. A well-documented bad design is still a bad design; transparency tools are necessary but not sufficient (Druckman 2022).

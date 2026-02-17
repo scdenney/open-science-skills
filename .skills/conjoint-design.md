@@ -1,13 +1,11 @@
 ---
 name: conjoint-design
-description: Specialized logic for multidimensional choice experiments. Covers attribute architecture (orthogonality, nesting, restrictions), AMCE and marginal mean estimation, interaction effects, power analysis with closed-form formulas and simulation tools, design variants (paired-choice, factorial vignettes, between-subjects conversion), treatment validation, and regression models for conjoint data.
+description: Specialized logic for designing conjoint and factorial vignette experiments. Use when (1) designing a new conjoint experiment, (2) selecting and structuring attributes and levels, (3) conducting a conjoint power analysis, (4) choosing between design variants (paired-choice, rating, factorial vignette), (5) writing conjoint regression specifications, or (6) drafting the conjoint portion of a pre-analysis plan. Covers attribute architecture, AMCE/MM estimation, interaction effects, power formulas, treatment validation, and design variants.
 ---
 
 # Conjoint Design Expert
 
-Use this skill when designing or reporting a conjoint experiment. It ensures the design is multidimensional, balanced, and statistically powered. Design choices must be justified against alternatives, not adopted because they are fashionable -- "the fundamentals of what makes for a 'good' experiment do not change" (Druckman 2022).
-
-## Instructions for the Agent
+## Instructions
 
 ### 1. Attribute Architecture
 - **Orthogonality:** Ensure every attribute is independent of every other attribute to allow for the estimation of causal effects for each component.
