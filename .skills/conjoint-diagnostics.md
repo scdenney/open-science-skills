@@ -134,13 +134,20 @@ Four methods, in order of ease:
 - Does the paper acknowledge that AMCEs depend on the distribution of other attributes? (Bansak et al. 2023 respond that AMCEs map to vote share changes)
 - Are AMCEs interpreted as causal effects or merely as preference rankings?
 
-### 5.2 Magnitude Reporting
+### 5.2 Lexicographic / Categorical Preferences
+- Could respondents be applying a categorical veto (always rejecting profiles with a given attribute level)?
+- If so, standard AMCEs and MMs may be misleading due to co-occurrence rates across task pairs.
+- Are nested marginal means used to detect attribute ranking? (Dill, Howlett & Müller-Crepon 2024; `cjRank` R package)
+- Does the paper test whether lower-ranked attributes matter conditional on the veto attribute being held constant?
+
+### 5.3 Magnitude Reporting
 - Are effect sizes reported in interpretable units (percentage points)?
 - Are substantive significance thresholds discussed alongside statistical significance?
 - Is there comparison to benchmark effect sizes in similar studies?
 
-### 5.3 Interaction Effects
+### 5.4 Interaction Effects
 - If interactions are examined, are AMIEs used rather than conditional AMCEs? (Egami & Imai 2019)
+- Are interaction coefficients from dummy-coded regressions interpreted? If so, flag: these are baseline-dependent artifacts (Egami & Imai 2019).
 - Is there a test for whether a factor matters at all? (Ham et al. 2024 CRTConjoint: conditional randomization test)
 
 ---
