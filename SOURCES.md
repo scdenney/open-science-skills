@@ -28,10 +28,12 @@ Sources specific to conjoint experiment methodology, estimation, and diagnostics
 * **Bansak, K., & Jenke, L.** (2025). "Odd Profiles in Conjoint Experimental Designs." *Political Analysis*.
 * **Clayton, K., Horiuchi, Y., Kaufman, A. R., King, G., & Komisarchik, M.** (2023). "Correcting Measurement Error Bias in Conjoint Survey Experiments." *American Journal of Political Science*.
 * **De la Cuesta, B., Egami, N., & Imai, K.** (2022). "Improving the External Validity of Conjoint Analysis: The Essential Role of Profile Distribution." *Political Analysis*, 30(1), 19–45.
+* **Dill, J., Howlett, M., & Müller-Crepon, C.** (2024). "At Any Cost: How Ukrainians Think about Self-Defense against Russia." *American Journal of Political Science*, 68(4), 1460–1478.
 * **Egami, N., & Imai, K.** (2019). "Causal Interaction in Factorial Experiments: Application to Conjoint Analysis." *Journal of the American Statistical Association*, 114(526), 529–540.
 * **Freitag, M.** (2021). *cjpowR: A package for power analysis for conjoint experiments*.
 * **Leeper, T. J., Hobolt, S. B., & Tilley, J.** (2020). "Measuring Subgroup Preferences in Conjoint Experiments." *Political Analysis*, 28(2), 207–221.
 * **Liu, Y., & Shiraito, Y.** (2023). "Multiple Hypothesis Testing in Conjoint Analysis." *Political Analysis*, 31(3), 380–395.
+* **Robinson, T. S., & Duch, R. M.** (2024). "How to Detect Heterogeneity in Conjoint Experiments." *The Journal of Politics*, 86(2), 412–427.
 * **Stefanelli, A., & Lukac, M.** (2020). "Subjects, Trials, and Levels: Statistical Power in Conjoint Experiments." SocArXiv.
 
 ## Survey Design
