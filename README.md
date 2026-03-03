@@ -7,7 +7,11 @@
 
 A library of [Claude Code skills](https://docs.anthropic.com/en/docs/claude-code/skills) for experimental social science. Drop the `.skills/` folder into any research project to get methodologically rigorous AI assistance — from hypothesis generation through final reporting.
 
-> These skills prevent "methods-driven" AI assistance by grounding every recommendation in the Data Generating Process, enforcing the move from theoretical **"Why"** to experimental **"If-Then,"** and holding output to APSA, JARS, and DA-RT reporting standards.
+Skills were developed using a curated library of methodology texts, with machine assistance from Gemini 3.0 and Opus 4.6. They are iteratively expanded as new sources are incorporated. This is a living-and-breathing kind of repo.
+
+Design follows the [Anthropic Skill Creator Guide](https://github.com/anthropics/skills/blob/main/skills/skill-creator/SKILL.md): concise context (no textbook definitions), trigger-rich YAML descriptions for auto-invocation, and progressive disclosure (instructions in skills, bibliography in SOURCES.md).
+
+> These skills are meant to support, not supplant, the writing process and ahere to standards for good social science standards as per APSA, JARS, and DA-RT reporting standards. Skills writing is based on 45+ published sources. See [**SOURCES.md**](SOURCES.md) for the full bibliography.
 
 ## Quick Start
 
@@ -51,18 +55,3 @@ Skills activate automatically based on your prompts, or invoke manually (e.g., `
 | [**narrative-building**](.skills/narrative-building.md) | Introduction logic, literature reviews, the "Why-to-If-Then" funnel, cumulative framing, multi-experiment coherence |
 | [**pre-registration-writing**](.skills/pre-registration-writing.md) | PAP structure, registry selection, analytical strategy specification, code pre-registration, deviation documentation |
 | [**methods-reporting**](.skills/methods-reporting.md) | 40-item reporting checklist: CONSORT standards, JARS preregistration elements, DA-RT transparency |
-
----
-
-All guidance is grounded in 45+ published sources — see [**SOURCES.md**](SOURCES.md) for the full bibliography.
-
-<details>
-<summary><strong>About this project</strong></summary>
-
-<br>
-
-Skills were developed using a curated library of foundational methodology texts, with machine assistance from Gemini 3.0 and Opus 4.6. They are iteratively expanded as new sources are incorporated.
-
-Design follows the [Anthropic Skill Creator Guide](https://github.com/anthropics/skills/blob/main/skills/skill-creator/SKILL.md): concise context (no textbook definitions), trigger-rich YAML descriptions for auto-invocation, progressive disclosure (instructions in skills, bibliography in SOURCES.md), and imperative voice throughout.
-
-</details>
