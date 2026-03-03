@@ -1,39 +1,80 @@
-# Open Science Skills Library
+# Open Science Skills
 
-This repository contains a collection of **Agentic Skills** (formatted as `.md` documents) designed for use with systems like **Claude Code**. These skills "teach" an AI assistant how to adhere to the high standards of experimental social science, from initial hypothesis generation to final methods reporting. This can be used to evaluate and otherwise support the writing and evaluation of pre-registered reports and research writing.
+![skills](https://img.shields.io/badge/skills-10-blue)
+![updated](https://img.shields.io/badge/updated-Mar%202026-green)
+![sources](https://img.shields.io/badge/sources-45%2B-purple)
+![PRs welcome](https://img.shields.io/badge/PRs-welcome-brightgreen)
 
-## Development
-These skills were developed with some machine assistance from Gemini 3.0, specifically using a personally curated library of foundational methodological texts, and Opus 4.6. I will iteratively improve and expand the files here as needed.
+A library of [Claude Code skills](https://docs.anthropic.com/en/docs/claude-code/skills) for experimental social science. Drop the `.skills/` folder into any research project to get methodologically rigorous AI assistance — from hypothesis generation through final reporting.
 
-## Skill Design Principles
-These skills follow the best practices outlined in Anthropic's [Skill Creator Guide](https://github.com/anthropics/skills/blob/main/skills/skill-creator/SKILL.md). Key principles applied:
+> These skills prevent "methods-driven" AI assistance by grounding every recommendation in the Data Generating Process, enforcing the move from theoretical **"Why"** to experimental **"If-Then,"** and holding output to APSA, JARS, and DA-RT reporting standards.
 
-- **Concise context**: Only include knowledge Claude doesn't already have; favor procedural directives over textbook definitions.
-- **Trigger-rich descriptions**: The YAML `description` field contains all "when to use" information so Claude can activate skills accurately.
-- **Progressive disclosure**: Core instructions live in the skill file; the full bibliography lives in [SOURCES.md](SOURCES.md).
-- **Imperative voice**: Instructions use imperative/infinitive form throughout.
+## Quick Start
 
-## Usage
-To use these skills with **Claude Code**:
-1. Clone this repository or copy the `.skills/` folder into your research project.
-2. When running Claude Code in that directory, you can activate these skills manually (e.g., `/methods-reporting`) or allow Claude to auto-invoke them based on your prompts.
+```bash
+# Clone into your project
+git clone https://github.com/scdenney/open-science-skills.git
+cp -r open-science-skills/.skills/ your-project/.skills/
 
-## Core Idea
-Scientific research is a "slow-moving process" that requires carving problems at their "analytical joints." This library prevents "methods-driven" AI assistance by forcing the agent to:
-- Identify the **Data Generating Process (DGP)** before suggesting analyses.
-- Move from a theoretical **"Why"** to an experimental **"If-Then."**
-- Adhere to the **APSA Experimental Section** reporting checklist, **JARS** preregistration standards, and **DA-RT** transparency principles (40-item checklist).
+# Or clone and work directly
+cd open-science-skills
+claude
+```
 
-## Repository Structure
-The repository is organized into a `.skills` directory containing ten skill files.
+Skills activate automatically based on your prompts, or invoke manually (e.g., `/conjoint-design`).
 
-* **`.skills/narrative-building.md`** – Logic for introductions, literature reviews, the "Why-to-If-Then" funnel, cumulative research framing, and multi-experiment narrative coherence.
-* **`.skills/hypothesis-building.md`** – Guidance on falsifiability, counterfactuals, DAGs, the FPCI, three-level hypothesis specification, equivalence testing, SESOI requirements, and multi-experiment hypothesis architecture.
-* **`.skills/methods-reporting.md`** – Implementation of a 40-item reporting checklist covering CONSORT standards, JARS preregistration elements, DA-RT transparency, and conjoint-specific reporting.
-* **`.skills/conjoint-design.md`** – Specialized logic for multidimensional choice experiments, including closed-form power formulas, empirical AMCE benchmarks, treatment validation, and simulation tools (cjpowR).
-* **`.skills/conjoint-diagnostics.md`** – Systematic diagnostic checklist for evaluating conjoint experiments, covering design, estimation, measurement error, external validity, and interpretation.
-* **`.skills/survey-design.md`** – Guides survey instrument design: question construction, scale design, survey flow, pretesting, respondent burden, social desirability mitigation, and treatment delivery.
-* **`.skills/pre-registration-writing.md`** – Guides writing a complete pre-analysis plan: registry selection, PAP structure, analytical strategy specification, code pre-registration, contingency planning, and deviation documentation.
-* **`.skills/cross-national-design.md`** – Guides cross-national survey experiment design with per-country power analysis, sensitivity bias auditing, instrument localization, and cross-national analytical strategies.
-* **`.skills/topic-modeling.md`** – Guides topic modeling for survey and experimental text data: STM specification with metadata covariates, topic count selection via coherence-exclusivity diagnostics, and covariate effects on prevalence.
-* **`.skills/text-classification.md`** – Guides LLM-based text classification: codebook design (five-component structure), learning regime selection (zero-shot through instruction-tuning), validation against human ground truth, and hybrid human-LLM workflows.
+---
+
+## Skills
+
+### Research Design
+
+| Skill | What it does |
+|-------|-------------|
+| [**conjoint-design**](.skills/conjoint-design.md) | Attribute architecture, AMCE/AMIE estimation, power analysis (`cjpowR`), BART heterogeneity detection, design variants |
+| [**conjoint-diagnostics**](.skills/conjoint-diagnostics.md) | Diagnostic checklist for reviewing conjoint studies: design, estimation, measurement error (IRR), external validity, interpretation |
+| [**survey-design**](.skills/survey-design.md) | Question construction, scale design, survey flow, pretesting, respondent burden, social desirability mitigation |
+| [**cross-national-design**](.skills/cross-national-design.md) | Cross-national survey experiments: per-country power, sensitivity bias auditing, instrument localization |
+
+### Analysis
+
+| Skill | What it does |
+|-------|-------------|
+| [**topic-modeling**](.skills/topic-modeling.md) | STM specification with metadata covariates, topic count selection via coherence-exclusivity diagnostics, reporting |
+| [**text-classification**](.skills/text-classification.md) | LLM-based classification: codebook design, learning regime selection, human-LLM hybrid workflows, validation |
+
+### Writing & Reporting
+
+| Skill | What it does |
+|-------|-------------|
+| [**hypothesis-building**](.skills/hypothesis-building.md) | Falsifiability, counterfactuals, DAGs, FPCI, three-level hypothesis specification, equivalence testing, SESOI |
+| [**narrative-building**](.skills/narrative-building.md) | Introduction logic, literature reviews, the "Why-to-If-Then" funnel, cumulative framing, multi-experiment coherence |
+| [**pre-registration-writing**](.skills/pre-registration-writing.md) | PAP structure, registry selection, analytical strategy specification, code pre-registration, deviation documentation |
+| [**methods-reporting**](.skills/methods-reporting.md) | 40-item reporting checklist: CONSORT standards, JARS preregistration elements, DA-RT transparency |
+
+---
+
+## Sources
+
+All methodological guidance is grounded in published sources. Skills cite by short reference (e.g., "Egami & Imai 2019"); full citations are in [**SOURCES.md**](SOURCES.md).
+
+---
+
+<details>
+<summary><strong>Design Principles</strong></summary>
+
+These skills follow the [Anthropic Skill Creator Guide](https://github.com/anthropics/skills/blob/main/skills/skill-creator/SKILL.md):
+
+- **Concise context** — Only knowledge Claude doesn't already have; procedural directives, not textbook definitions
+- **Trigger-rich descriptions** — The YAML `description` field lists all activation contexts so Claude auto-invokes accurately
+- **Progressive disclosure** — Actionable instructions in the skill file; bibliography in SOURCES.md
+- **Imperative voice** — All instructions use imperative form throughout
+
+</details>
+
+<details>
+<summary><strong>Development</strong></summary>
+
+Skills were developed using a curated library of foundational methodology texts, with assistance from Gemini 3.0 and Opus 4.6. They are iteratively expanded as new sources are incorporated. See [SOURCES.md](SOURCES.md) for the full bibliography.
+
+</details>
