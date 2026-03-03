@@ -25,7 +25,7 @@ Scientific research is a "slow-moving process" that requires carving problems at
 - Adhere to the **APSA Experimental Section** reporting checklist, **JARS** preregistration standards, and **DA-RT** transparency principles (40-item checklist).
 
 ## Repository Structure
-The repository is organized into a `.skills` directory containing eight skill files.
+The repository is organized into a `.skills` directory containing ten skill files.
 
 * **`.skills/narrative-building.md`** – Logic for introductions, literature reviews, the "Why-to-If-Then" funnel, cumulative research framing, and multi-experiment narrative coherence.
 * **`.skills/hypothesis-building.md`** – Guidance on falsifiability, counterfactuals, DAGs, the FPCI, three-level hypothesis specification, equivalence testing, SESOI requirements, and multi-experiment hypothesis architecture.
@@ -35,3 +35,5 @@ The repository is organized into a `.skills` directory containing eight skill fi
 * **`.skills/survey-design.md`** – Guides survey instrument design: question construction, scale design, survey flow, pretesting, respondent burden, social desirability mitigation, and treatment delivery.
 * **`.skills/pre-registration-writing.md`** – Guides writing a complete pre-analysis plan: registry selection, PAP structure, analytical strategy specification, code pre-registration, contingency planning, and deviation documentation.
 * **`.skills/cross-national-design.md`** – Guides cross-national survey experiment design with per-country power analysis, sensitivity bias auditing, instrument localization, and cross-national analytical strategies.
+* **`.skills/topic-modeling.md`** – Guides topic modeling for survey and experimental text data: STM specification with metadata covariates, topic count selection via coherence-exclusivity diagnostics, and covariate effects on prevalence.
+* **`.skills/text-classification.md`** – Guides LLM-based text classification: codebook design (five-component structure), learning regime selection (zero-shot through instruction-tuning), validation against human ground truth, and hybrid human-LLM workflows.
