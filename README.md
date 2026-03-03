@@ -54,27 +54,15 @@ Skills activate automatically based on your prompts, or invoke manually (e.g., `
 
 ---
 
-## Sources
-
-All methodological guidance is grounded in published sources. Skills cite by short reference (e.g., "Egami & Imai 2019"); full citations are in [**SOURCES.md**](SOURCES.md).
-
----
+All guidance is grounded in 45+ published sources — see [**SOURCES.md**](SOURCES.md) for the full bibliography.
 
 <details>
-<summary><strong>Design Principles</strong></summary>
+<summary><strong>About this project</strong></summary>
 
-These skills follow the [Anthropic Skill Creator Guide](https://github.com/anthropics/skills/blob/main/skills/skill-creator/SKILL.md):
+<br>
 
-- **Concise context** — Only knowledge Claude doesn't already have; procedural directives, not textbook definitions
-- **Trigger-rich descriptions** — The YAML `description` field lists all activation contexts so Claude auto-invokes accurately
-- **Progressive disclosure** — Actionable instructions in the skill file; bibliography in SOURCES.md
-- **Imperative voice** — All instructions use imperative form throughout
+Skills were developed using a curated library of foundational methodology texts, with machine assistance from Gemini 3.0 and Opus 4.6. They are iteratively expanded as new sources are incorporated.
 
-</details>
-
-<details>
-<summary><strong>Development</strong></summary>
-
-Skills were developed using a curated library of foundational methodology texts, with assistance from Gemini 3.0 and Opus 4.6. They are iteratively expanded as new sources are incorporated. See [SOURCES.md](SOURCES.md) for the full bibliography.
+Design follows the [Anthropic Skill Creator Guide](https://github.com/anthropics/skills/blob/main/skills/skill-creator/SKILL.md): concise context (no textbook definitions), trigger-rich YAML descriptions for auto-invocation, progressive disclosure (instructions in skills, bibliography in SOURCES.md), and imperative voice throughout.
 
 </details>
