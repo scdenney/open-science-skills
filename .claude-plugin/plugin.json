@@ -1,0 +1,22 @@
+{
+  "name": "open-science-skills",
+  "version": "1.0.0",
+  "description": "Claude Code skills for experimental social science: conjoint design, survey experiments, topic modeling, text classification, hypothesis building, pre-registration, and methods reporting.",
+  "author": {
+    "name": "Steven Denney",
+    "url": "https://github.com/scdenney"
+  },
+  "homepage": "https://github.com/scdenney/open-science-skills",
+  "repository": "https://github.com/scdenney/open-science-skills",
+  "license": "MIT",
+  "keywords": [
+    "social-science",
+    "conjoint",
+    "survey-experiments",
+    "pre-registration",
+    "methods-reporting",
+    "topic-modeling",
+    "text-classification"
+  ],
+  "skills": "./skills/"
+}
