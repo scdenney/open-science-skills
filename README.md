@@ -1,6 +1,7 @@
 # Open Science Skills
 
 ![skills](https://img.shields.io/badge/skills-10-blue)
+![plugin](https://img.shields.io/badge/Claude%20Code-plugin-orange)
 ![updated](https://img.shields.io/badge/updated-Mar%202026-green)
 ![sources](https://img.shields.io/badge/sources-45%2B-purple)
 ![PRs welcome](https://img.shields.io/badge/PRs-welcome-brightgreen)
