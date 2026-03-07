@@ -133,15 +133,17 @@ cp open-science-skills/skills/list-experiment/SKILL.md \
 ## Slash Command Examples
 
 ```
-/conjoint-design help me choose between 4 and 6 attributes for a naturalization conjoint
+/conjoint-design I'm deciding between 4 and 6 attributes — what are the trade-offs?
 
-/list-experiment I want to measure vote-buying prevalence — is a list experiment appropriate here?
+/list-experiment is a list experiment appropriate for measuring social desirability bias on this topic?
 
-/survey-design review this draft question: "Do you think immigrants benefit or harm the economy?"
+/survey-design review this draft question for leading language and double-barreling
 
-/text-classification I have 2,000 open-text responses in Korean — what's the best classification approach?
+/text-classification I have 5,000 open-text responses — should I use zero-shot or few-shot classification?
 
-/pre-registration-writing draft the analytical strategy section for a 2-country conjoint PAP
+/hypothesis-building help me sharpen this hypothesis and identify testable observable implications
+
+/pre-registration-writing draft the analytical strategy section for my PAP
 
 /methods-reporting run a reporting checklist on my methods section [paste text]
 ```
