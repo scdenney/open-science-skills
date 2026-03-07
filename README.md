@@ -50,7 +50,7 @@ claude plugin install open-science-skills --scope project
 
 ```bash
 git clone https://github.com/scdenney/open-science-skills.git
-cd open-science-skills && claude --plugin-dir .
+cd open-science-skills && claude --plugin-dir ./plugin
 ```
 
 All 11 skills auto-trigger based on your prompts. All 11 slash commands (`/conjoint-design`, `/list-experiment`, etc.) are immediately available.
@@ -62,20 +62,20 @@ Use the interactive install script to pick only the skills you want:
 ```bash
 git clone https://github.com/scdenney/open-science-skills.git
 cd open-science-skills
-bash scripts/install.sh
+bash plugin/scripts/install.sh
 ```
 
 The script lists available skills and lets you choose interactively. Skills are installed to `./.claude/skills/` by default (current project only). Options:
 
 ```bash
 # Install to user-wide skills directory (all projects)
-bash scripts/install.sh --target ~/.claude/skills
+bash plugin/scripts/install.sh --target ~/.claude/skills
 
 # Install specific skills non-interactively
-bash scripts/install.sh --skill conjoint-design survey-design list-experiment
+bash plugin/scripts/install.sh --skill conjoint-design survey-design list-experiment
 
 # Install all skills
-bash scripts/install.sh --all --target ~/.claude/skills
+bash plugin/scripts/install.sh --all --target ~/.claude/skills
 ```
 
 Restart Claude Code after installing to load the new skills.
@@ -87,12 +87,12 @@ git clone https://github.com/scdenney/open-science-skills.git
 
 # Project-level (current project only)
 mkdir -p your-project/.claude/skills/conjoint-design
-cp open-science-skills/skills/conjoint-design/SKILL.md \
+cp open-science-skills/plugin/skills/conjoint-design/SKILL.md \
    your-project/.claude/skills/conjoint-design/SKILL.md
 
 # User-wide (all projects)
 mkdir -p ~/.claude/skills/list-experiment
-cp open-science-skills/skills/list-experiment/SKILL.md \
+cp open-science-skills/plugin/skills/list-experiment/SKILL.md \
    ~/.claude/skills/list-experiment/SKILL.md
 ```
 
@@ -106,27 +106,27 @@ cp open-science-skills/skills/list-experiment/SKILL.md \
 
 | Skill | Slash command | What it does |
 |-------|--------------|-------------|
-| [**conjoint-design**](skills/conjoint-design/SKILL.md) | `/conjoint-design` | Attribute architecture, AMCE/AMIE estimation, power analysis (`cjpowR`), BART heterogeneity detection, design variants |
-| [**conjoint-diagnostics**](skills/conjoint-diagnostics/SKILL.md) | `/conjoint-diagnostics` | Diagnostic checklist: design, estimation, measurement error (IRR), external validity, interpretation |
-| [**survey-design**](skills/survey-design/SKILL.md) | `/survey-design` | Question construction, scale design, survey flow, pretesting, respondent burden, social desirability mitigation |
-| [**cross-national-design**](skills/cross-national-design/SKILL.md) | `/cross-national-design` | Cross-national survey experiments: per-country power, sensitivity bias auditing, instrument localization |
-| [**list-experiment**](skills/list-experiment/SKILL.md) | `/list-experiment` | Item count technique: pre-design sensitivity assessment, control list design, NLSreg/MLreg estimation, assumption testing, placebo diagnostics |
+| [**conjoint-design**](plugin/skills/conjoint-design/SKILL.md) | `/conjoint-design` | Attribute architecture, AMCE/AMIE estimation, power analysis (`cjpowR`), BART heterogeneity detection, design variants |
+| [**conjoint-diagnostics**](plugin/skills/conjoint-diagnostics/SKILL.md) | `/conjoint-diagnostics` | Diagnostic checklist: design, estimation, measurement error (IRR), external validity, interpretation |
+| [**survey-design**](plugin/skills/survey-design/SKILL.md) | `/survey-design` | Question construction, scale design, survey flow, pretesting, respondent burden, social desirability mitigation |
+| [**cross-national-design**](plugin/skills/cross-national-design/SKILL.md) | `/cross-national-design` | Cross-national survey experiments: per-country power, sensitivity bias auditing, instrument localization |
+| [**list-experiment**](plugin/skills/list-experiment/SKILL.md) | `/list-experiment` | Item count technique: pre-design sensitivity assessment, control list design, NLSreg/MLreg estimation, assumption testing, placebo diagnostics |
 
 ### Analysis
 
 | Skill | Slash command | What it does |
 |-------|--------------|-------------|
-| [**topic-modeling**](skills/topic-modeling/SKILL.md) | `/topic-modeling` | STM with metadata covariates, topic count selection via coherence-exclusivity diagnostics, reporting |
-| [**text-classification**](skills/text-classification/SKILL.md) | `/text-classification` | LLM-based classification: codebook design, learning regime selection, human-LLM hybrid workflows, validation |
+| [**topic-modeling**](plugin/skills/topic-modeling/SKILL.md) | `/topic-modeling` | STM with metadata covariates, topic count selection via coherence-exclusivity diagnostics, reporting |
+| [**text-classification**](plugin/skills/text-classification/SKILL.md) | `/text-classification` | LLM-based classification: codebook design, learning regime selection, human-LLM hybrid workflows, validation |
 
 ### Writing & Reporting
 
 | Skill | Slash command | What it does |
 |-------|--------------|-------------|
-| [**hypothesis-building**](skills/hypothesis-building/SKILL.md) | `/hypothesis-building` | Falsifiability, counterfactuals, DAGs, FPCI, three-level hypothesis specification, equivalence testing, SESOI |
-| [**narrative-building**](skills/narrative-building/SKILL.md) | `/narrative-building` | Introduction logic, literature reviews, the "Why-to-If-Then" funnel, cumulative framing, multi-experiment coherence |
-| [**pre-registration-writing**](skills/pre-registration-writing/SKILL.md) | `/pre-registration-writing` | PAP structure, registry selection, analytical strategy specification, code pre-registration, deviation documentation |
-| [**methods-reporting**](skills/methods-reporting/SKILL.md) | `/methods-reporting` | 40-item reporting checklist: CONSORT standards, JARS preregistration elements, DA-RT transparency |
+| [**hypothesis-building**](plugin/skills/hypothesis-building/SKILL.md) | `/hypothesis-building` | Falsifiability, counterfactuals, DAGs, FPCI, three-level hypothesis specification, equivalence testing, SESOI |
+| [**narrative-building**](plugin/skills/narrative-building/SKILL.md) | `/narrative-building` | Introduction logic, literature reviews, the "Why-to-If-Then" funnel, cumulative framing, multi-experiment coherence |
+| [**pre-registration-writing**](plugin/skills/pre-registration-writing/SKILL.md) | `/pre-registration-writing` | PAP structure, registry selection, analytical strategy specification, code pre-registration, deviation documentation |
+| [**methods-reporting**](plugin/skills/methods-reporting/SKILL.md) | `/methods-reporting` | 40-item reporting checklist: CONSORT standards, JARS preregistration elements, DA-RT transparency |
 
 ---
 
