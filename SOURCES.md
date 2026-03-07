@@ -83,6 +83,29 @@ Sources specific to LLM-based text classification, codebook design, and annotati
 * **Ornstein, J. T., Blasingame, E. N., & Truscott, J. S.** (2025). "How to Train Your Stochastic Parrot: Large Language Models for Political Texts." *Political Science Research and Methods*, 13, 264-281.
 * **Tornberg, P.** (2025). "Large Language Models Outperform Expert Coders and Supervised Classifiers at Annotating Political Social Media Messages." *Social Science Computer Review*, 43(6), 1181-1195.
 
+## List Experiments
+
+Sources specific to list experiment (item count technique) design, estimation, diagnostics, and validity:
+
+* **Agerberg, M., & Tannenberg, M.** (2021). "Dealing with Measurement Error in List Experiments: Choosing the Right Control List Design." *Research and Politics*, 8(2), 1–8.
+* **Aronow, P. M., Coppock, A., Crawford, F. W., & Green, D. P.** (2015). "Combining List Experiment and Direct Question Estimates of Sensitive Behavior Prevalence." *Journal of Survey Statistics and Methodology*, 3(1), 43–66.
+* **Blair, G., & Imai, K.** (2012). "Statistical Analysis of List Experiments." *Political Analysis*, 20(1), 47–77.
+* **Blair, G., Chou, W., & Imai, K.** (2019). "List Experiments with Measurement Error." *Political Analysis*, 27(4), 455–480.
+* **Blair, G., Chou, W., & Imai, K.** (2025). *list: Statistical Methods for the Item Count Technique and List Experiment* (R package version 9.2.6). CRAN.
+* **Blair, G., Coppock, A., & Moor, M.** (2020). "When to Worry about Sensitivity Bias: A Social Reference Theory and Evidence from 30 Years of List Experiments." *American Political Science Review*, 114(4), 1297–1315.
+* **Corstange, D.** (2009). "Sensitive Questions, Truthful Answers? Modeling the List Experiment with LISTIT." *Political Analysis*, 17(1), 45–63.
+* **Diaz, G.** (2024). "Assessing the Validity of Prevalence Estimates in Double List Experiments." *Journal of Experimental Political Science*, 11(3), 162–174.
+* **Droitcour, J., et al.** (1991). "The Item Count Technique as a Method of Indirect Questioning." In *Measurement Errors in Surveys*, pp. 185–210. Wiley.
+* **Frye, T., Gehlbach, S., Marquardt, K. L., & Reuter, O. J.** (2023). "Is Putin's Popularity (Still) Real?" *Post-Soviet Affairs*, 39(3), 213–222.
+* **Glynn, A. N.** (2013). "What Can We Learn with Statistical Truth Serum? Design and Analysis of the List Experiment." *Public Opinion Quarterly*, 77(S1), 159–172.
+* **Holbrook, A. L., & Krosnick, J. A.** (2010). "Social Desirability Bias in Voter Turnout Reports: Tests Using the Item Count Technique." *Public Opinion Quarterly*, 74(1), 37–67.
+* **Imai, K.** (2011). "Multivariate Regression Analysis for the Item Count Technique." *Journal of the American Statistical Association*, 106(494), 407–416.
+* **Kuhn, P. M., & Vivyan, N.** (2022). "The Misreporting Trade-Off Between List Experiments and Direct Questions in Practice." *Political Analysis*, 30(3), 381–402.
+* **Kuklinski, J. H., Cobb, M. D., & Gilens, M.** (1997). "Racial Attitudes and the 'New South.'" *Journal of Politics*, 59(2), 323–349.
+* **Kuklinski, J. H., et al.** (1997). "Racial Prejudice and Attitudes Toward Affirmative Action." *American Journal of Political Science*, 41(2), 402–419.
+* **Miller, J. D.** (1984). *A New Survey Technique for Studying Deviant Behavior*. Doctoral dissertation, The George Washington University.
+* **Riambau, G., & Ostwald, K.** (2021). "Placebo Statements in List Experiments: Evidence from a Face-to-Face Survey in Singapore." *Political Science Research and Methods*, 9(1), 172–179.
+
 ## Methods Reporting
 
 Sources specific to reporting standards for experimental research:

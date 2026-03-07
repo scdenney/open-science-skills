@@ -1,0 +1,304 @@
+% List Experiment / Item Count Technique — Bibliography
+% Papers extracted from PDFs in this directory + foundational works identified via literature search.
+% Used to inform the .skills/list-experiment.md skill and SOURCES.md.
+
+% -----------------------------------------------------------------------
+% FOUNDATIONAL AND HISTORICAL
+% -----------------------------------------------------------------------
+
+@phdthesis{miller1984,
+  author    = {Miller, Judith Droitcour},
+  title     = {A New Survey Technique for Studying Deviant Behavior},
+  school    = {The George Washington University},
+  year      = {1984},
+  note      = {ProQuest Dissertations, ID 8410488}
+}
+% Summary: The original, unpublished source of the item count technique (ICT), proposing the
+% core design logic: ask respondents only for a count of items they endorse, providing
+% plausible deniability for sensitive items. Cited as the invention point of the method
+% in virtually all subsequent methodological reviews.
+
+@incollection{droitcour1991,
+  author    = {Droitcour, Judith and Caspar, Rachel A. and Hubbard, Michael L. and Parsley, Teresa L. and Visscher, Wendy and Ezzati, Tarani M.},
+  title     = {The Item Count Technique as a Method of Indirect Questioning: A Review of Its Development and a Case Study Application},
+  booktitle = {Measurement Errors in Surveys},
+  editor    = {Biemer, Paul P. and Groves, Robert M. and Lyberg, Lars E. and Mathiowetz, Nancy A. and Sudman, Seymour},
+  pages     = {185--210},
+  publisher = {John Wiley \& Sons},
+  year      = {1991}
+}
+% Summary: First peer-reviewed publication formalizing the ICT. Provides the difference-in-means
+% prevalence estimator, a historical review of Miller's dissertation, and proposes the double
+% list experiment design as a variance-reduction strategy. Cited by Imai (2011) and Blair &
+% Imai (2012) as the canonical published origin of the method.
+
+@article{kuklinski1997a,
+  author    = {Kuklinski, James H. and Cobb, Michael D. and Gilens, Martin},
+  title     = {Racial Attitudes and the ``New South''},
+  journal   = {Journal of Politics},
+  volume    = {59},
+  number    = {2},
+  pages     = {323--349},
+  year      = {1997},
+  doi       = {10.1017/S0022381600053470}
+}
+% Summary: The foundational political science application of the ICT, measuring racial prejudice
+% in the American South and demonstrating that social desirability bias substantially masked
+% prejudice in direct survey questions. Established the standard design template (baseline items
+% + one sensitive item) used by all subsequent political science list experiments.
+
+@article{kuklinski1997b,
+  author    = {Kuklinski, James H. and Sniderman, Paul M. and Knight, Kathleen and Piazza, Thomas and Tetlock, Philip E. and Lawrence, Gordon R. and Mellers, Barbara},
+  title     = {Racial Prejudice and Attitudes Toward Affirmative Action},
+  journal   = {American Journal of Political Science},
+  volume    = {41},
+  number    = {2},
+  pages     = {402--419},
+  year      = {1997},
+  doi       = {10.2307/2111770}
+}
+% Summary: Companion to Kuklinski, Cobb & Gilens (1997a), extending list experiments to policy
+% attitude measurement and showing that the racial gap in affirmative action support is larger
+% than direct questioning reveals. Together the two 1997 papers are treated as the twin origin
+% points of list experiments in political science.
+
+% -----------------------------------------------------------------------
+% STATISTICAL METHODS AND INFERENCE
+% -----------------------------------------------------------------------
+
+@article{corstange2009,
+  author    = {Corstange, Daniel},
+  title     = {Sensitive Questions, Truthful Answers? Modeling the List Experiment with {LISTIT}},
+  journal   = {Political Analysis},
+  volume    = {17},
+  number    = {1},
+  pages     = {45--63},
+  year      = {2009},
+  doi       = {10.1093/pan/mpn013}
+}
+% Summary: Introduces the LISTIT maximum-likelihood estimator for multivariate regression with
+% list experiment data, enabling covariate-adjusted modeling of who holds a sensitive attitude
+% (not just aggregate prevalence). Won the Warren Miller Prize for best article in Political
+% Analysis in 2009. First multivariate estimator for the ICT prior to Imai (2011).
+
+@article{imai2011,
+  author    = {Imai, Kosuke},
+  title     = {Multivariate Regression Analysis for the Item Count Technique},
+  journal   = {Journal of the American Statistical Association},
+  volume    = {106},
+  number    = {494},
+  pages     = {407--416},
+  year      = {2011},
+  doi       = {10.1198/jasa.2011.ap10415}
+}
+% Summary: The definitive statistical treatment of the ICT, proposing nonlinear least squares
+% (NLS) and maximum likelihood (EM algorithm) estimation for multivariate regression with ICT
+% data. Published in the flagship statistics journal, providing formal statistical credibility
+% for the method. Provides the foundation for the `list` R package.
+
+@article{Blair2012,
+  author    = {Graeme Blair and Kosuke Imai},
+  title     = {Statistical Analysis of List Experiments},
+  journal   = {Political Analysis},
+  volume    = {20},
+  number    = {1},
+  pages     = {47--77},
+  year      = {2012},
+  doi       = {10.1093/pan/mpr048}
+}
+% Summary: Blair and Imai develop a comprehensive statistical framework for list experiments,
+% introducing multivariate regression estimators that go beyond the simple difference-in-means
+% approach to allow researchers to identify who is likely to hold the sensitive trait. They
+% also propose formal tests for the key identifying assumptions (no design effect, no floor/
+% ceiling effects) and provide open-source software implementing all proposed methods.
+
+@article{glynn2013,
+  author    = {Glynn, Adam N.},
+  title     = {What Can We Learn with Statistical Truth Serum? {Design} and Analysis of the List Experiment},
+  journal   = {Public Opinion Quarterly},
+  volume    = {77},
+  number    = {S1},
+  pages     = {159--172},
+  year      = {2013},
+  doi       = {10.1093/poq/nfs070}
+}
+% Summary: Design-focused companion to Imai (2011) and Blair & Imai (2012), reaching the survey
+% methodology audience via POQ. Proves that ICT data can support individual-level predicted
+% probabilities (not just aggregate prevalence), presents formal sample size guidelines, and
+% addresses violations of behavioral assumptions with diagnostic tools. Provides formal
+% guidance on the double list experiment.
+
+@article{aronow2015,
+  author    = {Aronow, Peter M. and Coppock, Alexander and Crawford, Forrest W. and Green, Donald P.},
+  title     = {Combining List Experiment and Direct Question Estimates of Sensitive Behavior Prevalence},
+  journal   = {Journal of Survey Statistics and Methodology},
+  volume    = {3},
+  number    = {1},
+  pages     = {43--66},
+  year      = {2015},
+  doi       = {10.1093/jssam/smu023}
+}
+% Summary: Addresses the high-variance problem of list experiments by developing a principled
+% nonparametric estimator that pools ICT and direct question estimates when partial honesty in
+% direct responses is suspected but unconfirmed. Also derives two nonparametric placebo tests
+% for the identifying assumptions, now standard diagnostic tools. Implemented in the `list`
+% R package.
+
+@article{Blair2019,
+  author    = {Graeme Blair and Winston Chou and Kosuke Imai},
+  title     = {List Experiments with Measurement Error},
+  journal   = {Political Analysis},
+  volume    = {27},
+  number    = {4},
+  pages     = {455--480},
+  year      = {2019},
+  doi       = {10.1017/pan.2018.56}
+}
+% Summary: Blair, Chou, and Imai address nonstrategic measurement error in list experiments,
+% demonstrating that the standard maximum likelihood regression (MLreg) estimator is vulnerable
+% to misspecification bias when respondents answer inattentively or randomly, whereas the
+% nonlinear least squares regression (NLSreg) estimator is more robust. They propose new
+% estimators that preserve statistical efficiency while improving robustness, and implement
+% all methods in the open-source R package "list."
+
+% -----------------------------------------------------------------------
+% DESIGN: CONTROL LIST, PLACEBO, AND FLOOR/CEILING
+% -----------------------------------------------------------------------
+
+@article{holbrook2010,
+  author    = {Holbrook, Allyson L. and Krosnick, Jon A.},
+  title     = {Social Desirability Bias in Voter Turnout Reports: {Tests} Using the Item Count Technique},
+  journal   = {Public Opinion Quarterly},
+  volume    = {74},
+  number    = {1},
+  pages     = {37--67},
+  year      = {2010},
+  doi       = {10.1093/poq/nfp065}
+}
+% Summary: Most-cited application of the ICT to voter turnout overreporting, validating list
+% experiment estimates against official electoral records. Shows that mode effects (telephone
+% vs. internet) moderate sensitivity bias, with implications for choosing between ICT and direct
+% questions depending on survey modality.
+
+@article{Riambau2021,
+  author    = {Guillem Riambau and Kai Ostwald},
+  title     = {Placebo Statements in List Experiments: Evidence from a Face-to-Face Survey in Singapore},
+  journal   = {Political Science Research and Methods},
+  volume    = {9},
+  number    = {1},
+  pages     = {172--179},
+  year      = {2021},
+  doi       = {10.1017/psrm.2020.18}
+}
+% Summary: Riambau and Ostwald provide evidence from a large representative face-to-face survey
+% in Singapore that mechanical inflation — where treatment group respondents report more true
+% statements simply due to list length — is a real and substantial problem, concentrated
+% among respondents with low educational attainment. They recommend including a necessarily
+% false placebo statement in the control group to equalize list lengths and protect against
+% this bias, and introduce a "pipe-in" approach for constructing individually tailored
+% placebo statements.
+
+@article{Agerberg2021,
+  author    = {Mattias Agerberg and Marcus Tannenberg},
+  title     = {Dealing with Measurement Error in List Experiments: Choosing the Right Control List Design},
+  journal   = {Research and Politics},
+  volume    = {8},
+  number    = {2},
+  pages     = {1--8},
+  year      = {2021},
+  doi       = {10.1177/20531680211013154}
+}
+% Summary: Agerberg and Tannenberg show theoretically that placebo items — a commonly proposed
+% solution to nonstrategic respondent error — do not generally eliminate the bias they are
+% intended to address and can even increase it. They introduce the "mixed control list" as a
+% third design option and provide researchers with a practical framework for choosing among
+% conventional, placebo, and mixed control list designs to minimize bias given expected
+% prevalence and direction of sensitivity bias.
+
+% -----------------------------------------------------------------------
+% VALIDITY, TRADE-OFFS, AND APPLICATIONS
+% -----------------------------------------------------------------------
+
+@article{Blair2020,
+  author    = {Graeme Blair and Alexander Coppock and Margaret Moor},
+  title     = {When to Worry about Sensitivity Bias: A Social Reference Theory and Evidence from 30 Years of List Experiments},
+  journal   = {American Political Science Review},
+  volume    = {114},
+  number    = {4},
+  pages     = {1297--1315},
+  year      = {2020},
+  doi       = {10.1017/S0003055420000374}
+}
+% Summary: Blair, Coppock, and Moor propose a social reference theory of sensitivity bias that
+% distinguishes when list experiments are likely to reduce bias versus when direct questions
+% may be preferred. They meta-analyze 30 years of published and unpublished list experiments
+% and find that sensitivity biases are typically smaller than 10 percentage points, with
+% considerable heterogeneity across substantive domains including clientelism, racial prejudice,
+% voter turnout, and support for authoritarian regimes.
+
+@article{Kuhn2022,
+  author    = {Patrick M. Kuhn and Nick Vivyan},
+  title     = {The Misreporting Trade-Off Between List Experiments and Direct Questions in Practice: Partition Validation Evidence from Two Countries},
+  journal   = {Political Analysis},
+  volume    = {30},
+  number    = {3},
+  pages     = {381--402},
+  year      = {2022},
+  doi       = {10.1017/pan.2021.10}
+}
+% Summary: Kuhn and Vivyan provide the first empirical assessment of the trade-off between
+% strategic misreporting (reduced by list experiments) and nonstrategic misreporting (increased
+% by list experiments) using list experiments on voter turnout in New Zealand and London, where
+% true turnout status is verifiable via official records. Applying a partition validation
+% method that distinguishes true and false positives and negatives, they find that in both
+% cases list experiments generate substantially more false positives from nonstrategic
+% misreporting than they eliminate false negatives from strategic misreporting.
+
+@article{Diaz2024,
+  author    = {Gustavo Diaz},
+  title     = {Assessing the Validity of Prevalence Estimates in Double List Experiments},
+  journal   = {Journal of Experimental Political Science},
+  volume    = {11},
+  number    = {3},
+  pages     = {162--174},
+  year      = {2024},
+  doi       = {10.1017/XPS.2023.24}
+}
+% Summary: Diaz develops two statistical tests to detect strategic misreporting in double list
+% experiments (DLEs) by exploiting variation in the timing with which the sensitive item is
+% presented to respondents across treatment schedules. The tests leverage carryover design
+% effects to assess whether DLE identification assumptions hold, illustrated with a reanalysis
+% of support for anti-immigration organizations in California.
+
+@article{Frye2023,
+  author    = {Timothy Frye and Scott Gehlbach and Kyle L. Marquardt and Ora John Reuter},
+  title     = {Is Putin's Popularity (Still) Real? A Cautionary Note on Using List Experiments to Measure Popularity in Authoritarian Regimes},
+  journal   = {Post-Soviet Affairs},
+  volume    = {39},
+  number    = {3},
+  pages     = {213--222},
+  year      = {2023},
+  doi       = {10.1080/1060586X.2023.2187195}
+}
+% Summary: Frye, Gehlbach, Marquardt, and Reuter revisit list experiment estimates of Vladimir
+% Putin's popularity using surveys from 2015 and 2020-22, finding that naive list experiment
+% estimates paint an ambiguous portrait that is likely subject to artificial deflation — a
+% downward design bias — rather than preference falsification. They highlight placebo
+% experiments as an essential diagnostic tool for detecting artificial deflation in list
+% experiments measuring support for political figures in authoritarian contexts.
+
+% -----------------------------------------------------------------------
+% SOFTWARE
+% -----------------------------------------------------------------------
+
+@manual{blairlist,
+  author    = {Blair, Graeme and Chou, Winston and Imai, Kosuke},
+  title     = {\texttt{list}: {Statistical} Methods for the Item Count Technique and List Experiment},
+  year      = {2025},
+  note      = {R package version 9.2.6},
+  url       = {https://CRAN.R-project.org/package=list}
+}
+% Summary: Standard R package implementing all major list experiment estimators, including
+% difference-in-means, NLSreg and MLreg multivariate regression (Imai 2011; Blair & Imai 2012),
+% combined direct-question estimators (Aronow et al. 2015), and measurement-error models
+% (Blair et al. 2019). Includes placebo diagnostic tests and Bayesian MCMC hierarchical models.
