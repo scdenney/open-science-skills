@@ -15,8 +15,8 @@
         "name": "Steven Denney",
         "url": "https://github.com/scdenney"
       },
-      "source": ".",
-      "category": "research",
+      "source": "./plugin",
+      "category": "productivity",
       "homepage": "https://github.com/scdenney/open-science-skills"
     }
   ]
