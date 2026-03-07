@@ -33,15 +33,24 @@ Both modes are available when installed as a plugin. Individual skills can also 
 
 ### Option 1 — Plugin (recommended, installs all skills + slash commands)
 
+**Permanent install** (user-wide, persists across all projects):
+
+```bash
+# Step 1: Register the marketplace (one-time)
+claude plugin marketplace add scdenney/open-science-skills
+
+# Step 2: Install the plugin
+claude plugin install open-science-skills
+
+# Project-only install
+claude plugin install open-science-skills --scope project
+```
+
+**Session-only** (no install required, active for the current session):
+
 ```bash
 git clone https://github.com/scdenney/open-science-skills.git
 cd open-science-skills && claude --plugin-dir .
-```
-
-Or install from a path in any project:
-
-```bash
-claude plugin install open-science-skills --plugin-dir /path/to/open-science-skills
 ```
 
 All 11 skills auto-trigger based on your prompts. All 11 slash commands (`/conjoint-design`, `/list-experiment`, etc.) are immediately available.
