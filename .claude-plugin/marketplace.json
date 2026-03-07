@@ -1,0 +1,23 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "open-science-skills",
+  "description": "Claude Code skills for experimental social science methodology",
+  "owner": {
+    "name": "Steven Denney",
+    "url": "https://github.com/scdenney"
+  },
+  "plugins": [
+    {
+      "name": "open-science-skills",
+      "description": "11 skills for experimental social science: conjoint design and diagnostics, survey design, list experiments, cross-national design, topic modeling, LLM text classification, hypothesis building, narrative building, pre-registration, and methods reporting. All skills auto-trigger from context and are available as /skill-name slash commands.",
+      "version": "1.1.0",
+      "author": {
+        "name": "Steven Denney",
+        "url": "https://github.com/scdenney"
+      },
+      "source": ".",
+      "category": "research",
+      "homepage": "https://github.com/scdenney/open-science-skills"
+    }
+  ]
+}
