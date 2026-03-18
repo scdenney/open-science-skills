@@ -34,6 +34,7 @@ description: Specialized logic for designing conjoint and factorial vignette exp
 - **Information Availability, Access, and Processing:** Validate that respondents (1) have *access* to the attribute information (can they see it?), (2) *attend* to it (do they read it?), and (3) *process* it as intended (do they interpret it the way the researcher assumes?). Attention checks and comprehension probes address conditions 1-2; pilot studies and cognitive interviews address condition 3 (Druckman 2022).
 - **Names-as-Cues Warning:** When attributes include proper names, cultural referents, or country names, these may carry unintended associations beyond the dimension of interest. Pilot-test whether respondents associate additional meanings with the selected names or labels.
 - **Pretreatment Mock Vignette:** Consider presenting respondents with a non-experimental practice vignette before the conjoint block to familiarize them with the task format. This reduces learning effects across early tasks.
+- **Repeated Task for IRR Estimation:** At design stage, plan to repeat the first conjoint task at the end of the block with left/right profile order reversed. This provides a direct estimate of intra-respondent reliability (IRR) for measurement error correction (Clayton et al. 2023). Respondents do not notice the repetition. The repeated task costs one additional task per block but enables bias-corrected AMCEs and marginal means via the `projoint` R package. This is a design decision — it cannot be retrofitted after data collection.
 
 ### 4. Estimating Effects
 - **Reference Categories:** Clearly identify the "baseline" or "reference" level for every attribute.
@@ -83,3 +84,4 @@ description: Specialized logic for designing conjoint and factorial vignette exp
 - [ ] **AMCE Distribution:** Is the marginalizing distribution for AMCE interpretation documented, and its correspondence to real-world attribute distributions discussed?
 - [ ] **Heterogeneity Plan:** If respondent-level heterogeneity is of interest, is the detection method (BART/cjbart or pre-specified subgroups) stated, and are results labeled confirmatory or exploratory (Robinson and Duch 2024)?
 - [ ] **Lexicographic Check:** If the theory predicts categorical/veto preferences, are nested marginal means used to test for lexicographic ordering (Dill, Howlett, and Müller-Crepon 2024)?
+- [ ] **IRR/Repeated Task:** Is a repeated task included at design stage for intra-respondent reliability estimation and measurement error correction (Clayton et al. 2023)?
