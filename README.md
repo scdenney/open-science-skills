@@ -1,9 +1,9 @@
 # Open Science Skills
 
-![skills](https://img.shields.io/badge/skills-11-blue)
+![skills](https://img.shields.io/badge/skills-12-blue)
 ![plugin](https://img.shields.io/badge/Claude%20Code-plugin-orange)
 ![updated](https://img.shields.io/badge/updated-Mar%202026-green)
-![sources](https://img.shields.io/badge/sources-65%2B-purple)
+![sources](https://img.shields.io/badge/sources-75%2B-purple)
 ![PRs welcome](https://img.shields.io/badge/PRs-welcome-brightgreen)
 
 A library of [Claude Code skills](https://docs.anthropic.com/en/docs/claude-code/skills) for experimental social science. Install as a plugin to get methodologically rigorous AI assistance — from hypothesis generation through final reporting — available both as auto-triggered context and as explicit `/skill-name` slash commands.
@@ -12,7 +12,7 @@ Skills were developed using a curated library of methodology texts, with machine
 
 Design follows the [Anthropic Skill Creator Guide](https://github.com/anthropics/skills/blob/main/skills/skill-creator/SKILL.md): concise procedural guidance (no textbook definitions), trigger-rich YAML descriptions for auto-invocation, and progressive disclosure (instructions in skills, bibliography in SOURCES.md).
 
-> These skills support, not supplant, the research and writing process. They adhere to APSA, JARS, and DA-RT reporting standards. All guidance is grounded in 65+ published sources — see [**SOURCES.md**](SOURCES.md) for the full bibliography.
+> These skills support, not supplant, the research and writing process. They adhere to APSA, JARS, and DA-RT reporting standards. All guidance is grounded in 75+ published sources — see [**SOURCES.md**](SOURCES.md) for the full bibliography.
 
 ---
 
@@ -53,7 +53,7 @@ git clone https://github.com/scdenney/open-science-skills.git
 cd open-science-skills && claude --plugin-dir ./plugin
 ```
 
-All 11 skills auto-trigger based on your prompts. All 11 slash commands (`/conjoint-design`, `/list-experiment`, etc.) are immediately available.
+All 12 skills auto-trigger based on your prompts. All 12 slash commands (`/conjoint-design`, `/list-experiment`, etc.) are immediately available.
 
 ### Option 2 — Selective install (choose specific skills, auto-trigger only)
 
@@ -108,6 +108,7 @@ cp open-science-skills/plugin/skills/list-experiment/SKILL.md \
 |-------|--------------|-------------|
 | [**conjoint-design**](plugin/skills/conjoint-design/SKILL.md) | `/conjoint-design` | Attribute architecture, AMCE/AMIE estimation, power analysis (`cjpowR`), BART heterogeneity detection, design variants |
 | [**conjoint-diagnostics**](plugin/skills/conjoint-diagnostics/SKILL.md) | `/conjoint-diagnostics` | Diagnostic checklist: design, estimation, measurement error (IRR), external validity, interpretation |
+| [**conjoint-cleaning**](plugin/skills/conjoint-cleaning/SKILL.md) | `/conjoint-cleaning` | Qualtrics export to analysis-ready format: column conventions, reshaping, choice mapping, translation, pilot detection, validation |
 | [**survey-design**](plugin/skills/survey-design/SKILL.md) | `/survey-design` | Question construction, scale design, survey flow, pretesting, respondent burden, social desirability mitigation |
 | [**cross-national-design**](plugin/skills/cross-national-design/SKILL.md) | `/cross-national-design` | Cross-national survey experiments: per-country power, sensitivity bias auditing, instrument localization |
 | [**list-experiment**](plugin/skills/list-experiment/SKILL.md) | `/list-experiment` | Item count technique: pre-design sensitivity assessment, control list design, NLSreg/MLreg estimation, assumption testing, placebo diagnostics |
@@ -134,6 +135,8 @@ cp open-science-skills/plugin/skills/list-experiment/SKILL.md \
 
 ```
 /conjoint-design I'm deciding between 4 and 6 attributes — what are the trade-offs?
+
+/conjoint-cleaning I have a Qualtrics export with custom JS embedded data — help me reshape it for cregg
 
 /list-experiment is a list experiment appropriate for measuring social desirability bias on this topic?
 
