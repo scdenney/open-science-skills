@@ -36,6 +36,18 @@ Sources specific to conjoint experiment methodology, estimation, and diagnostics
 * **Robinson, T. S., & Duch, R. M.** (2024). "How to Detect Heterogeneity in Conjoint Experiments." *The Journal of Politics*, 86(2), 412–427.
 * **Stefanelli, A., & Lukac, M.** (2020). "Subjects, Trials, and Levels: Statistical Power in Conjoint Experiments." *SocArXiv*.
 
+## Conjoint Data Cleaning
+
+Sources specific to conjoint data preparation, Qualtrics export handling, and R package workflows:
+
+* **Graham, M. H.** (2020). "Programming Choice Experiments in Qualtrics." Resource guide. Available at m-graham.com.
+* **Heiss, A.** (2023). "The Ultimate Practical Guide to Conjoint Analysis with R." Blog post. andrewheiss.com.
+* **Horiuchi, Y.** (2024). *cjdata: Read and Wrangle Conjoint Survey Data* (R package). GitHub: yhoriuchi/cjdata.
+* **Horiuchi, Y., Markovich, Z., & Yamamoto, T.** (2024). *projoint: An R Package for Conjoint Analysis with Measurement Error Correction* (R package). CRAN.
+* **Leeper, T. J.** (2020). *cregg: Simple Conjoint Tidying, Analysis, and Visualization* (R package). CRAN.
+* **Strezhnev, A.** (2020). *Conjoint Survey Design Tool* (software). GitHub: astrezhnev/conjointsdt.
+* **Strezhnev, A., Hainmueller, J., Hopkins, D. J., & Yamamoto, T.** (2020). *cjoint: AMCE Estimator for Conjoint Experiments* (R package). CRAN.
+
 ## Survey Design
 
 Sources specific to survey instrument design, question construction, and respondent measurement:
