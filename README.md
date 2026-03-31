@@ -6,13 +6,13 @@
 ![sources](https://img.shields.io/badge/sources-90%2B-purple)
 ![PRs welcome](https://img.shields.io/badge/PRs-welcome-brightgreen)
 
-A library of [Claude Code skills](https://code.claude.com/docs/en/skills) for experimental social science. Install as a plugin to get methodologically rigorous AI assistance — from hypothesis generation through final reporting — available both as auto-triggered context and as explicit `/skill-name` slash commands.
+A library of [Claude Code skills](https://code.claude.com/docs/en/skills) for experimental social science and computational text analsyis. Install as a plugin to get AI assistance, from hypothesis generation through final reporting . The skills are available both as auto-triggered context and as explicit `/skill-name` slash commands.
 
-Skills were developed using a curated library of methodology texts, with machine assistance from Gemini 3.0 and Opus 4.6. They are iteratively expanded as new sources are incorporated. This is a living and breathing kind of repo.
+Skills were developed using a curated library of methodology texts. They are iteratively expanded as new sources, ideas, and skills are incorporated. This is a living and breathing kind of repo. Skill building and editing is author-driven with the help of Opus 4.6, Gemini 3.0, and Chat GPT 5.4.
 
 Design follows Anthropic's [skill authoring best practices](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices): concise procedural guidance (no textbook definitions), trigger-rich YAML descriptions for auto-invocation, and progressive disclosure (instructions in skills, bibliography in SOURCES.md).
 
-> These skills support, not supplant, the research and writing process. They adhere to APSA, JARS, and DA-RT reporting standards. All guidance is grounded in 75+ published sources — see [**SOURCES.md**](SOURCES.md) for the full bibliography.
+> These skills are meant to support, not supplant, the research and writing process. They adhere to APSA, JARS, and DA-RT reporting standards. All guidance is grounded in 90+ published sources — see [**SOURCES.md**](SOURCES.md) for the full bibliography.
 
 ---
 
