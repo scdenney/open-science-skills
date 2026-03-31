@@ -1,6 +1,6 @@
 # Open Science Skills
 
-![skills](https://img.shields.io/badge/skills-12-blue)
+![skills](https://img.shields.io/badge/skills-13-blue)
 ![plugin](https://img.shields.io/badge/Claude%20Code-plugin-orange)
 ![updated](https://img.shields.io/badge/updated-Mar%202026-green)
 ![sources](https://img.shields.io/badge/sources-75%2B-purple)
@@ -53,7 +53,7 @@ git clone https://github.com/scdenney/open-science-skills.git
 cd open-science-skills && claude --plugin-dir ./plugin
 ```
 
-All 12 skills auto-trigger based on your prompts. All 12 slash commands (`/conjoint-design`, `/list-experiment`, etc.) are immediately available.
+All 13 skills auto-trigger based on your prompts. All 13 slash commands (`/conjoint-design`, `/list-experiment`, etc.) are immediately available.
 
 ### Option 2 — Selective install (choose specific skills, auto-trigger only)
 
@@ -119,6 +119,7 @@ cp open-science-skills/plugin/skills/list-experiment/SKILL.md \
 |-------|--------------|-------------|
 | [**topic-modeling**](plugin/skills/topic-modeling/SKILL.md) | `/topic-modeling` | STM with metadata covariates, topic count selection via coherence-exclusivity diagnostics, reporting |
 | [**text-classification**](plugin/skills/text-classification/SKILL.md) | `/text-classification` | LLM-based classification: codebook design, learning regime selection, human-LLM hybrid workflows, validation |
+| [**paper-review**](plugin/skills/paper-review/SKILL.md) | `/paper-review` | Pre-submission audit: parallel agent swarm for content, numbers, references, DOIs, writing, formatting, and replication archive review |
 
 ### Writing & Reporting
 
@@ -149,6 +150,8 @@ cp open-science-skills/plugin/skills/list-experiment/SKILL.md \
 /pre-registration-writing draft the analytical strategy section for my PAP
 
 /methods-reporting run a reporting checklist on my methods section [paste text]
+
+/paper-review run a full pre-submission audit before I send this to the journal
 ```
 
 ---
