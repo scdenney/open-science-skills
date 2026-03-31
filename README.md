@@ -10,7 +10,7 @@ A library of [Claude Code skills](https://code.claude.com/docs/en/skills) for ex
 
 Skills were developed using a curated library of methodology texts. They are iteratively expanded as new sources, ideas, and skills are incorporated. This is a living and breathing kind of repo. Skill building and editing is author-driven with the help of Opus 4.6, Gemini 3.0, and Chat GPT 5.4.
 
-Design follows Anthropic's [skill authoring best practices](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices): concise procedural guidance (no textbook definitions), trigger-rich YAML descriptions for auto-invocation, and progressive disclosure (instructions in skills, bibliography in SOURCES.md).
+Design follows Anthropic's [skill authoring best practices](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices): concise procedural guidance (no textbook definitions), trigger-rich YAML descriptions for auto-invocation, and progressive disclosure (instructions in skills, bibliography in SOURCES.md). Skills are periodically audited against both the [Claude Code skills reference](https://code.claude.com/docs/en/skills) and the [skill authoring guide](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices) to keep descriptions, frontmatter, and substantive content current.
 
 > These skills are meant to support, not supplant, the research and writing process. They adhere to APSA, JARS, and DA-RT reporting standards. All guidance is grounded in 90+ published sources — see [**SOURCES.md**](SOURCES.md) for the full bibliography.
 
