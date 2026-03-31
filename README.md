@@ -132,30 +132,6 @@ cp open-science-skills/plugin/skills/list-experiment/SKILL.md \
 
 ---
 
-## Slash Command Examples
-
-```
-/conjoint-design I'm deciding between 4 and 6 attributes — what are the trade-offs?
-
-/conjoint-cleaning I have a Qualtrics export with custom JS embedded data — help me reshape it for cregg
-
-/list-experiment is a list experiment appropriate for measuring social desirability bias on this topic?
-
-/survey-design review this draft question for leading language and double-barreling
-
-/text-classification I have 5,000 open-text responses — should I use zero-shot or few-shot classification?
-
-/hypothesis-building help me sharpen this hypothesis and identify testable observable implications
-
-/pre-registration-writing draft the analytical strategy section for my PAP
-
-/methods-reporting run a reporting checklist on my methods section [paste text]
-
-/paper-review run a full pre-submission audit before I send this to the journal
-```
-
----
-
 ## Contributing
 
 PRs welcome. To add a new skill:
