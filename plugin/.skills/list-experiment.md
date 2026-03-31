@@ -1,6 +1,7 @@
 ---
 name: list-experiment
 description: Guides design, estimation, and diagnostics for list experiments (item count technique, ICT). Use when (1) deciding whether a list experiment is warranted for a sensitive question, (2) designing the control list or choosing baseline items, (3) selecting between design variants (single, double, placebo), (4) choosing an estimator (difference-in-means, multivariate NLSreg/MLreg, combined), (5) testing the identifying assumptions (no design effect, no floor/ceiling), (6) assessing or diagnosing mechanical inflation or artificial deflation, or (7) interpreting list experiment results in relation to direct question estimates. Covers the full pipeline from pre-design sensitivity assessment through statistical inference and power analysis.
+argument-hint: "[describe your sensitive question or list experiment design]"
 ---
 
 # List Experiment Designer
@@ -12,7 +13,7 @@ description: Guides design, estimation, and diagnostics for list experiments (it
 - **Assess sensitivity bias first:** Before committing to a list experiment, consult domain-specific evidence on sensitivity bias. Blair, Coppock, and Moor's (2020) meta-analysis of 30 years of list experiments shows that sensitivity biases are typically smaller than 10 percentage points. A list experiment is not automatically the right choice for any sensitive topic.
 - **Social reference theory:** Sensitivity bias is largest when (a) the social norm on the topic is strong, (b) the norm is clear and widely shared, and (c) respondents believe others can infer their true attitude from their response (Blair et al. 2020). Evaluate all three conditions before deciding.
 - **Precision cost:** List experiments require approximately 10 times more respondents than a direct question to achieve equivalent precision. The trade-off is only favorable when the expected sensitivity bias exceeds the precision loss (Blair et al. 2020). If the topic is sensitive but the expected bias is small (< 5pp), a direct question with neutral framing is often preferable.
-- **Empirical benchmarks by domain:** Voter turnout (~5–15pp overreport), clientelism and vote-buying (~5–15pp underreport), racial prejudice (~10–20pp underreport), authoritarian regime support (highly context-dependent and often dominated by artificial deflation rather than preference falsification). Use these as priors when no domain-specific estimates exist.
+- **Empirical benchmarks by domain:** Voter turnout (~5–15pp overreport, wide confidence intervals), clientelism and vote-buying (~5–15pp underreport), racial prejudice (near-zero sensitivity bias — Blair et al. 2020 find little evidence respondents conceal prejudice on direct questions), authoritarian regime support (highly context-dependent and often dominated by artificial deflation rather than preference falsification). Use these as priors when no domain-specific estimates exist.
 
 ### 2. Basic Design
 
@@ -48,8 +49,8 @@ description: Guides design, estimation, and diagnostics for list experiments (it
 
 ### 6. Identifying Assumptions and Diagnostics
 
-- **No design effect (NDE):** Respondents answer the control items identically regardless of whether the sensitive item is present in their list. Violation means the presence of the sensitive item changes responses to other items (e.g., emotional or cognitive spillover). Test formally using the likelihood ratio test implemented in Blair & Imai's (2012) `list` package (`design.effect()` function).
-- **No floor/ceiling (NFC):** No respondent who endorses the sensitive item would endorse 0 of the control items (floor) or all N of the control items (ceiling) if they were in the treatment group. Ceiling effects cause artificial deflation — treatment respondents who hold the sensitive attitude cannot truthfully report N+1 and instead undercount. Test using the `floor.ceiling()` function in the `list` package.
+- **No design effect (NDE):** Respondents answer the control items identically regardless of whether the sensitive item is present in their list. Violation means the presence of the sensitive item changes responses to other items (e.g., emotional or cognitive spillover). Test formally using `ict.test()` in Blair & Imai's (2012) `list` package.
+- **No floor/ceiling (NFC):** No respondent who endorses the sensitive item would endorse 0 of the control items (floor) or all N of the control items (ceiling) if they were in the treatment group. Ceiling effects cause artificial deflation — treatment respondents who hold the sensitive attitude cannot truthfully report N+1 and instead undercount. Assess by examining response distributions at the extremes and using ceiling/floor liar model options within `ictreg()`.
 - **Placebo diagnostics:** Include a placebo experiment — a list experiment on a non-sensitive topic where the true prevalence is known — as an additional diagnostic (Frye et al. 2023). Significant artificial deflation on a placebo topic indicates systematic design problems, not preference falsification. Especially important in authoritarian contexts where ceiling effects on regime support items are common.
 - **Nonstrategic error diagnostics:** Test whether the variance of responses in the treatment group is substantially higher than in the control group. Inflated treatment variance relative to control may indicate inattentive responding producing noise (Blair et al. 2019). If detected, switch to NLSreg and consider including placebo items.
 

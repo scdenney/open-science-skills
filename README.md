@@ -3,14 +3,14 @@
 ![skills](https://img.shields.io/badge/skills-13-blue)
 ![plugin](https://img.shields.io/badge/Claude%20Code-plugin-orange)
 ![updated](https://img.shields.io/badge/updated-Mar%202026-green)
-![sources](https://img.shields.io/badge/sources-75%2B-purple)
+![sources](https://img.shields.io/badge/sources-90%2B-purple)
 ![PRs welcome](https://img.shields.io/badge/PRs-welcome-brightgreen)
 
-A library of [Claude Code skills](https://docs.anthropic.com/en/docs/claude-code/skills) for experimental social science. Install as a plugin to get methodologically rigorous AI assistance — from hypothesis generation through final reporting — available both as auto-triggered context and as explicit `/skill-name` slash commands.
+A library of [Claude Code skills](https://code.claude.com/docs/en/skills) for experimental social science. Install as a plugin to get methodologically rigorous AI assistance — from hypothesis generation through final reporting — available both as auto-triggered context and as explicit `/skill-name` slash commands.
 
 Skills were developed using a curated library of methodology texts, with machine assistance from Gemini 3.0 and Opus 4.6. They are iteratively expanded as new sources are incorporated. This is a living and breathing kind of repo.
 
-Design follows the [Anthropic Skill Creator Guide](https://github.com/anthropics/skills/blob/main/skills/skill-creator/SKILL.md): concise procedural guidance (no textbook definitions), trigger-rich YAML descriptions for auto-invocation, and progressive disclosure (instructions in skills, bibliography in SOURCES.md).
+Design follows Anthropic's [skill authoring best practices](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices): concise procedural guidance (no textbook definitions), trigger-rich YAML descriptions for auto-invocation, and progressive disclosure (instructions in skills, bibliography in SOURCES.md).
 
 > These skills support, not supplant, the research and writing process. They adhere to APSA, JARS, and DA-RT reporting standards. All guidance is grounded in 75+ published sources — see [**SOURCES.md**](SOURCES.md) for the full bibliography.
 
@@ -160,7 +160,7 @@ cp open-science-skills/plugin/skills/list-experiment/SKILL.md \
 
 PRs welcome. To add a new skill:
 
-1. Create `skills/<name>/SKILL.md` following the [Anthropic Skill Creator Guide](https://github.com/anthropics/skills/blob/main/skills/skill-creator/SKILL.md)
+1. Create `skills/<name>/SKILL.md` following the [skill authoring best practices](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices)
 2. Copy to `.skills/<name>.md` (flat format for direct project use)
 3. Add `commands/<name>.md` (see existing examples — one paragraph activation prompt + `$ARGUMENTS`)
 4. Add sources to `SOURCES.md` under a new or existing section

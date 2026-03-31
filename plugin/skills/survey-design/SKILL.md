@@ -1,6 +1,7 @@
 ---
 name: survey-design
 description: Guides the design of survey instruments for experimental social science. Use when (1) writing survey questions or constructing response scales, (2) organizing survey flow and block ordering, (3) designing treatment delivery within a survey, (4) planning pretesting or cognitive interviews, (5) managing respondent burden and survey length, (6) mitigating social desirability bias in sensitive questions, or (7) choosing between direct and indirect measurement. Covers question wording, scale construction, ordering effects, attention checks, and treatment-outcome separation.
+argument-hint: "[describe your survey question or design challenge]"
 ---
 
 # Survey Instrument Designer

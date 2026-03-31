@@ -1,6 +1,7 @@
 ---
 name: conjoint-design
 description: Specialized logic for designing conjoint and factorial vignette experiments. Use when (1) designing a new conjoint experiment, (2) selecting and structuring attributes and levels, (3) conducting a conjoint power analysis, (4) choosing between design variants (paired-choice, rating, factorial vignette), (5) writing conjoint regression specifications, or (6) drafting the conjoint portion of a pre-analysis plan. Covers attribute architecture, AMCE/MM estimation, interaction effects, power formulas, treatment validation, and design variants.
+argument-hint: "[describe your design question or paste attribute table]"
 ---
 
 # Conjoint Design Expert

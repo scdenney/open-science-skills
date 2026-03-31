@@ -8,11 +8,13 @@ The instructions within these skills are drawn from the following sources, organ
 
 Broad experimental and survey methodology:
 
+* **Aronson, E., & Carlsmith, J. M.** (1968). "Experimentation in Social Psychology." In G. Lindzey & E. Aronson (Eds.), *The Handbook of Social Psychology* (Vol. 2). Addison-Wesley.
 * **Berinsky, A. J.** (2017). "Measuring Public Opinion with Surveys." *Annual Review of Political Science*.
 * **Blair, G., Coppock, A., & Moor, M.** (2020). "When to Worry about Sensitivity Bias: A Social Reference Theory and Evidence from 30 Years of List Experiments." *American Political Science Review*.
 * **Christensen, G., Freese, J., & Miguel, E.** (2019). *Transparent and Reproducible Social Science Research: How to Do Open Science*. University of California Press.
 * **Druckman, J. N.** (2022). *Experimental Thinking: A Primer on Social Science Experiments*. Cambridge University Press.
 * **Druckman, J. N., & Green, D. P.** (Eds.). (2021). *Advances in Experimental Political Science*. Cambridge University Press.
+* **Gelman, A., & Carlin, J.** (2014). "Beyond Power Calculations: Assessing Type S (Sign) and Type M (Magnitude) Errors." *Perspectives on Psychological Science*, 9(6), 641–651.
 * **Huntington-Klein, N.** (2025). *The Effect: An Introduction to Research Design and Causality*. CRC Press.
 * **Lakens, D.** (2025). *Improving Your Statistical Inferences*.
 * **Mutz, D. C.** (2011). *Population-Based Survey Experiments*. Princeton University Press.
@@ -24,17 +26,30 @@ Broad experimental and survey methodology:
 Sources specific to conjoint experiment methodology, estimation, and diagnostics:
 
 * **Abramson, S. F., Kocak, K., & Magazinnik, A.** (2022). "What Do We Learn about Voter Preferences from Conjoint Experiments?" *American Journal of Political Science*, 66(4), 1008–1020.
+* **Auspurg, K., & Hinz, T.** (2015). *Factorial Survey Experiments*. SAGE Publications.
+* **Bansak, K., Hainmueller, J., Hopkins, D. J., & Yamamoto, T.** (2018). "The Number of Choice Tasks and Survey Satisficing in Conjoint Experiments." *Political Analysis*, 26(1), 112–119.
+* **Bansak, K., Hainmueller, J., Hopkins, D. J., & Yamamoto, T.** (2021). "Beyond the Breaking Point? Survey Satisficing in Conjoint Experiments." *Political Science Research and Methods*, 9(1), 53–71.
 * **Bansak, K., Hainmueller, J., Hopkins, D. J., & Yamamoto, T.** (2021). "Conjoint Survey Experiments." In *Advances in Experimental Political Science*, Cambridge University Press.
+* **Bansak, K., Hainmueller, J., Hopkins, D. J., & Yamamoto, T.** (2023). "Using Conjoint Experiments to Analyze Election Outcomes: The Essential Role of the Average Marginal Component Effect." *Political Analysis*, 31(4), 500–518.
 * **Bansak, K., & Jenke, L.** (2025). "Odd Profiles in Conjoint Experimental Designs." *Political Analysis*.
 * **Clayton, K., Horiuchi, Y., Kaufman, A. R., King, G., & Komisarchik, M.** (2023). "Correcting Measurement Error Bias in Conjoint Survey Experiments." *American Journal of Political Science*.
 * **De la Cuesta, B., Egami, N., & Imai, K.** (2022). "Improving the External Validity of Conjoint Analysis: The Essential Role of Profile Distribution." *Political Analysis*, 30(1), 19–45.
 * **Dill, J., Howlett, M., & Müller-Crepon, C.** (2024). "At Any Cost: How Ukrainians Think about Self-Defense against Russia." *American Journal of Political Science*, 68(4), 1460–1478.
 * **Egami, N., & Imai, K.** (2019). "Causal Interaction in Factorial Experiments: Application to Conjoint Analysis." *Journal of the American Statistical Association*, 114(526), 529–540.
-* **Freitag, M.** (2021). *cjpowR: A Package for Power Analysis for Conjoint Experiments* (R package).
+* **Fu, J., & Li, X.** (2024). "Generalization Issues in Conjoint Experiment: Attention and Salience." *arXiv* preprint arXiv:2405.06779.
+* **Goplerud, M., Imai, K., & Pashley, N. E.** (2025). "Estimating Heterogeneous Causal Effects of High-Dimensional Treatments: Application to Conjoint Analysis." *Annals of Applied Statistics*, 19(2), 866–888.
+* **Hainmueller, J., Hopkins, D. J., & Yamamoto, T.** (2014). "Causal Inference in Conjoint Analysis: Understanding Multidimensional Choices via Stated Preference Experiments." *Political Analysis*, 22(1), 1–30.
+* **Hainmueller, J., Hangartner, D., & Yamamoto, T.** (2015). "Validating Vignette and Conjoint Survey Experiments against Real-World Behavior." *Proceedings of the National Academy of Sciences*, 112(8), 2395–2400.
+* **Ham, D. W., Imai, K., & Janson, L.** (2024). "Using Machine Learning to Test Causal Hypotheses in Conjoint Analysis." *Political Analysis*, 32(2), 1–16.
+* **Miller, D. R., & Ziegler, J.** (2024). "Preferential Abstention in Conjoint Experiments." *Research and Politics*, 11(4).
+* **Schuessler, J., & Freitag, M.** (2020). "Power Analysis for Conjoint Experiments." *SocArXiv*.
+* **Schuessler, J., & Freitag, M.** (2021). *cjpowR: A Package for Power Analysis for Conjoint Experiments* (R package). GitHub: m-freitag/cjpowR.
 * **Leeper, T. J., Hobolt, S. B., & Tilley, J.** (2020). "Measuring Subgroup Preferences in Conjoint Experiments." *Political Analysis*, 28(2), 207–221.
 * **Liu, Y., & Shiraito, Y.** (2023). "Multiple Hypothesis Testing in Conjoint Analysis." *Political Analysis*, 31(3), 380–395.
 * **Robinson, T. S., & Duch, R. M.** (2024). "How to Detect Heterogeneity in Conjoint Experiments." *The Journal of Politics*, 86(2), 412–427.
 * **Stefanelli, A., & Lukac, M.** (2020). "Subjects, Trials, and Levels: Statistical Power in Conjoint Experiments." *SocArXiv*.
+* **Treger, C.** (2025). "Changing the Lens: The Contingency of Results from Conjoint Experiments on the Outcome Variable and the Estimand." *Research and Politics*.
+* **Visconti, G., & Yang, D.** (2024). "The Limitations of Using Forced Choice in Electoral Conjoint Experiments." Working paper.
 
 ## Conjoint Data Cleaning
 
@@ -53,6 +68,7 @@ Sources specific to conjoint data preparation, Qualtrics export handling, and R 
 Sources specific to survey instrument design, question construction, and respondent measurement:
 
 * **Blair, G., Coppock, A., & Moor, M.** (2020). "When to Worry about Sensitivity Bias: A Social Reference Theory and Evidence from 30 Years of List Experiments." *American Political Science Review*.
+* **Merolla, J., Ramakrishnan, S. K., & Haynes, C.** (2013). "'Illegal,' 'Undocumented,' or 'Unauthorized': Equivalency Frames, Issue Frames, and Public Opinion on Immigration." *Perspectives on Politics*, 11(3).
 * **Mutz, D. C.** (2011). *Population-Based Survey Experiments*. Princeton University Press.
 * **Sniderman, P. M.** (2018). "Some Advances in the Design of Survey Experiments." *Annual Review of Political Science*.
 * **Stantcheva, S.** (2023). "How to Run Surveys: A Guide to Creating Your Own Identifying Variation." *Annual Review of Economics*.
@@ -83,8 +99,8 @@ Sources specific to topic model selection, estimation, diagnostics, and interpre
 
 Sources specific to LLM-based text classification, codebook design, and annotation workflows:
 
-* **Barrie, C., Palmer, A., & Spirling, A.** (2025). "Replication for Language Models: Problems, Principles, and Best Practices for Political Science."
-* **Benoit, K., De Marchi, S., Laver, C., Laver, M., & Ma, J.** (2025). "Using Large Language Models to Analyze Political Texts Through Natural Language Understanding."
+* **Barrie, C., Palmer, A., & Spirling, A.** (2025). "Replication for Language Models: Problems, Principles, and Best Practices for Political Science." Working paper (R&R).
+* **Benoit, K., De Marchi, S., Laver, C., Laver, M., & Ma, J.** (2025). "Using Large Language Models to Analyze Political Texts Through Natural Language Understanding." *American Journal of Political Science*.
 * **Chae, Y., & Davidson, T.** (2025). "Large Language Models for Text Classification: From Zero-Shot Learning to Instruction-Tuning." *Sociological Methods & Research*.
 * **Geer, J. G.** (1988). "What Do Open-Ended Questions Measure?" *Public Opinion Quarterly*, 52(3), 365–371.
 * **Glazier, R. A., Boydstun, A. E., & Feezell, J. T.** (2021). "Self-coding: A Method to Assess Semantic Validity and Bias When Coding Open-Ended Responses." *Research and Politics*.
@@ -106,7 +122,7 @@ Sources specific to list experiment (item count technique) design, estimation, d
 * **Blair, G., Chou, W., & Imai, K.** (2025). *list: Statistical Methods for the Item Count Technique and List Experiment* (R package version 9.2.6). CRAN.
 * **Blair, G., Coppock, A., & Moor, M.** (2020). "When to Worry about Sensitivity Bias: A Social Reference Theory and Evidence from 30 Years of List Experiments." *American Political Science Review*, 114(4), 1297–1315.
 * **Corstange, D.** (2009). "Sensitive Questions, Truthful Answers? Modeling the List Experiment with LISTIT." *Political Analysis*, 17(1), 45–63.
-* **Diaz, G.** (2024). "Assessing the Validity of Prevalence Estimates in Double List Experiments." *Journal of Experimental Political Science*, 11(3), 162–174.
+* **Diaz, G.** (2024). "Assessing the Validity of Prevalence Estimates in Double List Experiments." *Journal of Experimental Political Science*, 11(2), 162–174.
 * **Droitcour, J., et al.** (1991). "The Item Count Technique as a Method of Indirect Questioning." In *Measurement Errors in Surveys*, pp. 185–210. Wiley.
 * **Frye, T., Gehlbach, S., Marquardt, K. L., & Reuter, O. J.** (2023). "Is Putin's Popularity (Still) Real?" *Post-Soviet Affairs*, 39(3), 213–222.
 * **Glynn, A. N.** (2013). "What Can We Learn with Statistical Truth Serum? Design and Analysis of the List Experiment." *Public Opinion Quarterly*, 77(S1), 159–172.
@@ -122,4 +138,7 @@ Sources specific to list experiment (item count technique) design, estimation, d
 
 Sources specific to reporting standards for experimental research:
 
+* **Gelman, A., & Loken, E.** (2014). "The Statistical Crisis in Science." *American Scientist*, 102(6), 460–465.
 * **Gerber, A. S., et al.** (2014). "Reporting Guidelines for Experimental Research." *Journal of Experimental Political Science*.
+* **Waldron, T., & Allen, P.** (2022). "Not All Pre-Registrations Are Equal." *Neuropsychopharmacology*.
+* **Wicherts, J. M., Veldkamp, C. L. S., Augusteijn, H. E. M., Bakker, M., van Aert, R. C. M., & van Assen, M. A. L. M.** (2016). "Degrees of Freedom in Planning, Running, Analyzing, and Reporting Psychological Studies: A Checklist to Avoid p-Hacking." *Frontiers in Psychology*, 7, 1832.

@@ -1,6 +1,7 @@
 ---
 name: methods-reporting
 description: Implements high-transparency reporting standards for experimental social science. Use when (1) drafting or auditing a methods section, (2) preparing a pre-analysis plan or pre-registration, (3) documenting a conjoint or factorial vignette design, (4) building a CONSORT sample flow, or (5) ensuring compliance with APSA Experimental Section, JARS, and DA-RT standards. Includes a 45-item mandatory checklist.
+argument-hint: "[paste your methods section or describe what to audit]"
 ---
 
 # Transparent Methods Reporter
@@ -87,7 +88,7 @@ This section applies when the experiment uses a conjoint or factorial vignette d
 - **During-Collection Documentation:** Maintain session logs, variable creation decisions, case selection decisions, and analytic code version control throughout data collection -- not only after (Druckman 2022, Ch. 5).
 - **IRB and Ethics:** Report IRB approval details. For audit studies or studies involving deception, note the specific ethical provisions. Begin the IRB process early -- it can take weeks or months (Druckman 2022).
 
-## Mandatory Checklist
+## Quality Checks
 
 ### Core Reporting (Items 1--19)
 - [ ] 1. Eligibility criteria for participants reported?

@@ -1,14 +1,7 @@
 ---
 name: topic-modeling
-description: |
-  Use when:
-  1. Selecting a topic model for open-ended survey responses or text corpora
-  2. Specifying a Structural Topic Model (STM) with metadata covariates
-  3. Choosing the number of topics and evaluating model diagnostics
-  4. Interpreting topic content and estimating covariate effects on prevalence
-  5. Preprocessing text data for topic modeling (tokenization, stemming, stopword removal)
-  6. Validating topic model output against experimental conditions or treatment groups
-  7. Reporting topic modeling results in a methods or results section
+description: Guides structural topic model (STM) specification for survey and experimental text data. Covers model selection, preprocessing, topic count diagnostics, covariate effects on prevalence, and reporting. Use when (1) selecting a topic model for open-ended survey responses or text corpora, (2) specifying an STM with metadata covariates, (3) choosing the number of topics and evaluating diagnostics, (4) interpreting topic content and estimating covariate effects, (5) preprocessing text data for topic modeling, (6) validating output against treatment groups, or (7) reporting topic modeling results.
+argument-hint: "[describe your corpus and research question]"
 ---
 
 # Topic Modeling for Survey and Experimental Text Data

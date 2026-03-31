@@ -1,14 +1,8 @@
 ---
 name: paper-review
-description: |
-  Use when:
-  1. Preparing a manuscript for journal submission and need a comprehensive pre-submission audit
-  2. Checking internal consistency of numbers across abstract, body, tables, and supplementary information
-  3. Auditing a bibliography for missing DOIs, uncited entries, stale working papers, or formatting issues
-  4. Reviewing a replication archive for completeness and runnability before submission
-  5. Verifying that data availability, ethics/IRB, funding, and conflict of interest statements are present
-  6. Running a cross-check on figures, tables, cross-references, and LaTeX/build warnings
-  7. Assessing writing quality: redundancy, terminology consistency, jargon, and paragraph structure
+description: Runs a comprehensive pre-submission audit using parallel review agents. Covers content/argument, numerical consistency, references/DOIs, writing quality, figures/formatting, and replication archive. Use when (1) preparing a manuscript for journal submission, (2) checking internal consistency of numbers across abstract, body, tables, and SI, (3) auditing a bibliography for missing DOIs or formatting issues, (4) reviewing a replication archive for completeness, (5) verifying data availability, ethics/IRB, and funding statements, (6) running a cross-check on figures, tables, and formatting, or (7) assessing writing quality and terminology consistency.
+argument-hint: "[path to paper or describe manuscript to review]"
+context: fork
 ---
 
 # Paper Pre-Submission Review
@@ -43,18 +37,23 @@ Use this knowledge to write **specific** agent prompts that reference actual fil
 **Agent 4 — DOI Audit**: Check every bibliography entry for a DOI. For entries missing a DOI, attempt to locate one via web search (title + author + "doi"). Report which entries are missing DOIs and, where found, provide the correct DOI. Verify that existing DOIs resolve to the correct paper — wrong-paper DOIs are a common copy-paste error. This agent runs separately because DOI lookup is slow.
 
 **Agent 5 — Writing Quality & Completeness**: Check for redundancy, passive voice overuse, unclear antecedents, jargon without definition on first use, overly long sentences (60+ words), and inconsistent terminology for the same concept. Also explicitly check for these pre-submission completeness items:
+- Anonymization / double-blind compliance: no self-identifying information, self-citations in third person, no "unpublished manuscript by [author]" references, no author names in file metadata or acknowledgments
 - Data availability statement (present and accurate?)
 - Ethics/IRB statement (present and sufficient for human subjects research?)
+- Preregistration disclosure (if experimental: is a PAP referenced or its absence justified?)
+- AI use disclosure (required by some journals — flag if absent and suggest adding)
 - Conflict of interest declaration
 - Funding/acknowledgment statement
 - Author ORCID (if journal requires)
+- Abstract word count (most journals cap at 150 words)
+- Keywords (some journals require 4-5 keywords)
 - Word/page count against journal limits (if known)
 
 Flag each completeness item as present, missing, or insufficient.
 
 **Agent 6 — Figures, Tables & Formatting**: Verify all figures referenced in text exist on disk. Check captions for self-containedness (a reader should understand the figure from the caption alone). Verify figure and table numbering for gaps or duplicates. Check for LaTeX/build warnings (undefined references, overfull/underfull boxes). Verify SI is internally consistent and all SI cross-references in the main text point to the correct appendix/table/figure numbers. Check for formatting inconsistencies (e.g., mixed `\hline` and booktabs, inconsistent float placement).
 
-**Agent 7 — Replication Archive**: Review the replication archive independently. Does the README document the full pipeline? Are all data files present (or documented as embargoed/restricted)? Do script paths in the README match what actually exists? Are software dependencies and versions documented? Could a competent researcher reproduce the main results from the archive alone? Flag missing files, undocumented steps, or broken path references.
+**Agent 7 — Replication Archive**: Review the replication archive independently. Does the README document the full pipeline? Are all data files present (or documented as embargoed/restricted)? Do script paths in the README match what actually exists? Are software dependencies and versions documented? Is there a codebook for each dataset (variable definitions, coding)? Does a table/figure-to-script mapping exist (which script produces which output)? Are PRNG seeds documented for any simulation or bootstrap procedures? Is data provenance documented (source, license, redistribution rights)? Could a competent researcher reproduce the main results from the archive alone? Flag missing files, undocumented steps, or broken path references.
 
 **Output format for each agent**: Use structured lists, not prose. For each issue:
 - Severity: `[CRITICAL]`, `[RECOMMENDED]`, or `[MINOR]`
@@ -88,6 +87,7 @@ Issues: [N critical, N recommended, N minor]
 | Dimension                        | Status            | Notes |
 |----------------------------------|-------------------|-------|
 | Compiles cleanly                 | PASS/FAIL         |       |
+| Anonymized for double-blind      | PASS/FAIL         |       |
 | Argument & logic                 | PASS/FAIL/PARTIAL |       |
 | Internal numerical consistency   | PASS/FAIL/PARTIAL |       |
 | References complete              | PASS/FAIL/PARTIAL |       |
@@ -95,9 +95,13 @@ Issues: [N critical, N recommended, N minor]
 | Writing quality                  | PASS/FAIL/PARTIAL |       |
 | Figures/tables correct           | PASS/FAIL/PARTIAL |       |
 | Formatting consistent            | PASS/FAIL/PARTIAL |       |
+| Abstract & keywords              | PASS/FAIL/PARTIAL |       |
+| Word/page count compliant        | PASS/FAIL/NA      |       |
 | Replication archive ready        | PASS/FAIL/PARTIAL |       |
 | Data availability statement      | PASS/MISSING      |       |
 | Ethics/IRB statement             | PASS/MISSING      |       |
+| Preregistration disclosure       | PASS/MISSING/NA   |       |
+| AI use disclosure                | PASS/MISSING      |       |
 | COI declaration                  | PASS/MISSING      |       |
 | Funding/acknowledgments          | PASS/MISSING      |       |
 
@@ -116,7 +120,7 @@ Cite file paths and line numbers for every issue. Distinguish between objective 
 - [ ] Cross-check agents verified every CRITICAL and RECOMMENDED finding against actual files
 - [ ] False positives identified and removed from the final report
 - [ ] Every issue in the report includes a file path and line number (or section name)
-- [ ] The journal-readiness checklist covers all 13 dimensions
+- [ ] The journal-readiness checklist covers all 18 dimensions
 - [ ] The "What Still Needs Your Input" section is populated with items requiring author knowledge
 - [ ] Report distinguishes objective errors from subjective suggestions
 - [ ] Report includes a Strengths section (not just problems)

@@ -1,6 +1,7 @@
 ---
 name: conjoint-cleaning
 description: Specialized logic for cleaning and reshaping choice-based conjoint data from Qualtrics exports into analysis-ready long format. Use when (1) preparing conjoint survey data for analysis, (2) reshaping wide Qualtrics exports to long format, (3) mapping conjoint choice and rating variables to profile-level outcomes, (4) translating attribute labels across languages, (5) diagnosing pilot contamination or data quality issues in conjoint data, or (6) setting AMCE reference categories. Covers Qualtrics column conventions, existing R packages, wide-to-long reshaping, choice variable encoding, attribute-level translation, data validation, and analysis-ready output.
+argument-hint: "[describe your Qualtrics export or paste data sample]"
 ---
 
 # Conjoint Data Cleaning Expert
@@ -11,7 +12,7 @@ description: Specialized logic for cleaning and reshaping choice-based conjoint 
 
 **Export format:** When exporting from Qualtrics, select **"Use choice text"** (not "Use numeric values") so that attribute levels appear as human-readable labels. If working with non-Latin scripts (Chinese, Korean, Arabic), export as XLSX rather than CSV to avoid UTF-8/ANSI encoding issues.
 
-**Metadata rows:** Current Qualtrics CSV exports include **3 header rows** before respondent data: (1) variable identifiers, (2) question text/descriptions, (3) ImportId JSON. Legacy exports have 2 rows. The `cjoint::read.qualtrics()` parameter `new.format = TRUE` (default) handles the 3-row format. For manual import via `readxl::read_excel()` or `readr::read_csv()`, skip the appropriate number of metadata rows after reading headers.
+**Metadata rows:** Current Qualtrics CSV exports include **3 header rows** before respondent data: (1) variable identifiers, (2) question text/descriptions, (3) ImportId JSON. Legacy exports have 2 rows. The `cjoint::read.qualtrics()` parameter `new.format = TRUE` (set explicitly; default is `FALSE`) handles the 3-row format. For manual import via `readxl::read_excel()` or `readr::read_csv()`, skip the appropriate number of metadata rows after reading headers.
 
 **Randomization order columns:** If "Export viewing order data" is enabled, Qualtrics adds `_DO_` columns (e.g., `Block1_DO`) containing pipe-separated integers showing element display order. These are useful for task-order robustness checks but are not needed for the core reshape.
 
