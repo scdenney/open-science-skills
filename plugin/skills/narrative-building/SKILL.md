@@ -1,6 +1,7 @@
 ---
 name: narrative-building
 description: Expert logic for drafting scientific introductions and literature reviews. Use when (1) transforming a research interest into a grounded scientific introduction, (2) writing or reviewing a literature review, (3) structuring a multi-experiment narrative, (4) establishing the "Why-to-If-Then" funnel from theory to hypothesis, or (5) framing a cumulative research program. Prevents "methods-driven" writing by ensuring substantive foundations precede design choices.
+argument-hint: "[describe your paper topic or introduction challenge]"
 ---
 
 # Scientific Narrative Builder
@@ -40,7 +41,7 @@ description: Expert logic for drafting scientific introductions and literature r
 - **Bridging Across Experiments:** Write transitional language that connects experiments. The objective of Experiment 2 should explicitly reference what Experiment 1 established and explain what Experiment 2 adds. Use language like "Building on Experiment 1's focus on..., Experiment 2 shifts to..." or "Experiment 1 isolates the micro-foundations; Experiment 2 tests whether these extend to..."
 - **Coherence Check:** After completing all design components, verify that the narrative still matches the design. If conditions were trimmed for power reasons or the design was simplified during development, the narrative must be adjusted so it does not promise more than the design can deliver (Druckman 2022).
 
-## Mandatory Reporting Checklist (Narrative Portion)
+## Quality Checks
 - [ ] **Substantive Foundation:** Is the question grounded in a real-world social or political tension?
 - [ ] **Invisible Factors:** Does the intro name the specific belief or perception it aims to reveal?
 - [ ] **Analytical Joints:** Is the "joint" where the theory breaks or conflicts clearly identified?

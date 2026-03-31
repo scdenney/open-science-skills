@@ -1,6 +1,7 @@
 ---
 name: hypothesis-building
 description: Guides the transformation of theoretical concepts into falsifiable, counterfactual-based hypotheses with formal estimands. Use when (1) drafting hypotheses for a pre-analysis plan, (2) specifying estimands and linking them to regression models, (3) choosing between NHST, equivalence, and minimum-effect tests, (4) structuring a multi-experiment hypothesis architecture, or (5) classifying hypotheses as primary, secondary, or exploratory. Ensures every claim has a named estimand, a SESOI, and a three-level specification (conceptual, operationalized, statistical).
+argument-hint: "[describe your theory or research question]"
 ---
 
 # Causal Hypothesis Architect

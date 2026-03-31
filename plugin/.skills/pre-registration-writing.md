@@ -1,6 +1,7 @@
 ---
 name: pre-registration-writing
 description: Guides writing a complete pre-analysis plan (PAP) for experimental social science. Use when (1) choosing a registry platform (OSF, EGAP, AsPredicted), (2) structuring a PAP document end-to-end, (3) specifying analytical strategies with locked, conditional, and exploratory tiers, (4) pre-registering analysis code on simulated data, (5) writing contingency plans for design failures, (6) documenting deviations from a registered plan, or (7) planning a registered report submission. Covers PAP structure, decision rules, code registration, contingency trees, deviation reporting, and timeline logistics.
+argument-hint: "[describe your study or PAP section to draft]"
 ---
 
 # Pre-Analysis Plan Writer
@@ -9,7 +10,7 @@ description: Guides writing a complete pre-analysis plan (PAP) for experimental 
 
 ### 1. Registry Selection
 - **OSF (Open Science Framework):** Use for maximum flexibility. Supports free-form documents, file attachments (analysis code, stimuli), version control, and optional embargo periods. Registration is timestamped and immutable once confirmed. Best for complex designs that require supplementary materials.
-- **EGAP (Evidence in Governance and Politics):** Use for political science, development economics, and governance research. EGAP registrations undergo administrative review before acceptance, which provides a quality signal. The structured form prompts for specific design elements. Best when the research community values EGAP-specific credibility.
+- **EGAP (Evidence in Governance and Politics):** Historically used for political science, development economics, and governance research. EGAP stopped accepting new registrations in October 2023; use OSF Registries with the EGAP registration form instead. The structured form prompts for specific design elements. Best when the research community values EGAP-specific credibility.
 - **AsPredicted:** Use for simple designs requiring fast registration. The structured 9-question format enforces brevity and is completable in under an hour. Registrations are private until the authors choose to make them public. Best for straightforward experiments with few analytical degrees of freedom.
 - **Registered Reports:** A distinct format where the journal peer-reviews the introduction and methods before data collection. Acceptance is contingent on design quality, not results. Pursue registered reports when the research question is important but the expected results are uncertain or likely null -- this eliminates publication bias by design. Note that registered reports require substantially more lead time than standard pre-registration.
 

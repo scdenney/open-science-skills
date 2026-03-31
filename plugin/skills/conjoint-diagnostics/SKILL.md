@@ -1,6 +1,7 @@
 ---
 name: conjoint-diagnostics
 description: Systematic diagnostic checklist for evaluating choice-based conjoint experiments. Use when (1) reviewing a conjoint paper or manuscript, (2) auditing a conjoint analysis script or dataset, (3) assessing measurement error and IRR in conjoint data, (4) evaluating external validity of a conjoint design, or (5) checking interpretation of AMCEs, marginal means, and interaction effects. Covers design, estimation, measurement error correction, external validity, and reporting.
+argument-hint: "[describe your conjoint study or paste analysis code]"
 ---
 
 # Conjoint Experiment Diagnostics
@@ -83,7 +84,7 @@ This is a critical and often-overlooked diagnostic. Conjoint experiments produce
 ### 3.1 Understanding the Problem
 - Conjoint responses have **swapping error**: respondents sometimes select the opposite of their true preference. This is NOT classical measurement error.
 - For binary outcomes, swapping error biases both MMs (toward 0.5) and AMCEs (toward 0).
-- Intra-Respondent Reliability (IRR) in conjoint experiments averages ~75% (range 73-81% across eight replicated studies). This means ~15% of responses are effectively random noise.
+- Intra-Respondent Reliability (IRR) in conjoint experiments averages ~77% (range 73-81% across eight replicated studies). This means roughly 15-25% of responses are effectively random noise.
 - IRR does NOT vary systematically with attribute combinations but DOES vary with respondent characteristics (younger, male, non-white respondents tend to have lower reliability).
 - For subgroup comparisons, bias can attenuate, exaggerate, or flip the sign of differences.
 
@@ -152,7 +153,7 @@ Four methods, in order of ease:
 
 ---
 
-## 6. Reporting Checklist
+## Quality Checks
 
 A well-reported conjoint study should include:
 

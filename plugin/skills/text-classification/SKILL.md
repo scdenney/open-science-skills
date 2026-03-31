@@ -1,15 +1,7 @@
 ---
 name: text-classification
-description: |
-  Use when:
-  1. Designing an LLM-based classification scheme for open-ended survey responses or text data
-  2. Writing a codebook for LLM text annotation (labels, definitions, examples)
-  3. Choosing between zero-shot, few-shot, fine-tuning, or instruction-tuning approaches
-  4. Selecting a model for text classification (proprietary vs. open-weight, model size)
-  5. Validating LLM classifications against human-coded ground truth
-  6. Implementing a hybrid human-LLM annotation workflow
-  7. Addressing reproducibility concerns when using LLMs for measurement
-  8. Reporting LLM classification methods and results in a manuscript
+description: Guides LLM-based text classification for survey and experimental text data. Covers codebook design, learning regime selection, model choice, human-LLM hybrid workflows, and validation. Use when (1) designing an LLM classification scheme for open-ended survey responses, (2) writing a codebook for LLM text annotation, (3) choosing between zero-shot, few-shot, fine-tuning, or instruction-tuning, (4) selecting a model for classification, (5) validating LLM classifications against human-coded ground truth, (6) implementing hybrid human-LLM workflows, (7) addressing reproducibility concerns, or (8) reporting LLM classification methods and results.
+argument-hint: "[describe your text data and classification task]"
 ---
 
 # LLM-Based Text Classification for Social Science Research
@@ -19,7 +11,7 @@ description: |
 ### 1. Codebook Design
 
 - Treat codebook design as the most consequential decision in the classification pipeline. LLMs struggle with loose instructions and revert to general-purpose definitions rather than following researcher-specific operationalizations (Halterman & Keith 2025).
-- Structure each code with five components (Halterman & Keith 2025):
+- Structure each code with the following components (adapted from Halterman & Keith 2025):
   - **Label**: The exact output string the model should return
   - **Definition**: A single-sentence operationalization of the construct
   - **Clarification**: What IS included — boundary cases that belong in this category
@@ -46,7 +38,7 @@ description: |
 
 ### 3. Model Selection and Reproducibility
 
-- Prefer open-weight models (Llama 3, Gemma, Mistral) for publishable research. Open-weight models run locally produce near-zero variance across runs, while proprietary models (GPT-4, Gemini) show high and unpredictable variance even with temperature=0 (Barrie, Palmer & Spirling 2025).
+- Prefer open-weight models (Llama 3, Gemma, Mistral) for publishable research. Open-weight models run locally produce substantially lower and more predictable variance across runs, while proprietary models (GPT-4, Gemini) show high and unpredictable variance even with temperature=0 (Barrie, Palmer & Spirling 2025).
 - If using proprietary models, document the exact model identifier (e.g., `gpt-4o-2024-08-06`), not the model family name. Commercial models are modified or deprecated without notice — GPT-3 was withdrawn from OpenAI's API entirely (Barrie, Palmer & Spirling 2025; Chae & Davidson 2025).
 - Set temperature to 0 for classification tasks. This reduces but does not eliminate stochastic variation in proprietary models (Barrie, Palmer & Spirling 2025).
 - Run the same 50 responses through the classifier twice, separated by at least two weeks. Report the agreement rate between runs as a variance metric. If agreement is below 95%, flag the results as potentially unstable.
@@ -55,7 +47,7 @@ description: |
 
 ### 4. Prompt Construction
 
-- Place the codebook in the system prompt. Include all five components for each code (label, definition, clarification, negative clarification, examples).
+- Place the codebook in the system prompt. Include all components for each code (label, definition, clarification, negative clarification, examples).
 - Specify the exact output format: code labels only, comma-separated if multi-label. Instruct the model to return no additional text. Smaller models in particular generate conversational preamble unless explicitly constrained (Chae & Davidson 2025).
 - For structured or complex inputs, use JSON formatting for both input and expected output. LLMs trained on code corpora parse JSON reliably and produce more consistent structured output (Chae & Davidson 2025).
 - Include the response text in the user message, separated clearly from instructions. Use a consistent delimiter (e.g., `"Code this response:\n\n{text}"`).
@@ -75,7 +67,7 @@ description: |
 - Flag responses for human review using one or more of: (a) LLM self-reported confidence (prompt the model to rate HIGH/MEDIUM/LOW), (b) disagreement across multiple model runs, (c) responses assigned to the residual category, (d) responses near decision boundaries (e.g., coded with two competing labels).
 - Expect 10-15% of responses to require human review. If the flagging rate exceeds 25%, the codebook or model is performing poorly — return to pilot testing.
 - Use human review not only for quality assurance but also for codebook refinement. Patterns in flagged cases often reveal systematic ambiguities that can be resolved with better definitions.
-- For ensemble approaches, run two or more models (e.g., GPT-4o and Llama3-70B) and flag cases where they disagree. Ensemble agreement correlates 0.92-0.98 with expert benchmarks (Benoit et al. 2025).
+- For ensemble approaches, run two or more models (e.g., GPT-4o and Llama3-70B) and flag cases where they disagree. Ensemble means of LLM estimates correlate highly with expert survey benchmarks on party positioning tasks (Benoit et al. 2025).
 
 ### 7. Analysis and Interpretation
 
@@ -96,7 +88,7 @@ description: |
 
 ## Quality Checks
 
-- [ ] Codebook includes all five components per code: label, definition, clarification, negative clarification, examples (Halterman & Keith 2025)
+- [ ] Codebook includes all components per code: label, definition, clarification, negative clarification, examples (adapted from Halterman & Keith 2025)
 - [ ] Learning regime (zero-shot, few-shot, fine-tuning, instruction-tuning) chosen based on data characteristics and available resources, not convenience
 - [ ] Exact model version documented (not just model family name)
 - [ ] Pilot sample of 50-100 responses hand-coded by two independent coders before LLM classification
