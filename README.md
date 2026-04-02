@@ -136,8 +136,7 @@ cp open-science-skills/plugin/skills/list-experiment/SKILL.md \
 
 PRs welcome. To add a new skill:
 
-1. Create `skills/<name>/SKILL.md` following the [skill authoring best practices](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices)
-2. Copy to `.skills/<name>.md` (flat format for direct project use)
-3. Add `commands/<name>.md` (see existing examples — one paragraph activation prompt + `$ARGUMENTS`)
-4. Add sources to `SOURCES.md` under a new or existing section
-5. Update badges and table in this README
+1. Create `plugin/skills/<name>/SKILL.md` following the [skill authoring best practices](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices)
+2. Add `plugin/commands/<name>.md` (see existing examples — one paragraph activation prompt + `$ARGUMENTS`)
+3. Add sources to `SOURCES.md` under a new or existing section
+4. Update badges and table in this README
