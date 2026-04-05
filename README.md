@@ -1,6 +1,6 @@
 # Open Science Skills
 
-![skills](https://img.shields.io/badge/skills-13-blue)
+![skills](https://img.shields.io/badge/skills-15-blue)
 ![plugin](https://img.shields.io/badge/Claude%20Code-plugin-orange)
 ![updated](https://img.shields.io/badge/updated-Mar%202026-green)
 ![sources](https://img.shields.io/badge/sources-90%2B-purple)
@@ -53,7 +53,7 @@ git clone https://github.com/scdenney/open-science-skills.git
 cd open-science-skills && claude --plugin-dir ./plugin
 ```
 
-All 13 skills auto-trigger based on your prompts. All 13 slash commands (`/conjoint-design`, `/list-experiment`, etc.) are immediately available.
+All 15 skills auto-trigger based on your prompts. All 15 slash commands (`/conjoint-design`, `/list-experiment`, etc.) are immediately available.
 
 ### Option 2 — Selective install (choose specific skills, auto-trigger only)
 
@@ -119,6 +119,13 @@ cp open-science-skills/plugin/skills/list-experiment/SKILL.md \
 |-------|--------------|-------------|
 | [**topic-modeling**](plugin/skills/topic-modeling/SKILL.md) | `/topic-modeling` | STM with metadata covariates, topic count selection via coherence-exclusivity diagnostics, reporting |
 | [**text-classification**](plugin/skills/text-classification/SKILL.md) | `/text-classification` | LLM-based classification: codebook design, learning regime selection, human-LLM hybrid workflows, validation |
+
+### Corpus Processing
+
+| Skill | Slash command | What it does |
+|-------|--------------|-------------|
+| [**vlm-ocr-pipeline**](plugin/skills/vlm-ocr-pipeline/SKILL.md) | `/vlm-ocr-pipeline` | VLM-based OCR: model selection, image handling, prompt engineering, batch strategy, accuracy evaluation, reproducibility |
+| [**post-ocr-cleanup**](plugin/skills/post-ocr-cleanup/SKILL.md) | `/post-ocr-cleanup` | Post-OCR cleanup: LLM and rule-based correction, quality diagnostics, multilingual considerations, corpus-level QA, provenance |
 
 ### Writing & Reporting
 
