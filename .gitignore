@@ -2,3 +2,14 @@ CLAUDE.md
 setup-sync.sh
 .claude/
 .DS_Store
+
+# Knowledge base: PDFs local only, Markdown tracked
+knowledge_base/og/
+knowledge_base/unprocessed/
+*.pdf
+
+# Python venv used for PDF conversion
+.venv/
+__pycache__/
+*.py[cod]
+
