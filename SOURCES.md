@@ -2,8 +2,6 @@
 
 The instructions within these skills are drawn from the following sources, organized by topic area. Sources may appear in multiple subsections when they are relevant to more than one skill area.
 
-> **Knowledge base:** LLM-readable Markdown conversions of the sources listed below live in [`knowledge_base/md/`](knowledge_base/README.md), organized by topic. Original PDFs stay in `knowledge_base/og/` (gitignored, local only). Sources that could not be acquired automatically are tracked in `knowledge_base/TODO_ACQUIRE.md`.
-
 ---
 
 ## General
