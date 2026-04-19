@@ -1,15 +1,28 @@
 ---
-name: paper-review
-description: Runs a comprehensive pre-submission audit using parallel review agents. Covers content/argument, numerical consistency, references/DOIs, writing quality, figures/formatting, and replication archive. Use when (1) preparing a manuscript for journal submission, (2) checking internal consistency of numbers across abstract, body, tables, and SI, (3) auditing a bibliography for missing DOIs or formatting issues, (4) reviewing a replication archive for completeness, (5) verifying data availability, ethics/IRB, and funding statements, (6) running a cross-check on figures, tables, and formatting, or (7) assessing writing quality and terminology consistency.
+name: paper-review-lite
+description: Runs a Critical-Reviewer-style pre-submission audit of a manuscript using parallel sub-agents inside Claude Code. An in-session lightweight counterpart to the standalone `openpeerreview` Python CLI — adopts the same adversarial framing (brutally honest but quote-grounded) at ~11 sub-agents instead of 30+ stages. Use when (1) preparing a manuscript for journal submission, (2) checking internal consistency of numbers across abstract, body, tables, and SI, (3) auditing a bibliography for missing DOIs or formatting issues, (4) reviewing a replication archive for completeness, (5) verifying data availability, ethics/IRB, and funding statements, (6) running a cross-check on figures, tables, and formatting, or (7) assessing writing quality and terminology consistency. For heavier adversarial review (30+ Red Team / Blue Team / verification stages, resumable, cost-tracked), use `openpeerreview` instead.
 argument-hint: "[path to paper or describe manuscript to review]"
 context: fork  # Claude Code: run skill in a forked subagent context (isolated from conversation history). See https://code.claude.com/docs/en/skills#frontmatter-reference
 ---
 
-# Paper Pre-Submission Review
+# Paper Pre-Submission Review (Lite)
+
+## Heritage and scope
+
+This is the in-session, Claude-Code-native counterpart to [`openpeerreview`](https://github.com/scdenney/open-peer-review) — our port of the [reviewer2](https://github.com/isitcredible/reviewer2) adversarial peer-review pipeline to Anthropic Claude. The design inherits two things from that lineage:
+
+1. **A Critical-Reviewer posture.** Review sub-agents adopt the persona of a rigorous, epistemically humble reviewer who is brutally honest about weaknesses but impervious to prestige (reputation, journal status, citation counts, prior peer review) and grounds every finding in a quote from the manuscript.
+2. **A verification cascade.** Red Team findings are cross-checked against the source before they enter the final report; claims that cannot be pinned to a quoted passage are dropped as likely hallucinations.
+
+**What this skill is:** a ~11-sub-agent review that runs inside a Claude Code session, no extra install, billable against your Claude Code plan. Fast feedback during writing.
+
+**What it is NOT:** the full reviewer2/`openpeerreview` pipeline. That tool runs ~30 stages with a dedicated Red Team (Breaker, Butcher, Shredder, Collector, Void), Blue Team defence, numbers/fact-check/citation-verification cascades, and a legal pass — and it is resumable and cost-tracked. Reach for `openpeerreview` when you want deeper adversarial pressure, need a standalone deliverable (a review report file), or are preparing a manuscript for final external peer review. This skill is the fast in-flow check.
 
 ## Instructions
 
 Run a comprehensive pre-submission review of the academic paper using parallel review agents. Each agent examines a different dimension; cross-check agents audit Phase 1 findings for false positives and missed issues. The final output is a structured pre-submit report with severity-ranked findings and a journal-readiness checklist.
+
+**Critical-Reviewer posture (required for every sub-agent).** Every review sub-agent must (a) cite a direct quote from the manuscript for every `[CRITICAL]` and `[RECOMMENDED]` finding — a short verbatim span is sufficient, and (b) attack the *argument or the data*, not the *authors*. Framing like "fraudulent" or "incompetent" is out of scope; "the claim on line X is not supported by the evidence on line Y" is in scope. The standard is *brutally honest on the work, fair to the people*.
 
 This review can be re-run after fixes to verify issues are resolved.
 
@@ -31,7 +44,7 @@ Use this knowledge to write **specific** agent prompts that reference actual fil
 
 ### 2. Parallel Deep Review (launch all 9 agents simultaneously)
 
-**Agent 1 — Content & Argument**: Read the full paper. Check logical flow from introduction through conclusion. Identify unsupported claims, logical gaps, missing caveats, and places where the argument is unclear or circular. Flag any claims in the abstract not backed up in the body. Note missing discussion of limitations. Check whether the framing accurately positions the contribution relative to cited prior work.
+**Agent 1 — Content & Argument (Red Team primary)**: Read the full paper. Your posture is adversarial but fair: find every place the argument is weaker than the paper presents it to be. Check logical flow from introduction through conclusion. Identify unsupported claims, logical gaps, missing caveats, and places where the argument is unclear or circular. Flag any claims in the abstract not backed up in the body. Note missing discussion of limitations. Check whether the framing accurately positions the contribution relative to cited prior work. **Required**: support every `[CRITICAL]` and `[RECOMMENDED]` finding with a direct quote from the manuscript (verbatim span, ≤ 2 sentences) plus the file path + line number. Unsupported findings will be dropped by the cross-checker.
 
 **Agent 2 — Numbers & Internal Consistency**: Check every quantitative claim against JARS-Quant reporting expectations (Appelbaum et al. 2018). Do numbers in the abstract match the body? Do table values match in-text references? Do SI cross-references point to the right appendices/tables? Are confidence intervals, p-values, N counts, and effect sizes reported consistently throughout? Flag multiple-comparisons issues (many tests without correction or discussion). Verify that significance thresholds are defined and used consistently. For experimental papers, verify denominator consistency across ITT and any complier/compliance-adjusted analyses and flag any manipulation-check that is present in the design but missing from the results. Flag forking-paths risks explicitly: DV switching between primary and secondary outcomes, covariate-set changes across models, transformation or subsetting decisions not traceable to a pre-registration, and any analysis whose choice was visibly made after seeing outcome data (Wicherts et al. 2016; Gelman & Loken 2014; Simmons et al. 2011). Do NOT audit the CONSORT flow, baseline balance, attrition-by-arm, or PAP-to-paper mapping — those are Agents 6 and 7.
 
@@ -66,6 +79,7 @@ Flag each completeness item as present, missing, or insufficient. Do NOT audit t
 - Location: file path and line number or section name
 - Issue: one sentence describing the problem
 - Fix: one sentence describing what to do
+- Quote: a verbatim span (≤ 2 sentences) from the manuscript that supports the finding — **required** for every `[CRITICAL]` and `[RECOMMENDED]` item, optional for `[MINOR]`. Findings without a quote will be dropped by the Phase 3 cross-checker as likely hallucinations.
 
 **Severity rubric** (apply consistently across all agents):
 - `[CRITICAL]` — blocks submission: wrong numbers, broken references, missing ethics/data-availability statement when required, silent deviation from a pre-registration, anonymization failure, unreproducible main result.
@@ -76,9 +90,9 @@ Flag each completeness item as present, missing, or insufficient. Do NOT audit t
 
 Both cross-check agents read the Phase 2 output files from `.review-tmp/` directly. They do not need findings pasted into their prompts — tell each cross-checker which files to read and write their own validated output to `.review-tmp/agent-10-content-numbers.md` and `.review-tmp/agent-11-technical.md`.
 
-**Agent 10 — Content, Numbers & Design Cross-Checker**: Read `.review-tmp/agent-1-content.md`, `.review-tmp/agent-2-numbers.md`, `.review-tmp/agent-6-consort.md`, and `.review-tmp/agent-7-prereg.md`. For each `[CRITICAL]` or `[RECOMMENDED]` item, verify it against the actual paper text. Flag false positives (issue doesn't exist or is already addressed). Add any issues missed — pay particular attention to: abstract vs. conclusion claims that drift from body evidence, significance thresholds, multiple comparisons, denominator consistency (e.g., percentages computed with vs. without a residual category), ITT vs. per-protocol mismatches, CONSORT-number vs. table-N mismatches, and silent pre-registration deviations (registered analyses not reported, reported analyses not registered).
+**Agent 10 — Content, Numbers & Design Cross-Checker (Blue Team / verification)**: Read `.review-tmp/agent-1-content.md`, `.review-tmp/agent-2-numbers.md`, `.review-tmp/agent-6-consort.md`, and `.review-tmp/agent-7-prereg.md`. For each `[CRITICAL]` or `[RECOMMENDED]` item: (a) verify the cited quote appears verbatim at the cited location in the manuscript; drop items whose quote is missing, paraphrased, or does not support the claim made — these are hallucinations; (b) verify the issue itself against the actual paper text and flag false positives (issue doesn't exist or is already addressed); (c) steel-man the paper — for each retained finding, briefly note whether the paper anticipates or partially addresses the concern, since a partial response may downgrade severity. Add any issues missed — pay particular attention to: abstract vs. conclusion claims that drift from body evidence, significance thresholds, multiple comparisons, denominator consistency (e.g., percentages computed with vs. without a residual category), ITT vs. per-protocol mismatches, CONSORT-number vs. table-N mismatches, and silent pre-registration deviations (registered analyses not reported, reported analyses not registered).
 
-**Agent 11 — Technical Cross-Checker**: Read `.review-tmp/agent-3-references.md`, `agent-4-dois.md`, `agent-5-writing.md`, `agent-8-figures.md`, and `agent-9-archive.md`. Verify each flagged item against the actual files — check the bibliography, figure files, figure/table numbering, and archive directory. Confirm or refute each finding. Add any issues missed.
+**Agent 11 — Technical Cross-Checker (Blue Team / verification)**: Read `.review-tmp/agent-3-references.md`, `agent-4-dois.md`, `agent-5-writing.md`, `agent-8-figures.md`, and `agent-9-archive.md`. For each flagged item: (a) verify the cited location actually contains the described issue (drop hallucinations); (b) verify the finding itself against the actual files — check the bibliography, figure files, figure/table numbering, and archive directory; (c) confirm or refute each finding. Add any issues missed.
 
 ### 4. Synthesis
 
@@ -147,3 +161,15 @@ Cite file paths and line numbers for every issue. Distinguish between objective 
 - [ ] Report distinguishes objective errors from subjective suggestions
 - [ ] Report includes a Strengths section (not just problems)
 - [ ] For a worked example of a filled Pre-Submit Report, see `reference/example-report.md`
+
+## When to reach for `openpeerreview` instead
+
+This skill covers most in-flow review needs. Reach for the heavier [`openpeerreview`](https://github.com/scdenney/open-peer-review) Python CLI when:
+
+- You want **full adversarial pressure** — the reviewer2 pipeline spins up multiple Red Team personas (Breaker, Butcher, Shredder, Collector, Void) that each attack the paper from a different angle; this skill compresses that into Agent 1.
+- You want a **standalone deliverable** — a single `report.txt` and optional editor's note, produced outside your Claude Code session. Useful when the review is the product (sending feedback to a co-author, final pre-submission critique, pre-print critique).
+- You want **resumability + cost tracking** — `openpeerreview` checkpoints every stage to disk; deleting a stage file forces that stage to re-run. Tracks per-stage API cost.
+- You want a **math audit** — `openpeerreview` has an optional Mathpix-backed equation audit (`--math`); this skill doesn't.
+- You want a **code-replication audit** — `openpeerreview` can ingest a replication archive and compare claims against the code (`--code`); this skill stops at the "does the archive look complete" question in Agent 9.
+
+Trade-off: `openpeerreview` bills per-token against an Anthropic API key (separate from your Claude Code subscription). See `open-peer-review/README.md` for install, cost considerations, and known trade-offs vs. the upstream Gemini implementation.

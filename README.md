@@ -136,7 +136,7 @@ cp open-science-skills/plugin/skills/list-experiment/SKILL.md \
 | [**narrative-building**](plugin/skills/narrative-building/SKILL.md) | `/narrative-building` | Introduction logic, literature reviews, the "Why-to-If-Then" funnel, cumulative framing, multi-experiment coherence |
 | [**pre-registration-writing**](plugin/skills/pre-registration-writing/SKILL.md) | `/pre-registration-writing` | PAP structure, registry selection, analytical strategy specification, code pre-registration, deviation documentation |
 | [**methods-reporting**](plugin/skills/methods-reporting/SKILL.md) | `/methods-reporting` | 40-item reporting checklist: CONSORT standards, JARS preregistration elements, DA-RT transparency |
-| [**paper-review**](plugin/skills/paper-review/SKILL.md) | `/paper-review` | Pre-submission audit: parallel agent swarm for content, numbers, references, DOIs, writing, formatting, and replication archive review |
+| [**paper-review-lite**](plugin/skills/paper-review-lite/SKILL.md) | `/paper-review-lite` | Critical-Reviewer-style pre-submission audit: parallel quote-grounded sub-agents, verification cross-check, CONSORT + pre-reg audit for experimental papers. Lite counterpart to the standalone [`openpeerreview`](https://github.com/scdenney/open-peer-review) CLI. |
 
 ---
 

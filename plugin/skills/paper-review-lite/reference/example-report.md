@@ -1,6 +1,6 @@
 # Example Pre-Submit Report (Toy Conjoint Manuscript)
 
-Worked example showing what the `paper-review` skill produces after all 11 agents run.
+Worked example showing what the `paper-review-lite` skill produces after all 11 agents run.
 Manuscript: *Do Voters Punish Coalition Defectors? Evidence from a Paired-Choice Conjoint*
 (fictional; for illustration only).
 
