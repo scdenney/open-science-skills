@@ -1,6 +1,6 @@
 ---
 name: conjoint-diagnostics
-description: Systematic diagnostic checklist for evaluating choice-based conjoint experiments. Use when (1) reviewing a conjoint paper or manuscript, (2) auditing a conjoint analysis script or dataset, (3) assessing measurement error and IRR in conjoint data, (4) evaluating external validity of a conjoint design, or (5) checking interpretation of AMCEs, marginal means, and interaction effects. Covers design, estimation, measurement error correction, external validity, and reporting.
+description: Systematic diagnostic checklist for evaluating choice-based conjoint experiments. Use when (1) reviewing a conjoint paper or manuscript, (2) auditing a conjoint analysis script or dataset, (3) assessing measurement error and IRR in conjoint data, (4) evaluating external validity of a conjoint design, or (5) checking interpretation of AMCEs, marginal means, and interaction effects.
 argument-hint: "[describe your conjoint study or paste analysis code]"
 ---
 
@@ -10,7 +10,11 @@ argument-hint: "[describe your conjoint study or paste analysis code]"
 
 Work through each section below for the conjoint study under review. Assess whether the study addresses each item adequately, partially, or not at all. Flag items that pose threats to inference and prioritize recommendations by severity.
 
-If provided with R scripts or data, inspect the actual implementation, not just what the paper claims. Check for discrepancies between described and implemented methods.
+Branch on input:
+- **If a paper or manuscript is provided**, proceed through Sections 1–5 sequentially and produce a verdict per section.
+- **If analysis code or data is provided**, verify the actual implementation rather than just what the paper claims: (a) confirm clustering specification, (b) confirm the estimand matches the reported quantity, (c) if IRR is unmeasured, compute within-respondent task-pair agreement as a function of attribute-level differences (Clayton et al. 2023 §3.3 method 2 / `projoint`).
+
+For neighboring concerns, invoke sibling skills: `conjoint-design` (design choices), `conjoint-cleaning` (Qualtrics exports → long format), `hypothesis-building` (linking estimands to "If-Then" predictions), `methods-reporting` (full JARS/DA-RT compliance and replication archive), `cross-national-design` (multi-country / multilingual conjoints).
 
 ---
 
@@ -19,7 +23,8 @@ If provided with R scripts or data, inspect the actual implementation, not just 
 ### 1.1 Attribute and Level Selection
 - Are attributes conceptually distinct and non-overlapping?
 - Are levels realistic and mutually exclusive within each attribute?
-- Is the number of attributes justified? (Bansak et al. 2021 PSRM: attributes can scale with modest satisficing, but each additional attribute adds cognitive load)
+- Is the number of attributes justified? (Bansak et al. 2021 PSRM "Beyond the Breaking Point": response quality is generally robust even at 35 filler attributes, with detectable but modest satisficing — use as a ceiling, not an endorsement of 35 attributes as optimal. Distinct from Bansak et al. 2018 on task counts below.)
+- For cross-national or multilingual designs, verify construct equivalence of attribute labels across languages (see `cross-national-design`).
 - Are there "dominant" attributes that might crowd out attention to others?
 - Do the attribute levels span a meaningful range of the construct of interest?
 
@@ -30,8 +35,9 @@ If provided with R scripts or data, inspect the actual implementation, not just 
 
 ### 1.3 Number of Tasks and Satisficing
 - How many tasks per respondent? (Bansak et al. 2018: up to 30 tasks with limited satisficing)
-- Are attention checks embedded?
-- Is there evidence of survey fatigue or satisficing in later tasks? (e.g., declining response time, increased randomness)
+- Are attention checks embedded? Are pass rates reported by task position?
+- Is there evidence of survey fatigue or satisficing in later tasks? Look for: (a) response-time distributions by task position (not just means), (b) always-same-side / always-left or always-right rates, (c) random-choice / trembling-hand rates relative to Bansak et al. 2021 baselines, (d) attention-check failure rates by task position.
+- Have profile-order, carryover, and fatigue assumptions been tested empirically? (Ham, Imai & Janson 2024 §3.5: `CRTConjoint` provides conditional randomization tests for all three of Hainmueller-Hopkins-Yamamoto 2014's identifying assumptions.)
 
 ### 1.4 Randomization
 - Is attribute-level assignment fully randomized (uniform distribution)?
@@ -65,7 +71,7 @@ If provided with R scripts or data, inspect the actual implementation, not just 
 - Is heterogeneity detection systematic or ad hoc? (Robinson & Duch 2024 cjbart; Goplerud et al. 2025 FactorHet)
 
 ### 2.4 Standard Errors and Clustering
-- Are standard errors clustered at the respondent level? (Required when T > 1 tasks per respondent)
+- Are standard errors clustered at the respondent level? Clustering is conventional with T > 1 tasks per respondent, though Schuessler & Freitag (2020) show the adjustment averages only ~2% across published conjoints and is not strictly necessary for sample causal effects. Flag clustering absent without justification, but do not auto-fail.
 - Is the clustering variable correctly specified?
 - Are confidence intervals reported? At what level? (Convention: 95%, some papers use 90% or dual CI bars)
 
@@ -79,52 +85,32 @@ If provided with R scripts or data, inspect the actual implementation, not just 
 
 ## 3. Measurement Error Diagnostics (Clayton et al. 2023)
 
-This is a critical and often-overlooked diagnostic. Conjoint experiments produce substantial measurement error due to the inherent complexity of multi-attribute trade-offs.
+Worry about measurement error whenever the study draws subgroup comparisons, reports small-to-moderate AMCEs/MMs near zero, or forgoes any IRR estimate. Conjoint responses carry **swapping error** (not classical noise): average Intra-Respondent Reliability is ~77% across Clayton et al.'s eight replications, biasing MMs toward 0.5 and AMCEs toward 0. For subgroup diff-in-AMCEs, correction can attenuate, exaggerate, or flip sign (~82/12/5% split). Audit the study for (a) an IRR estimate or justified borrow (≈0.75 default), (b) bias correction via the `projoint` R package (Clayton et al.), and (c) sensitivity analysis across plausible IRR values if uncorrected.
 
-### 3.1 Understanding the Problem
-- Conjoint responses have **swapping error**: respondents sometimes select the opposite of their true preference. This is NOT classical measurement error.
-- For binary outcomes, swapping error biases both MMs (toward 0.5) and AMCEs (toward 0).
-- Intra-Respondent Reliability (IRR) in conjoint experiments averages ~77% (range 73-81% across eight replicated studies). This means roughly 15-25% of responses are effectively random noise.
-- IRR does NOT vary systematically with attribute combinations but DOES vary with respondent characteristics (younger, male, non-white respondents tend to have lower reliability).
-- For subgroup comparisons, bias can attenuate, exaggerate, or flip the sign of differences.
-
-### 3.2 Does the Study Estimate IRR?
-Four methods, in order of ease:
-1. **Borrow from similar studies**: Use IRR ≈ 0.75 from Clayton et al.'s replications of similar conjoint studies. Justify the chosen value.
-2. **Extrapolate from existing data**: Use within-respondent task-pair agreement as a function of attribute-level differences, extrapolating to zero differences (no repeated tasks needed).
-3. **Repeat-task design** (recommended for new studies): Repeat the first conjoint task at the end of the survey (with left/right profiles flipped). IRR = proportion agreement.
-4. **Full attribute-specific IRR**: Estimate IRR for each attribute value separately (most intensive).
-
-### 3.3 Does the Study Apply Bias Correction?
-- Corrected MM: ρ̃(a) = (ρ̂(a) − τ) / (1 − 2τ)
-- Corrected AMCE: θ̃(a, a') = θ̂(a, a') / (1 − 2τ)
-- Where τ is the swapping error probability, estimated from IRR via: τ̂ = (1 − √(1 − 2(1 − IRR))) / 2
-- The correction ALWAYS increases absolute value of AMCEs and distance of MMs from 0.5.
-- For subgroup differences, the correction can increase (~82%), decrease (~12%), or flip sign (~5%).
-- Software: `projoint` R package (Clayton et al.)
-
-### 3.4 If No Correction, What Is the Risk?
-- Sensitivity analysis: Report results for a range of plausible IRR values (e.g., 0.70, 0.75, 0.80)
-- At minimum, acknowledge measurement error as a limitation
-- For subgroup analyses, this concern is especially acute since bias direction is unpredictable
+> **Detailed measurement-error workflow:** see [reference/measurement-error.md](reference/measurement-error.md).
 
 ---
 
 ## 4. External Validity Diagnostics
 
-### 4.1 Profile Distribution
+### 4.1 Behavioral Benchmarking
+- Does the paper position its design against the Hainmueller-Hangartner-Yamamoto 2015 benchmark, or provide other behavioral validation? HHY 2015 compared conjoint and vignette estimates to a Swiss naturalization referendum natural experiment; the paired forced-choice conjoint recovered behavioral effects to within ~2 percentage points. Absent a direct behavioral benchmark, the paper should at minimum reference HHY 2015's evidence that paired forced-choice designs have strong external validity for comparable decision contexts.
+
+### 4.2 Profile Distribution
 - Does the uniform attribute distribution match real-world frequencies? (de la Cuesta et al. 2022)
 - If not, does the paper discuss how this affects interpretation?
 - Are pAMCEs computed for comparison?
 
-### 4.2 Forced Choice vs. Real-World Behavior
+### 4.3 Forced Choice vs. Real-World Behavior
 - Does the forced-choice format accurately reflect the decision context? (Visconti & Yang 2024)
 - Should an abstention/neither option be offered? (Miller & Ziegler 2024: preferential abstention can produce different-sign AMCEs)
 - Is there a rating outcome alongside forced choice? (Treger 2025: forced-choice and rating elicit distinct preferences)
+- **Outcome-type robustness**: If both forced-choice and rating were collected, do AMCEs/MMs agree in sign and ranking across outcome types? Divergence is substantive, not a nuisance.
 
-### 4.3 Attention and Salience
+### 4.4 Attention and Salience
 - Does the conjoint format artificially inflate attention to attributes that respondents would ignore in real decisions? (Fu & Li 2024)
 - Could this lead to effect magnitude amplification, sign reversal, or importance reversal?
+- What real-world decision process is the conjoint trying to simulate? State the target DGP explicitly — without it, "attention inflation" cannot be assessed.
 
 ---
 
@@ -145,6 +131,7 @@ Four methods, in order of ease:
 - Are effect sizes reported in interpretable units (percentage points)?
 - Are substantive significance thresholds discussed alongside statistical significance?
 - Is there comparison to benchmark effect sizes in similar studies?
+- **Cross-attribute magnitude comparisons require caution.** Leeper et al. 2020 (fn 3): in forced-choice designs where both profiles can share a level, MMs are bounded by the co-occurrence probability (for 5 equally likely levels, MMs are bounded to ~(0.04, 0.96)); AMCEs for binary attributes are bounded to (−0.5, 0.5). Comparing raw AMCE magnitudes across attributes with different level counts conflates the effect with its mechanical bound.
 
 ### 5.4 Interaction Effects
 - If interactions are examined, are AMIEs used rather than conditional AMCEs? (Egami & Imai 2019)
@@ -169,4 +156,14 @@ A well-reported conjoint study should include:
 - [ ] Multiple testing approach or acknowledgment of concern (Liu & Shiraito 2023)
 - [ ] Pre-registration status and any deviations
 - [ ] Software and packages used for estimation
+
+For full JARS/DA-RT compliance — replication archive, seeds, preprocessing code, IRB, consent, and funding statements — invoke the `methods-reporting` skill.
+
+## Example Finding
+
+A HIGH-severity finding should name the rule violated, cite the source, and recommend a fix. For example: *"The paper compares AMCEs for gender across subgroups A and B (−0.04 vs. +0.02) and concludes preferences differ. Per Leeper, Hobolt & Tilley (2020), diff-in-AMCEs is reference-category dependent and can flip sign under a different baseline. Recommendation: recompute as diff-in-MMs and report both; interpret any sign change as evidence the original claim was reference-artifact driven."*
+
+## Software
+
+The skill references several R packages; the one whose use is strictly load-bearing for the skill is `projoint` (Clayton et al. 2023) for IRR estimation and bias correction. Others that may appear in a conjoint workflow: `cjoint` (Strezhnev et al., AMCE estimation), `cregg` (Leeper, MMs and diff-in-MMs), `cjbart` (Robinson & Duch 2024, BART-based heterogeneity), `FactorHet` (Goplerud-Imai-Pashley 2025, principled heterogeneity detection), `CRTConjoint` (Ham-Imai-Janson 2024, conditional randomization tests and assumption tests), `cjRank` (Dill-Howlett-Müller-Crépon 2024, nested MMs for lexicographic preferences), and `cjpowR` (Schuessler & Freitag 2020, power analysis).
 

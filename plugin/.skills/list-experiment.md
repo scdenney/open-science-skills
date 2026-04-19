@@ -6,6 +6,8 @@ argument-hint: "[describe your sensitive question or list experiment design]"
 
 # List Experiment Designer
 
+**Related skills:** Use alongside `hypothesis-building` (state π and a SESOI before design choices), `survey-design` (mode effects, question ordering, and pre-testing of control items), and `methods-reporting` (deposit list wording, randomization seed, `list` package version, and `ict.test` / `ict.hausman.test` / `ictreg()` output).
+
 ## Instructions
 
 ### 1. Pre-Design: Is a List Experiment Warranted?
@@ -36,12 +38,14 @@ argument-hint: "[describe your sensitive question or list experiment design]"
 ### 4. Design Variants
 
 - **Single list experiment:** Standard design. Simplest to implement; most commonly used. The sensitive item appears only in the treatment list.
-- **Double list experiment (DLE):** Each respondent sees the sensitive item in one of two lists (as a treatment item in one list, as part of a second control list in another). Reduces variance by using all respondents for estimation. However, Diaz (2024) shows that DLEs require additional diagnostic testing for carryover design effects — if respondents respond differently to control items after having seen the sensitive item in another list, the DLE identification assumption fails. Apply Diaz's (2024) statistical tests for carryover effects before treating DLE estimates as credible.
-- **Pipe-in placebo:** A placebo statement tailored to each respondent based on their background characteristics, constructed to be necessarily false for that specific respondent. Introduced by Riambau & Ostwald (2021) as a way to equalize list length without relying on a universal false statement that respondents might recognize as false and interpret as a signal of the study's purpose.
+- **Double list experiment (DLE):** Each respondent sees the sensitive item in one of two lists (as a treatment item in one list, as part of a second control list in another). Reduces variance by using all respondents for estimation. However, Diaz (2024) shows that DLEs require additional diagnostic testing for carryover design effects — if respondents respond differently to control items after having seen the sensitive item in another list, the DLE identification assumption fails.
+  - *Design preconditions for diagnostics:* Diaz's (2024) tests apply only to fixed-randomized or randomized-randomized DLEs (the location of the sensitive item must be randomized across respondents); they cannot diagnose carryover in fixed-fixed DLEs.
+  - *Two tests, both to be reported:* (i) a difference-in-differences test on the paired list means (equivalent to the Chuang et al. 2021 consistency test in the fixed-randomized case) and (ii) Stephenson's signed-rank test (Rosenbaum 2007, 2020) on the paired within-respondent differences. The difference-in-differences test has more power under response deflation than inflation; the signed-rank statistic can be positive under either inflation or non-zero true prevalence, so interpret one-sided deflation alternatives. Report both.
+- **Placebo-item design (Riambau & Ostwald 2021):** A universally-false statement (e.g., "I have been invited to have dinner with PM Lee at Sri Temasek next week") added to the control list to equalize list length at J+1 / J+1. The placebo should be implausible enough to be false for all respondents but not so disruptive that it degrades attention on the remaining items. This is the design the placebo/mixed options in §3 rely on; do not confuse it with respondent-tailored ("piped-in") placebos, which are a separate and not-yet-validated variant.
 
 ### 5. Estimators
 
-- **Difference-in-means:** $\hat{\pi} = \bar{Y}_{T} - \bar{Y}_{C}$. Unbiased estimator of population prevalence under the identifying assumptions. Standard errors: $SE \approx \sqrt{Var(Y_T)/n_T + Var(Y_C)/n_C}$. Simple and transparent; appropriate when no covariate adjustment is needed and the research question is purely about aggregate prevalence.
+- **Difference-in-means:** $\hat{\pi} = \bar{Y}_{T} - \bar{Y}_{C}$. Unbiased estimator of the target estimand π — the population prevalence of the sensitive behavior or attitude (state π explicitly before design choices, per Lundberg, Johnson & Stewart 2021). Standard errors: $SE \approx \sqrt{Var(Y_T)/n_T + Var(Y_C)/n_C}$. Simple and transparent; appropriate when no covariate adjustment is needed and the research question is purely about aggregate prevalence.
 - **Multivariate NLSreg:** Nonlinear least squares regression that models the list experiment outcome as a function of covariates. More robust to nonstrategic measurement error than MLreg when respondents answer inattentively or randomly — NLSreg is more robust to misspecification because it does not impose a parametric distribution on the sensitive item (Blair et al. 2019). **Prefer NLSreg over MLreg as the primary multivariate estimator** in online and panel surveys where inattentive responding is common.
 - **Multivariate MLreg:** Maximum likelihood regression imposing a logistic model on the sensitive item. More efficient than NLSreg when correctly specified, but vulnerable to misspecification bias under measurement error (Blair et al. 2019). Use as a robustness check.
 - **Combined estimator (Aronow et al. 2015):** When both list experiment and direct question data are available, and partial honesty is suspected in direct responses, the Aronow et al. (2015) estimator improves precision by pooling both sources nonparametrically. Use when power is limited and some direct responses are likely truthful. Implemented in the `list` R package.
@@ -52,7 +56,7 @@ argument-hint: "[describe your sensitive question or list experiment design]"
 - **No design effect (NDE):** Respondents answer the control items identically regardless of whether the sensitive item is present in their list. Violation means the presence of the sensitive item changes responses to other items (e.g., emotional or cognitive spillover). Test formally using `ict.test()` in Blair & Imai's (2012) `list` package.
 - **No floor/ceiling (NFC):** No respondent who endorses the sensitive item would endorse 0 of the control items (floor) or all N of the control items (ceiling) if they were in the treatment group. Ceiling effects cause artificial deflation — treatment respondents who hold the sensitive attitude cannot truthfully report N+1 and instead undercount. Assess by examining response distributions at the extremes and using ceiling/floor liar model options within `ictreg()`.
 - **Placebo diagnostics:** Include a placebo experiment — a list experiment on a non-sensitive topic where the true prevalence is known — as an additional diagnostic (Frye et al. 2023). Significant artificial deflation on a placebo topic indicates systematic design problems, not preference falsification. Especially important in authoritarian contexts where ceiling effects on regime support items are common.
-- **Nonstrategic error diagnostics:** Test whether the variance of responses in the treatment group is substantially higher than in the control group. Inflated treatment variance relative to control may indicate inattentive responding producing noise (Blair et al. 2019). If detected, switch to NLSreg and consider including placebo items.
+- **Nonstrategic error diagnostics:** Test whether the variance of responses in the treatment group is substantially higher than in the control group. Inflated treatment variance relative to control may indicate inattentive responding producing noise (Blair et al. 2019). The operational test is the NLSreg-vs-MLreg specification test (a Hausman-style contrast of the two fits) proposed in Blair, Chou & Imai (2019) and implemented as `ict.hausman.test()` in the `list` package — reject model specification if the Hausman statistic is large and positive, or if it takes a negative value (which itself signals misspecification). If detected, use NLSreg as the primary estimator and consider including a placebo item.
 
 ### 7. Common Problems and Corrections
 
@@ -76,12 +80,17 @@ argument-hint: "[describe your sensitive question or list experiment design]"
 - [ ] **Floor/ceiling pre-checked:** Was the no-floor/ceiling assumption evaluated prior to data collection using prevalence priors?
 - [ ] **Design variant justified:** Has the choice between single, double, and placebo variants been justified based on expected sources of error?
 - [ ] **Placebo decision:** If placebo items are used, was it to address mechanical inflation specifically? Has the risk of placebo bias (Agerberg & Tannenberg 2021) been considered?
-- [ ] **DLE carryover tested:** If a double list experiment is used, are Diaz's (2024) carryover diagnostics planned?
+- [ ] **DLE carryover tested:** If a double list experiment is used, is it fixed-randomized or randomized-randomized (so that Diaz's 2024 tests apply), and are both the difference-in-differences test and Stephenson's signed-rank test planned and reported?
 - [ ] **NLSreg as primary:** Is NLSreg (not MLreg) used as the primary multivariate estimator, especially in online surveys with likely inattentive respondents?
-- [ ] **NDE test:** Is the no-design-effect assumption tested formally and reported?
+- [ ] **NDE test:** Is the no-design-effect assumption tested formally with `ict.test()` and reported?
+- [ ] **Hausman spec test:** Is the NLSreg-vs-MLreg specification test (`ict.hausman.test()`; Blair, Chou & Imai 2019) reported when a multivariate estimator is used?
 - [ ] **NFC test:** Is the no-floor/ceiling assumption tested formally and reported?
 - [ ] **Placebo experiment:** For politically sensitive contexts (regime support, discrimination), is a placebo experiment included to distinguish preference falsification from artificial deflation?
 - [ ] **Trade-off acknowledged:** Is the misreporting trade-off (reduced strategic, increased nonstrategic) discussed, with reference to domain-specific evidence?
 - [ ] **Power simulation:** Was a simulation-based power analysis conducted accounting for the ~10× variance multiplier?
 - [ ] **`list` package cited:** Is the `list` R package (Blair, Chou & Imai) cited as the implementation source?
 - [ ] **Direct comparison:** If results are compared to direct question estimates, is the comparison treated as a diagnostic rather than a validation (since the direct question is the biased baseline)?
+
+## Example
+
+For a worked illustration — a four-item control list for a clientelism / vote-buying sensitive item, with expected prevalences, floor/ceiling tail calculations, a pre-field NFC simulation, and the specific `ict.test()` / `ict.hausman.test()` diagnostic calls — see `reference/example-clientelism.md`.

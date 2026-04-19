@@ -1,6 +1,6 @@
 ---
 name: methods-reporting
-description: Implements high-transparency reporting standards for experimental social science. Use when (1) drafting or auditing a methods section, (2) preparing a pre-analysis plan or pre-registration, (3) documenting a conjoint or factorial vignette design, (4) building a CONSORT sample flow, or (5) ensuring compliance with APSA Experimental Section, JARS, and DA-RT standards. Includes a 45-item mandatory checklist.
+description: Implements high-transparency reporting standards for experimental social science. Use when (1) drafting or auditing a methods section, (2) preparing a pre-analysis plan or pre-registration, (3) documenting a conjoint or factorial vignette design, (4) building a CONSORT-style sample flow, or (5) aligning a methods section with APSA Experimental Section, JARS-Quant, and DA-RT standards. Includes a 45-item reporting checklist synthesizing these standards with conjoint and survey-quality best practice. Pairs with the pre-registration-writing, hypothesis-building, and paper-review skills.
 argument-hint: "[paste your methods section or describe what to audit]"
 ---
 
@@ -12,8 +12,9 @@ argument-hint: "[paste your methods section or describe what to audit]"
 This section covers upstream documentation that makes transparent reporting possible. A well-documented bad design is still a bad design; transparency tools are necessary but not sufficient (Druckman 2022).
 
 - **Design Document:** Before data collection, create a comprehensive document recording all decisions and their rationale -- motivation, stimuli, outcome measures, predictions, analysis plans, and logistics. This "design document" is the upstream practice that enables downstream transparent reporting (Druckman 2022, Ch. 5).
-- **Pre-Registration vs. Pre-Analysis Plan:** Distinguish between *study registration* (basic: recording the study's existence, hypotheses, and population in a public repository) and a *pre-analysis plan* (detailed: specifying exact statistical tests, evidence thresholds, and contingency plans). Require the latter for confirmatory experiments. Name the repository used (OSF, EGAP, or AsPredicted) and provide the registration ID.
-- **JARS Six Elements:** For preregistered experiments, ensure the following six elements are specified (Lakens 2025, citing Journal Article Reporting Standards): (1) randomization procedure, (2) inclusion/exclusion criteria, (3) sampling procedures and expected participation rate, (4) sample size justification with power analysis or precision rationale, (5) data diagnostics (exclusion criteria, missing data handling, outlier definitions, assumption checks), and (6) analytic strategy organized into primary, secondary, and exploratory tiers.
+- **Pre-Registration vs. Pre-Analysis Plan:** Distinguish between *study registration* (basic: recording the study's existence, hypotheses, and population in a public repository) and a *pre-analysis plan* (detailed: specifying exact statistical tests, evidence thresholds, and contingency plans). Require the latter for confirmatory experiments. Name the repository used (OSF, EGAP, or AsPredicted) and provide the registration ID. For PAP structure, cross-reference the `pre-registration-writing` skill; for estimand, SESOI, and primary/secondary/exploratory classification, cross-reference `hypothesis-building`.
+- **Six Core Pre-Registration Elements (Lakens's JARS-aligned summary):** For preregistered experiments, ensure the following six elements are specified, following Lakens's (2025) summary of the APA Journal Article Reporting Standards for quantitative research (JARS-Quant; Appelbaum et al. 2018): (1) randomization procedure, (2) inclusion/exclusion criteria, (3) sampling procedures and expected participation rate, (4) sample size justification with power analysis or precision rationale, (5) data diagnostics (exclusion criteria, missing data handling, outlier definitions, assumption checks), and (6) analytic strategy organized into primary, secondary, and exploratory tiers. The primary JARS-Quant tables (Appelbaum et al. 2018, *American Psychologist*; incorporated into APA 2020, *Publication Manual*, 7th ed., ch. 3) contain a longer branching item set covering observational, clinical-trial, longitudinal, replication, and N-of-1 designs; the six elements above are Lakens's pedagogical condensation, not JARS-Quant in full. For the broader reproducibility context in which JARS sits, see Munafò et al. (2017, "A Manifesto for Reproducible Science").
+- **Minimal vs. Complete Pre-Registration.** Waldron and Allen (2022) show that minimal pre-registrations (hypotheses only, or under-specified analysis plans) re-admit exploratory researcher degrees of freedom under a confirmatory banner. A pre-registration that lists hypotheses but leaves variables, exclusion rules, or model specifications open is closer to a public hypothesis than a confirmatory PAP. Require complete specification (items 1--6 above) when a study will be reported as confirmatory.
 - **Analysis Code:** The gold standard is to preregister analysis code that runs on a simulated dataset, eliminating ambiguity about all analytical decisions (Lakens 2025). For conjoint analyses, provide the regression specification in code form (e.g., R `lm()` or `feols()` call).
 - **Pilot Documentation:** Document all pilot studies, including not just manipulation check results but also response rate data, recruitment language testing, and any modifications made as a result (Druckman 2022, Ch. 5). For conjoints, pilot whether respondents attend to all attributes, find combinations plausible, and process the display as intended.
 
@@ -43,7 +44,7 @@ This section covers upstream documentation that makes transparent reporting poss
 ### 4. Measurement and Sample Flow
 - **Variable Definitions:** Provide precise definitions for how all primary outcomes, secondary outcomes, and covariates are measured and coded.
 - **Index Construction:** If an index is used, explain exactly how it was constructed.
-- **CONSORT Flow:** Document the sample at every stage:
+- **CONSORT-Style Sample Flow:** Document the sample at every stage, following the enrollment → allocation → follow-up → analysis structure of the CONSORT 2010 flow diagram (Schulz, Altman, and Moher 2010, *BMJ* 340:c332). The CONSORT 2010 Statement includes a 25-item checklist and a four-stage flow diagram; experiments reported in political science and social psychology typically adopt the flow structure even when the full 25-item medical-trial checklist does not apply.
     - The number initially assessed for eligibility.
     - Any exclusions prior to random assignment and the specific reasons for them.
     - The number of subjects assigned to each experimental group.
@@ -63,82 +64,28 @@ This section covers upstream documentation that makes transparent reporting poss
 - **Interaction Specification:** If interaction models are pre-registered, report the exact interaction terms, the hypothesis each tests, and the visualization method (e.g., conditional marginal means plots).
 - **Cross-Group Models:** If the design is fielded across multiple sites/countries, specify whether per-group models are estimated separately or pooled with group × attribute interactions.
 - **Pre-Specified Figures:** List all planned figures with a brief description of what each shows and which hypothesis it tests.
-- **Sensitivity and Robustness:** Beyond secondary DV replication, specify planned robustness checks: specification curves, alternative exclusion criteria, alternative model specifications. This addresses the "garden of forking paths" concern -- the risk that researchers unconsciously make particular analytic decisions that lead to outcomes that may not occur under other reasonable decisions (Gelman and Loken 2014, cited in Druckman 2022).
+- **Sensitivity and Robustness:** Beyond secondary DV replication, specify planned robustness checks: specification curves, alternative exclusion criteria, alternative model specifications. This addresses the "garden of forking paths" concern -- the risk that researchers unconsciously make particular analytic decisions that lead to outcomes that may not occur under other reasonable decisions (Gelman and Loken 2014; see also the Wicherts et al. 2016 34-item DF checklist for a comprehensive enumeration of researcher degrees of freedom to close through reporting).
 
 ### 6. Conjoint-Specific Reporting
-This section applies when the experiment uses a conjoint or factorial vignette design.
+When the experiment uses a conjoint or factorial vignette design, report the complete attribute table (with levels and reference categories), any randomization constraints and their justification, the task structure (number of tasks, forced choice vs. rating, attribute and profile randomization), clearly distinguished primary and secondary DVs with exact wording, all post-block items, and the effective sample size (Respondents × Tasks × Profiles). For factorial vignettes, also report the assembly template and worked examples. The primary methodological references are Hainmueller, Hopkins, and Yamamoto (2014) and Bansak, Hainmueller, Hopkins, and Yamamoto (2021, *Advances in Experimental Political Science*).
 
-- **Attribute Table:** Report a complete table listing all attributes, their levels, and the reference category for each. If levels are country-specific (localized), provide both the generic attribute definition and the country-specific operationalizations.
-- **Randomization Constraints:** If any attributes are nested, linked, or restricted (not fully independently randomized), document: (a) which attributes are constrained, (b) the justification for the constraint, and (c) which attributes remain fully independent. This is critical because constrained randomization changes the interpretation of AMCEs.
-- **Vignette Assembly:** If using factorial vignettes (paragraph-form rather than attribute tables), provide: (a) the template showing how attributes are assembled into a coherent vignette, (b) worked examples of assembled vignettes for multiple attribute combinations, and (c) all country-specific text for each attribute level.
-- **Task Structure:** Report: the number of paired-choice tasks per respondent, whether tasks involve forced choice or rating or both, attribute order randomization method, and profile position randomization.
-- **DV Specification:** Clearly distinguish primary and secondary dependent variables. State the exact question wording for each. If both forced choice and rating are used, specify which is primary (for AMCE estimation) and which is secondary (for robustness).
-- **Post-Block Items:** Document any post-block measures (attribution items, manipulation checks) with exact wording and response options. Clearly label these as non-confirmatory if they are not primary outcomes.
-- **Effective Sample Size:** Report the effective number of profile evaluations (Respondents × Tasks × Profiles per task) and the number of observations per cell in the attribute space.
+> **Conjoint-specific reporting:** see [reference/conjoint-reporting.md](reference/conjoint-reporting.md).
 
 ### 7. Validity Framework
 - **Four Validity Types:** Evaluate the design against Druckman's (2022) four validity types: (1) *construct validity* (do measures capture the intended concepts?), (2) *statistical conclusion validity* (are the statistical inferences correct?), (3) *internal validity* (is the causal claim warranted?), and (4) *external validity* (does the finding generalize?). Random assignment provides internal validity; representative sampling provides generalizability -- these are independent contributions (Mutz 2011).
-- **Deviation Reporting:** When deviating from a preregistered plan, document: (a) what changed, (b) why, (c) the impact on *severity* (does the deviation make the test more or less capable of falsifying the hypothesis?), and (d) the impact on *validity* (does the deviation improve or degrade the design's ability to measure what it claims?). Not all deviations reduce quality -- fixing a validity problem can *increase* test severity (Lakens 2025).
-- **Design Improvement Framing:** If the design was revised in response to peer or workshop feedback, frame the improvement as a theoretical advance rather than a correction. For example: "The redesigned experiment enables a direct test of whether [mechanism] withstands [alternative explanation]" (see narrative-building skill).
+- **Deviation Reporting:** When deviating from a preregistered plan, document: (a) what changed, (b) why, (c) the impact on *severity* (does the deviation make the test more or less capable of falsifying the hypothesis?), and (d) the impact on *validity* (does the deviation improve or degrade the design's ability to measure what it claims?). Not all deviations reduce quality -- fixing a validity problem can *increase* test severity (Lakens 2025). This skill enforces *disclosure* of deviations; any *narrative framing* of revisions belongs in the `narrative-building` skill, not here.
 
 ### 8. Open Science Infrastructure
-- **DA-RT Three Pillars:** Adhere to the Data Access and Research Transparency principles: (1) *data access* -- share replication data, (2) *production transparency* -- document how data were generated, and (3) *analytic transparency* -- provide complete analysis code (APSA Guide to Professional Ethics, cited in Druckman 2022).
+- **DA-RT Three Pillars:** Adhere to the Data Access and Research Transparency principles articulated for political science: (1) *data access* -- share replication data, (2) *production transparency* -- document how data were generated, and (3) *analytic transparency* -- provide complete analysis code. The canonical formulation is Lupia and Elman (2014, *PS: Political Science & Politics* 47(1), 19--42), the lead article of the DA-RT symposium, later codified in the APSA *Guide to Professional Ethics in Political Science* and extended by the APSA (2020) *Principles and Guidance for Human Subjects Research*. Cross-journal operationalization appears in the Transparency and Openness Promotion (TOP) Guidelines (Nosek et al. 2015, *Science* 348:1422--1425), which translate DA-RT-style commitments into eight journal-policy standards (citation, data, analytic methods, research materials, design, pre-registration of studies, pre-registration of analyses, replication) at three enforcement levels. See Christensen, Freese, and Miguel (2019) for implementation guidance.
 - **Data Sharing Plan:** Specify what data will be shared, in what format, with what documentation, and on what platform. For cross-national studies, address varying privacy regimes across national contexts (Christensen et al. 2019).
 - **Reproducible Workflow:** Provide version-controlled analysis code that reproduces all results from raw data to published figures. The path from raw data to published results should be fully documented and executable, not just described in prose (Christensen et al. 2019).
 - **During-Collection Documentation:** Maintain session logs, variable creation decisions, case selection decisions, and analytic code version control throughout data collection -- not only after (Druckman 2022, Ch. 5).
-- **IRB and Ethics:** Report IRB approval details. For audit studies or studies involving deception, note the specific ethical provisions. Begin the IRB process early -- it can take weeks or months (Druckman 2022).
+- **IRB and Ethics:** Report IRB approval details. For audit studies or studies involving deception, note the specific ethical provisions. Begin the IRB process early -- it can take weeks or months (Druckman 2022). Political-science-specific human-subjects guidance is in APSA (2020, *Principles and Guidance for Human Subjects Research*), which covers power differentials, deception, consent, and the obligation to acknowledge and justify deviations from the principles in published work. For manuscript-level checks on data availability, ethics, IRB, and funding statements, cross-reference the `paper-review` skill.
 
 ## Quality Checks
 
-### Core Reporting (Items 1--19)
-- [ ] 1. Eligibility criteria for participants reported?
-- [ ] 2. Specific recruitment and conduct dates (including follow-ups) provided?
-- [ ] 3. Survey firm identified and recruitment methods described?
-- [ ] 4. Response rate and calculation method reported?
-- [ ] 5. Use of random assignment explicitly stated?
-- [ ] 6. Unit of randomization (individual, group, cluster) identified?
-- [ ] 7. Table of baseline means and SDs by experimental group provided?
-- [ ] 8. Detailed description of all treatment and control conditions included?
-- [ ] 9. Complete treatment materials (scripts, images, etc.) made available?
-- [ ] 10. Outcome variable measurement and coding defined?
-- [ ] 11. Exact construction of any indices explained?
-- [ ] 12. Measurement and coding of all covariates/model variables reported?
-- [ ] 13. Number of subjects initially assessed for eligibility reported?
-- [ ] 14. Exclusions prior to randomization and reasons provided?
-- [ ] 15. Number of subjects assigned to each experimental group stated?
-- [ ] 16. Proportion receiving the intervention and reasons for non-receipt reported?
-- [ ] 17. Number of subjects per group lacking outcome data reported?
-- [ ] 18. Number included in analysis and rationale for exclusions provided?
-- [ ] 19. Outcome means/SDs/Ns reported using Intent-to-Treat (ITT) analysis?
+The full 45-item reporting checklist synthesizes the 19-item APSA Experimental Section rubric (Gerber et al. 2014), JARS-Quant (Appelbaum et al. 2018; APA 2020) as condensed by Lakens (2025), DA-RT principles (Lupia and Elman 2014; Nosek et al. 2015), conjoint best practice (Hainmueller, Hopkins, and Yamamoto 2014; Bansak et al. 2021), and survey-quality recommendations (Stantcheva 2023). Items are grouped into four blocks: Core Reporting (1--19), Conjoint-Specific Reporting (20--28), Design Transparency (29--40), and Survey Design Quality (41--45). No single authority mandates all 45 as a unit; treat the list as a *recommended* reporting ceiling, not a minimum-mandatory floor.
 
-### Conjoint-Specific Reporting (Items 20--28)
-- [ ] 20. Complete attribute table with all levels and reference categories provided?
-- [ ] 21. Any randomization constraints (nesting, linking, restrictions) documented and justified?
-- [ ] 22. Vignette assembly template and worked examples included (if factorial vignette)?
-- [ ] 23. Number of tasks, choice format, and randomization method reported?
-- [ ] 24. Primary and secondary DVs clearly distinguished with exact question wording?
-- [ ] 25. Post-block items (attribution, manipulation checks) documented with exact wording?
-- [ ] 26. Effective sample size (profile evaluations) and per-cell Ns reported?
-- [ ] 27. AMCE estimation method, clustering, and marginal means computation specified?
-- [ ] 28. All pre-registered interaction models and planned figures listed?
+For a paragraph-level worked example illustrating how items 1--19 can be compactly reported in ~650 words of prose plus named supplementary materials, see [reference/example-methods-paragraph.md](reference/example-methods-paragraph.md).
 
-### Design Transparency (Items 29--40)
-- [ ] 29. Hypotheses stated prior to research design, not post hoc (Gerber et al. 2014)?
-- [ ] 30. Subject incentives described (Gerber et al. 2014)?
-- [ ] 31. Blinding status (single, double, or none) reported (Gerber et al. 2014)?
-- [ ] 32. Mode of treatment delivery (text, audio, video, in-person) described (Gerber et al. 2014)?
-- [ ] 33. Randomization software/tool and assignment sequence details provided (Gerber et al. 2014)?
-- [ ] 34. Manipulation checks documented with placement, wording, and results (Druckman 2022)?
-- [ ] 35. Sample size justification type identified and reported (Lakens 2025)?
-- [ ] 36. SESOI specified and justified for all hypothesis tests, or rationale given for its absence (Lakens 2025)?
-- [ ] 37. Pre-registration ID and repository stated (Druckman 2022)?
-- [ ] 38. Deviations from pre-analysis plan documented with severity and validity impact (Lakens 2025)?
-- [ ] 39. Results labeled as primary, secondary, or exploratory (Lakens 2025; JARS)?
-- [ ] 40. Data sharing plan, reproducible analysis code, and open materials platform specified (Christensen et al. 2019)?
-
-### Survey Design Quality (Items 41--45, Stantcheva 2023)
-- [ ] 41. Was a soft-launch conducted before full deployment, with technical issues documented?
-- [ ] 42. Are raw (unadjusted) results reported alongside any corrected/reweighted results?
-- [ ] 43. Are benchmark comparisons to existing representative surveys reported to validate sample quality?
-- [ ] 44. Have question wording best practices been followed (item-specific scales, no agree-disagree, randomized option order)?
-- [ ] 45. Is the three-stage survey error pipeline (coverage, sampling, nonresponse) addressed?
+> **Full checklist:** see [reference/checklist.md](reference/checklist.md).
