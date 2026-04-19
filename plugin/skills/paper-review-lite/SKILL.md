@@ -1,6 +1,6 @@
 ---
 name: paper-review-lite
-description: Runs a Critical-Reviewer-style pre-submission audit of a manuscript using parallel sub-agents inside Claude Code. An in-session lightweight counterpart to the standalone `openpeerreview` Python CLI — adopts the same adversarial framing (brutally honest but quote-grounded) at ~11 sub-agents instead of 30+ stages. Use when (1) preparing a manuscript for journal submission, (2) checking internal consistency of numbers across abstract, body, tables, and SI, (3) auditing a bibliography for missing DOIs or formatting issues, (4) reviewing a replication archive for completeness, (5) verifying data availability, ethics/IRB, and funding statements, (6) running a cross-check on figures, tables, and formatting, or (7) assessing writing quality and terminology consistency. For heavier adversarial review (30+ Red Team / Blue Team / verification stages, resumable, cost-tracked), use `openpeerreview` instead.
+description: Runs a Critical-Reviewer-style pre-submission audit of a manuscript using parallel sub-agents inside Claude Code. An in-session lightweight counterpart to the standalone `presubmit` Python CLI — adopts the same adversarial framing (brutally honest but quote-grounded) at ~11 sub-agents instead of 30+ stages. Use when (1) preparing a manuscript for journal submission, (2) checking internal consistency of numbers across abstract, body, tables, and SI, (3) auditing a bibliography for missing DOIs or formatting issues, (4) reviewing a replication archive for completeness, (5) verifying data availability, ethics/IRB, and funding statements, (6) running a cross-check on figures, tables, and formatting, or (7) assessing writing quality and terminology consistency. For heavier adversarial review (30+ Red Team / Blue Team / verification stages, resumable, cost-tracked), use `presubmit` instead.
 argument-hint: "[path to paper or describe manuscript to review]"
 context: fork  # Claude Code: run skill in a forked subagent context (isolated from conversation history). See https://code.claude.com/docs/en/skills#frontmatter-reference
 ---
@@ -9,14 +9,14 @@ context: fork  # Claude Code: run skill in a forked subagent context (isolated f
 
 ## Heritage and scope
 
-This is the in-session, Claude-Code-native counterpart to [`openpeerreview`](https://github.com/scdenney/open-peer-review) — our port of the [reviewer2](https://github.com/isitcredible/reviewer2) adversarial peer-review pipeline to Anthropic Claude. The design inherits two things from that lineage:
+This is the in-session, Claude-Code-native counterpart to [`presubmit`](https://github.com/scdenney/presubmit) — our port of the [reviewer2](https://github.com/isitcredible/reviewer2) adversarial peer-review pipeline to Anthropic Claude. The design inherits two things from that lineage:
 
 1. **A Critical-Reviewer posture.** Review sub-agents adopt the persona of a rigorous, epistemically humble reviewer who is brutally honest about weaknesses but impervious to prestige (reputation, journal status, citation counts, prior peer review) and grounds every finding in a quote from the manuscript.
 2. **A verification cascade.** Red Team findings are cross-checked against the source before they enter the final report; claims that cannot be pinned to a quoted passage are dropped as likely hallucinations.
 
 **What this skill is:** a ~11-sub-agent review that runs inside a Claude Code session, no extra install, billable against your Claude Code plan. Fast feedback during writing.
 
-**What it is NOT:** the full reviewer2/`openpeerreview` pipeline. That tool runs ~30 stages with a dedicated Red Team (Breaker, Butcher, Shredder, Collector, Void), Blue Team defence, numbers/fact-check/citation-verification cascades, and a legal pass — and it is resumable and cost-tracked. Reach for `openpeerreview` when you want deeper adversarial pressure, need a standalone deliverable (a review report file), or are preparing a manuscript for final external peer review. This skill is the fast in-flow check.
+**What it is NOT:** the full reviewer2/`presubmit` pipeline. That tool runs ~30 stages with a dedicated Red Team (Breaker, Butcher, Shredder, Collector, Void), Blue Team defence, numbers/fact-check/citation-verification cascades, and a legal pass — and it is resumable and cost-tracked. Reach for `presubmit` when you want deeper adversarial pressure, need a standalone deliverable (a review report file), or are preparing a manuscript for final external peer review. This skill is the fast in-flow check.
 
 ## Instructions
 
@@ -162,14 +162,14 @@ Cite file paths and line numbers for every issue. Distinguish between objective 
 - [ ] Report includes a Strengths section (not just problems)
 - [ ] For a worked example of a filled Pre-Submit Report, see `reference/example-report.md`
 
-## When to reach for `openpeerreview` instead
+## When to reach for `presubmit` instead
 
-This skill covers most in-flow review needs. Reach for the heavier [`openpeerreview`](https://github.com/scdenney/open-peer-review) Python CLI when:
+This skill covers most in-flow review needs. Reach for the heavier [`presubmit`](https://github.com/scdenney/presubmit) Python CLI when:
 
 - You want **full adversarial pressure** — the reviewer2 pipeline spins up multiple Red Team personas (Breaker, Butcher, Shredder, Collector, Void) that each attack the paper from a different angle; this skill compresses that into Agent 1.
 - You want a **standalone deliverable** — a single `report.txt` and optional editor's note, produced outside your Claude Code session. Useful when the review is the product (sending feedback to a co-author, final pre-submission critique, pre-print critique).
-- You want **resumability + cost tracking** — `openpeerreview` checkpoints every stage to disk; deleting a stage file forces that stage to re-run. Tracks per-stage API cost.
-- You want a **math audit** — `openpeerreview` has an optional Mathpix-backed equation audit (`--math`); this skill doesn't.
-- You want a **code-replication audit** — `openpeerreview` can ingest a replication archive and compare claims against the code (`--code`); this skill stops at the "does the archive look complete" question in Agent 9.
+- You want **resumability + cost tracking** — `presubmit` checkpoints every stage to disk; deleting a stage file forces that stage to re-run. Tracks per-stage API cost.
+- You want a **math audit** — `presubmit` has an optional Mathpix-backed equation audit (`--math`); this skill doesn't.
+- You want a **code-replication audit** — `presubmit` can ingest a replication archive and compare claims against the code (`--code`); this skill stops at the "does the archive look complete" question in Agent 9.
 
-Trade-off: `openpeerreview` bills per-token against an Anthropic API key (separate from your Claude Code subscription). See `open-peer-review/README.md` for install, cost considerations, and known trade-offs vs. the upstream Gemini implementation.
+Trade-off: `presubmit` bills per-token against an Anthropic API key (separate from your Claude Code subscription). See `presubmit/README.md` for install, cost considerations, and known trade-offs vs. the upstream Gemini implementation.
