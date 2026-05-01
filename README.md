@@ -1,11 +1,11 @@
 # Open Science Skills
 
-![version](https://img.shields.io/badge/version-1.5.1-blue)
-![skills](https://img.shields.io/badge/skills-16-blue)
-![plugin](https://img.shields.io/badge/Claude%20Code-plugin-orange)
-![updated](https://img.shields.io/badge/updated-May%202026-green)
-![sources](https://img.shields.io/badge/sources-140%2B-purple)
-![PRs welcome](https://img.shields.io/badge/PRs-welcome-brightgreen)
+[![version](https://img.shields.io/badge/version-1.5.1-blue)](https://github.com/scdenney/open-science-skills/releases)
+[![skills](https://img.shields.io/badge/skills-16-blue)](#skills)
+[![plugin](https://img.shields.io/badge/Claude%20Code-plugin-orange)](https://code.claude.com/docs/en/skills)
+[![updated](https://img.shields.io/badge/updated-May%202026-green)](https://github.com/scdenney/open-science-skills/commits/main)
+[![sources](https://img.shields.io/badge/sources-140%2B-purple)](SOURCES.md)
+[![PRs welcome](https://img.shields.io/badge/PRs-welcome-brightgreen)](#contributing)
 
 A library of [Claude Code skills](https://code.claude.com/docs/en/skills) for experimental social science and computational text analysis. Install as a plugin to get AI assistance, from hypothesis generation through final reporting. The skills are available both as auto-triggered context and as explicit `/skill-name` slash commands.
 
