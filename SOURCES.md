@@ -37,11 +37,17 @@ Sources specific to conjoint experiment methodology, estimation, and diagnostics
 * **Dill, J., Howlett, M., & Müller-Crepon, C.** (2024). "At Any Cost: How Ukrainians Think about Self-Defense against Russia." *American Journal of Political Science*, 68(4), 1460–1478.
 * **Egami, N., & Imai, K.** (2019). "Causal Interaction in Factorial Experiments: Application to Conjoint Analysis." *Journal of the American Statistical Association*, 114(526), 529–540.
 * **Fu, J., & Li, X.** (2024). "Generalization Issues in Conjoint Experiment: Attention and Salience." *arXiv* preprint arXiv:2405.06779.
+* **Ganter, F.** (2023). "Identification of Preferences in Forced-Choice Conjoint Experiments: Reassessing the Quantity of Interest." *Political Analysis*, 31(1), 98–112.
 * **Goplerud, M., Imai, K., & Pashley, N. E.** (2025). "Estimating Heterogeneous Causal Effects of High-Dimensional Treatments: Application to Conjoint Analysis." *Annals of Applied Statistics*, 19(2), 866–888.
+* **Gosciak, J., Molitor, D., & Lundberg, I.** (2026). "Adaptive Randomization in Conjoint Survey Experiments." *Political Analysis*, 1–28. https://doi.org/10.1017/pan.2026.10040.
+* **Hadad, V., Hirshberg, D. A., Zhan, R., Wager, S., & Athey, S.** (2021). "Confidence Intervals for Policy Evaluation in Adaptive Experiments." *Proceedings of the National Academy of Sciences*, 118(15), e2014602118.
 * **Hainmueller, J., Hopkins, D. J., & Yamamoto, T.** (2014). "Causal Inference in Conjoint Analysis: Understanding Multidimensional Choices via Stated Preference Experiments." *Political Analysis*, 22(1), 1–30.
 * **Hainmueller, J., Hangartner, D., & Yamamoto, T.** (2015). "Validating Vignette and Conjoint Survey Experiments against Real-World Behavior." *Proceedings of the National Academy of Sciences*, 112(8), 2395–2400.
 * **Ham, D. W., Imai, K., & Janson, L.** (2024). "Using Machine Learning to Test Causal Hypotheses in Conjoint Analysis." *Political Analysis*, 32(2), 1–16.
+* **Horiuchi, Y., Markovich, Z., & Yamamoto, T.** (2022). "Does Conjoint Analysis Mitigate Social Desirability Bias?" *Political Analysis*, 30(4), 535–549.
+* **Kasy, M., & Sautmann, A.** (2021). "Adaptive Treatment Assignment in Experiments for Policy Choice." *Econometrica*, 89(1), 113–132.
 * **Miller, D. R., & Ziegler, J.** (2024). "Preferential Abstention in Conjoint Experiments." *Research and Politics*, 11(4).
+* **Offer-Westort, M., Coppock, A., & Green, D. P.** (2021). "Adaptive Experimental Design: Prospects and Applications in Political Science." *American Journal of Political Science*, 65(4), 826–844.
 * **Schuessler, J., & Freitag, M.** (2020). "Power Analysis for Conjoint Experiments." *SocArXiv*.
 * **Schuessler, J., & Freitag, M.** (2021). *cjpowR: A Package for Power Analysis for Conjoint Experiments* (R package). GitHub: m-freitag/cjpowR.
 * **Leeper, T. J., Hobolt, S. B., & Tilley, J.** (2020). "Measuring Subgroup Preferences in Conjoint Experiments." *Political Analysis*, 28(2), 207–221.
