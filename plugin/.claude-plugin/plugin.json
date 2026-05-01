@@ -1,6 +1,6 @@
 {
   "name": "open-science-skills",
-  "version": "1.4.0",
+  "version": "1.5.1",
   "description": "Claude Code skills for experimental social science and computational text analysis: conjoint design, diagnostics, and data cleaning, survey design, list experiments, cross-national design, topic modeling, LLM text classification, VLM-based OCR pipelines, post-OCR cleanup, paper pre-submission review, hypothesis building, narrative building, pre-registration, and methods reporting. Invoke as /skill-name or let Claude auto-trigger based on context.",
   "author": {
     "name": "Steven Denney",

@@ -1,19 +1,19 @@
 # Open Science Skills
 
-![version](https://img.shields.io/badge/version-1.5.0-blue)
+![version](https://img.shields.io/badge/version-1.5.1-blue)
 ![skills](https://img.shields.io/badge/skills-16-blue)
 ![plugin](https://img.shields.io/badge/Claude%20Code-plugin-orange)
 ![updated](https://img.shields.io/badge/updated-May%202026-green)
-![sources](https://img.shields.io/badge/sources-90%2B-purple)
+![sources](https://img.shields.io/badge/sources-140%2B-purple)
 ![PRs welcome](https://img.shields.io/badge/PRs-welcome-brightgreen)
 
-A library of [Claude Code skills](https://code.claude.com/docs/en/skills) for experimental social science and computational text analsyis. Install as a plugin to get AI assistance, from hypothesis generation through final reporting. The skills are available both as auto-triggered context and as explicit `/skill-name` slash commands.
+A library of [Claude Code skills](https://code.claude.com/docs/en/skills) for experimental social science and computational text analysis. Install as a plugin to get AI assistance, from hypothesis generation through final reporting. The skills are available both as auto-triggered context and as explicit `/skill-name` slash commands.
 
 Skills were developed using a curated library of methodology texts. They are iteratively expanded as new sources, ideas, and skills are incorporated. This is a living and breathing kind of repo. Skill building and editing is author-driven with the help of Opus 4.6, Gemini 3.0, and Chat GPT 5.4.
 
 Design follows Anthropic's [skill authoring best practices](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices): concise procedural guidance (no textbook definitions), trigger-rich YAML descriptions for auto-invocation, and progressive disclosure (instructions in skills, bibliography in SOURCES.md). Skills are periodically audited against both the [Claude Code skills reference](https://code.claude.com/docs/en/skills) and the [skill authoring guide](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices) to keep descriptions, frontmatter, and substantive content current.
 
-> These skills are meant to support, not supplant, the research and writing process. They adhere to APSA, JARS, and DA-RT reporting standards. All guidance is grounded in 90+ published sources — see [**SOURCES.md**](SOURCES.md) for the full bibliography.
+> These skills are meant to support, not supplant, the research and writing process. They adhere to APSA, JARS, and DA-RT reporting standards. All guidance is grounded in 140+ published sources — see [**SOURCES.md**](SOURCES.md) for the full bibliography.
 
 ---
 
