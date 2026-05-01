@@ -1,9 +1,9 @@
 # Open Science Skills
 
-![version](https://img.shields.io/badge/version-1.4.0-blue)
-![skills](https://img.shields.io/badge/skills-15-blue)
+![version](https://img.shields.io/badge/version-1.5.0-blue)
+![skills](https://img.shields.io/badge/skills-16-blue)
 ![plugin](https://img.shields.io/badge/Claude%20Code-plugin-orange)
-![updated](https://img.shields.io/badge/updated-Apr%202026-green)
+![updated](https://img.shields.io/badge/updated-May%202026-green)
 ![sources](https://img.shields.io/badge/sources-90%2B-purple)
 ![PRs welcome](https://img.shields.io/badge/PRs-welcome-brightgreen)
 
@@ -54,7 +54,7 @@ git clone https://github.com/scdenney/open-science-skills.git
 cd open-science-skills && claude --plugin-dir ./plugin
 ```
 
-All 15 skills auto-trigger based on your prompts. All 15 slash commands (`/conjoint-design`, `/list-experiment`, etc.) are immediately available.
+All 16 skills auto-trigger based on your prompts. All 16 slash commands (`/conjoint-design`, `/list-experiment`, etc.) are immediately available.
 
 ### Option 2 — Selective install (choose specific skills, auto-trigger only)
 
@@ -137,6 +137,7 @@ cp open-science-skills/plugin/skills/list-experiment/SKILL.md \
 | [**pre-registration-writing**](plugin/skills/pre-registration-writing/SKILL.md) | `/pre-registration-writing` | PAP structure, registry selection, analytical strategy specification, code pre-registration, deviation documentation |
 | [**methods-reporting**](plugin/skills/methods-reporting/SKILL.md) | `/methods-reporting` | 40-item reporting checklist: CONSORT standards, JARS preregistration elements, DA-RT transparency |
 | [**paper-review-lite**](plugin/skills/paper-review-lite/SKILL.md) | `/paper-review-lite` | Critical-Reviewer-style pre-submission audit: parallel quote-grounded sub-agents, verification cross-check, CONSORT + pre-reg audit for experimental papers. Lite counterpart to the standalone [`presubmit`](https://github.com/scdenney/presubmit) CLI. |
+| [**presubmit**](plugin/skills/presubmit/SKILL.md) | `/presubmit` | Activator + setup wizard for the standalone [`presubmit`](https://github.com/scdenney/presubmit) Python CLI: walks first-time users through install (venv + `pip install -e .`), Anthropic API key setup, and output location, then runs the heavier 30+ stage adversarial pipeline (resumable, cost-tracked, optional `--math` and `--code-dir` add-ons). Heavier API-driven counterpart to `paper-review-lite`. |
 
 ---
 
