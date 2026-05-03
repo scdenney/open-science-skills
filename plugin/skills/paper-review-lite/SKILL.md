@@ -96,12 +96,27 @@ Both cross-check agents read the Phase 2 output files from `.review-tmp/` direct
 
 ### 4. Synthesis
 
-Compile all validated findings (false positives removed) into a single **Pre-Submit Report**:
+**Before listing anything, consolidate.** If two or more Phase 2 agents independently flagged the same underlying issue, present it once with the strongest supporting quote, not two or three times under different headings. If a finder's own description includes language conceding the point ("does not in itself indicate a deviation from common practice," "while a real concern, this is standard in the literature," "the paper acknowledges this on p. X"), demote the issue one severity tier — or drop it if the concession negates the critique. The reader should not encounter the same complaint five times restated as five separate items; that's an artifact of the parallel-agent structure, and it erodes trust in the report.
+
+Compile validated, deduplicated findings into a single **Pre-Submit Report**:
 
 ```
 ## Pre-Submit Report: [Paper Title]
 Date: [today]
+Recommendation: [Submit as-is | Minor revisions before submit | Major revisions before submit | Hold for new analysis | Substantial restructuring needed]
 Issues: [N critical, N recommended, N minor]
+
+### Editor's Note (revision strategy — read first)
+
+A 3–6 paragraph prose memo, in your own voice, summarizing the path to a revised version that defends the contribution. Not a punch list — the punch list is below. This section should:
+
+- Open with the single most consequential addition that would *strengthen* rather than weaken the paper. (Often a small analytical addition, a missing robustness check, or a missing comparison whose result would convert the strongest critique into a supporting result.)
+- Identify which Critical Issues require new analysis (cannot be addressed by rewriting alone) versus which are textual/framing fixes.
+- Where the manuscript already concedes a point that a critique missed, name the concession and note that the fix may be a small expansion of the existing acknowledgement rather than a new section.
+- Where two Critical Issues are coupled (fixing one resolves the other), say so.
+- End with a short paragraph on what could be deferred to a future paper without weakening the current contribution.
+
+The Editor's Note is the most useful single section for the author who is about to revise. The Critical / Recommended / Minor lists below are the supporting evidence for the strategy laid out here.
 
 ### Critical Issues (must fix before submission)
 ### Recommended Changes (should fix, not blocking)
@@ -155,6 +170,10 @@ Cite file paths and line numbers for every issue. Distinguish between objective 
 - [ ] Forking-paths audit (DV/covariate/sample/transformation choices) was completed by Agent 7
 - [ ] Cross-check agents verified every CRITICAL and RECOMMENDED finding against actual files
 - [ ] False positives identified and removed from the final report
+- [ ] **Synthesis deduplication applied**: findings that multiple Phase 2 agents flagged about the same underlying issue are consolidated into a single entry with the strongest supporting quote, not restated multiple times under different headings
+- [ ] **Self-conceded critiques demoted or dropped**: any finding whose own description includes language conceding the point ("does not in itself indicate a deviation," "this is standard in the literature," "the paper acknowledges this on p. X") is demoted one severity tier or dropped entirely if the concession negates the critique
+- [ ] **Top-line Recommendation set**: the report begins with a single-line verdict (Submit as-is / Minor / Major / Hold for new analysis / Substantial restructuring) before any of the issue lists
+- [ ] **Editor's Note written before the issue lists**: a 3–6 paragraph prose memo identifying the single most consequential addition that would strengthen the paper, distinguishing analysis-required vs. rewriting-only fixes, and naming any concessions the author already makes that critiques may have missed
 - [ ] Every issue in the report includes a file path and line number (or section name)
 - [ ] The journal-readiness checklist covers all dimensions present in the table
 - [ ] The "What Still Needs Your Input" section is populated with items requiring author knowledge
