@@ -9,8 +9,8 @@
   "plugins": [
     {
       "name": "open-science-skills",
-      "description": "16 skills for experimental social science: conjoint design / cleaning / diagnostics, survey design, list experiments, cross-national design, topic modeling, LLM text classification, VLM-OCR + post-OCR cleanup, hypothesis building, narrative building, pre-registration writing, methods reporting, paper-review-lite (in-session adversarial audit), and presubmit (activator for the standalone API-driven peer-review pipeline). All skills auto-trigger from context and are available as /skill-name slash commands.",
-      "version": "1.5.0",
+      "description": "17 skills for experimental social science: conjoint design / cleaning / diagnostics, survey design, list experiments, cross-national design, topic modeling, LLM text classification, VLM-OCR + post-OCR cleanup, hypothesis building, narrative building, pre-registration writing, methods reporting, paper-review-lite (in-session self-audit), presubmit (activator for the standalone API-driven self-audit pipeline), and journal-review (third-party referee report drafting for editor-invited reviews). All skills auto-trigger from context and are available as /skill-name slash commands.",
+      "version": "1.6.0",
       "author": {
         "name": "Steven Denney",
         "url": "https://github.com/scdenney"

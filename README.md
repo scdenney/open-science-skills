@@ -1,7 +1,7 @@
 # Open Science Skills
 
-[![version](https://img.shields.io/badge/version-1.5.1-blue)](https://github.com/scdenney/open-science-skills/releases)
-[![skills](https://img.shields.io/badge/skills-16-blue)](#skills)
+[![version](https://img.shields.io/badge/version-1.6.0-blue)](https://github.com/scdenney/open-science-skills/releases)
+[![skills](https://img.shields.io/badge/skills-17-blue)](#skills)
 [![plugin](https://img.shields.io/badge/Claude%20Code-plugin-orange)](https://code.claude.com/docs/en/skills)
 [![updated](https://img.shields.io/badge/updated-May%202026-green)](https://github.com/scdenney/open-science-skills/commits/main)
 [![sources](https://img.shields.io/badge/sources-140%2B-purple)](SOURCES.md)
@@ -54,7 +54,7 @@ git clone https://github.com/scdenney/open-science-skills.git
 cd open-science-skills && claude --plugin-dir ./plugin
 ```
 
-All 16 skills auto-trigger based on your prompts. All 16 slash commands (`/conjoint-design`, `/list-experiment`, etc.) are immediately available.
+All 17 skills auto-trigger based on your prompts. All 17 slash commands (`/conjoint-design`, `/list-experiment`, etc.) are immediately available.
 
 ### Option 2 — Selective install (choose specific skills, auto-trigger only)
 
@@ -138,6 +138,7 @@ cp open-science-skills/plugin/skills/list-experiment/SKILL.md \
 | [**methods-reporting**](plugin/skills/methods-reporting/SKILL.md) | `/methods-reporting` | 40-item reporting checklist: CONSORT standards, JARS preregistration elements, DA-RT transparency |
 | [**paper-review-lite**](plugin/skills/paper-review-lite/SKILL.md) | `/paper-review-lite` | Critical-Reviewer-style pre-submission audit: parallel quote-grounded sub-agents, verification cross-check, CONSORT + pre-reg audit for experimental papers. Lite counterpart to the standalone [`presubmit`](https://github.com/scdenney/presubmit) CLI. |
 | [**presubmit**](plugin/skills/presubmit/SKILL.md) | `/presubmit` | Activator + setup wizard for the standalone [`presubmit`](https://github.com/scdenney/presubmit) Python CLI: walks first-time users through install (venv + `pip install -e .`), Anthropic API key setup, and output location, then runs the heavier 30+ stage adversarial pipeline (resumable, cost-tracked, optional `--math` and `--code-dir` add-ons). Heavier API-driven counterpart to `paper-review-lite`. |
+| [**journal-review**](plugin/skills/journal-review/SKILL.md) | `/journal-review` | Drafts a senior-peer referee report on **someone else's** manuscript for a social-science journal. Five parallel finder sub-agents (Breaker, Butcher, Shredder, Void, Situator) + Blue Team filter + Chief Reviewer synthesis + Tone Guard sanitization produce a tight 1,200–2,000 word report (Recommendation + Summary + Major Concerns + Additional Concerns + Suggestions for Revision). Different role from `paper-review-lite` and `presubmit`, which are calibrated for SELF-AUDIT; this one is third-party referee work appropriate to send to a journal editor. |
 
 ---
 
