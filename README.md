@@ -1,11 +1,11 @@
 # Open Science Skills
 
-[![version](https://img.shields.io/badge/version-1.7.0-blue)](https://github.com/scdenney/open-science-skills/releases)
+[![version](https://img.shields.io/badge/version-1.8.0-blue)](https://github.com/scdenney/open-science-skills/releases)
 [![License: CC BY-NC 4.0](https://img.shields.io/badge/license-CC%20BY--NC%204.0-lightgrey)](LICENSE)
-[![skills](https://img.shields.io/badge/skills-20-blue)](#skills)
+[![skills](https://img.shields.io/badge/skills-21-blue)](#skills)
 [![plugin](https://img.shields.io/badge/Claude%20Code-plugin-orange)](https://code.claude.com/docs/en/skills)
 [![updated](https://img.shields.io/badge/updated-May%202026-green)](https://github.com/scdenney/open-science-skills/commits/main)
-[![sources](https://img.shields.io/badge/sources-150%2B-purple)](SOURCES.md)
+[![sources](https://img.shields.io/badge/sources-160%2B-purple)](SOURCES.md)
 [![PRs welcome](https://img.shields.io/badge/PRs-welcome-brightgreen)](#contributing)
 
 A library of [Claude Code skills](https://code.claude.com/docs/en/skills) for experimental social science, computational text analysis, manuscript QA, and transparent reporting. Install as a plugin to get AI assistance from research design through citation, figure/table, and final submission checks. The skills are available both as auto-triggered context and as explicit `/skill-name` slash commands.
@@ -14,7 +14,7 @@ Skills were developed using a curated library of methodology texts. They are ite
 
 Design follows Anthropic's [skill authoring best practices](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices): concise procedural guidance (no textbook definitions), trigger-rich YAML descriptions for auto-invocation, and progressive disclosure (instructions in skills, bibliography in SOURCES.md). Skills are periodically audited against both the [Claude Code skills reference](https://code.claude.com/docs/en/skills) and the [skill authoring guide](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices) to keep descriptions, frontmatter, and substantive content current.
 
-> These skills are meant to support, not supplant, the research and writing process. They adhere to APSA, JARS, and DA-RT reporting standards. All guidance is grounded in 150+ published sources and documented workflow patterns — see [**SOURCES.md**](SOURCES.md) for the full bibliography.
+> These skills are meant to support, not supplant, the research and writing process. They adhere to APSA, JARS, DA-RT, TOP, and FAIR open-science expectations. All guidance is grounded in 160+ published sources and documented workflow patterns — see [**SOURCES.md**](SOURCES.md) for the full bibliography.
 
 ---
 
@@ -26,17 +26,17 @@ flowchart LR
     A --> C[Writing and PAP]
     B --> D[Methods Reporting]
     C --> D
-    D --> E[Manuscript QA]
+    D --> E[Manuscript QA and FAIR]
     E --> F[Review and Submission]
 
     A -.-> A1[conjoint / survey / list / cross-national]
     B -.-> B1[topic modeling / text classification / OCR]
     C -.-> C1[hypotheses / literature review / narrative / preregistration]
-    E -.-> E1[citations / figures / tables / archive checks]
+    E -.-> E1[FAIR / citations / figures / tables / archive checks]
     F -.-> F1[paper-review-lite / presubmit / journal-review]
 ```
 
-Use the domain skills when designing or analyzing a study. Use the manuscript-QA skills when a draft exists and you need to check whether citations, figures, tables, reporting, and replication materials can survive review.
+Use the domain skills when designing or analyzing a study. Use the manuscript-QA skills when a draft exists and you need to check whether FAIR availability, citations, figures, tables, reporting, and replication materials can survive review.
 
 ---
 
@@ -77,7 +77,7 @@ git clone https://github.com/scdenney/open-science-skills.git
 cd open-science-skills && claude --plugin-dir ./plugin
 ```
 
-All 20 skills auto-trigger based on your prompts. All 20 slash commands (`/conjoint-design`, `/citation-check`, `/figure-table-audit`, etc.) are immediately available.
+All 21 skills auto-trigger based on your prompts. All 21 slash commands (`/conjoint-design`, `/fair-check`, `/citation-check`, `/figure-table-audit`, etc.) are immediately available.
 
 ### Option 2 — Selective install (choose specific skills, auto-trigger only)
 
@@ -165,6 +165,7 @@ cp open-science-skills/plugin/skills/list-experiment/SKILL.md \
 
 | Skill | Slash command | What it does |
 |-------|--------------|-------------|
+| [**fair-check**](plugin/skills/fair-check/SKILL.md) | `/fair-check` | FAIR audit for completed manuscripts: data/code/material availability, repository metadata, persistent identifiers, licenses, access restrictions, reuse conditions |
 | [**citation-check**](plugin/skills/citation-check/SKILL.md) | `/citation-check` | In-text/reference parity, DOI and source-status checks, stale working papers, citation-style and support audits |
 | [**figure-table-audit**](plugin/skills/figure-table-audit/SKILL.md) | `/figure-table-audit` | Figure/table inventory, captions, cross-references, text-to-table consistency, accessibility, SI and replication linkage |
 

@@ -27,12 +27,21 @@ Sources and reusable workflow patterns for citation checking, literature-review 
 
 * **American Psychological Association.** (2020). *Publication Manual of the American Psychological Association* (7th ed.). American Psychological Association.
 * **Cheng-I Wu.** (2026). *Academic Research Skills for Claude Code* (Version 3.7.0). GitHub: Imbad0202/academic-research-skills. Licensed CC BY-NC 4.0. Workflow ideas adapted and rewritten for the `citation-check`, `literature-review`, and `figure-table-audit` skills.
+* **Center for Open Science.** (n.d.). *Add Metadata to Your OSF Project.* OSF Support. help.osf.io/article/568-add-metadata-to-your-osf-project
+* **Center for Open Science.** (n.d.). *OSF Projects: DOIs, GUIDs, metadata, and licensing.* OSF Support. help.osf.io/article/353-welcome-to-projects
+* **Center for Open Science.** (n.d.). *Preserve and Share Data with the OSF Data Archive.* OSF Support. help.osf.io/article/676-archive-data
+* **Center for Open Science.** (2025). *Transparency and Openness Promotion (TOP) Guidelines.* cos.io/initiatives/top-guidelines
 * **Crossref.** (n.d.). *Crossref REST API Documentation.* crossref.org/documentation/retrieve-metadata/rest-api/
 * **DataCite Metadata Working Group.** (n.d.). *DataCite Metadata Schema Documentation for the Publication and Citation of Research Data and Other Research Outputs.* DataCite.
+* **Data Citation Synthesis Group.** (2014). *Joint Declaration of Data Citation Principles.* FORCE11. https://doi.org/10.25490/a97f-egyk
+* **FAIRsharing.** (n.d.). *FAIRsharing: standards, databases, and data policies.* fairsharing.org
+* **GO FAIR.** (n.d.). *FAIR Principles.* go-fair.org/fair-principles/
 * **International DOI Foundation.** (n.d.). *DOI Handbook.* doi.org/the-identifier/resources/handbook/
+* **National Institutes of Health.** (2025). *Data Management and Sharing Policy.* grants.nih.gov/policy-and-compliance/policy-topics/sharing-policies/dms
 * **Page, M. J., McKenzie, J. E., Bossuyt, P. M., Boutron, I., Hoffmann, T. C., Mulrow, C. D., ... Moher, D.** (2021). "The PRISMA 2020 Statement: An Updated Guideline for Reporting Systematic Reviews." *BMJ*, 372, n71.
 * **Tufte, E. R.** (2001). *The Visual Display of Quantitative Information* (2nd ed.). Graphics Press.
 * **Ware, C.** (2013). *Information Visualization: Perception for Design* (3rd ed.). Morgan Kaufmann.
+* **Wilkinson, M. D., Dumontier, M., Aalbersberg, I. J., et al.** (2016). "The FAIR Guiding Principles for Scientific Data Management and Stewardship." *Scientific Data*, 3, 160018. https://doi.org/10.1038/sdata.2016.18
 * **Wickham, H.** (2016). *ggplot2: Elegant Graphics for Data Analysis* (2nd ed.). Springer.
 * **World Wide Web Consortium.** (2023). *Web Content Accessibility Guidelines (WCAG) 2.2.* W3C Recommendation.
 
