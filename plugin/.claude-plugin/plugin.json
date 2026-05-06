@@ -1,14 +1,14 @@
 {
   "name": "open-science-skills",
-  "version": "1.5.1",
-  "description": "Claude Code skills for experimental social science and computational text analysis: conjoint design, diagnostics, and data cleaning, survey design, list experiments, cross-national design, topic modeling, LLM text classification, VLM-based OCR pipelines, post-OCR cleanup, paper pre-submission review, hypothesis building, narrative building, pre-registration, and methods reporting. Invoke as /skill-name or let Claude auto-trigger based on context.",
+  "version": "1.7.0",
+  "description": "Claude Code skills for experimental social science and computational text analysis: conjoint design, diagnostics, and data cleaning, survey design, list experiments, cross-national design, topic modeling, LLM text classification, VLM-based OCR pipelines, post-OCR cleanup, citation checking, literature review evidence mapping, figure/table auditing, paper pre-submission review, hypothesis building, narrative building, pre-registration, methods reporting, presubmit activation, and third-party journal review. Invoke as /skill-name or let Claude auto-trigger based on context.",
   "author": {
     "name": "Steven Denney",
     "url": "https://github.com/scdenney"
   },
   "homepage": "https://github.com/scdenney/open-science-skills",
   "repository": "https://github.com/scdenney/open-science-skills",
-  "license": "MIT",
+  "license": "CC-BY-NC-4.0",
   "keywords": [
     "social-science",
     "conjoint",
@@ -17,6 +17,14 @@
     "survey-experiments",
     "list-experiment",
     "item-count-technique",
+    "citation-check",
+    "references",
+    "doi",
+    "literature-review",
+    "figure-table-audit",
+    "figures",
+    "tables",
+    "manuscript-qa",
     "pre-registration",
     "methods-reporting",
     "topic-modeling",
@@ -26,6 +34,9 @@
     "pre-analysis-plan",
     "paper-review-lite",
     "pre-submission",
+    "presubmit",
+    "journal-review",
+    "peer-review",
     "vlm-ocr",
     "post-ocr-cleanup",
     "document-digitization"

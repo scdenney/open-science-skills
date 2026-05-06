@@ -117,9 +117,10 @@ Worry about measurement error whenever the study draws subgroup comparisons, rep
 ## 5. Interpretation Diagnostics
 
 ### 5.1 AMCE Interpretation
-- Does the paper correctly interpret AMCEs as average effects on choice probability, not majority preferences? (Abramson et al. 2022)
+- Does the paper correctly interpret AMCEs as average effects on choice probability, not majority preferences? (Abramson et al. 2022; Ganter 2023 sharpens this: AMCE identifies a choice-probability effect, not a parameter of the underlying preference distribution.)
 - Does the paper acknowledge that AMCEs depend on the distribution of other attributes? (Bansak et al. 2023 respond that AMCEs map to vote share changes)
 - Are AMCEs interpreted as causal effects or merely as preference rankings?
+- If the design relies on the SDB-mitigation argument for conjoints, is the claim hedged in light of Horiuchi, Markovich, and Yamamoto (2022)? Their direct test shows conjoints reduce SDB on some attributes but not others; the mitigation is not automatic.
 
 ### 5.2 Lexicographic / Categorical Preferences
 - Could respondents be applying a categorical veto (always rejecting profiles with a given attribute level)?
@@ -137,6 +138,7 @@ Worry about measurement error whenever the study draws subgroup comparisons, rep
 - If interactions are examined, are AMIEs used rather than conditional AMCEs? (Egami & Imai 2019)
 - Are interaction coefficients from dummy-coded regressions interpreted? If so, flag: these are baseline-dependent artifacts (Egami & Imai 2019).
 - Is there a test for whether a factor matters at all? (Ham et al. 2024 CRTConjoint: conditional randomization test)
+- **Configural vs additive claims:** If the paper argues that one attribute's effect is fundamentally interactive with the rest of the profile ("the effect of X depends on the full bundle"), check whether the analysis reports the *range* of focal-attribute effects across the context space — $\theta(\vec{x}_{Max})$ and $\theta(\vec{x}_{Min})$ in the sense of Gosciak, Molitor, and Lundberg (2026) — rather than only an AMCE that marginalizes over context. AMIE captures low-order interactions and CRT detects whether *any* heterogeneity exists, but neither localizes the contexts at which the focal attribute matters most or least. With non-adaptive data, this surface is recoverable observationally from cell means at the cost of thin cells in rare context combinations; flag the substantive coarsening choices and the cell-size distribution. With an adaptive design, audit the warm-up/adaptive/validation phase allocations, the choice of focal attribute (must be ex ante), and the two-signal construction for each context value.
 
 ---
 
