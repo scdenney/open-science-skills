@@ -1,6 +1,6 @@
 ---
 name: text-classification
-description: Guides LLM-based text classification for survey and experimental text data. Covers codebook design, learning regime selection, model choice, human-LLM hybrid workflows, and validation. Use when (1) designing an LLM classification scheme for open-ended survey responses, (2) writing a codebook for LLM text annotation, (3) choosing between zero-shot, few-shot, fine-tuning, or instruction-tuning, (4) selecting a model for classification, (5) validating LLM classifications against human-coded ground truth, (6) implementing hybrid human-LLM workflows, (7) addressing reproducibility concerns, or (8) reporting LLM classification methods and results.
+description: LLM-based text classification: codebook, validation, agreement statistics.
 argument-hint: "[describe your text data and classification task]"
 ---
 

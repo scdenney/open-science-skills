@@ -1,6 +1,6 @@
 ---
 name: conjoint-cleaning
-description: Specialized logic for cleaning and reshaping choice-based conjoint data from Qualtrics exports into analysis-ready long format. Use when (1) preparing conjoint survey data for analysis, (2) reshaping wide Qualtrics exports to long format, (3) mapping conjoint choice and rating variables to profile-level outcomes, (4) translating attribute labels across languages, (5) diagnosing pilot contamination or data quality issues in conjoint data, or (6) setting AMCE reference categories. Covers Qualtrics column conventions, existing R packages, wide-to-long reshaping, choice variable encoding, attribute-level translation, data validation, and analysis-ready output.
+description: Clean and reshape Qualtrics conjoint exports to analysis-ready long format.
 argument-hint: "[describe your Qualtrics export or paste data sample]"
 ---
 

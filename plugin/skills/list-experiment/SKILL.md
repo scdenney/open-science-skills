@@ -1,6 +1,6 @@
 ---
 name: list-experiment
-description: Guides design, estimation, and diagnostics for list experiments (item count technique, ICT). Use when (1) deciding whether a list experiment is warranted for a sensitive question, (2) designing the control list or choosing baseline items, (3) selecting between design variants (single, double, placebo), (4) choosing an estimator (difference-in-means, multivariate NLSreg/MLreg, combined), (5) testing the identifying assumptions (no design effect, no floor/ceiling), (6) assessing or diagnosing mechanical inflation or artificial deflation, or (7) interpreting list experiment results in relation to direct question estimates. Covers the full pipeline from pre-design sensitivity assessment through statistical inference and power analysis.
+description: Design and diagnose list experiments (item count technique).
 argument-hint: "[describe your sensitive question or list experiment design]"
 ---
 

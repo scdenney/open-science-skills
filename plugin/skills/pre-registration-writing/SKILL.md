@@ -1,6 +1,6 @@
 ---
 name: pre-registration-writing
-description: Guides writing a complete pre-analysis plan (PAP) for experimental social science under DA-RT / APSA / JARS transparency standards. Use when (1) choosing a registry platform (OSF Registries, AEA RCT Registry, AsPredicted), (2) structuring a PAP document end-to-end, (3) specifying analytical strategies with locked, conditional, and exploratory tiers, (4) pre-registering analysis code on simulated data, (5) writing contingency plans for design failures, (6) documenting deviations from a registered plan, or (7) planning a registered report submission. Covers PAP structure, decision rules, code registration, contingency trees, deviation reporting, and timeline logistics.
+description: Write pre-analysis plans: PAP structure, registry, analysis strategy.
 argument-hint: "[describe your study or PAP section to draft]"
 ---
 

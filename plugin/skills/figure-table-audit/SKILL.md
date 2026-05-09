@@ -1,6 +1,6 @@
 ---
 name: figure-table-audit
-description: Audits figures, tables, captions, cross-references, statistical notes, accessibility, and text-to-table consistency in academic manuscripts. Use when (1) preparing figures and tables for journal submission, (2) checking whether all figures/tables referenced in text exist and are numbered correctly, (3) verifying table values against textual claims, (4) checking figure captions and table notes for self-contained reporting, (5) auditing SI appendix cross-references, (6) checking color/accessibility and image-quality problems, or (7) reviewing whether a paper's visual and tabular evidence supports its headline claims. Pairs with methods-reporting, paper-review-lite, journal-review, citation-check, conjoint-diagnostics, topic-modeling, text-classification, and vlm-ocr-pipeline.
+description: Audit figures, tables, captions, cross-references, and statistical notes.
 argument-hint: "[path to manuscript, figures, tables, SI, or compiled PDF; include target journal if known]"
 ---
 

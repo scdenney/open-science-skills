@@ -1,6 +1,6 @@
 ---
 name: methods-reporting
-description: Implements high-transparency reporting standards for experimental social science. Use when (1) drafting or auditing a methods section, (2) preparing a pre-analysis plan or pre-registration, (3) documenting a conjoint or factorial vignette design, (4) building a CONSORT-style sample flow, or (5) aligning a methods section with APSA Experimental Section, JARS-Quant, and DA-RT standards. Includes a 45-item reporting checklist synthesizing these standards with conjoint and survey-quality best practice. Pairs with the pre-registration-writing, hypothesis-building, and paper-review-lite skills.
+description: Check methods reporting against CONSORT, JARS, DA-RT standards.
 argument-hint: "[paste your methods section or describe what to audit]"
 ---
 
