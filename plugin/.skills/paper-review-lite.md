@@ -1,6 +1,6 @@
 ---
 name: paper-review-lite
-description: Runs a Critical-Reviewer-style pre-submission audit of a manuscript using parallel sub-agents inside Claude Code. An in-session lightweight counterpart to the standalone `presubmit` Python CLI — adopts the same adversarial framing (brutally honest but quote-grounded) at ~11 sub-agents instead of 30+ stages. Use when (1) preparing a manuscript for journal submission, (2) checking internal consistency of numbers across abstract, body, tables, and SI, (3) auditing a bibliography for missing DOIs or formatting issues, (4) reviewing a replication archive for completeness, (5) verifying data availability, ethics/IRB, and funding statements, (6) running a cross-check on figures, tables, and formatting, or (7) assessing writing quality and terminology consistency. For heavier adversarial review (30+ Red Team / Blue Team / verification stages, resumable, cost-tracked), use `presubmit` instead.
+description: Pre-submission audit: argument, numerics, refs, writing, figures, replication.
 argument-hint: "[path to paper or describe manuscript to review]"
 context: fork  # Claude Code: run skill in a forked subagent context (isolated from conversation history). See https://code.claude.com/docs/en/skills#frontmatter-reference
 ---

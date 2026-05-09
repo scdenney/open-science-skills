@@ -1,6 +1,6 @@
 ---
 name: fair-check
-description: Audits completed manuscripts and replication packages against FAIR open-science principles: Findable, Accessible, Interoperable, and Reusable. Use when (1) checking whether data, code, materials, stimuli, preregistrations, protocols, prompts, models, or derived corpora are deposited and cited appropriately, (2) drafting or auditing data/code/materials availability statements, (3) verifying persistent identifiers, repository metadata, licenses, access restrictions, embargoes, and reuse conditions, (4) prompting authors for missing repository or controlled-access details, or (5) preparing a manuscript for journal submission under open-science, TOP, DA-RT, OSF, NIH DMS, or FAIR expectations. Pairs with methods-reporting, citation-check, figure-table-audit, paper-review-lite, presubmit, text-classification, topic-modeling, and vlm-ocr-pipeline.
+description: Audit manuscript and replication package against FAIR open-science principles.
 argument-hint: "[path to manuscript and replication package, or paste availability statements and repository links]"
 ---
 

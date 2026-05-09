@@ -1,6 +1,6 @@
 ---
 name: vlm-ocr-pipeline
-description: Guide setup and execution of a VLM-based OCR pipeline for scanned historical and multilingual documents. Covers model selection, image handling, prompt engineering, batch processing, and accuracy evaluation. Use when (1) selecting a vision-language model for document OCR, (2) deciding on DPI and image extraction strategy for scanned PDFs, (3) writing language-specific OCR prompts for a VLM, (4) designing a multi-stage OCR pipeline with diagnostics, (5) planning batch OCR on HPC or SLURM infrastructure, (6) estimating GPU-hours and VRAM for a document corpus, (7) evaluating OCR accuracy with CER/WER and dictionary proxies, or (8) documenting an OCR pipeline for reproducibility.
+description: VLM-based OCR pipeline: model selection, prompts, architecture, evaluation.
 argument-hint: "[describe your document corpus, languages, and compute environment]"
 ---
 

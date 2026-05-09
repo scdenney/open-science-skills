@@ -1,6 +1,6 @@
 ---
 name: figure-table-audit
-description: Audits figures, tables, captions, cross-references, statistical notes, accessibility, and text-to-table consistency in academic manuscripts. Use when (1) preparing figures and tables for journal submission, (2) checking whether all figures/tables referenced in text exist and are numbered correctly, (3) verifying table values against textual claims, (4) checking figure captions and table notes for self-contained reporting, (5) auditing SI appendix cross-references, (6) checking color/accessibility and image-quality problems, or (7) reviewing whether a paper's visual and tabular evidence supports its headline claims. Pairs with methods-reporting, paper-review-lite, journal-review, citation-check, conjoint-diagnostics, topic-modeling, text-classification, and vlm-ocr-pipeline.
+description: Audit figures, tables, captions, cross-references, and statistical notes.
 argument-hint: "[path to manuscript, figures, tables, SI, or compiled PDF; include target journal if known]"
 ---
 
@@ -9,6 +9,8 @@ argument-hint: "[path to manuscript, figures, tables, SI, or compiled PDF; inclu
 ## Heritage and scope
 
 This is an original Open Science Skills workflow for manuscript QA. It remixes general figure/table and citation-compliance ideas from Cheng-I Wu's *Academic Research Skills for Claude Code* (CC BY-NC 4.0), but is rewritten for open-science social-science manuscripts. It is not a visual hallucination engine: when a claim requires reading plotted values from an image, prefer source data or mark the issue as needing author verification.
+
+This is the **end-stage** auditor. For figure design and production guidance during drafting, use the `figures` skill; for table design, use the `tables` skill. Run `figure-table-audit` once the figure and table set is stable and you are preparing for submission.
 
 ## Instructions
 

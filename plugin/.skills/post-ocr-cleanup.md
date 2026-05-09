@@ -1,6 +1,6 @@
 ---
 name: post-ocr-cleanup
-description: Guide post-OCR text cleanup for research corpora. Covers LLM-based correction, rule-based fixes, quality diagnostics, multilingual considerations, and corpus-level quality assurance. Use when (1) choosing between LLM and rule-based OCR error correction, (2) designing prompts for LLM-based OCR cleanup, (3) applying constrained decoding to prevent correction hallucination, (4) building rule-based fixes for Unicode normalization or repetition artifacts, (5) evaluating cleanup quality beyond CER/WER, (6) handling diacritics restoration or script-specific spacing, (7) sampling and flagging documents for human review at corpus scale, or (8) tracking correction provenance for reproducibility.
+description: Clean post-OCR text: correction, QA, multilingual handling, provenance.
 argument-hint: "[describe your OCR output, languages, and error patterns]"
 ---
 

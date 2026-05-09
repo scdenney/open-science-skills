@@ -1,6 +1,6 @@
 ---
 name: presubmit
-description: Activates the standalone presubmit Python CLI — a 30+ stage adversarial peer-review pipeline (Red Team, Blue Team, verification cascade, legal pass, copyedit) that calls the Anthropic API directly and writes a consolidated review report to disk. Walks first-time users through install (clone repo, venv, pip install marker-pdf and anthropic), API key setup, and output location, then orchestrates per-paper runs with a slug-based file-naming convention. Use when (1) you want a deeper, resumable, cost-tracked self-audit than the in-session paper-review-lite skill provides, (2) you want a standalone .txt deliverable rather than in-session findings, (3) you want a math audit (--math) or replication-code audit (--code-dir) on top of the text review, or (4) you are setting up presubmit for the first time and want a guided install. For the lighter in-session counterpart that uses parallel Claude Code sub-agents and bills against your Claude Code subscription instead of an API key, use paper-review-lite instead.
+description: Run the standalone presubmit CLI: adversarial 30+ stage peer-review pipeline.
 argument-hint: "[path to your draft to review, or describe the setup task]"
 ---
 

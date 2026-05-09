@@ -1,8 +1,8 @@
 # Open Science Skills
 
-[![version](https://img.shields.io/badge/version-1.8.1-blue)](https://github.com/scdenney/open-science-skills/releases)
+[![version](https://img.shields.io/badge/version-2.0.0-blue)](https://github.com/scdenney/open-science-skills/releases)
 [![License: CC BY-NC 4.0](https://img.shields.io/badge/license-CC%20BY--NC%204.0-lightgrey)](LICENSE)
-[![skills](https://img.shields.io/badge/skills-21-blue)](#skills)
+[![skills](https://img.shields.io/badge/skills-23-blue)](#skills)
 [![plugin](https://img.shields.io/badge/Claude%20Code-plugin-orange)](https://code.claude.com/docs/en/skills)
 [![updated](https://img.shields.io/badge/updated-May%202026-green)](https://github.com/scdenney/open-science-skills/commits/main)
 [![sources](https://img.shields.io/badge/sources-160%2B-purple)](SOURCES.md)
@@ -32,7 +32,8 @@ flowchart LR
     A -.-> A1[conjoint / survey / list / cross-national]
     B -.-> B1[topic modeling / text classification / OCR]
     C -.-> C1[hypotheses / literature review / narrative / preregistration]
-    E -.-> E1[FAIR / citations / figures / tables / archive checks]
+    D -.-> D1[figures / tables / methods reporting]
+    E -.-> E1[FAIR / citations / figure-table-audit / archive checks]
     F -.-> F1[paper-review-lite / presubmit / journal-review]
 ```
 
@@ -47,7 +48,7 @@ Each skill is available in two ways:
 | Mode | How | When to use |
 |------|-----|-------------|
 | **Auto-trigger** | Claude reads your prompt and loads the relevant skill silently | Working naturally — Claude detects context |
-| **Slash command** | Type `/skill-name` (optionally with a task description) | When you want to invoke a skill explicitly |
+| **Slash command** | Type `/oss:skill-name` (or just `/skill-name` when there is no ambiguity) | When you want to invoke a skill explicitly |
 
 Both modes are available when installed as a plugin. Individual skills can also be installed manually (auto-trigger only).
 
@@ -64,11 +65,13 @@ Both modes are available when installed as a plugin. Individual skills can also 
 claude plugin marketplace add scdenney/open-science-skills
 
 # Step 2: Install the plugin
-claude plugin install open-science-skills
+claude plugin install oss@open-science-skills
 
 # Project-only install
-claude plugin install open-science-skills --scope project
+claude plugin install oss@open-science-skills --scope project
 ```
+
+The plugin's slash-command prefix is `oss:` (short for **o**pen **s**cience **s**kills). The marketplace and GitHub repo are still named `open-science-skills`.
 
 **Session-only** (no install required, active for the current session):
 
@@ -77,7 +80,7 @@ git clone https://github.com/scdenney/open-science-skills.git
 cd open-science-skills && claude --plugin-dir ./plugin
 ```
 
-All 21 skills auto-trigger based on your prompts. All 21 slash commands (`/conjoint-design`, `/fair-check`, `/citation-check`, `/figure-table-audit`, etc.) are immediately available.
+All 23 skills auto-trigger based on your prompts. All 23 slash commands (`/oss:conjoint-design`, `/oss:fair-check`, `/oss:figures`, `/oss:tables`, `/oss:figure-table-audit`, etc.) are immediately available. The prefix can be omitted when there is no ambiguity with other installed plugins.
 
 ### Option 2 — Selective install (choose specific skills, auto-trigger only)
 
@@ -161,13 +164,20 @@ cp open-science-skills/plugin/skills/list-experiment/SKILL.md \
 | [**pre-registration-writing**](plugin/skills/pre-registration-writing/SKILL.md) | `/pre-registration-writing` | PAP structure, registry selection, analytical strategy specification, code pre-registration, deviation documentation |
 | [**methods-reporting**](plugin/skills/methods-reporting/SKILL.md) | `/methods-reporting` | 40-item reporting checklist: CONSORT standards, JARS preregistration elements, DA-RT transparency |
 
+### Figures & Tables
+
+| Skill | Slash command | What it does |
+|-------|--------------|-------------|
+| [**figures**](plugin/skills/figures/SKILL.md) | `/figures` | Design publication-quality figures: chart choice from comparison, scales, color, legend ordering matched to visual order, self-contained captions, reproducibility |
+| [**tables**](plugin/skills/tables/SKILL.md) | `/tables` | Design publication-quality tables: column order matching the argument, row grouping, precision and uncertainty conventions, self-contained titles and notes, code-generated workflows |
+
 ### Manuscript QA
 
 | Skill | Slash command | What it does |
 |-------|--------------|-------------|
 | [**fair-check**](plugin/skills/fair-check/SKILL.md) | `/fair-check` | FAIR audit for completed manuscripts: data/code/material availability, repository metadata, persistent identifiers, licenses, access restrictions, reuse conditions |
 | [**citation-check**](plugin/skills/citation-check/SKILL.md) | `/citation-check` | In-text/reference parity, DOI and source-status checks, stale working papers, citation-style and support audits |
-| [**figure-table-audit**](plugin/skills/figure-table-audit/SKILL.md) | `/figure-table-audit` | Figure/table inventory, captions, cross-references, text-to-table consistency, accessibility, SI and replication linkage |
+| [**figure-table-audit**](plugin/skills/figure-table-audit/SKILL.md) | `/figure-table-audit` | End-stage QA of the finished figure/table set: inventory, cross-references, text-to-table consistency, accessibility, SI and replication linkage. Pairs with `figures` and `tables` (production-stage). |
 
 ### Review & Submission
 
@@ -193,4 +203,4 @@ PRs welcome. To add a new skill:
 
 This project is licensed under [Creative Commons Attribution-NonCommercial 4.0 International](LICENSE). The skills are intended for noncommercial scholarly and educational use.
 
-The `citation-check`, `literature-review`, and `figure-table-audit` skills remix workflow ideas from [Cheng-I Wu's Academic Research Skills for Claude Code](https://github.com/Imbad0202/academic-research-skills), also licensed CC BY-NC 4.0. The instructions here are rewritten for this repository's open-science and experimental-social-science scope.
+The `citation-check`, `literature-review`, `figures`, `tables`, and `figure-table-audit` skills remix workflow ideas from [Cheng-I Wu's Academic Research Skills for Claude Code](https://github.com/Imbad0202/academic-research-skills), also licensed CC BY-NC 4.0. The instructions here are rewritten for this repository's open-science and experimental-social-science scope.

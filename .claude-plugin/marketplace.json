@@ -8,9 +8,9 @@
   },
   "plugins": [
     {
-      "name": "open-science-skills",
-      "description": "21 skills for experimental social science: conjoint design / cleaning / diagnostics, survey design, list experiments, cross-national design, topic modeling, LLM text classification, VLM-OCR + post-OCR cleanup, FAIR manuscript checks, citation checking, literature-review evidence mapping, figure/table auditing, hypothesis building, narrative building, pre-registration writing, methods reporting, paper-review-lite, presubmit, and journal-review. All skills auto-trigger from context and are available as /skill-name slash commands.",
-      "version": "1.8.0",
+      "name": "oss",
+      "description": "Open Science Skills — 23 skills for experimental social science: conjoint design / cleaning / diagnostics, survey design, list experiments, cross-national design, topic modeling, LLM text classification, VLM-OCR + post-OCR cleanup, FAIR manuscript checks, citation checking, literature-review evidence mapping, figure design, table design, figure/table auditing, hypothesis building, narrative building, pre-registration writing, methods reporting, paper-review-lite, presubmit, and journal-review. All skills auto-trigger from context and are available as /oss:skill-name slash commands (or just /skill-name when there is no ambiguity).",
+      "version": "2.0.0",
       "license": "CC-BY-NC-4.0",
       "author": {
         "name": "Steven Denney",

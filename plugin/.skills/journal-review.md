@@ -1,6 +1,6 @@
 ---
 name: journal-review
-description: Drafts a senior-peer referee report on someone else's manuscript for a social-science journal. Five parallel finder sub-agents (Breaker for theoretical foundations, Butcher for empirical machinery, Shredder for documentation/internal consistency, Void for what's missing, Situator for literature placement and novelty) plus a Blue Team filter, Chief Reviewer synthesis, and Tone Guard sanitization produce a tight 1,200-2,000 word report with Recommendation + Summary + 3-6 Major Concerns + Additional Concerns + Suggestions for Revision, calibrated to a senior-peer voice (firm, fair, paragraphs not bullets, no imputed intent, no invented citations). Use when (1) an editor has invited you to referee a manuscript and you want a draft to read and edit before submitting, (2) you want adversarial audit of a manuscript grounded in direct quotes, (3) you want literature-placement scrutiny via the Situator agent. For SELF-AUDIT of your own draft pre-submission, use paper-review-lite or presubmit instead — those are calibrated for the author auditing themselves; this skill is calibrated for third-party referee work and produces output appropriate for sending to a journal editor.
+description: Draft a senior peer-review report on a social-science manuscript.
 argument-hint: "[path to manuscript PDF, plus target journal and any editor's-letter notes]"
 context: fork
 ---

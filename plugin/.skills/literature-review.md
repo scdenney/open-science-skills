@@ -1,6 +1,6 @@
 ---
 name: literature-review
-description: Builds or audits social-science literature reviews by producing an evidence map, closest-prior-work assessment, gap verdict, and synthesis plan. Use when (1) developing a literature review section, (2) mapping prior findings before hypothesis-building or narrative-building, (3) checking whether a claimed contribution is novel, (4) converting a pile of papers into theory/mechanism clusters, (5) deciding whether a formal PRISMA-style systematic review is needed, or (6) identifying publication-bias, registered-study, or selective-citation risks. Pairs with citation-check, narrative-building, hypothesis-building, pre-registration-writing, methods-reporting, and journal-review.
+description: Build or audit a literature review: evidence map, gaps, synthesis plan.
 argument-hint: "[topic, draft literature review, paper list, Zotero export, or claimed contribution]"
 ---
 

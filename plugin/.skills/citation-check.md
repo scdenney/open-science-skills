@@ -1,6 +1,6 @@
 ---
 name: citation-check
-description: Audits citation integrity for academic manuscripts, BibTeX files, reference lists, and literature-review drafts. Use when (1) checking in-text citations against the bibliography, (2) finding cited-but-missing or uncited references, (3) verifying DOI/URL presence and DOI-title matches, (4) detecting stale working papers or preprints that may now be published, (5) checking author-year consistency, (6) flagging suspicious or possibly fabricated references, or (7) preparing a citation audit before journal submission. Pairs with literature-review, narrative-building, methods-reporting, paper-review-lite, and journal-review.
+description: Audit in-text/reference parity, DOIs, claim support, and citation style.
 argument-hint: "[path to manuscript and bibliography, or paste citation list; include target style/journal if known]"
 ---
 

@@ -1,6 +1,6 @@
 ---
 name: conjoint-diagnostics
-description: Systematic diagnostic checklist for evaluating choice-based conjoint experiments. Use when (1) reviewing a conjoint paper or manuscript, (2) auditing a conjoint analysis script or dataset, (3) assessing measurement error and IRR in conjoint data, (4) evaluating external validity of a conjoint design, or (5) checking interpretation of AMCEs, marginal means, and interaction effects.
+description: Diagnose conjoint design integrity, estimation choices, and validity.
 argument-hint: "[describe your conjoint study or paste analysis code]"
 ---
 

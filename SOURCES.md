@@ -26,7 +26,7 @@ Broad experimental and survey methodology:
 Sources and reusable workflow patterns for citation checking, literature-review evidence mapping, figure/table auditing, and manuscript quality assurance:
 
 * **American Psychological Association.** (2020). *Publication Manual of the American Psychological Association* (7th ed.). American Psychological Association.
-* **Cheng-I Wu.** (2026). *Academic Research Skills for Claude Code* (Version 3.7.0). GitHub: Imbad0202/academic-research-skills. Licensed CC BY-NC 4.0. Workflow ideas adapted and rewritten for the `citation-check`, `literature-review`, and `figure-table-audit` skills.
+* **Cheng-I Wu.** (2026). *Academic Research Skills for Claude Code* (Version 3.7.0). GitHub: Imbad0202/academic-research-skills. Licensed CC BY-NC 4.0. Workflow ideas adapted and rewritten for the `citation-check`, `literature-review`, `figures`, `tables`, and `figure-table-audit` skills.
 * **Center for Open Science.** (n.d.). *Add Metadata to Your OSF Project.* OSF Support. help.osf.io/article/568-add-metadata-to-your-osf-project
 * **Center for Open Science.** (n.d.). *OSF Projects: DOIs, GUIDs, metadata, and licensing.* OSF Support. help.osf.io/article/353-welcome-to-projects
 * **Center for Open Science.** (n.d.). *Preserve and Share Data with the OSF Data Archive.* OSF Support. help.osf.io/article/676-archive-data

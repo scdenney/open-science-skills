@@ -1,6 +1,6 @@
 ---
 name: cross-national-design
-description: Guides the design of cross-national comparative survey experiments. Use when (1) selecting countries for a multi-country study, (2) localizing experimental instruments across languages and institutional contexts, (3) calibrating origin-country stimuli for immigration experiments, (4) conducting per-country power analyses, or (5) planning a cross-national analytical strategy with pooled and per-country models. Covers case selection, instrument localization, ecological validity, power management, and sensitivity bias auditing.
+description: Design cross-national survey experiments: power, equivalence, localization.
 argument-hint: "[describe your cross-national study or country selection]"
 ---
 

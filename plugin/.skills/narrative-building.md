@@ -1,6 +1,6 @@
 ---
 name: narrative-building
-description: Expert logic for drafting scientific introductions and literature reviews. Use when (1) transforming a research interest into a grounded scientific introduction, (2) writing or reviewing a literature review, (3) structuring a multi-experiment narrative, (4) establishing the "Why-to-If-Then" funnel from theory to hypothesis, or (5) framing a cumulative research program. Prevents "methods-driven" writing by ensuring substantive foundations precede design choices.
+description: Draft scientific introductions: argument logic, framing, multi-experiment coherence.
 argument-hint: "[describe your paper topic or introduction challenge]"
 ---
 

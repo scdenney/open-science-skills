@@ -10,6 +10,8 @@ argument-hint: "[path to manuscript, figures, tables, SI, or compiled PDF; inclu
 
 This is an original Open Science Skills workflow for manuscript QA. It remixes general figure/table and citation-compliance ideas from Cheng-I Wu's *Academic Research Skills for Claude Code* (CC BY-NC 4.0), but is rewritten for open-science social-science manuscripts. It is not a visual hallucination engine: when a claim requires reading plotted values from an image, prefer source data or mark the issue as needing author verification.
 
+This is the **end-stage** auditor. For figure design and production guidance during drafting, use the `figures` skill; for table design, use the `tables` skill. Run `figure-table-audit` once the figure and table set is stable and you are preparing for submission.
+
 ## Instructions
 
 ### 1. Orient before auditing
