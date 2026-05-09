@@ -8,7 +8,7 @@
 [![sources](https://img.shields.io/badge/sources-160%2B-purple)](SOURCES.md)
 [![PRs welcome](https://img.shields.io/badge/PRs-welcome-brightgreen)](#contributing)
 
-A library of [Claude Code skills](https://code.claude.com/docs/en/skills) for experimental social science, computational text analysis, manuscript QA, and transparent reporting. Install as a plugin to get AI assistance from research design through citation, figure/table, and final submission checks. The skills are available both as auto-triggered context and as explicit `/skill-name` slash commands.
+A library of [Claude Code skills](https://code.claude.com/docs/en/skills) for experimental social science, computational text analysis, manuscript QA, and transparent reporting. Install as a plugin to get AI assistance from research design through citation, figure/table, and final submission checks. All 23 skills auto-trigger from prompt context and are also available as explicit `/oss:skill-name` slash commands (the `oss:` prefix can be omitted when there is no ambiguity with other installed plugins).
 
 Skills were developed using a curated library of methodology texts. They are iteratively expanded as new sources, ideas, and skills are incorporated. This is a living and breathing kind of repo. Skill building and editing is author-driven with the help of Opus 4.6, Gemini 3.0, and Chat GPT 5.4.
 
