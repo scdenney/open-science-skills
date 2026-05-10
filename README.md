@@ -5,7 +5,7 @@
 [![skills](https://img.shields.io/badge/skills-23-blue)](#skills)
 [![plugin](https://img.shields.io/badge/Claude%20Code-plugin-orange)](https://code.claude.com/docs/en/skills)
 [![updated](https://img.shields.io/badge/updated-May%202026-green)](https://github.com/scdenney/open-science-skills/commits/main)
-[![sources](https://img.shields.io/badge/sources-140-purple)](SOURCES.md)
+[![sources](https://img.shields.io/badge/sources-150-purple)](SOURCES.md)
 [![PRs welcome](https://img.shields.io/badge/PRs-welcome-brightgreen)](#contributing)
 
 A library of [Claude Code skills](https://code.claude.com/docs/en/skills) for experimental social science, computational text analysis, manuscript QA, and transparent reporting. Install as a plugin to get AI assistance from research design through citation, figure/table, and final submission checks. All 23 skills auto-trigger from prompt context and are also available as explicit `/oss:skill-name` slash commands (the `oss:` prefix can be omitted when there is no ambiguity with other installed plugins).
