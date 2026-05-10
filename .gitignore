@@ -8,6 +8,9 @@ knowledge_base/
 scripts/
 *.pdf
 
+# Sources corpus: PDFs + MD conversions kept local (size + copyright)
+sources/
+
 # Python venv used for PDF conversion
 .venv/
 __pycache__/

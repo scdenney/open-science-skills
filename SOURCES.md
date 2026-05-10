@@ -1,6 +1,6 @@
 # Sources & Bibliography
 
-The instructions within these skills are drawn from the following sources, organized by topic area. Sources may appear in multiple subsections when they are relevant to more than one skill area.
+The instructions within these skills are drawn from the following sources, organized by topic area. Each source is listed once, in the section that best matches its primary contribution.
 
 ---
 
@@ -10,17 +10,12 @@ Broad experimental and survey methodology:
 
 * **Aronson, E., & Carlsmith, J. M.** (1968). "Experimentation in Social Psychology." In G. Lindzey & E. Aronson (Eds.), *The Handbook of Social Psychology* (Vol. 2). Addison-Wesley.
 * **Berinsky, A. J.** (2017). "Measuring Public Opinion with Surveys." *Annual Review of Political Science*.
-* **Blair, G., Coppock, A., & Moor, M.** (2020). "When to Worry about Sensitivity Bias: A Social Reference Theory and Evidence from 30 Years of List Experiments." *American Political Science Review*.
 * **Christensen, G., Freese, J., & Miguel, E.** (2019). *Transparent and Reproducible Social Science Research: How to Do Open Science*. University of California Press.
 * **Druckman, J. N.** (2022). *Experimental Thinking: A Primer on Social Science Experiments*. Cambridge University Press.
 * **Druckman, J. N., & Green, D. P.** (Eds.). (2021). *Advances in Experimental Political Science*. Cambridge University Press.
 * **Gelman, A., & Carlin, J.** (2014). "Beyond Power Calculations: Assessing Type S (Sign) and Type M (Magnitude) Errors." *Perspectives on Psychological Science*, 9(6), 641–651.
 * **Huntington-Klein, N.** (2025). *The Effect: An Introduction to Research Design and Causality*. CRC Press.
 * **Lakens, D.** (2025). *Improving Your Statistical Inferences*.
-* **Mutz, D. C.** (2011). *Population-Based Survey Experiments*. Princeton University Press.
-* **Sniderman, P. M.** (2018). "Some Advances in the Design of Survey Experiments." *Annual Review of Political Science*.
-* **Stantcheva, S.** (2023). "How to Run Surveys: A Guide to Creating Your Own Identifying Variation." *Annual Review of Economics*.
-
 ## Remixed Skill Patterns and Manuscript QA
 
 Sources and reusable workflow patterns for citation checking, literature-review evidence mapping, figure/table auditing, and manuscript quality assurance:
@@ -38,7 +33,6 @@ Sources and reusable workflow patterns for citation checking, literature-review 
 * **GO FAIR.** (n.d.). *FAIR Principles.* go-fair.org/fair-principles/
 * **International DOI Foundation.** (n.d.). *DOI Handbook.* doi.org/the-identifier/resources/handbook/
 * **National Institutes of Health.** (2025). *Data Management and Sharing Policy.* grants.nih.gov/policy-and-compliance/policy-topics/sharing-policies/dms
-* **Page, M. J., McKenzie, J. E., Bossuyt, P. M., Boutron, I., Hoffmann, T. C., Mulrow, C. D., ... Moher, D.** (2021). "The PRISMA 2020 Statement: An Updated Guideline for Reporting Systematic Reviews." *BMJ*, 372, n71.
 * **Tufte, E. R.** (2001). *The Visual Display of Quantitative Information* (2nd ed.). Graphics Press.
 * **Ware, C.** (2013). *Information Visualization: Perception for Design* (3rd ed.). Morgan Kaufmann.
 * **Wilkinson, M. D., Dumontier, M., Aalbersberg, I. J., et al.** (2016). "The FAIR Guiding Principles for Scientific Data Management and Stewardship." *Scientific Data*, 3, 160018. https://doi.org/10.1038/sdata.2016.18
@@ -97,7 +91,6 @@ Sources specific to conjoint data preparation, Qualtrics export handling, and R 
 
 Sources specific to survey instrument design, question construction, and respondent measurement:
 
-* **Blair, G., Coppock, A., & Moor, M.** (2020). "When to Worry about Sensitivity Bias: A Social Reference Theory and Evidence from 30 Years of List Experiments." *American Political Science Review*.
 * **Merolla, J., Ramakrishnan, S. K., & Haynes, C.** (2013). "'Illegal,' 'Undocumented,' or 'Unauthorized': Equivalency Frames, Issue Frames, and Public Opinion on Immigration." *Perspectives on Politics*, 11(3).
 * **Mutz, D. C.** (2011). *Population-Based Survey Experiments*. Princeton University Press.
 * **Sniderman, P. M.** (2018). "Some Advances in the Design of Survey Experiments." *Annual Review of Political Science*.
@@ -121,10 +114,7 @@ Sources specific to comparative survey experiments, case selection, and cross-cu
 Sources specific to pre-registration, pre-analysis plan writing, and research transparency:
 
 * **Blair, G., Cooper, J., Coppock, A., & Humphreys, M.** (2019). "Declaring and Diagnosing Research Designs." *American Political Science Review*, 113(3), 838–859.
-* **Christensen, G., Freese, J., & Miguel, E.** (2019). *Transparent and Reproducible Social Science Research: How to Do Open Science*. University of California Press.
-* **Druckman, J. N.** (2022). *Experimental Thinking: A Primer on Social Science Experiments*. Cambridge University Press.
 * **Humphreys, M., de la Sierra, R. S., & van der Windt, P.** (2013). "Fishing, Commitment, and Communication: A Proposal for Comprehensive Nonbinding Research Registration." *Political Analysis*, 21(1), 1–20.
-* **Lakens, D.** (2025). *Improving Your Statistical Inferences*.
 * **Nosek, B. A., Ebersole, C. R., DeHaven, A. C., & Mellor, D. T.** (2018). "The Preregistration Revolution." *PNAS*, 115(11), 2600–2606.
 * **Simmons, J. P., Nelson, L. D., & Simonsohn, U.** (2011). "False-Positive Psychology: Undisclosed Flexibility in Data Collection and Analysis Allows Presenting Anything as Significant." *Psychological Science*, 22(11), 1359–1366.
 
@@ -221,7 +211,6 @@ Sources specific to vision-language model OCR pipelines, image handling, and acc
 Sources specific to post-OCR text correction, quality diagnostics, multilingual cleanup, and corpus-level quality assurance:
 
 * **Backer, D., & Hyman, G.** (2025). "Bootstrapping AI: Interdisciplinary Approaches to Assessing OCR Quality in English-Language Historical Documents." *NLP4DH 2025*. DOI: 10.18653/v1/2025.nlp4dh-1.21.
-* **Beyene, F. S., & Dancy, C. L.** (2026). "A Survey of OCR Evaluation Methods and Metrics and the Invisibility of Historical Documents." *ACM FAccT 2026*. arXiv:2603.25761.
 * **Bourne, C.** (2024). "CLOCR-C: Context Leveraging OCR Correction with Pre-trained Language Models." *arXiv* preprint arXiv:2408.17428.
 * **Choi, S., & Kim, H.** (2021). "Automatic Word Spacing of Korean Using Syllable and Morpheme." *Applied Sciences*, 11(2), 626.
 * **Greif, S., Griesshaber, D., & Greif, T.** (2025). "Multimodal LLMs for OCR, OCR Post-Correction, and Named Entity Recognition in Historical Documents." *arXiv* preprint arXiv:2504.00414.
