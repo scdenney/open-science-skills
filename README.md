@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="assets/hero.jpg" alt="Open Science Skills — vintage typewriter, globe, and books labeled Open Access, Collaboration, Transparency, Reproducibility, beneath a framed title sign." width="900">
+</p>
+
 # Open Science Skills
 
 [![version](https://img.shields.io/badge/version-2.1.0-blue)](https://github.com/scdenney/open-science-skills/releases)
