@@ -4,15 +4,15 @@
 
 # Open Science Skills
 
-[![version](https://img.shields.io/badge/version-2.1.0-blue)](https://github.com/scdenney/open-science-skills/releases)
+[![version](https://img.shields.io/badge/version-2.2.0-blue)](https://github.com/scdenney/open-science-skills/releases)
 [![License: CC BY-NC 4.0](https://img.shields.io/badge/license-CC%20BY--NC%204.0-lightgrey)](LICENSE)
-[![skills](https://img.shields.io/badge/skills-24-blue)](#skills)
+[![skills](https://img.shields.io/badge/skills-25-blue)](#skills)
 [![plugin](https://img.shields.io/badge/Claude%20Code-plugin-orange)](https://code.claude.com/docs/en/skills)
 [![updated](https://img.shields.io/badge/updated-May%202026-green)](https://github.com/scdenney/open-science-skills/commits/main)
 [![sources](https://img.shields.io/badge/sources-150-purple)](SOURCES.md)
 [![PRs welcome](https://img.shields.io/badge/PRs-welcome-brightgreen)](#contributing)
 
-A library of [Claude Code skills](https://code.claude.com/docs/en/skills) for experimental social science, computational text analysis, manuscript QA, and transparent reporting. Install as a plugin and you get help across the workflow — research design, analysis, citation and figure/table audits, and pre-submission review. All 24 skills auto-trigger from prompt context and are also available as explicit `/oss:skill-name` slash commands. The `oss:` prefix can be omitted when no other installed plugin claims the same name.
+A library of [Claude Code skills](https://code.claude.com/docs/en/skills) for experimental social science, computational text analysis, manuscript QA, and transparent reporting. Install as a plugin and you get help across the workflow — research design, analysis, citation and figure/table audits, replication-package scaffolding, and pre-submission review. All 25 skills auto-trigger from prompt context and are also available as explicit `/oss:skill-name` slash commands. The `oss:` prefix can be omitted when no other installed plugin claims the same name.
 
 This is the toolkit I use in my own research. It is built from a curated corpus of methodology texts and grows as I add new sources, ideas, and skills. Authoring and editing are mine, with help from Opus 4.6, Gemini 3.0, and ChatGPT 5.4.
 
@@ -37,7 +37,7 @@ flowchart LR
     B -.-> B1[topic modeling / text classification / OCR]
     C -.-> C1[hypotheses / literature review / narrative / preregistration]
     D -.-> D1[figures / tables / methods reporting]
-    E -.-> E1[FAIR / citations / figure-table-audit / archive checks]
+    E -.-> E1[FAIR / citations / figure-table-audit / replication-package / archive checks]
     F -.-> F1[paper-review-lite / paper-review-lite-codex / presubmit / journal-review]
 ```
 
@@ -84,7 +84,7 @@ git clone https://github.com/scdenney/open-science-skills.git
 cd open-science-skills && claude --plugin-dir ./plugin
 ```
 
-All 24 skills auto-trigger based on your prompts. All 24 slash commands (`/oss:conjoint-design`, `/oss:fair-check`, `/oss:figures`, `/oss:tables`, `/oss:figure-table-audit`, and so on) are immediately available. The prefix can be omitted when no other installed plugin claims the same name.
+All 25 skills auto-trigger based on your prompts. All 25 slash commands (`/oss:conjoint-design`, `/oss:fair-check`, `/oss:figures`, `/oss:tables`, `/oss:figure-table-audit`, `/oss:replication-package`, and so on) are immediately available. The prefix can be omitted when no other installed plugin claims the same name.
 
 ### Option 2 — Selective install (choose specific skills, auto-trigger only)
 
@@ -182,6 +182,7 @@ cp open-science-skills/plugin/skills/list-experiment/SKILL.md \
 | [**fair-check**](plugin/skills/fair-check/SKILL.md) | `/fair-check` | FAIR audit for completed manuscripts: data/code/material availability, repository metadata, persistent identifiers, licenses, access restrictions, reuse conditions |
 | [**citation-check**](plugin/skills/citation-check/SKILL.md) | `/citation-check` | In-text/reference parity, DOI and source-status checks, stale working papers, citation-style and support audits |
 | [**figure-table-audit**](plugin/skills/figure-table-audit/SKILL.md) | `/figure-table-audit` | End-stage QA of the finished figure/table set: inventory, cross-references, text-to-table consistency, accessibility, SI and replication linkage. Pairs with `figures` and `tables` (production-stage). |
+| [**replication-package**](plugin/skills/replication-package/SKILL.md) | `/replication-package` | Scaffold or audit a replication package at a target directory. Generates folder structure, README, `master.R`, figure/table crosswalk, codebook template, LICENSE placeholder, `.gitignore`, and a pre-release checklist. Platform-neutral (Harvard Dataverse, OSF, Zenodo, GitHub releases). Adapted from Yusaku Horiuchi's [replication-package-guide](https://github.com/yhoriuchi/replication-package-guide) with FAIR-principle integration. Pair with `fair-check`. |
 
 ### Review & Submission
 
@@ -209,3 +210,5 @@ PRs welcome. To add a new skill:
 This project is licensed under [Creative Commons Attribution-NonCommercial 4.0 International](LICENSE). The skills are intended for noncommercial scholarly and educational use.
 
 The `citation-check`, `literature-review`, `figures`, `tables`, and `figure-table-audit` skills remix workflow ideas from [Cheng-I Wu's Academic Research Skills for Claude Code](https://github.com/Imbad0202/academic-research-skills), also licensed CC BY-NC 4.0. The instructions here are rewritten for this repository's open-science and experimental-social-science scope.
+
+The `replication-package` skill adapts the structural conventions in [Yusaku Horiuchi's replication-package-guide](https://github.com/yhoriuchi/replication-package-guide) (the source for single-entry-point, compact vs. build/analyze layouts, figure/table crosswalk, paper-consistency check, correction workflow, and pre-release checklist). FAIR-principle integration and the Claude Code skill packaging are added on top; Harvard Dataverse and other platform-specific upload mechanics are not included. Cite Horiuchi's guide if you publish a package built with this skill.
