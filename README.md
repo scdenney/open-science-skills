@@ -1,20 +1,20 @@
 # Open Science Skills
 
-[![version](https://img.shields.io/badge/version-2.0.0-blue)](https://github.com/scdenney/open-science-skills/releases)
+[![version](https://img.shields.io/badge/version-2.1.0-blue)](https://github.com/scdenney/open-science-skills/releases)
 [![License: CC BY-NC 4.0](https://img.shields.io/badge/license-CC%20BY--NC%204.0-lightgrey)](LICENSE)
-[![skills](https://img.shields.io/badge/skills-23-blue)](#skills)
+[![skills](https://img.shields.io/badge/skills-24-blue)](#skills)
 [![plugin](https://img.shields.io/badge/Claude%20Code-plugin-orange)](https://code.claude.com/docs/en/skills)
 [![updated](https://img.shields.io/badge/updated-May%202026-green)](https://github.com/scdenney/open-science-skills/commits/main)
 [![sources](https://img.shields.io/badge/sources-150-purple)](SOURCES.md)
 [![PRs welcome](https://img.shields.io/badge/PRs-welcome-brightgreen)](#contributing)
 
-A library of [Claude Code skills](https://code.claude.com/docs/en/skills) for experimental social science, computational text analysis, manuscript QA, and transparent reporting. Install as a plugin to get AI assistance from research design through citation, figure/table, and final submission checks. All 23 skills auto-trigger from prompt context and are also available as explicit `/oss:skill-name` slash commands (the `oss:` prefix can be omitted when there is no ambiguity with other installed plugins).
+A library of [Claude Code skills](https://code.claude.com/docs/en/skills) for experimental social science, computational text analysis, manuscript QA, and transparent reporting. Install as a plugin and you get help across the workflow — research design, analysis, citation and figure/table audits, and pre-submission review. All 24 skills auto-trigger from prompt context and are also available as explicit `/oss:skill-name` slash commands. The `oss:` prefix can be omitted when no other installed plugin claims the same name.
 
-Skills were developed using a curated library of methodology texts. They are iteratively expanded as new sources, ideas, and skills are incorporated. This is a living and breathing kind of repo. Skill building and editing is author-driven with the help of Opus 4.6, Gemini 3.0, and Chat GPT 5.4.
+This is the toolkit I use in my own research. It is built from a curated corpus of methodology texts and grows as I add new sources, ideas, and skills. Authoring and editing are mine, with help from Opus 4.6, Gemini 3.0, and ChatGPT 5.4.
 
-Design follows Anthropic's [skill authoring best practices](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices): concise procedural guidance (no textbook definitions), trigger-rich YAML descriptions for auto-invocation, and progressive disclosure (instructions in skills, bibliography in SOURCES.md). Skills are periodically audited against both the [Claude Code skills reference](https://code.claude.com/docs/en/skills) and the [skill authoring guide](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices) to keep descriptions, frontmatter, and substantive content current.
+The design follows Anthropic's [skill authoring best practices](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices). Procedural guidance over textbook definitions, trigger-rich YAML descriptions for auto-invocation, and progressive disclosure (instructions live in skills, the bibliography in SOURCES.md). Skills are periodically audited against the [Claude Code skills reference](https://code.claude.com/docs/en/skills) and the [skill authoring guide](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices) so descriptions, frontmatter, and substantive content stay current.
 
-> These skills are meant to support, not supplant, the research and writing process. They adhere to APSA, JARS, DA-RT, TOP, and FAIR open-science expectations. All guidance is grounded in 160+ published sources and documented workflow patterns — see [**SOURCES.md**](SOURCES.md) for the full bibliography.
+> These skills support the research and writing process. They do not replace it. They follow APSA, JARS, DA-RT, TOP, and FAIR open-science expectations, and all guidance is grounded in 150 published sources and documented workflow patterns. See [**SOURCES.md**](SOURCES.md) for the full bibliography.
 
 ---
 
@@ -34,7 +34,7 @@ flowchart LR
     C -.-> C1[hypotheses / literature review / narrative / preregistration]
     D -.-> D1[figures / tables / methods reporting]
     E -.-> E1[FAIR / citations / figure-table-audit / archive checks]
-    F -.-> F1[paper-review-lite / presubmit / journal-review]
+    F -.-> F1[paper-review-lite / paper-review-lite-codex / presubmit / journal-review]
 ```
 
 Use the domain skills when designing or analyzing a study. Use the manuscript-QA skills when a draft exists and you need to check whether FAIR availability, citations, figures, tables, reporting, and replication materials can survive review.
@@ -80,7 +80,7 @@ git clone https://github.com/scdenney/open-science-skills.git
 cd open-science-skills && claude --plugin-dir ./plugin
 ```
 
-All 23 skills auto-trigger based on your prompts. All 23 slash commands (`/oss:conjoint-design`, `/oss:fair-check`, `/oss:figures`, `/oss:tables`, `/oss:figure-table-audit`, etc.) are immediately available. The prefix can be omitted when there is no ambiguity with other installed plugins.
+All 24 skills auto-trigger based on your prompts. All 24 slash commands (`/oss:conjoint-design`, `/oss:fair-check`, `/oss:figures`, `/oss:tables`, `/oss:figure-table-audit`, and so on) are immediately available. The prefix can be omitted when no other installed plugin claims the same name.
 
 ### Option 2 — Selective install (choose specific skills, auto-trigger only)
 
@@ -183,9 +183,10 @@ cp open-science-skills/plugin/skills/list-experiment/SKILL.md \
 
 | Skill | Slash command | What it does |
 |-------|--------------|-------------|
-| [**paper-review-lite**](plugin/skills/paper-review-lite/SKILL.md) | `/paper-review-lite` | Critical-Reviewer-style pre-submission audit: parallel quote-grounded sub-agents, verification cross-check, CONSORT + pre-reg audit for experimental papers. Lite counterpart to the standalone [`presubmit`](https://github.com/scdenney/presubmit) CLI. |
-| [**presubmit**](plugin/skills/presubmit/SKILL.md) | `/presubmit` | Activator + setup wizard for the standalone [`presubmit`](https://github.com/scdenney/presubmit) Python CLI: walks first-time users through install (venv + `pip install -e .`), Anthropic API key setup, and output location, then runs the heavier 30+ stage adversarial pipeline (resumable, cost-tracked, optional `--math` and `--code-dir` add-ons). Heavier API-driven counterpart to `paper-review-lite`. |
-| [**journal-review**](plugin/skills/journal-review/SKILL.md) | `/journal-review` | Drafts a senior-peer referee report on **someone else's** manuscript. Five parallel finder sub-agents (Breaker, Butcher, Shredder, Void, Situator) + Blue Team filter + Chief Reviewer synthesis + Tone Guard sanitization produce a tight 1,200–2,000 word report (Recommendation + Summary + Major Concerns + Additional Concerns + Suggestions for Revision). Different role from `paper-review-lite` and `presubmit`, which are calibrated for self-audit. This one acts like a third-party referee and can be used to support/augment (note: not replace) your review of papers. |
+| [**paper-review-lite**](plugin/skills/paper-review-lite/SKILL.md) | `/paper-review-lite` | Critical-Reviewer-style pre-submission audit. Parallel quote-grounded sub-agents, verification cross-check, CONSORT and pre-reg audit for experimental papers. Single-model, in-session counterpart to the standalone [`presubmit`](https://github.com/scdenney/presubmit) CLI. |
+| [**paper-review-lite-codex**](plugin/skills/paper-review-lite-codex/SKILL.md) | `/paper-review-lite-codex` | Cross-model adversarial variant of `paper-review-lite`. Claude and Codex (GPT-5.4) independently apply the same review specification, then each cross-checks the other's findings; surviving issues are annotated by confidence (mutual, asymmetric-confirmed, single-model-adjudicated). Roughly 22 model calls. Use before submission for maximum pressure and a second model family's blind spots. |
+| [**presubmit**](plugin/skills/presubmit/SKILL.md) | `/presubmit` | Activator and setup wizard for the standalone [`presubmit`](https://github.com/scdenney/presubmit) Python CLI. Walks first-time users through install (venv + `pip install -e .`), Anthropic API key setup, and output location, then runs the heavier 30+ stage adversarial pipeline (resumable, cost-tracked, optional `--math` and `--code-dir` add-ons). Heavier API-driven counterpart to `paper-review-lite`. |
+| [**journal-review**](plugin/skills/journal-review/SKILL.md) | `/journal-review` | Drafts a senior-peer referee report on **someone else's** manuscript for a social-science journal. Five parallel finder sub-agents (Breaker, Butcher, Shredder, Void, Situator), a Blue Team filter, Chief Reviewer synthesis, and Tone Guard sanitization produce a 1,200–2,000-word report (Recommendation, Summary, Major Concerns, Additional Concerns, Suggestions for Revision). Different role from `paper-review-lite` and `presubmit`, which are calibrated for self-audit. This one acts as a third-party referee and is meant to support, not replace, your own assessment of a manuscript. |
 
 ---
 
