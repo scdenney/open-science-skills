@@ -15,7 +15,7 @@ allowed-tools:
 
 This is the cross-model sibling of [`paper-review-lite`](../paper-review-lite/SKILL.md), itself the in-session, Claude-Code-native counterpart to [`presubmit`](https://github.com/scdenney/presubmit) (our port of the [reviewer2](https://github.com/isitcredible/reviewer2) adversarial peer-review pipeline). The heritage carries over wholesale. Sub-agents adopt a Critical-Reviewer posture, every finding is grounded in a verbatim quote, and a verification cascade filters hallucinations before they reach the final report.
 
-The new mechanic is cross-model adversarial verification. Two reviewers — Claude (the orchestrator) and Codex (GPT-5.4, called through `codex:codex-rescue`) — independently apply the same `paper-review-lite` specification to the same paper. Each then plays Blue Team to the other's Red Team. Two different model families have different blind spots, so:
+The new mechanic is cross-model adversarial verification. Two reviewers — Claude (the orchestrator) and Codex (GPT-5.4, invoked via Bash `codex exec` — see § Codex invocation mechanism) — independently apply the same `paper-review-lite` specification to the same paper. Each then plays Blue Team to the other's Red Team. Two different model families have different blind spots, so:
 
 - **Mutual catches** (both teams flag the issue, both cross-checks confirm) are high-confidence.
 - **Asymmetric catches** (one team flags, the other's cross-checker confirms against the paper) survive at standard confidence and often surface real but easy-to-miss problems.
@@ -23,6 +23,33 @@ The new mechanic is cross-model adversarial verification. Two reviewers — Clau
 - **Quote-failed** findings (the cross-checker cannot find the cited verbatim span) are dropped as hallucinations.
 
 This is the heavier sibling. Roughly 22 model calls total (9 Claude Red Team, 9 Codex Red Team, 4 cross-model Blue Team) plus orientation and synthesis by the orchestrator. Reach for it before submission when you want maximum adversarial pressure and a second model family's blind spots. For the heaviest standalone deliverable — Red Team personas (Breaker, Butcher, Shredder, Collector, Void), math audits, code-replication checks, resumable, cost-tracked — use [`presubmit`](https://github.com/scdenney/presubmit).
+
+## Codex invocation mechanism
+
+Claude Code has no native `codex:codex-rescue` subagent. Every "spawn Codex" reference below means: use the `Bash` tool to invoke `codex exec` directly. Pattern (substitute `OUTPUT_PATH` with the agent's output file path and inline the prompt body inside the heredoc):
+
+```bash
+codex exec \
+  --sandbox workspace-write \
+  --skip-git-repo-check \
+  -C "$(dirname OUTPUT_PATH)" \
+  "$(cat <<'CODEXEOF'
+<the XML prompt template for this agent, with PAPER_PATH and OUTPUT_PATH substituted as literals>
+CODEXEOF
+)" < /dev/null
+```
+
+**Required:**
+
+- **`< /dev/null`** — closes stdin. Without it, `codex exec` hangs indefinitely on "Reading additional input from stdin..." even when the prompt is passed as a CLI argument. This is the single most common failure mode.
+- **`run_in_background: true`** on every `Bash` call. Eleven parallel Codex calls per run (9 Phase 2 + 2 Phase 3) make foreground execution impractical.
+- **`timeout: 600000`** (10 minutes) as a harness backstop. If a call hangs for any reason, the harness kills it.
+
+After each Codex Bash task notifies completion, `Read` its output file. Treat any of the following as a Codex agent failure (skip that finding's contribution in adjudication, log the failure in the report):
+
+- Exit code ≠ 0.
+- No session file appeared in `~/.codex/sessions/` (Codex did not actually start).
+- The `OUTPUT_PATH` file is missing or empty.
 
 ## Instructions
 
@@ -59,14 +86,14 @@ Create this scratch layout in the paper's working directory.
     └── codex-checks-claude-technical.md
 ```
 
-Both teams write independently to their own subdirectory. Cross-checkers read the *other* team's subdirectory. Use absolute paths when spawning Codex sub-agents. The `codex:codex-rescue` runtime inherits the parent working directory, but explicit paths remove ambiguity when the paper lives outside the current CWD.
+Both teams write independently to their own subdirectory. Cross-checkers read the *other* team's subdirectory. Use absolute paths when spawning Codex sub-agents — `codex exec`'s `-C` flag sets the working directory, but absolute `PAPER_PATH` and `OUTPUT_PATH` values in the prompt remove ambiguity when the paper lives outside that CWD.
 
 ### 3. Phase 2 — Dual independent Red Team (18 parallel calls)
 
 Launch all 18 review calls in a single message.
 
 - **9 Claude sub-agents** via the `Agent` tool (default `subagent_type`). Use the agent prompts from `paper-review-lite` § 2 (Agents 1–9) verbatim, but redirect output to `.review-tmp/claude/agent-N-*.md` instead of the original `.review-tmp/agent-N-*.md`.
-- **9 Codex sub-agents** via the `Agent` tool with `subagent_type: codex:codex-rescue`. Use the Codex Phase 2 template below, one call per dimension. Output to `.review-tmp/codex/agent-N-*.md`.
+- **9 Codex sub-agents** via the `Bash` tool, following the pattern in § Codex invocation mechanism. Use the Codex Phase 2 template below as the prompt body, one call per dimension. Output to `.review-tmp/codex/agent-N-*.md`.
 
 Both teams apply the same dimension definitions, the same Critical-Reviewer posture, and the same severity rubric (`[CRITICAL]`, `[RECOMMENDED]`, `[MINOR]`) from `paper-review-lite` § 2. The point of running two model families on one specification is to compare independent applications of one standard, not to give them different jobs. Neither team sees the other's findings during Phase 2.
 
@@ -83,7 +110,7 @@ Each model verifies the other's findings. Cross-checkers do not add new findings
 
 For each Codex `[CRITICAL]` or `[RECOMMENDED]` finding, the cross-checker verifies the cited verbatim quote appears at the cited location, verifies the issue against the actual paper, flags any Codex finding that Claude also flagged independently in `.review-tmp/claude/` (mutual catch — note for synthesis), and steel-mans the paper. When the paper anticipates or partially addresses the concern, note it for severity downgrade.
 
-**Codex cross-checks Claude (2 sub-agents via `Agent` with `subagent_type: codex:codex-rescue`).**
+**Codex cross-checks Claude (2 sub-agents via `Bash` following § Codex invocation mechanism).**
 
 - Sub-agent C reads `.review-tmp/claude/agent-{1,2,6,7}-*.md`. Writes `.review-tmp/cross-check/codex-checks-claude-content.md`.
 - Sub-agent D reads `.review-tmp/claude/agent-{3,4,5,8,9}-*.md`. Writes `.review-tmp/cross-check/codex-checks-claude-technical.md`.
@@ -115,7 +142,7 @@ Everything else in the report follows the `paper-review-lite` § 4 format exactl
 
 ## Codex Phase 2 template (one per dimension, 9 total)
 
-Spawn `codex:codex-rescue` with the prompt below. Substitute `DIMENSION_INSTRUCTIONS` with the verbatim text of the corresponding agent from `paper-review-lite` § 2 (the full text of Agent 1, Agent 2, …, Agent 9 — do not paraphrase). Substitute `PAPER_PATH` with the absolute manuscript path and `OUTPUT_PATH` with the absolute path to the Codex agent's output file under `.review-tmp/codex/`.
+Use the XML block below as the prompt body inside the Bash invocation from § Codex invocation mechanism. Substitute `DIMENSION_INSTRUCTIONS` with the verbatim text of the corresponding agent from `paper-review-lite` § 2 (the full text of Agent 1, Agent 2, …, Agent 9 — do not paraphrase). Substitute `PAPER_PATH` with the absolute manuscript path and `OUTPUT_PATH` with the absolute path to the Codex agent's output file under `.review-tmp/codex/`.
 
 ```xml
 <task>
@@ -209,7 +236,7 @@ Process every finding in the input files end-to-end. Do not ask clarifying quest
 - [ ] Three subdirectories created under `.review-tmp/`. `claude/`, `codex/`, `cross-check/`.
 - [ ] All 18 Phase 2 calls (9 Claude + 9 Codex) launched in a single parallel message.
 - [ ] Both teams use the same dimension prompts and severity rubric from `paper-review-lite` § 2. No model gets a different job.
-- [ ] Codex sub-agents called via `Agent` with `subagent_type: codex:codex-rescue` and absolute paths in the prompt.
+- [ ] Codex sub-agents called via `Bash` following § Codex invocation mechanism (`codex exec ... < /dev/null`, `run_in_background: true`, `timeout: 600000`). Absolute paths used for `PAPER_PATH` and `OUTPUT_PATH` in the prompt.
 - [ ] Agents 6 and 7 marked `NA` on both teams for non-experimental or non-preregistered manuscripts.
 - [ ] All 4 Phase 3 cross-check calls launched in a single parallel message after all 18 Phase 2 output files exist.
 - [ ] Phase 3 cross-checkers do not add new findings. Verify, refute, or downgrade only.
