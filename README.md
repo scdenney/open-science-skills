@@ -4,21 +4,21 @@
 
 # Open Science Skills
 
-[![version](https://img.shields.io/badge/version-2.2.0-blue)](https://github.com/scdenney/open-science-skills/releases)
+[![version](https://img.shields.io/badge/version-2.3.0-blue)](https://github.com/scdenney/open-science-skills/releases)
 [![License: CC BY-NC 4.0](https://img.shields.io/badge/license-CC%20BY--NC%204.0-lightgrey)](LICENSE)
-[![skills](https://img.shields.io/badge/skills-25-blue)](#skills)
+[![skills](https://img.shields.io/badge/skills-27-blue)](#skills)
 [![plugin](https://img.shields.io/badge/Claude%20Code-plugin-orange)](https://code.claude.com/docs/en/skills)
 [![updated](https://img.shields.io/badge/updated-May%202026-green)](https://github.com/scdenney/open-science-skills/commits/main)
-[![sources](https://img.shields.io/badge/sources-150-purple)](SOURCES.md)
+[![sources](https://img.shields.io/badge/sources-151-purple)](SOURCES.md)
 [![PRs welcome](https://img.shields.io/badge/PRs-welcome-brightgreen)](#contributing)
 
-A library of [Claude Code skills](https://code.claude.com/docs/en/skills) for experimental social science, computational text analysis, manuscript QA, and transparent reporting. Install as a plugin and you get help across the workflow — research design, analysis, citation and figure/table audits, replication-package scaffolding, and pre-submission review. All 25 skills auto-trigger from prompt context and are also available as explicit `/oss:skill-name` slash commands. The `oss:` prefix can be omitted when no other installed plugin claims the same name.
+A library of [Claude Code skills](https://code.claude.com/docs/en/skills) for experimental social science, computational text analysis, manuscript QA, and transparent reporting. Install as a plugin and you get help across the workflow — research design, analysis, citation and figure/table audits, replication-package scaffolding, and pre-submission review. All 27 skills auto-trigger from prompt context and are also available as explicit `/oss:skill-name` slash commands. The `oss:` prefix can be omitted when no other installed plugin claims the same name.
 
 This is the toolkit I use in my own research. It is built from a curated corpus of methodology texts and grows as I add new sources, ideas, and skills. Authoring and editing are mine, with help from Opus 4.6, Gemini 3.0, and ChatGPT 5.4.
 
 The design follows Anthropic's [skill authoring best practices](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices). Procedural guidance over textbook definitions, trigger-rich YAML descriptions for auto-invocation, and progressive disclosure (instructions live in skills, the bibliography in SOURCES.md). Skills are periodically audited against the [Claude Code skills reference](https://code.claude.com/docs/en/skills) and the [skill authoring guide](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices) so descriptions, frontmatter, and substantive content stay current.
 
-> These skills support the research and writing process. They do not replace it. They follow APSA, JARS, DA-RT, TOP, and FAIR open-science expectations, and all guidance is grounded in 150 published sources and documented workflow patterns. See [**SOURCES.md**](SOURCES.md) for the full bibliography.
+> These skills support the research and writing process. They do not replace it. They follow APSA, JARS, DA-RT, TOP, and FAIR open-science expectations, and all guidance is grounded in 151 published sources and documented workflow patterns. See [**SOURCES.md**](SOURCES.md) for the full bibliography.
 
 ---
 
@@ -33,12 +33,16 @@ flowchart LR
     D --> E[Manuscript QA and FAIR]
     E --> F[Review and Submission]
 
+    G[Ideation] --> A
+    G --> C
+
     A -.-> A1[conjoint / survey / list / cross-national]
     B -.-> B1[topic modeling / text classification / OCR]
     C -.-> C1[hypotheses / literature review / narrative / preregistration]
     D -.-> D1[figures / tables / methods reporting]
     E -.-> E1[FAIR / citations / figure-table-audit / replication-package / archive checks]
     F -.-> F1[paper-review-lite / paper-review-lite-codex / presubmit / journal-review]
+    G -.-> G1[diverge / diverge-codex]
 ```
 
 Use the domain skills when designing or analyzing a study. Use the manuscript-QA skills when a draft exists and you need to check whether FAIR availability, citations, figures, tables, reporting, and replication materials can survive review.
@@ -84,7 +88,7 @@ git clone https://github.com/scdenney/open-science-skills.git
 cd open-science-skills && claude --plugin-dir ./plugin
 ```
 
-All 25 skills auto-trigger based on your prompts. All 25 slash commands (`/oss:conjoint-design`, `/oss:fair-check`, `/oss:figures`, `/oss:tables`, `/oss:figure-table-audit`, `/oss:replication-package`, and so on) are immediately available. The prefix can be omitted when no other installed plugin claims the same name.
+All 27 skills auto-trigger based on your prompts. All 27 slash commands (`/oss:conjoint-design`, `/oss:fair-check`, `/oss:figures`, `/oss:tables`, `/oss:figure-table-audit`, `/oss:replication-package`, and so on) are immediately available. The prefix can be omitted when no other installed plugin claims the same name.
 
 ### Option 2 — Selective install (choose specific skills, auto-trigger only)
 
@@ -132,6 +136,13 @@ cp open-science-skills/plugin/skills/list-experiment/SKILL.md \
 ---
 
 ## Skills
+
+### Ideation
+
+| Skill | Slash command | What it does |
+|-------|--------------|-------------|
+| [**diverge**](plugin/skills/diverge/SKILL.md) | `/diverge` | Brainstorm-then-select: before implementing, generate 3–5 conceptually distinct approaches labeled by creativity dimension ([Novel], [Surprising], [Diverse], [Conventional]) and hold for selection. Resists defaulting to the most obvious solution. After Creative Preference Optimization (Ismayilzada et al., 2025). |
+| [**diverge-codex**](plugin/skills/diverge-codex/SKILL.md) | `/diverge-codex` | Cross-model variant of `diverge`. Delegates the brainstorm to Codex (GPT-5.4) via `codex exec`, presents its approaches for selection, then has Codex implement the chosen one. A second model family widens the space of approaches. |
 
 ### Research Design
 

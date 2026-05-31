@@ -222,3 +222,11 @@ Sources specific to post-OCR text correction, quality diagnostics, multilingual 
 * **Sastre, F., Etcheverry, M., Rey, A., Moncecchi, G., & Rosa, A.** (2025). "Post-OCR Correction Using Large Language Models with Constrained Decoding." DOI: 10.21203/rs.3.rs-6823036/v1.
 * **Thomas, B., Gaizauskas, R., & Lu, H.** (2024). "Leveraging LLMs for Post-OCR Correction of Historical Newspapers." *LT4HALA 2024 @ LREC-COLING*.
 * **van Strien, D., Beelen, K., Ardanuy, M. C., Hosseini, K., McGillivray, B., & Colavizza, G.** (2020). "Assessing the Impact of OCR Quality on Downstream NLP Tasks." *ArtiDIGH 2020*.
+
+---
+
+## Creative Divergence
+
+Source for the brainstorm-then-select discipline behind the `diverge` and `diverge-codex` skills:
+
+* **Ismayilzada, M., Laverghetta Jr., A., Luchini, S. A., Patel, R., Bosselut, A., van der Plas, L., & Beaty, R. E.** (2025). "Creative Preference Optimization." *Findings of the Association for Computational Linguistics: EMNLP 2025*, 9580–9609. arXiv:2505.14442.

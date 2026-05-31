@@ -1,7 +1,7 @@
 {
   "name": "oss",
-  "version": "2.2.0",
-  "description": "Open Science Skills (oss). 25 Claude Code skills for experimental social science and computational text analysis. Conjoint design, diagnostics, and data cleaning; survey design; list experiments; cross-national design; topic modeling; LLM text classification; VLM-based OCR pipelines; post-OCR cleanup; FAIR manuscript checks; citation checking; literature review evidence mapping; figure design; table design; figure/table auditing; replication-package scaffolding (FAIR + Horiuchi conventions); paper pre-submission review (single-model and cross-model Claude+Codex variants); hypothesis building; narrative building; pre-registration; methods reporting; presubmit activation; and third-party journal review. Invoke as /oss:skill-name (or just /skill-name when there is no ambiguity) or let Claude auto-trigger based on context.",
+  "version": "2.3.0",
+  "description": "Open Science Skills (oss). 27 Claude Code skills for experimental social science and computational text analysis. Conjoint design, diagnostics, and data cleaning; survey design; list experiments; cross-national design; topic modeling; LLM text classification; VLM-based OCR pipelines; post-OCR cleanup; FAIR manuscript checks; citation checking; literature review evidence mapping; figure design; table design; figure/table auditing; replication-package scaffolding (FAIR + Horiuchi conventions); paper pre-submission review (single-model and cross-model Claude+Codex variants); hypothesis building; narrative building; pre-registration; methods reporting; presubmit activation; third-party journal review; and creative-divergence brainstorming in single-model and cross-model Claude+Codex variants (diverge, diverge-codex). Invoke as /oss:skill-name (or just /skill-name when there is no ambiguity) or let Claude auto-trigger based on context.",
   "author": {
     "name": "Steven Denney",
     "url": "https://github.com/scdenney"
@@ -46,6 +46,10 @@
     "presubmit",
     "journal-review",
     "peer-review",
+    "diverge",
+    "creative-divergence",
+    "ideation",
+    "brainstorming",
     "vlm-ocr",
     "post-ocr-cleanup",
     "document-digitization"
