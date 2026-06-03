@@ -22,6 +22,14 @@ The design follows Anthropic's [skill authoring best practices](https://platform
 
 ---
 
+## Contents
+
+[Skill Map](#skill-map) · [How Skills Work](#how-skills-work) · [Installation](#installation) · [Skills](#skills) · [Contributing](#contributing) · [License](#license)
+
+**Skills:** [Ideation](#ideation) · [Research Design](#research-design) · [Analysis](#analysis) · [Corpus Processing](#corpus-processing) · [Writing &amp; Reporting](#writing--reporting) · [Figures &amp; Tables](#figures--tables) · [Manuscript QA](#manuscript-qa) · [Review &amp; Submission](#review--submission)
+
+---
+
 ## Skill Map
 
 ```mermaid
@@ -90,7 +98,8 @@ cd open-science-skills && claude --plugin-dir ./plugin
 
 All 27 skills auto-trigger based on your prompts. All 27 slash commands (`/oss:conjoint-design`, `/oss:fair-check`, `/oss:figures`, `/oss:tables`, `/oss:figure-table-audit`, `/oss:replication-package`, and so on) are immediately available. The prefix can be omitted when no other installed plugin claims the same name.
 
-### Option 2 — Selective install (choose specific skills, auto-trigger only)
+<details>
+<summary><b>Option 2 — Selective install</b> (choose specific skills, auto-trigger only)</summary>
 
 Use the interactive install script to pick only the skills you want:
 
@@ -115,7 +124,10 @@ bash plugin/scripts/install.sh --all --target ~/.claude/skills
 
 Restart Claude Code after installing to load the new skills.
 
-### Option 3 — Manual copy (single skill, auto-trigger only)
+</details>
+
+<details>
+<summary><b>Option 3 — Manual copy</b> (single skill, auto-trigger only)</summary>
 
 ```bash
 git clone https://github.com/scdenney/open-science-skills.git
@@ -132,6 +144,8 @@ cp open-science-skills/plugin/skills/list-experiment/SKILL.md \
 ```
 
 > **Note:** Manual install gives you auto-trigger only. Slash commands (`/skill-name`) require the plugin.
+
+</details>
 
 ---
 
