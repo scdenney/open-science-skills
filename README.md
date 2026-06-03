@@ -14,7 +14,7 @@
 
 A library of [Claude Code skills](https://code.claude.com/docs/en/skills) for experimental social science, computational text analysis, manuscript QA, and transparent reporting. Install as a plugin and you get help across the workflow — research design, analysis, citation and figure/table audits, replication-package scaffolding, and pre-submission review. All 27 skills auto-trigger from prompt context and are also available as explicit `/oss:skill-name` slash commands. The `oss:` prefix can be omitted when no other installed plugin claims the same name.
 
-This is the toolkit I use in my own research. It is built from a curated corpus of methodology texts and grows as I add new sources, ideas, and skills. Authoring and editing are mine, with help from Opus 4.6, Gemini 3.0, and ChatGPT 5.4.
+This is the toolkit I use in my own research. It is built from a curated corpus of methodology texts and grows as I add new sources, ideas, and skills. Authoring and editing are mine, with help from Opus 4.8, Gemini 3.0, and ChatGPT 5.4.
 
 The design follows Anthropic's [skill authoring best practices](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices). Procedural guidance over textbook definitions, trigger-rich YAML descriptions for auto-invocation, and progressive disclosure (instructions live in skills, the bibliography in SOURCES.md). Skills are periodically audited against the [Claude Code skills reference](https://code.claude.com/docs/en/skills) and the [skill authoring guide](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices) so descriptions, frontmatter, and substantive content stay current.
 

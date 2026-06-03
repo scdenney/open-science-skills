@@ -68,7 +68,7 @@ Captions and table notes should let a reader understand the evidence without hun
 - All transformations, scales, and index directions are explicit.
 - Any data exclusions or subgroup restrictions are named.
 
-For conjoint, list-experiment, topic-modeling, LLM-classification, and OCR studies, invoke or recommend the relevant sibling skill when table/figure interpretation depends on method-specific standards.
+For conjoint, list-experiment, topic-modeling, text-classification, and OCR studies, invoke or recommend the relevant sibling skill when table/figure interpretation depends on method-specific standards.
 
 ### 5. Check accessibility and production quality
 

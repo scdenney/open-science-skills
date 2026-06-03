@@ -1,6 +1,6 @@
 ---
 name: replication-package
-description: Scaffold or audit a social-science replication package at a target directory. Generates folder structure, README, master.R, figure/table crosswalk, codebook template, LICENSE placeholder, and pre-release checklist. Adapted from Yusaku Horiuchi's replication-package-guide with FAIR-principle integration; platform-neutral (Harvard Dataverse, OSF, Zenodo, GitHub releases, institutional archives).
+description: Scaffold or audit a social-science replication package at a target directory. Generates folder structure, README, master.R, figure/table crosswalk, codebook template, LICENSE placeholder, .gitignore, and pre-release checklist. Adapted from Yusaku Horiuchi's replication-package-guide with FAIR-principle integration; platform-neutral (Harvard Dataverse, OSF, Zenodo, GitHub releases, institutional archives).
 argument-hint: "[path to replication folder; defaults to ./replication]"
 allowed-tools:
   - Read
