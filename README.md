@@ -153,70 +153,250 @@ cp open-science-skills/plugin/skills/list-experiment/SKILL.md \
 
 ### Ideation
 
-| Skill | Slash command | What it does |
-|-------|--------------|-------------|
-| [**diverge**](plugin/skills/diverge/SKILL.md) | `/diverge` | Brainstorm-then-select: before implementing, generate 3–5 conceptually distinct approaches labeled by creativity dimension ([Novel], [Surprising], [Diverse], [Conventional]) and hold for selection. Resists defaulting to the most obvious solution. After Creative Preference Optimization (Ismayilzada et al., 2025). |
-| [**diverge-codex**](plugin/skills/diverge-codex/SKILL.md) | `/diverge-codex` | Cross-model variant of `diverge`. Delegates the brainstorm to Codex (GPT-5.4) via `codex exec`, presents its approaches for selection, then has Codex implement the chosen one. A second model family widens the space of approaches. |
+<table width="100%">
+<thead>
+<tr>
+<th width="18%">Skill</th>
+<th width="16%">Slash command</th>
+<th width="66%">What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="plugin/skills/diverge/SKILL.md"><strong>diverge</strong></a></td>
+<td><code>/diverge</code></td>
+<td>Brainstorm-then-select: before implementing, generate 3–5 conceptually distinct approaches labeled by creativity dimension ([Novel], [Surprising], [Diverse], [Conventional]) and hold for selection. Resists defaulting to the most obvious solution. After Creative Preference Optimization (Ismayilzada et al., 2025).</td>
+</tr>
+<tr>
+<td><a href="plugin/skills/diverge-codex/SKILL.md"><strong>diverge-codex</strong></a></td>
+<td><code>/diverge-codex</code></td>
+<td>Cross-model variant of <code>diverge</code>. Delegates the brainstorm to Codex (GPT-5.4) via <code>codex exec</code>, presents its approaches for selection, then has Codex implement the chosen one. A second model family widens the space of approaches.</td>
+</tr>
+</tbody>
+</table>
 
 ### Research Design
 
-| Skill | Slash command | What it does |
-|-------|--------------|-------------|
-| [**conjoint-design**](plugin/skills/conjoint-design/SKILL.md) | `/conjoint-design` | Attribute architecture, AMCE/AMIE estimation, power analysis (`cjpowR`), BART heterogeneity detection, design variants |
-| [**conjoint-diagnostics**](plugin/skills/conjoint-diagnostics/SKILL.md) | `/conjoint-diagnostics` | Diagnostic checklist: design, estimation, measurement error (IRR), external validity, interpretation |
-| [**conjoint-cleaning**](plugin/skills/conjoint-cleaning/SKILL.md) | `/conjoint-cleaning` | Qualtrics export to analysis-ready format: column conventions, reshaping, choice mapping, translation, pilot detection, validation |
-| [**survey-design**](plugin/skills/survey-design/SKILL.md) | `/survey-design` | Question construction, scale design, survey flow, pretesting, respondent burden, social desirability mitigation |
-| [**cross-national-design**](plugin/skills/cross-national-design/SKILL.md) | `/cross-national-design` | Cross-national survey experiments: per-country power, sensitivity bias auditing, instrument localization |
-| [**list-experiment**](plugin/skills/list-experiment/SKILL.md) | `/list-experiment` | Item count technique: pre-design sensitivity assessment, control list design, NLSreg/MLreg estimation, assumption testing, placebo diagnostics |
+<table width="100%">
+<thead>
+<tr>
+<th width="18%">Skill</th>
+<th width="16%">Slash command</th>
+<th width="66%">What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="plugin/skills/conjoint-design/SKILL.md"><strong>conjoint-design</strong></a></td>
+<td><code>/conjoint-design</code></td>
+<td>Attribute architecture, AMCE/AMIE estimation, power analysis (<code>cjpowR</code>), BART heterogeneity detection, design variants</td>
+</tr>
+<tr>
+<td><a href="plugin/skills/conjoint-diagnostics/SKILL.md"><strong>conjoint-diagnostics</strong></a></td>
+<td><code>/conjoint-diagnostics</code></td>
+<td>Diagnostic checklist: design, estimation, measurement error (IRR), external validity, interpretation</td>
+</tr>
+<tr>
+<td><a href="plugin/skills/conjoint-cleaning/SKILL.md"><strong>conjoint-cleaning</strong></a></td>
+<td><code>/conjoint-cleaning</code></td>
+<td>Qualtrics export to analysis-ready format: column conventions, reshaping, choice mapping, translation, pilot detection, validation</td>
+</tr>
+<tr>
+<td><a href="plugin/skills/survey-design/SKILL.md"><strong>survey-design</strong></a></td>
+<td><code>/survey-design</code></td>
+<td>Question construction, scale design, survey flow, pretesting, respondent burden, social desirability mitigation</td>
+</tr>
+<tr>
+<td><a href="plugin/skills/cross-national-design/SKILL.md"><strong>cross-national-design</strong></a></td>
+<td><code>/cross-national-design</code></td>
+<td>Cross-national survey experiments: per-country power, sensitivity bias auditing, instrument localization</td>
+</tr>
+<tr>
+<td><a href="plugin/skills/list-experiment/SKILL.md"><strong>list-experiment</strong></a></td>
+<td><code>/list-experiment</code></td>
+<td>Item count technique: pre-design sensitivity assessment, control list design, NLSreg/MLreg estimation, assumption testing, placebo diagnostics</td>
+</tr>
+</tbody>
+</table>
 
 ### Analysis
 
-| Skill | Slash command | What it does |
-|-------|--------------|-------------|
-| [**topic-modeling**](plugin/skills/topic-modeling/SKILL.md) | `/topic-modeling` | STM with metadata covariates, topic count selection via coherence-exclusivity diagnostics, reporting |
-| [**text-classification**](plugin/skills/text-classification/SKILL.md) | `/text-classification` | LLM-based classification: codebook design, learning regime selection, human-LLM hybrid workflows, validation |
+<table width="100%">
+<thead>
+<tr>
+<th width="18%">Skill</th>
+<th width="16%">Slash command</th>
+<th width="66%">What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="plugin/skills/topic-modeling/SKILL.md"><strong>topic-modeling</strong></a></td>
+<td><code>/topic-modeling</code></td>
+<td>STM with metadata covariates, topic count selection via coherence-exclusivity diagnostics, reporting</td>
+</tr>
+<tr>
+<td><a href="plugin/skills/text-classification/SKILL.md"><strong>text-classification</strong></a></td>
+<td><code>/text-classification</code></td>
+<td>LLM-based classification: codebook design, learning regime selection, human-LLM hybrid workflows, validation</td>
+</tr>
+</tbody>
+</table>
 
 ### Corpus Processing
 
-| Skill | Slash command | What it does |
-|-------|--------------|-------------|
-| [**vlm-ocr-pipeline**](plugin/skills/vlm-ocr-pipeline/SKILL.md) | `/vlm-ocr-pipeline` | VLM-based OCR: model selection, image handling, prompt engineering, batch strategy, accuracy evaluation, reproducibility |
-| [**post-ocr-cleanup**](plugin/skills/post-ocr-cleanup/SKILL.md) | `/post-ocr-cleanup` | Post-OCR cleanup: LLM and rule-based correction, quality diagnostics, multilingual considerations, corpus-level QA, provenance |
+<table width="100%">
+<thead>
+<tr>
+<th width="18%">Skill</th>
+<th width="16%">Slash command</th>
+<th width="66%">What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="plugin/skills/vlm-ocr-pipeline/SKILL.md"><strong>vlm-ocr-pipeline</strong></a></td>
+<td><code>/vlm-ocr-pipeline</code></td>
+<td>VLM-based OCR: model selection, image handling, prompt engineering, batch strategy, accuracy evaluation, reproducibility</td>
+</tr>
+<tr>
+<td><a href="plugin/skills/post-ocr-cleanup/SKILL.md"><strong>post-ocr-cleanup</strong></a></td>
+<td><code>/post-ocr-cleanup</code></td>
+<td>Post-OCR cleanup: LLM and rule-based correction, quality diagnostics, multilingual considerations, corpus-level QA, provenance</td>
+</tr>
+</tbody>
+</table>
 
 ### Writing & Reporting
 
-| Skill | Slash command | What it does |
-|-------|--------------|-------------|
-| [**hypothesis-building**](plugin/skills/hypothesis-building/SKILL.md) | `/hypothesis-building` | Falsifiability, counterfactuals, DAGs, FPCI, three-level hypothesis specification, equivalence testing, SESOI |
-| [**literature-review**](plugin/skills/literature-review/SKILL.md) | `/literature-review` | Evidence maps, closest-prior-work assessment, gap verdicts, literature clusters, synthesis plans |
-| [**narrative-building**](plugin/skills/narrative-building/SKILL.md) | `/narrative-building` | Introduction logic, literature reviews, the "Why-to-If-Then" funnel, cumulative framing, multi-experiment coherence |
-| [**pre-registration-writing**](plugin/skills/pre-registration-writing/SKILL.md) | `/pre-registration-writing` | PAP structure, registry selection, analytical strategy specification, code pre-registration, deviation documentation |
-| [**methods-reporting**](plugin/skills/methods-reporting/SKILL.md) | `/methods-reporting` | 40-item reporting checklist: CONSORT standards, JARS preregistration elements, DA-RT transparency |
+<table width="100%">
+<thead>
+<tr>
+<th width="18%">Skill</th>
+<th width="16%">Slash command</th>
+<th width="66%">What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="plugin/skills/hypothesis-building/SKILL.md"><strong>hypothesis-building</strong></a></td>
+<td><code>/hypothesis-building</code></td>
+<td>Falsifiability, counterfactuals, DAGs, FPCI, three-level hypothesis specification, equivalence testing, SESOI</td>
+</tr>
+<tr>
+<td><a href="plugin/skills/literature-review/SKILL.md"><strong>literature-review</strong></a></td>
+<td><code>/literature-review</code></td>
+<td>Evidence maps, closest-prior-work assessment, gap verdicts, literature clusters, synthesis plans</td>
+</tr>
+<tr>
+<td><a href="plugin/skills/narrative-building/SKILL.md"><strong>narrative-building</strong></a></td>
+<td><code>/narrative-building</code></td>
+<td>Introduction logic, literature reviews, the "Why-to-If-Then" funnel, cumulative framing, multi-experiment coherence</td>
+</tr>
+<tr>
+<td><a href="plugin/skills/pre-registration-writing/SKILL.md"><strong>pre-registration-writing</strong></a></td>
+<td><code>/pre-registration-writing</code></td>
+<td>PAP structure, registry selection, analytical strategy specification, code pre-registration, deviation documentation</td>
+</tr>
+<tr>
+<td><a href="plugin/skills/methods-reporting/SKILL.md"><strong>methods-reporting</strong></a></td>
+<td><code>/methods-reporting</code></td>
+<td>40-item reporting checklist: CONSORT standards, JARS preregistration elements, DA-RT transparency</td>
+</tr>
+</tbody>
+</table>
 
 ### Figures & Tables
 
-| Skill | Slash command | What it does |
-|-------|--------------|-------------|
-| [**figures**](plugin/skills/figures/SKILL.md) | `/figures` | Design publication-quality figures: chart choice from comparison, scales, color, legend ordering matched to visual order, self-contained captions, reproducibility |
-| [**tables**](plugin/skills/tables/SKILL.md) | `/tables` | Design publication-quality tables: column order matching the argument, row grouping, precision and uncertainty conventions, self-contained titles and notes, code-generated workflows |
+<table width="100%">
+<thead>
+<tr>
+<th width="18%">Skill</th>
+<th width="16%">Slash command</th>
+<th width="66%">What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="plugin/skills/figures/SKILL.md"><strong>figures</strong></a></td>
+<td><code>/figures</code></td>
+<td>Design publication-quality figures: chart choice from comparison, scales, color, legend ordering matched to visual order, self-contained captions, reproducibility</td>
+</tr>
+<tr>
+<td><a href="plugin/skills/tables/SKILL.md"><strong>tables</strong></a></td>
+<td><code>/tables</code></td>
+<td>Design publication-quality tables: column order matching the argument, row grouping, precision and uncertainty conventions, self-contained titles and notes, code-generated workflows</td>
+</tr>
+</tbody>
+</table>
 
 ### Manuscript QA
 
-| Skill | Slash command | What it does |
-|-------|--------------|-------------|
-| [**fair-check**](plugin/skills/fair-check/SKILL.md) | `/fair-check` | FAIR audit for completed manuscripts: data/code/material availability, repository metadata, persistent identifiers, licenses, access restrictions, reuse conditions |
-| [**citation-check**](plugin/skills/citation-check/SKILL.md) | `/citation-check` | In-text/reference parity, DOI and source-status checks, stale working papers, citation-style and support audits |
-| [**figure-table-audit**](plugin/skills/figure-table-audit/SKILL.md) | `/figure-table-audit` | End-stage QA of the finished figure/table set: inventory, cross-references, text-to-table consistency, accessibility, SI and replication linkage. Pairs with `figures` and `tables` (production-stage). |
-| [**replication-package**](plugin/skills/replication-package/SKILL.md) | `/replication-package` | Scaffold or audit a replication package at a target directory. Generates folder structure, README, `master.R`, figure/table crosswalk, codebook template, LICENSE placeholder, `.gitignore`, and a pre-release checklist. Platform-neutral (Harvard Dataverse, OSF, Zenodo, GitHub releases). Adapted from Yusaku Horiuchi's [replication-package-guide](https://github.com/yhoriuchi/replication-package-guide) with FAIR-principle integration. Pair with `fair-check`. |
+<table width="100%">
+<thead>
+<tr>
+<th width="18%">Skill</th>
+<th width="16%">Slash command</th>
+<th width="66%">What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="plugin/skills/fair-check/SKILL.md"><strong>fair-check</strong></a></td>
+<td><code>/fair-check</code></td>
+<td>FAIR audit for completed manuscripts: data/code/material availability, repository metadata, persistent identifiers, licenses, access restrictions, reuse conditions</td>
+</tr>
+<tr>
+<td><a href="plugin/skills/citation-check/SKILL.md"><strong>citation-check</strong></a></td>
+<td><code>/citation-check</code></td>
+<td>In-text/reference parity, DOI and source-status checks, stale working papers, citation-style and support audits</td>
+</tr>
+<tr>
+<td><a href="plugin/skills/figure-table-audit/SKILL.md"><strong>figure-table-audit</strong></a></td>
+<td><code>/figure-table-audit</code></td>
+<td>End-stage QA of the finished figure/table set: inventory, cross-references, text-to-table consistency, accessibility, SI and replication linkage. Pairs with <code>figures</code> and <code>tables</code> (production-stage).</td>
+</tr>
+<tr>
+<td><a href="plugin/skills/replication-package/SKILL.md"><strong>replication-package</strong></a></td>
+<td><code>/replication-package</code></td>
+<td>Scaffold or audit a replication package at a target directory. Generates folder structure, README, <code>master.R</code>, figure/table crosswalk, codebook template, LICENSE placeholder, <code>.gitignore</code>, and a pre-release checklist. Platform-neutral (Harvard Dataverse, OSF, Zenodo, GitHub releases). Adapted from Yusaku Horiuchi's <a href="https://github.com/yhoriuchi/replication-package-guide">replication-package-guide</a> with FAIR-principle integration. Pair with <code>fair-check</code>.</td>
+</tr>
+</tbody>
+</table>
 
 ### Review & Submission
 
-| Skill | Slash command | What it does |
-|-------|--------------|-------------|
-| [**paper-review-lite**](plugin/skills/paper-review-lite/SKILL.md) | `/paper-review-lite` | Critical-Reviewer-style pre-submission audit. Parallel quote-grounded sub-agents, verification cross-check, CONSORT and pre-reg audit for experimental papers. Single-model, in-session counterpart to the standalone [`presubmit`](https://github.com/scdenney/presubmit) CLI. |
-| [**paper-review-lite-codex**](plugin/skills/paper-review-lite-codex/SKILL.md) | `/paper-review-lite-codex` | Cross-model adversarial variant of `paper-review-lite`. Claude and Codex (GPT-5.4) independently apply the same review specification, then each cross-checks the other's findings; surviving issues are annotated by confidence (mutual, asymmetric-confirmed, single-model-adjudicated). Roughly 22 model calls. Use before submission for maximum pressure and a second model family's blind spots. |
-| [**presubmit**](plugin/skills/presubmit/SKILL.md) | `/presubmit` | Activator and setup wizard for the standalone [`presubmit`](https://github.com/scdenney/presubmit) Python CLI. Walks first-time users through install (venv + `pip install -e .`), Anthropic API key setup, and output location, then runs the heavier 30+ stage adversarial pipeline (resumable, cost-tracked, optional `--math` and `--code-dir` add-ons). Heavier API-driven counterpart to `paper-review-lite`. |
-| [**journal-review**](plugin/skills/journal-review/SKILL.md) | `/journal-review` | Drafts a senior-peer referee report on **someone else's** manuscript for a social-science journal. Five parallel finder sub-agents (Breaker, Butcher, Shredder, Void, Situator), a Blue Team filter, Chief Reviewer synthesis, and Tone Guard sanitization produce a 1,200–2,000-word report (Recommendation, Summary, Major Concerns, Additional Concerns, Suggestions for Revision). Different role from `paper-review-lite` and `presubmit`, which are calibrated for self-audit. This one acts as a third-party referee and is meant to support, not replace, your own assessment of a manuscript. |
+<table width="100%">
+<thead>
+<tr>
+<th width="18%">Skill</th>
+<th width="16%">Slash command</th>
+<th width="66%">What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="plugin/skills/paper-review-lite/SKILL.md"><strong>paper-review-lite</strong></a></td>
+<td><code>/paper-review-lite</code></td>
+<td>Critical-Reviewer-style pre-submission audit. Parallel quote-grounded sub-agents, verification cross-check, CONSORT and pre-reg audit for experimental papers. Single-model, in-session counterpart to the standalone <a href="https://github.com/scdenney/presubmit"><code>presubmit</code></a> CLI.</td>
+</tr>
+<tr>
+<td><a href="plugin/skills/paper-review-lite-codex/SKILL.md"><strong>paper-review-lite-codex</strong></a></td>
+<td><code>/paper-review-lite-codex</code></td>
+<td>Cross-model adversarial variant of <code>paper-review-lite</code>. Claude and Codex (GPT-5.4) independently apply the same review specification, then each cross-checks the other's findings; surviving issues are annotated by confidence (mutual, asymmetric-confirmed, single-model-adjudicated). Roughly 22 model calls. Use before submission for maximum pressure and a second model family's blind spots.</td>
+</tr>
+<tr>
+<td><a href="plugin/skills/presubmit/SKILL.md"><strong>presubmit</strong></a></td>
+<td><code>/presubmit</code></td>
+<td>Activator and setup wizard for the standalone <a href="https://github.com/scdenney/presubmit"><code>presubmit</code></a> Python CLI. Walks first-time users through install (venv + <code>pip install -e .</code>), Anthropic API key setup, and output location, then runs the heavier 30+ stage adversarial pipeline (resumable, cost-tracked, optional <code>--math</code> and <code>--code-dir</code> add-ons). Heavier API-driven counterpart to <code>paper-review-lite</code>.</td>
+</tr>
+<tr>
+<td><a href="plugin/skills/journal-review/SKILL.md"><strong>journal-review</strong></a></td>
+<td><code>/journal-review</code></td>
+<td>Drafts a senior-peer referee report on <strong>someone else's</strong> manuscript for a social-science journal. Five parallel finder sub-agents (Breaker, Butcher, Shredder, Void, Situator), a Blue Team filter, Chief Reviewer synthesis, and Tone Guard sanitization produce a 1,200–2,000-word report (Recommendation, Summary, Major Concerns, Additional Concerns, Suggestions for Revision). Different role from <code>paper-review-lite</code> and <code>presubmit</code>, which are calibrated for self-audit. This one acts as a third-party referee and is meant to support, not replace, your own assessment of a manuscript.</td>
+</tr>
+</tbody>
+</table>
 
 ---
 
