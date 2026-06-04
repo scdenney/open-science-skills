@@ -1,0 +1,79 @@
+% ============================================================================
+% Open Science Skills — house-style preamble for working papers and submissions
+% ----------------------------------------------------------------------------
+% Font: EB Garamond. Bibliography: author-date (apsr/natbib). Sections numbered,
+% subsections unnumbered. Captions carry a title with an italic "Note:" beneath
+% (\figcap). Floats placed exactly where written ([H]). Robust to pandoc output.
+%
+% Journal overrides (edit here, not in the body):
+%   - font:    swap \usepackage{ebgaramond} for the required family
+%   - bib:     change \bibliographystyle{apsr} to the required .bst
+%   - spacing: set in the main/SI file (\singlespacing or \doublespacing), not here
+% ============================================================================
+
+\usepackage[margin=1in]{geometry}
+\usepackage{setspace}
+\usepackage[T1]{fontenc}
+\usepackage{ebgaramond}                 % house serif; replace if a journal mandates a font
+
+\usepackage{graphicx}
+\usepackage{calc}                       % pandoc emits column widths as (\columnwidth ...) * \real{..}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{multirow}
+\usepackage{longtable}
+\usepackage{threeparttable}
+\usepackage{float}                      % enables [H] exact float placement
+\usepackage{amsmath}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{appendix}
+\usepackage{pdflscape}
+
+\usepackage[round]{natbib}
+\bibliographystyle{apsr}                % author-date; change per journal
+\usepackage[hidelinks]{hyperref}
+\usepackage{xr-hyper}                   % \externaldocument{...} cross-refs main <-> SI
+
+% Number sections only; subsection headings are unnumbered.
+\setcounter{secnumdepth}{1}
+
+% Captions: bold label, colon separator, justified, no single-line centering.
+\captionsetup{labelfont=bf, labelsep=colon, justification=justified, singlelinecheck=false}
+
+% \figcap{title}{note}
+%   The caption carries the title; an italic "Note:" line sits beneath it.
+%   Use for EVERY figure and table so each exhibit reads on its own.
+%   Put the title and all explanation here, never baked inside the image, and
+%   state confidence-interval / N / source details in the note only.
+\newcommand{\figcap}[2]{\caption[#1]{#1\\[6pt]\textit{Note:} #2}}
+
+% ----------------------------------------------------------------------------
+% pandoc compatibility shims (harmless when unused; let converted bodies build)
+% ----------------------------------------------------------------------------
+\providecommand{\tightlist}{\setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\providecommand{\real}[1]{#1}
+% \pandocbounded scales an image down to fit the text block (pandoc's own definition;
+% pandoc emits the call but not the definition when producing a body fragment).
+\makeatletter
+\newsavebox\pandoc@box
+\providecommand*\pandocbounded[1]{%
+  \sbox\pandoc@box{#1}%
+  \Gscale@div\@tempa\textheight{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
+  \Gscale@div\@tempb\linewidth{\wd\pandoc@box}%
+  \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi%
+  \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
+  \else\usebox\pandoc@box\fi}
+\makeatother
+
+\usepackage{newunicodechar}
+\newunicodechar{−}{\ensuremath{-}}      % U+2212 minus
+\newunicodechar{–}{--}                  % en dash
+\newunicodechar{—}{---}                 % em dash
+\newunicodechar{→}{\ensuremath{\rightarrow}}
+\newunicodechar{≥}{\ensuremath{\geq}}
+\newunicodechar{≤}{\ensuremath{\leq}}
+
+% Footnote breathing room.
+\setlength{\skip\footins}{16pt plus 4pt minus 2pt}
+\setlength{\footnotesep}{9pt}

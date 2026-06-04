@@ -1,0 +1,24 @@
+\documentclass[12pt]{article}
+\input{preamble}
+
+% Supplementary information: unnumbered sections, labeled SI-A, SI-B, ... in the body.
+\setcounter{secnumdepth}{0}
+\renewcommand{\thefigure}{SI-\arabic{figure}}
+\renewcommand{\thetable}{SI-\arabic{table}}
+
+\title{\textbf{Supplementary Information}\\[3pt]
+\normalsize {{TITLE}}}
+\author{{{AUTHOR}}}
+\date{{{DATE}}}
+
+\begin{document}
+\maketitle
+\thispagestyle{empty}
+\singlespacing
+
+\input{{{BODYFILE}}}
+
+\clearpage
+\bibliography{{{BIB}}}
+
+\end{document}

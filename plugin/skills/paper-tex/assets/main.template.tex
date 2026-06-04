@@ -1,0 +1,36 @@
+\documentclass[12pt]{article}
+\input{preamble}
+{{EXTERNALDOC}}
+\title{\textbf{{{TITLE}}}}
+\author{{{AUTHOR}}}
+\date{{{DATE}}}
+
+\begin{document}
+
+% --- Title block: always single-spaced ---
+{\singlespacing
+\maketitle
+\thispagestyle{empty}
+\begin{abstract}
+\noindent {{ABSTRACT}}
+\end{abstract}
+
+\noindent\textbf{Keywords:} {{KEYWORDS}}
+}
+
+% Body spacing (journal-dependent: \singlespacing fits tight page limits).
+{{SPACING}}
+
+% Introduction starts on its own page (remove for journals that require it on the cover page).
+{{TITLEBREAK}}
+
+\input{{{BODYFILE}}}
+
+% --- Disclosures: full sentences under unnumbered section headings, never bold run-ins ---
+{{DISCLOSURES}}
+
+\newpage
+\singlespacing
+\bibliography{{{BIB}}}
+
+\end{document}
