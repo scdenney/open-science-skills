@@ -4,15 +4,15 @@
 
 # Open Science Skills
 
-[![version](https://img.shields.io/badge/version-2.3.1-blue)](https://github.com/scdenney/open-science-skills/releases)
+[![version](https://img.shields.io/badge/version-2.4.0-blue)](https://github.com/scdenney/open-science-skills/releases)
 [![License: CC BY-NC 4.0](https://img.shields.io/badge/license-CC%20BY--NC%204.0-lightgrey)](LICENSE)
-[![skills](https://img.shields.io/badge/skills-27-blue)](#skills)
+[![skills](https://img.shields.io/badge/skills-28-blue)](#skills)
 [![plugin](https://img.shields.io/badge/Claude%20Code-plugin-orange)](https://code.claude.com/docs/en/skills)
 [![updated](https://img.shields.io/badge/updated-June%202026-green)](https://github.com/scdenney/open-science-skills/commits/main)
 [![sources](https://img.shields.io/badge/sources-151-purple)](SOURCES.md)
 [![PRs welcome](https://img.shields.io/badge/PRs-welcome-brightgreen)](#contributing)
 
-A library of [Claude Code skills](https://code.claude.com/docs/en/skills) for experimental social science, computational text analysis, manuscript QA, and transparent reporting. Install as a plugin and you get help across the workflow — research design, analysis, citation and figure/table audits, replication-package scaffolding, and pre-submission review. All 27 skills auto-trigger from prompt context and are also available as explicit `/oss:skill-name` slash commands. The `oss:` prefix can be omitted when no other installed plugin claims the same name.
+A library of [Claude Code skills](https://code.claude.com/docs/en/skills) for experimental social science, computational text analysis, manuscript QA, and transparent reporting. Install as a plugin and you get help across the workflow — research design, analysis, citation and figure/table audits, replication-package scaffolding, and pre-submission review. All 28 skills auto-trigger from prompt context and are also available as explicit `/oss:skill-name` slash commands. The `oss:` prefix can be omitted when no other installed plugin claims the same name.
 
 This is the toolkit I use in my own research. It is built from a curated corpus of methodology texts and grows as I add new sources, ideas, and skills. Authoring and editing are mine, with help from Opus 4.8, Gemini 3.0, and ChatGPT 5.4.
 
@@ -96,7 +96,7 @@ git clone https://github.com/scdenney/open-science-skills.git
 cd open-science-skills && claude --plugin-dir ./plugin
 ```
 
-All 27 skills auto-trigger based on your prompts. All 27 slash commands (`/oss:conjoint-design`, `/oss:fair-check`, `/oss:figures`, `/oss:tables`, `/oss:figure-table-audit`, `/oss:replication-package`, and so on) are immediately available. The prefix can be omitted when no other installed plugin claims the same name.
+All 28 skills auto-trigger based on your prompts. All 28 slash commands (`/oss:conjoint-design`, `/oss:fair-check`, `/oss:figures`, `/oss:tables`, `/oss:paper-tex`, `/oss:figure-table-audit`, `/oss:replication-package`, and so on) are immediately available. The prefix can be omitted when no other installed plugin claims the same name.
 
 <details>
 <summary><b>Option 2 — Selective install</b> (choose specific skills, auto-trigger only)</summary>
@@ -302,6 +302,11 @@ cp open-science-skills/plugin/skills/list-experiment/SKILL.md \
 <td><a href="plugin/skills/methods-reporting/SKILL.md"><strong>methods-reporting</strong></a></td>
 <td><code>/methods-reporting</code></td>
 <td>40-item reporting checklist: CONSORT standards, JARS preregistration elements, DA-RT transparency</td>
+</tr>
+<tr>
+<td><a href="plugin/skills/paper-tex/SKILL.md"><strong>paper-tex</strong></a></td>
+<td><code>/paper-tex</code></td>
+<td>Typeset a working paper or journal submission in house-style LaTeX from any draft (Markdown, Word, TeX, ODT, HTML): pandoc conversion, EB Garamond template, <code>\figcap</code> title+note captions, <code>[H]</code> floats, single-spaced title block with the introduction on its own page, and journal-specific prep (spacing, page limit, anonymization, disclosures). Bundles a tested convert-and-build driver.</td>
 </tr>
 </tbody>
 </table>
