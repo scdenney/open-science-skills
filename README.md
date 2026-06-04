@@ -49,7 +49,7 @@ flowchart LR
     C -.-> C1[hypotheses / literature review / narrative / preregistration]
     D -.-> D1[figures / tables / methods reporting]
     E -.-> E1[FAIR / citations / figure-table-audit / replication-package / archive checks]
-    F -.-> F1[paper-review-lite / paper-review-lite-codex / presubmit / journal-review]
+    F -.-> F1[paper-tex / paper-review-lite / paper-review-lite-codex / presubmit / journal-review]
     G -.-> G1[diverge / diverge-codex]
 ```
 
