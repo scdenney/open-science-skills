@@ -132,15 +132,15 @@ Restart Claude Code after installing to load the new skills.
 ```bash
 git clone https://github.com/scdenney/open-science-skills.git
 
-# Project-level (current project only)
-mkdir -p your-project/.claude/skills/conjoint-design
-cp open-science-skills/plugin/skills/conjoint-design/SKILL.md \
-   your-project/.claude/skills/conjoint-design/SKILL.md
+# Project-level (current project only) — copy the whole skill folder:
+# many skills ship reference/, assets/, or scripts/ files their SKILL.md points at
+mkdir -p your-project/.claude/skills
+cp -R open-science-skills/plugin/skills/conjoint-design \
+   your-project/.claude/skills/
 
 # User-wide (all projects)
-mkdir -p ~/.claude/skills/list-experiment
-cp open-science-skills/plugin/skills/list-experiment/SKILL.md \
-   ~/.claude/skills/list-experiment/SKILL.md
+mkdir -p ~/.claude/skills
+cp -R open-science-skills/plugin/skills/list-experiment ~/.claude/skills/
 ```
 
 > **Note:** Manual install gives you auto-trigger only. Slash commands (`/skill-name`) require the plugin.

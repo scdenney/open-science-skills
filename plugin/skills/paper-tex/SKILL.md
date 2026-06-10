@@ -10,10 +10,10 @@ Turn a draft in any common format into a clean, house-style LaTeX paper and buil
 
 The house style: 12pt EB Garamond, 1-inch margins, author-date citations (`apsr`), numbered sections with unnumbered subsections, a single-spaced title block, the introduction on its own page, figures and tables placed where they are written (`[H]`), and every exhibit carrying a title with an italic *Note:* beneath it (`\figcap`).
 
-Paths below are relative to this skill directory. Set `SKILL` to it once:
+Paths below are relative to this skill directory — the folder containing this SKILL.md. You know its absolute path from having just read this file; set `SKILL` to it once:
 
 ```bash
-SKILL=~/Documents/GitHub/resources/open-science-skills/plugin/skills/paper-tex
+SKILL=/path/to/.../skills/paper-tex   # the directory this SKILL.md lives in
 ```
 
 ## Step 0 — Ask for the journal specifics first
@@ -43,7 +43,7 @@ Verified on macOS with TeX Live 2025 and pandoc 3.8. Required on `PATH`: `pandoc
 
 ```bash
 # macOS
-brew install pandoc poppler        # TeX via MacTeX (basictex users: tlmgr install ebgaramond apsr collection-latexextra)
+brew install pandoc poppler        # TeX via MacTeX (basictex users: tlmgr install ebgaramond harvard collection-latexextra)
 # Debian/Ubuntu
 # apt-get install -y pandoc texlive-full poppler-utils
 ```
@@ -73,9 +73,11 @@ python3 "$SKILL/scripts/format_paper.py" draft.tex --out build --title "..." --b
 python3 "$SKILL/scripts/format_paper.py" main.md --si si.md --out build --build
 ```
 
-Output lands in `build/`: `main.tex`, `body.tex`, `preamble.tex` (and `si.tex`/`si_body.tex` with `--si`), plus `main.pdf` when `--build` is set. The driver prints the page count and the house-finishing checklist.
+Output lands in `build/`: `main.tex`, `body.tex`, `preamble.tex` (and `si.tex`/`si_body.tex` with `--si`), plus `main.pdf` when `--build` is set. The driver prints the page count and the house-finishing checklist. With `--si`, the SI builds first so `\externaldocument{si}` resolves SI cross-references on main's first pass.
 
-Full options: `python3 "$SKILL/scripts/format_paper.py" --help`. Notable flags: `--anon`, `--cover-page`, `--spacing`, `--bib NAME`, `--engine pdflatex|xelatex`, `--no-here-floats`.
+After a successful build the driver deletes the latexmk/bibtex byproducts (`.aux`, `.log`, `.bbl`, `.blg`, `.fls`, `.fdb_latexmk`, `.out`, `.toc`, `.synctex.gz`, …) so the folder holds only the sources, the staged `.bib` and figures, and the PDFs. Pass `--keep-aux` while debugging a failed-then-fixed build; with `--si`, `si.aux` is kept because `xr-hyper` reads it when `main.tex` is rebuilt by hand.
+
+Full options: `python3 "$SKILL/scripts/format_paper.py" --help`. Notable flags: `--anon`, `--cover-page`, `--spacing`, `--bib NAME`, `--engine pdflatex|xelatex`, `--no-here-floats`, `--keep-aux`.
 
 ## House-finishing (by hand, after the driver)
 
@@ -99,8 +101,14 @@ The driver gets the structure right; these four steps make it house style. Do th
    not require human-subjects review.
    ```
    Identifying disclosures (funding, acknowledgments, ORCID, COI) go on a separate, non-anonymous title page for double-anonymous review, not in the body.
-3. **Thread SI cross-references.** With `--si`, `\externaldocument{si}` is already set, so `\ref{}`/`\Cref{}` reach SI labels. Make sure the main text actually points readers to the supplementary tables and figures where they support a claim.
-4. **Remove bold-period run-in subheaders.** Convert `\textbf{Multi-group CFA.}`-style leads into a real `\subsection{}` (or spell the point into the sentence). This is the `sci-edit` rule against bold-text-with-period headings; the formatter does not auto-catch it.
+3. **Thread SI cross-references.** With `--si`, `\externaldocument{si}` is already set, so plain `\ref{}` reaches SI labels (the preamble does not load `cleveref`, so do not write `\Cref`). Make sure the main text actually points readers to the supplementary tables and figures where they support a claim.
+4. **Remove bold-period run-in subheaders.** Convert `\textbf{Multi-group CFA.}`-style leads into a real `\subsection{}` (or spell the point into the sentence). Bold-text-with-period headings are banned house style; the formatter does not auto-catch them.
+
+5. **Leave the folder clean.** Hand rebuilds recreate the latexmk byproducts the driver cleaned. When the PDF is final, remove them (this is mandatory — a working-paper folder must hold only sources, staged assets, and PDFs):
+   ```bash
+   python3 "$SKILL/scripts/format_paper.py" --clean --out build
+   ```
+   This deletes `.aux`/`.bbl`/`.blg`/`.fdb_latexmk`/`.fls`/`.log`/`.out`/`.toc`/`.synctex.gz` and friends, and never touches sources or PDFs. If you rebuild `main.tex` again later with an SI, build `si.tex` first so `\externaldocument{si}` finds a fresh `si.aux`.
 
 Two more house rules the formatter cannot enforce for you: tables get a title and note beneath them (use `\figcap` inside `threeparttable`/`table`, booktabs rules, no vertical lines), and case or country names that carry the argument are written plainly — not bolded or otherwise over-emphasized — even when they do special work.
 
@@ -127,3 +135,5 @@ Two more house rules the formatter cannot enforce for you: tables get a title an
 | `Citation 'x' undefined` after build | the `.bib` was not staged — pass `--bib NAME` or copy it into `build/`; the driver auto-copies a sibling `references.bib` |
 | Over a hard page limit | switch to `--spacing single`, then add `\setlength{\bibsep}{4pt}` before cutting content |
 | Author name leaks in a double-anonymous build | pass `--anon`; move funding/acknowledgments/ORCID to a separate title page |
+| SI cross-references print `??` in `main.pdf` | `si.aux` is missing — build `si.tex` before `main.tex` (the driver does this) |
+| Folder cluttered with `.log`/`.fls`/`.blg`/`.aux` files | the driver cleans these after its own builds; after hand `latexmk` runs, `format_paper.py --clean --out build` (house-finishing step 5) |

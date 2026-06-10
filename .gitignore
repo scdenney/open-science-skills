@@ -4,8 +4,9 @@ setup-sync.sh
 .DS_Store
 
 # Knowledge base and conversion tooling: kept local only (synced via Google Drive, not git)
+# (anchored: skill-level scripts/ dirs, e.g. plugin/skills/paper-tex/scripts/, ARE tracked)
 knowledge_base/
-scripts/
+/scripts/
 *.pdf
 
 # Sources corpus: PDFs + MD conversions kept local (size + copyright)

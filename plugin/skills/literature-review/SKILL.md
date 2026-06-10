@@ -24,6 +24,8 @@ Decide what the user needs:
 
 Default to a narrative/evidence-map review unless the user explicitly asks for a systematic review, meta-analysis, or PRISMA-compliant output.
 
+If the user does want a systematic review, be explicit about what this skill can and cannot do: steps 2-7 below produce the **protocol scaffold** -- question, boundaries, search strings, inclusion/exclusion criteria, and the evidence-map structure -- but exhaustive multi-database screening, dual-coder risk-of-bias assessment, and PRISMA flow accounting require dedicated tooling and human coders. Deliver the protocol scaffold, recommend registering it (PROSPERO or OSF), and point the user at screening tools (e.g., Covidence, ASReview) for the systematic phase.
+
 ### 2. Define the question and boundaries
 
 Before summarizing papers, specify:

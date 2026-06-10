@@ -40,7 +40,7 @@ Before fielding, simulate B = 10,000 synthetic respondents under the prior joint
 
 ## Post-field diagnostics
 
-- **No-design-effect (NDE) test:** `ict.test(y, treat, J = 4)` from the `list` R package (Blair & Imai 2012). Null hypothesis: no design effect. Report the p-value, the number of bootstrap iterations, and the `list` package version.
+- **No-design-effect (NDE) test:** `ict.test(y, treat, J = 4)` from the `list` R package (Blair & Imai 2012). Null hypothesis: no design effect. Report the p-value, the number of Monte Carlo draws (`n.draws`), and the `list` package version.
 - **Floor/ceiling check:** Tabulate the control-group count distribution. Compare observed P(Y = 0) and P(Y = 4) to the pre-field priors above. Flag divergences > 10pp as potential design failures, not preference falsification (Frye et al. 2023).
 - **Hausman specification test** (if a multivariate estimator is reported): `ict.hausman.test()` from the same package (Blair, Chou & Imai 2019). Large positive or any negative statistic indicates misspecification; prefer NLSreg if triggered.
 

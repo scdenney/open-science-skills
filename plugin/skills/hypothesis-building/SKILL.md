@@ -10,7 +10,7 @@ argument-hint: "[describe your theory or research question]"
 
 ### 1. The Identification Challenge
 - **Verify FPCI Resolution:** Confirm that random assignment (or the identification strategy) solves the Fundamental Problem of Causal Inference for this design (Druckman 2022).
-- **Four Prerequisites for Experiments:** Before proceeding, verify that the design meets the four prerequisites for causal inference from experiments: (1) *random assignment* to conditions, (2) *exclusion restriction* (the only difference between conditions is the treatment itself), (3) *SUTVA* (Stable Unit Treatment Value Assumption -- one subject's treatment does not affect another's outcome), and (4) *noninterference* between units (Druckman 2022).
+- **Three Prerequisites for Experiments:** Before proceeding, verify that the design meets the three prerequisites for causal inference from experiments: (1) *random assignment* to conditions, (2) *exclusion restriction* (the only difference between conditions is the treatment itself), and (3) *SUTVA* (the Stable Unit Treatment Value Assumption, i.e. noninterference -- one subject's treatment does not affect another's outcome) (Druckman 2022, following Gerber & Green 2012).
 - **Define the Data Generating Process (DGP):** Before drafting the hypothesis, describe the set of rules that governs how the data is created. What are the underlying mechanics of the world being studied?
 - **Map the Causal Diagram:** Where appropriate, draw a DAG. Identify backdoor paths and confirm whether randomization closes them (Mutz 2011).
 - **Close the Backdoors:** State which variables must be controlled for to isolate the treatment effect. If using an experiment, explain how random assignment closes these paths (Mutz 2011).

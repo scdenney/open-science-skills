@@ -11,7 +11,7 @@ context: fork
 
 This is the in-session, Claude-Code-native referee-drafting tool. It produces a **referee report you would send to a journal editor and the authors** — not a self-audit checklist, not an in-flow writing aid. Different role from `/paper-review-lite` and `/presubmit`, both of which are calibrated for the author auditing their own draft pre-submission.
 
-The eight-agent design is adapted from the [`presubmit`](https://github.com/scdenney/presubmit) pipeline (itself a port of `reviewer2` / isitcredible.com, Apache-2.0). Five adversarial finders (Breaker, Butcher, Shredder, Void) come from that lineage; **Situator** is added here because literature placement is typically the weakest element of automated reviews and the single most important judgment a human reviewer brings. Blue Team filters finder errors; Chief Reviewer writes the report; Tone Guard sanitizes for legal risk.
+The eight-agent design is adapted from the [`presubmit`](https://github.com/scdenney/presubmit) pipeline (itself a port of `reviewer2` / isitcredible.com, Apache-2.0). Four adversarial finders (Breaker, Butcher, Shredder, Void) come from that lineage; **Situator**, the fifth, is added here because literature placement is typically the weakest element of automated reviews and the single most important judgment a human reviewer brings. Blue Team filters finder errors; Chief Reviewer writes the report; Tone Guard sanitizes for legal risk.
 
 ## What this produces
 
@@ -29,7 +29,7 @@ Total length: 1,200–2,000 words. Shorter is better than longer if the critique
 ## Setup (do this yourself before launching agents)
 
 1. Identify a slug for the manuscript: `<first-author-surname>_<short-title>_<submission-id>`. Example: `Kim_divided_views_JAS-26-0243`.
-2. Create the working directory: `mkdir -p <reviews-folder>/<slug>/` (typically under `~/Documents/GitHub/reviews/` if the user has that convention).
+2. Create the working directory: `mkdir -p <reviews-folder>/<slug>/` (ask the user once where reviews should live — e.g. `~/reviews/` — and reuse that convention thereafter).
 3. Copy the manuscript PDF into the slug folder as `manuscript.pdf`. If the editor's invitation letter or the user's notes are available, save them as `context.md` in the same folder.
 4. Read the manuscript yourself once before writing agent prompts. Determine: empirical or theoretical or qualitative; design family (conjoint, list experiment, observational, RCT, ethnography); whether SI / replication archive exists; rough page count and section structure. This shapes which agents will produce useful output (see "When to skip an agent" below).
 
@@ -262,6 +262,8 @@ Spawn on the Chief Reviewer's draft.
 >
 > Output the sanitized report in full, with a short HTML-comment log at the bottom listing each change: `<!-- Changed "X" → "Y" (imputed intent). -->`. If nothing changed, end with `<!-- No issues found. -->`.
 
+After reviewing the change log, **delete the HTML comments from `referee_report.md`** — that file goes to the editor and authors, and workflow artifacts must not leak into it.
+
 ## Phase 5 — Run /sci-edit on the prose (if available)
 
 After Tone Guard, the report is legally clean but may still read as AI-drafted. If `/sci-edit` is installed at `~/.claude/skills/sci-edit/`, invoke it on the report file:
@@ -270,7 +272,7 @@ After Tone Guard, the report is legally clean but may still read as AI-drafted. 
 /sci-edit <slug>/referee_report.md
 ```
 
-This applies Steven's academic-prose linter (Kobak Tier-1 vocab blocklist, phrasal AI tells, voice overrides). Apply its suggestions to the Major Concerns paragraphs especially — these are what the author and editor actually read. If `/sci-edit` is not installed, skip this phase and mention it in the final summary so the user can install it for next time.
+This applies the user's academic-prose linter (Kobak Tier-1 vocab blocklist, phrasal AI tells, voice overrides). Apply its suggestions to the Major Concerns paragraphs especially — these are what the author and editor actually read. If `/sci-edit` is not installed, skip this phase and mention it in the final summary so the user can install it for next time.
 
 ## Phase 6 — Optional confidential editor note
 
@@ -303,6 +305,7 @@ Save as `<slug>/editor_confidential.md`.
 ## Output checklist (last-mile, before the user sends)
 
 - [ ] Every quote in the report verified against the PDF by direct lookup. Agents occasionally paraphrase as though quoting.
+- [ ] Tone Guard's HTML-comment change log deleted from `referee_report.md`.
 - [ ] Every page citation correct. Agents sometimes cite the wrong page.
 - [ ] Summary describes the paper, not the critique. Recognizable to the authors as a fair characterization.
 - [ ] Major Concerns ordered by importance, not by the order agents produced them.

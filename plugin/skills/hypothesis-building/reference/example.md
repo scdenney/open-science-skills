@@ -114,11 +114,13 @@ estimand is $\beta_1 = \hat\tau_{\text{SATE}}$.
 Combine the directional test above with an equivalence test (TOST)
 using bounds $\pm 0.25$ scale points:
 
+(Rejecting the TOST null *concludes equivalence*: the effect lies inside the $\pm$ SESOI bounds.)
+
 | NHST result | TOST result | Interpretation                          |
 |-------------|-------------|-----------------------------------------|
-| Reject $H_0$ | Reject equiv. | Effect present in predicted direction  |
-| Fail to reject | Reject equiv. | Effect trivially small (no support)  |
-| Reject $H_0$ | Fail to reject | Effect present but inconclusive size |
+| Reject $H_0$ | Fail to reject (not equivalent) | Effect present in predicted direction; a $\geq$ SESOI effect cannot be ruled out |
+| Reject $H_0$ | Reject (equivalent) | Statistically significant but trivially small (no support) |
+| Fail to reject | Reject (equivalent) | Conclusive null: any effect is smaller than the SESOI |
 | Fail to reject | Fail to reject | Inconclusive; under-powered         |
 
 ## 4. Tier classification and scope

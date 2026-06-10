@@ -2,11 +2,11 @@
 # install.sh — Selective installer for open-science-skills
 # Installs one or more skills into a Claude Code skills directory.
 #
-# Usage:
-#   bash scripts/install.sh                    # interactive
-#   bash scripts/install.sh --all              # install all skills
-#   bash scripts/install.sh --skill conjoint-design survey-design
-#   bash scripts/install.sh --target ~/.claude/skills   # custom target
+# Usage (from the repo root):
+#   bash plugin/scripts/install.sh                    # interactive
+#   bash plugin/scripts/install.sh --all              # install all skills
+#   bash plugin/scripts/install.sh --skill conjoint-design survey-design
+#   bash plugin/scripts/install.sh --target ~/.claude/skills   # custom target
 #
 # Default target: ./.claude/skills (project-level, current directory)
 
@@ -84,15 +84,17 @@ echo ""
 echo "Installing to: $TARGET"
 mkdir -p "$TARGET"
 
+# Copy the whole skill directory: many skills ship reference/, assets/, or
+# scripts/ files that their SKILL.md points at.
 for skill in "${SELECTED_SKILLS[@]}"; do
-  src="$SKILLS_DIR/$skill/SKILL.md"
-  dst="$TARGET/$skill/SKILL.md"
-  if [[ ! -f "$src" ]]; then
+  src="$SKILLS_DIR/$skill"
+  dst="$TARGET/$skill"
+  if [[ ! -f "$src/SKILL.md" ]]; then
     echo "  ✗ $skill — not found, skipping"
     continue
   fi
-  mkdir -p "$(dirname "$dst")"
-  cp "$src" "$dst"
+  mkdir -p "$dst"
+  cp -R "$src/." "$dst/"
   echo "  ✓ $skill"
 done
 

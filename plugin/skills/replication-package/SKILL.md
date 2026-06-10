@@ -77,7 +77,8 @@ When in doubt, choose compact. Build/analyze is justified only when the build st
 |-- data/
 |-- code/
 |-- docs/
-|   `-- crosswalk.md
+|   |-- crosswalk.md
+|   `-- codebook.md
 `-- outputs/
     |-- figures/
     |-- tables/
@@ -102,7 +103,8 @@ When in doubt, choose compact. Build/analyze is justified only when the build st
     |-- figures/
     |-- tables/
     |-- docs/
-    |   `-- crosswalk.md
+    |   |-- crosswalk.md
+    |   `-- codebook.md
     `-- logs/
 ```
 
@@ -111,6 +113,8 @@ Create the directories first, then write the template files in Step 5. Leave `da
 ### Step 5. Write template files
 
 Use the templates in the **Templates** section below. Fill in placeholder fields (`<paper title>`, `<authors>`, etc.) with values the user provides; if a placeholder cannot be resolved from context, leave it as written and flag it in the final report so the user knows what to edit.
+
+The templates are written for the **compact** layout. When scaffolding **build/analyze**, adapt the paths as you write them: `code/` → `build/scripts/` and `analyze/scripts/`, `outputs/` → `analyze/`, `docs/` → `analyze/docs/` — in the README's file descriptions and in every `source()` line of `master.R`.
 
 ### Step 6. Report
 
@@ -124,7 +128,7 @@ After scaffolding, output a short report with:
 
 ### `README.md`
 
-```markdown
+````markdown
 # <paper title>
 
 **Authors.** <author 1>, <author 2>, ...
@@ -193,7 +197,7 @@ See `LICENSE`. <one sentence: data license, code license, any restrictions>.
 ## Attribution
 
 This package follows the structural conventions in Yusaku Horiuchi's [replication-package-guide](https://github.com/yhoriuchi/replication-package-guide) and the FAIR principles (Wilkinson et al. 2016, doi:10.1038/sdata.2016.18).
-```
+````
 
 ### `master.R`
 
@@ -204,7 +208,6 @@ This package follows the structural conventions in Yusaku Horiuchi's [replicatio
 
 # Reproducibility
 set.seed(20260101)              # change to the seed used in the paper
-options(stringsAsFactors = FALSE)
 
 # Capture the start time and prepare the log directory
 .start_time <- Sys.time()

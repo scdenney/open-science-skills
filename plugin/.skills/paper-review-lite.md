@@ -40,7 +40,7 @@ Read the paper yourself to understand its structure before writing agent prompts
 
 Use this knowledge to write **specific** agent prompts that reference actual file paths, section names, and relevant files. Generic prompts produce shallow results.
 
-**Orchestration contract.** Before Phase 2, create a scratch directory `.review-tmp/` in the paper's working directory. Each Phase 2 agent writes its structured findings to a dedicated file (`agent-1-content.md`, `agent-2-numbers.md`, ..., `agent-9-archive.md`) using the output format specified below. Phase 3 cross-checkers read these files directly; you do not need to paste findings back into their prompts. Launch all Phase 2 agents in a single message with parallel sub-agent tool calls (one call per agent) so they run concurrently; launch Phase 3 after all nine output files exist. For experimental manuscripts, Agents 6 (CONSORT/randomization-and-flow) and 7 (pre-registration verification) are mandatory; for non-experimental manuscripts they can be skipped and their checklist rows marked `NA`.
+**Orchestration contract.** Before Phase 2, create a scratch directory `.review-tmp/` in the paper's working directory. Each Phase 2 agent writes its structured findings to a dedicated file — `agent-1-content.md`, `agent-2-numbers.md`, `agent-3-references.md`, `agent-4-dois.md`, `agent-5-writing.md`, `agent-6-consort.md`, `agent-7-prereg.md`, `agent-8-figures.md`, `agent-9-archive.md` — using the output format specified below. Use these exact filenames; Phase 3 reads them directly. Phase 3 cross-checkers read these files directly; you do not need to paste findings back into their prompts. Launch all Phase 2 agents in a single message with parallel sub-agent tool calls (one call per agent) so they run concurrently; launch Phase 3 after all nine output files exist. For experimental manuscripts, Agents 6 (CONSORT/randomization-and-flow) and 7 (pre-registration verification) are mandatory; for non-experimental manuscripts they can be skipped and their checklist rows marked `NA`. After the Pre-Submit Report has been delivered, delete `.review-tmp/` — it is workflow scratch, not a deliverable — unless the user asks to keep it.
 
 ### 2. Parallel Deep Review (launch all 9 agents simultaneously)
 
@@ -163,6 +163,7 @@ Cite file paths and line numbers for every issue. Distinguish between objective 
 - [ ] `.review-tmp/` scratch directory created and all Phase 2 agents wrote to their assigned file
 - [ ] All 9 Phase 2 agents launched in parallel in a single message (Agents 6 and 7 marked `NA` for non-experimental / non-preregistered papers)
 - [ ] Phase 3 cross-checkers read Phase 2 output files directly from `.review-tmp/`
+- [ ] `.review-tmp/` deleted after the report was delivered (unless the user asked to keep it)
 - [ ] Severity rubric (CRITICAL / RECOMMENDED / MINOR) applied consistently across all agents
 - [ ] Agent prompts reference specific file paths, not generic placeholders
 - [ ] For experimental papers: Agent 6 audited CONSORT participant flow, ITT primacy, baseline balance, attrition-by-arm, randomization procedure, and blinding

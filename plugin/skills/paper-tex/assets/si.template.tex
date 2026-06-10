@@ -1,8 +1,9 @@
 \documentclass[12pt]{article}
 \input{preamble}
 
-% Supplementary information: unnumbered sections, labeled SI-A, SI-B, ... in the body.
-\setcounter{secnumdepth}{0}
+% Supplementary information: sections numbered SI-A, SI-B, ...; floats SI-1, SI-2, ...
+% (secnumdepth stays 1 from the preamble so sections step their counter and are \ref-able)
+\renewcommand{\thesection}{SI-\Alph{section}}
 \renewcommand{\thefigure}{SI-\arabic{figure}}
 \renewcommand{\thetable}{SI-\arabic{table}}
 

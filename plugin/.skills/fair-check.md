@@ -93,6 +93,7 @@ Statements must be specific enough for a reader to find and reuse objects. "Avai
 
 ### 7. Compose with sibling skills
 
+- Use `replication-package` to scaffold or restructure the package itself when the audit finds structural gaps (it cross-references this skill as its follow-up).
 - Use `citation-check` when repository objects need formal citation or DOI checks.
 - Use `figure-table-audit` to verify figures/tables trace to repository files or scripts.
 - Use `methods-reporting` for DA-RT, TOP, JARS, CONSORT, and methods-section integration.

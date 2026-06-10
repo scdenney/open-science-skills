@@ -73,7 +73,7 @@ argument-hint: "[describe your cross-national study or country selection]"
 - [ ] **Sensitivity Audit:** Has the risk of social desirability bias been assessed per country, with indirect measurement considered where needed?
 - [ ] **Mode Consistency:** Is the survey mode consistent across countries, or are mode differences documented?
 - [ ] **Cross-National Piloting:** Has the localized instrument been piloted in each country?
-- [ ] **Translation:** Is a professional translation and back-translation protocol specified?
+- [ ] **Translation:** Is a TRAPD team-translation protocol specified? (Back-translation alone is not sufficient -- see Translation Protocol above.)
 - [ ] **Response Style Biases:** Have moderacy, extreme response, and acquiescence biases been assessed across countries?
 - [ ] **Online Representativeness:** For developing/middle-income country samples, is the "online representative" limitation acknowledged?
 - [ ] **Treatment Homogeneity:** Are information treatments designed to maintain equivalence across countries (e.g., qualitative rather than quantitative framing where appropriate)?

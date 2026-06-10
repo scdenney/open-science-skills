@@ -6,7 +6,7 @@ Worked prompt templates and a span-level provenance schema to accompany SKILL.md
 
 ## A. Baseline correction prompt (minimal, constrained-decoding friendly)
 
-Use this as the default template for routine page-level correction. The instruction set is intentionally tight: no explanations, no modernization, no translation. This is the version that pairs cleanly with token-level CBS because every output character has a direct correspondence to an input character and the model is not asked to produce any "scaffolding" tokens.
+Use this as the default template for routine page-level correction. The instruction set is intentionally tight: no explanations, no modernization, no translation. This is the version that pairs cleanly with token-level CBS because, apart from the fixed `<CORRECTED>`/`</CORRECTED>` wrapper tags (deterministic delimiters, stripped before scoring), every output character has a direct correspondence to an input character — the model is not asked to produce free-form scaffolding.
 
 ```
 System:
@@ -121,7 +121,7 @@ Canonical example (JSONL, one record per line):
 
 ```jsonl
 {"schema_version":"1.0.0","event_id":"c2f1a4e0-...","doc_id":"doc_017","page_id":3,"base_revision":0,"span_start":1284,"span_end":1291,"orig_text":"Madifon","new_text":"Madison","edit_type":"substitute","source":"model","model_name":"gemma-2-9b-it@4bit","confidence":0.74,"review_status":"unreviewed","layout_zone":"body"}
-{"schema_version":"1.0.0","event_id":"91a8d2b3-...","doc_id":"doc_017","page_id":3,"base_revision":0,"span_start":1312,"span_end":1328,"orig_text":"inter-\nnational","new_text":"international","edit_type":"normalize","source":"rule","rule_name":"hyphenation_repair","confidence":0.98,"review_status":"approved","layout_zone":"body","note":"line-break hyphenation repair"}
+{"schema_version":"1.0.0","event_id":"91a8d2b3-...","doc_id":"doc_017","page_id":3,"base_revision":0,"span_start":1312,"span_end":1327,"orig_text":"inter-\nnational","new_text":"international","edit_type":"normalize","source":"rule","rule_name":"hyphenation_repair","confidence":0.98,"review_status":"approved","layout_zone":"body","note":"line-break hyphenation repair"}
 {"schema_version":"1.0.0","event_id":"4e7c9f11-...","doc_id":"doc_017","page_id":4,"base_revision":0,"span_start":812,"span_end":819,"orig_text":"NewYork","new_text":"New York","edit_type":"split","source":"model","model_name":"gemma-2-9b-it@4bit","confidence":0.81,"review_status":"unreviewed","layout_zone":"body"}
 ```
 

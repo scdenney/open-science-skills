@@ -113,6 +113,7 @@ The VLM returns the transcription as a string. A thin post-processing wrapper pa
 
 Field notes:
 
+- **Offset convention:** all `start_char`/`end_char` values are 0-based Unicode-codepoint offsets into the **marker-stripped** transcription (the `text` field after `[UNCERTAIN: ...]` and layout tags are removed), with `end_char` exclusive. Compute them during parsing, as the tags are stripped — offsets into the raw tagged string would shift with every tag.
 - `confidence` is a model-reported or heuristic per-page score on [0, 1]; document the source in the pipeline record (self-reported log-probabilities, dictionary hit rate, or a learned classifier).
 - `uncertain_spans` is the parsed form of `[UNCERTAIN: ...]` tags; always populated (empty array if none). `reason` is optional but encouraged (`faded_ink`, `torn`, `bleed_through`, `ambiguous_character`, `damaged_scan`).
 - `layout_markers` is the parsed form of layout tags; downstream diagnostics consume this to distinguish body text from tables, footnotes, and figures.

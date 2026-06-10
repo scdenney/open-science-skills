@@ -102,11 +102,13 @@ k_search <- searchK(prepped$documents, prepped$vocab,
                     data = prepped$meta, init.type = "Spectral")
 plot(k_search)
 
-# (c) At the chosen K, refit with multiple initializations; pick off the frontier.
+# (c) At the chosen K, refit with multiple RANDOM initializations; pick off the
+# frontier. Do not pass init.type = "Spectral" here: spectral init is
+# deterministic, so all runs would be identical and the frontier degenerate.
 k_chosen  <- 10
 candidates <- selectModel(prepped$documents, prepped$vocab, K = k_chosen,
                           prevalence = ~ treatment_arm, data = prepped$meta,
-                          runs = 20, init.type = "Spectral")
+                          runs = 20, init.type = "LDA")
 plotModels(candidates)
 fit <- candidates$runout[[1]]
 

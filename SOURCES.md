@@ -107,7 +107,9 @@ Sources specific to estimand specification, counterfactual reasoning, and hypoth
 
 Sources specific to comparative survey experiments, case selection, and cross-cultural measurement:
 
+* **Bansak, K., Hainmueller, J., & Hangartner, D.** (2016). "How Economic, Humanitarian, and Religious Concerns Shape European Attitudes Toward Asylum Seekers." *Science*, 354(6309), 217–222.
 * **Cross-Cultural Survey Guidelines (CCSG).** (2016). *Guidelines for Best Practice in Cross-Cultural Surveys* (4th ed.). Survey Research Center, University of Michigan. (Consolidates Harkness et al. 2010 TRAPD protocol and related 3MC guidance.)
+* **Hainmueller, J., & Hopkins, D. J.** (2014). "Public Attitudes Toward Immigration." *Annual Review of Political Science*, 17, 225–249.
 
 ## Pre-Registration and Pre-Analysis Plans
 
@@ -158,6 +160,7 @@ Sources specific to list experiment (item count technique) design, estimation, d
 * **Blair, G., Chou, W., & Imai, K.** (2019). "List Experiments with Measurement Error." *Political Analysis*, 27(4), 455–480.
 * **Blair, G., Chou, W., & Imai, K.** (2025). *list: Statistical Methods for the Item Count Technique and List Experiment* (R package version 9.2.6). CRAN.
 * **Blair, G., Coppock, A., & Moor, M.** (2020). "When to Worry about Sensitivity Bias: A Social Reference Theory and Evidence from 30 Years of List Experiments." *American Political Science Review*, 114(4), 1297–1315.
+* **Chuang, E., Dupas, P., Huillery, E., & Seban, J.** (2021). "Sex, Lies, and Measurement: Consistency Tests for Indirect Response Survey Methods." *Journal of Development Economics*, 148, 102582.
 * **Corstange, D.** (2009). "Sensitive Questions, Truthful Answers? Modeling the List Experiment with LISTIT." *Political Analysis*, 17(1), 45–63.
 * **Diaz, G.** (2024). "Assessing the Validity of Prevalence Estimates in Double List Experiments." *Journal of Experimental Political Science*, 11(2), 162–174.
 * **Droitcour, J., et al.** (1991). "The Item Count Technique as a Method of Indirect Questioning." In *Measurement Errors in Surveys*, pp. 185–210. Wiley.
@@ -170,6 +173,8 @@ Sources specific to list experiment (item count technique) design, estimation, d
 * **Kuklinski, J. H., et al.** (1997). "Racial Prejudice and Attitudes Toward Affirmative Action." *American Journal of Political Science*, 41(2), 402–419.
 * **Miller, J. D.** (1984). *A New Survey Technique for Studying Deviant Behavior*. Doctoral dissertation, The George Washington University.
 * **Riambau, G., & Ostwald, K.** (2021). "Placebo Statements in List Experiments: Evidence from a Face-to-Face Survey in Singapore." *Political Science Research and Methods*, 9(1), 172–179.
+* **Rosenbaum, P. R.** (2007). "Confidence Intervals for Uncommon but Dramatic Responses to Treatment." *Biometrics*, 63(4), 1164–1171.
+* **Rosenbaum, P. R.** (2020). *Design of Observational Studies* (2nd ed.). Springer.
 
 ## Methods Reporting
 

@@ -38,35 +38,36 @@ command -v presubmit && presubmit --help | head -3
 
 If the command is found and `--help` returns the usage banner, presubmit is installed — skip to Step 2.
 
-If not, walk the user through:
+If not, ask the user where they keep cloned repos (set `PRESUBMIT_DIR` to that choice; the examples below use it throughout), then walk them through:
 
 ```bash
-# Clone (or update) the repo
-git clone https://github.com/scdenney/presubmit ~/Documents/GitHub/resources/presubmit \
-  || git -C ~/Documents/GitHub/resources/presubmit pull
+PRESUBMIT_DIR=~/repos/presubmit   # wherever the user keeps clones
 
-cd ~/Documents/GitHub/resources/presubmit
+# Clone (or update) the repo
+git clone https://github.com/scdenney/presubmit "$PRESUBMIT_DIR" \
+  || git -C "$PRESUBMIT_DIR" pull
+
+cd "$PRESUBMIT_DIR"
 
 # Create a venv
 python3 -m venv .venv
 source .venv/bin/activate
 
-# Install — first time pulls marker-pdf + PyTorch, ~5–10 min
+# Install — first time pulls marker-pdf + PyTorch, ~5–10 min.
+# pyproject.toml pins anthropic>=0.60 directly; verify the resolver honored it:
 pip install -e .
-
-# Force-upgrade past marker-pdf's transitive cap (anthropic 0.46 lacks the `thinking` kwarg)
-pip install -U 'anthropic>=0.60'
+pip show anthropic | head -2     # must be >= 0.60; if not: pip install -U 'anthropic>=0.60'
 ```
 
 Confirm install with:
 
 ```bash
-~/Documents/GitHub/resources/presubmit/.venv/bin/presubmit --help | head -3
+"$PRESUBMIT_DIR/.venv/bin/presubmit" --help | head -3
 ```
 
-The CLI lives in the venv. Either source the venv each session (`source ~/Documents/GitHub/resources/presubmit/.venv/bin/activate`) or invoke the absolute binary path.
+The CLI lives in the venv. Either source the venv each session (`source "$PRESUBMIT_DIR/.venv/bin/activate"`) or invoke the absolute binary path.
 
-**On first conversion**, marker-pdf will download ~3.3 GB of OCR / layout / table-recognition models to `~/Library/Caches/datalab/models/`. Subsequent runs reuse this cache. The download is bandwidth-limited; warn the user.
+**On first conversion**, marker-pdf will download ~3.3 GB of OCR / layout / table-recognition models into its local Hugging Face cache (macOS: `~/Library/Caches/datalab/models/`; Linux: `~/.cache/datalab/models/`). Subsequent runs reuse this cache. The download is bandwidth-limited; warn the user.
 
 ### Step 2 — Is `ANTHROPIC_API_KEY` set?
 
@@ -132,8 +133,8 @@ Read the input filename. Derive a default slug:
 
 - Strip extension and path.
 - Lowercase.
-- Replace runs of non-alphanumeric characters with single hyphens.
-- Trim leading/trailing hyphens.
+- Replace runs of non-alphanumeric characters (other than underscores, which are preserved) with single hyphens.
+- Trim leading/trailing hyphens and underscores.
 - Aim for `<lastname>_<year>_<short-title>` shape if the filename already follows it.
 
 Example: `Denney_2026_What-Were-They-Thinking.pdf` → `denney_2026_what-were-they-thinking`.
@@ -153,10 +154,13 @@ Ask which run mode (`AskUserQuestion`):
 ```bash
 WORK_DIR="$OUTPUT_BASE/$SLUG/presubmit_run"
 mkdir -p "$WORK_DIR"
-~/Documents/GitHub/resources/presubmit/.venv/bin/presubmit "$PAPER_PATH" \
+"$PRESUBMIT_DIR/.venv/bin/presubmit" "$PAPER_PATH" \
   --work-dir "$WORK_DIR" \
+  -o "$OUTPUT_BASE/$SLUG/report.txt" \
   $EXTRA_FLAGS
 ```
+
+Always pass `-o`: without it the CLI copies the final report to `report.txt` in the **current working directory**, leaving stray clutter wherever the agent happened to be.
 
 Run in the background using the Bash tool's `run_in_background: true`. Stream the log to a file so the user (and you) can check progress separately.
 
@@ -166,16 +170,15 @@ Tell the user: the wall time, where to watch the live log (`tail -f` instruction
 
 When the background task notifies completion:
 
-1. Confirm exit code is 0 and no `FATAL: Claude refused` appears in the log.
-2. Locate the consolidated report — it's the file matching `$WORK_DIR/<slug>_*.txt` (presubmit auto-names it `<author_title_uuid>.txt`).
-3. Report wall time, total tokens (input + output across stages — visible at the end of the log), and the location of the consolidated report.
-4. Note that cost reports may say `MISSING` until `pricing.csv` is updated for Claude rates — point at the Anthropic console for actual cost.
-5. Offer to open the report (`less` / `Read`) and to write a per-paper README.md alongside the work_dir capturing: invocation date, flags used, models, wall time.
+1. Confirm exit code is 0 and no `FATAL: Claude refused` appears in the log. (A smoke run — `--stop-stage` — also exits 0, printing `Stopped at stage N as requested`; judge it by the per-stage files in `$WORK_DIR`, since no consolidated report exists by design.)
+2. Locate the consolidated report — it's the file matching `$WORK_DIR/<slug>_*.txt` (presubmit auto-names it `<author_title_uuid>.txt`), with a stable-named copy at the `-o` path.
+3. Report wall time, total tokens (input + output across stages — visible at the end of the log), and the end-of-run dollar total (pricing.csv carries current Claude rates; cross-check the Anthropic console if rates have changed).
+4. Offer to open the report (`less` / `Read`) and to write a per-paper README.md alongside the work_dir capturing: invocation date, flags used, models, wall time.
 
 If the run failed:
 
 - **`Messages.create() got an unexpected keyword argument 'thinking'`** — anthropic SDK is < 0.60. Fix: `pip install -U 'anthropic>=0.60'` in the venv.
-- **`FATAL: Claude refused: <stage_name>`** — a Red Team prompt tripped Claude's safety filters. Identify which prompt under `~/Documents/GitHub/resources/presubmit/src/presubmit/prompts/` corresponds to the stage. Soften it to attack the manuscript's claims, not the authors. Re-run; the pipeline is resumable.
+- **`FATAL: Claude refused the request (likely safety policy)`** — a Red Team prompt tripped Claude's safety filters. The message does not name the stage; find the last `► Executing <stage>` line above it in the log, then locate that stage's prompt under `$PRESUBMIT_DIR/src/presubmit/prompts/`. Soften it to attack the manuscript's claims, not the authors. Re-run; the pipeline is resumable.
 - **Marker conversion failure** — surface the specific PipelineError. Common cause: marker-pdf install incomplete; verify `pip show marker-pdf` succeeds in the venv.
 - **Out-of-credit** — top up at <https://console.anthropic.com/>, then re-run. The pipeline picks up from where it stopped.
 
@@ -184,7 +187,8 @@ If the run failed:
 ```
 $OUTPUT_BASE/                                            (from config; user-chosen)
 └── <slug>/                                              (one folder per paper)
-    ├── README.md                                        (auto-generated when run completes)
+    ├── README.md                                        (offered after the run — never silently written)
+    ├── report.txt                                       (stable-named copy of the report, via -o)
     └── presubmit_run/                                   (the --work-dir)
         ├── <author_title_uuid>.txt                     ← THE main consolidated report
         ├── original_source.pdf                          (cached source)
@@ -227,10 +231,10 @@ Both are legitimate self-audit tools. `paper-review-lite` is the everyday tool; 
 - [ ] If the run failed, the specific error was diagnosed against the known failure modes above before suggesting a generic retry.
 - [ ] Per-paper `README.md` capturing run metadata was offered (not silently written).
 
-## Known gotchas (current as of 2026-05)
+## Known gotchas (current as of 2026-06)
 
-1. **anthropic SDK version floor.** `marker-pdf 1.10.x` transitively caps anthropic at `<0.47`, but presubmit's `core.py` calls `Messages.create(thinking=…)` which requires `anthropic>=0.60`. After every fresh install, run `pip install -U 'anthropic>=0.60'` to force-upgrade past the cap. There is a pip warning at install time; runtime is unaffected because presubmit doesn't use marker's optional anthropic-LLM mode.
-2. **Pricing CSV is stale.** End-of-run cost summary prints `MISSING` for every stage. Real cost on the Anthropic console.
-3. **Default `-o` flag is misleading.** `-o / --output` controls the *final report file path* only — without `--work-dir`, stage outputs land in a temp dir that gets garbage-collected. **Always use `--work-dir`.** This skill does so automatically.
-4. **`use_search=True` is a no-op.** Stage 00a (metadata) silently degrades for published papers needing a citation lookup; fine for unpublished manuscripts.
-5. **First marker conversion is slow.** 3–5 GB of model weights download to `~/Library/Caches/datalab/models/` on first use; subsequent runs reuse the cache.
+1. **anthropic SDK version conflict.** presubmit's `pyproject.toml` pins `anthropic>=0.60` directly (core.py's `Messages.create(thinking=…)` needs it), but `marker-pdf 1.10.x` transitively caps anthropic at `<0.47`. pip resolves the conflict by backtracking marker-pdf to an older release, or by warning. After install, check `pip show anthropic marker-pdf`; if anthropic landed below 0.60, force it with `pip install -U 'anthropic>=0.60'` (runtime is unaffected — presubmit doesn't use marker's optional anthropic-LLM mode).
+2. **`-o` defaults to `./report.txt`.** `-o / --output` controls the *final report copy* only — without it, a stray `report.txt` lands in the invoking directory; without `--work-dir`, stage outputs land in a temp dir that gets garbage-collected. **Always pass both.** This skill does so automatically.
+3. **`use_search=True` is a no-op.** Stage 00a (metadata) silently degrades for published papers needing a citation lookup; fine for unpublished manuscripts.
+4. **First marker conversion is slow.** 3–5 GB of model weights download into marker's local cache (macOS: `~/Library/Caches/datalab/models/`; Linux: `~/.cache/datalab/models/`) on first use; subsequent runs reuse the cache.
+5. **Older checkouts exit 1 on intentional `--stop-stage` runs.** Current presubmit exits 0 with `Stopped at stage N as requested`; if you see exit 1 with "did not produce a final report" after a smoke run, the install predates the fix — `git pull && pip install -e .`.

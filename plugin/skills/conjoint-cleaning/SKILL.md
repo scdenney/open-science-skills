@@ -10,7 +10,7 @@ argument-hint: "[describe your Qualtrics export or paste data sample]"
 
 ### 1. Qualtrics Export Settings and Metadata
 
-**Export format:** When exporting from Qualtrics, select **"Use choice text"** (not "Use numeric values") so that attribute levels appear as human-readable labels. If working with non-Latin scripts (Chinese, Korean, Arabic), export as XLSX rather than CSV to avoid UTF-8/ANSI encoding issues. On Windows with East Asian locales, `read.csv()` may still require `Sys.setlocale()` to match the file encoding before import (see `?cjoint::read.qualtrics` East Asian Language Support).
+**Export format:** The right Qualtrics export choice depends on the pipeline. `cjoint::read.qualtrics()` (Method A) hard-errors when the choice-response columns contain text — export **"Use numeric values"** for it. `projoint::reshape_projoint()` parses the chosen profile from a label at the end of the outcome string (default `A`/`B`), and manual reshaping benefits from readable attribute labels — **"Use choice text"** works for those. When unsure, export both versions; they differ only in response coding. If working with non-Latin scripts (Chinese, Korean, Arabic), export as XLSX rather than CSV to avoid UTF-8/ANSI encoding issues. On Windows with East Asian locales, `read.csv()` may still require `Sys.setlocale()` to match the file encoding before import (see `?cjoint::read.qualtrics` East Asian Language Support).
 
 **Metadata rows:** Current Qualtrics CSV exports include **3 header rows** before respondent data: (1) variable identifiers, (2) question text/descriptions, (3) ImportId JSON. Legacy exports have 2 rows. The `cjoint::read.qualtrics()` parameter `new.format = TRUE` (set explicitly; default is `FALSE`) handles the 3-row format. For manual import via `readxl::read_excel()` or `readr::read_csv()`, skip the appropriate number of metadata rows after reading headers.
 
@@ -56,9 +56,12 @@ When existing packages cannot handle the data format, reshape manually. The goal
 Iterate over tasks, profiles, and attribute positions. For each combination, read the attribute name from the name column and the corresponding value from the value column. This naturally handles randomized attribute order.
 
 ```r
-rows <- vector("list", T * P * K)
+# n_tasks / P / K = tasks, profiles per task, attributes per profile.
+# Never name the task count `T`: it aliases TRUE in R, so seq_len(T) would
+# silently run exactly one task instead of erroring.
+rows <- vector("list", n_tasks * P * K)
 i <- 0L
-for (task in seq_len(T)) {
+for (task in seq_len(n_tasks)) {
   name_cols <- paste0(prefix, "-F-", task, "-", seq_len(K))
   for (profile in seq_len(P)) {
     val_cols <- paste0(prefix, "-F-", task, "-", profile, "-", seq_len(K))
@@ -182,7 +185,7 @@ Save as `.rds` files (one per conjoint). The output should have:
 
 **cregg compatibility:** `cj(data, chosen ~ Attr1 + Attr2 + ..., id = ~ResponseId)`. The `id` parameter requires a **tilde formula** (`~ResponseId`), not a bare name. The `estimate` parameter accepts `"amce"`, `"mm"`, `"mm_differences"`, `"amce_differences"`, and `"frequencies"`.
 
-**cjoint compatibility:** Expects a `selected` column (logical) and attributes named with the F-based convention. Use `cjoint::amce()` for estimation.
+**cjoint compatibility:** Expects a `selected` column (integer 0/1, as `read.qualtrics()` produces) and attributes named with the F-based convention. Use `cjoint::amce()` for estimation.
 
 **projoint compatibility:** Requires a `projoint_data` object created via `reshape_projoint()`. Supports repeated-task IRR estimation and bias-corrected AMCEs.
 

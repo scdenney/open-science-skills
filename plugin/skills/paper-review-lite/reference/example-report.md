@@ -8,7 +8,16 @@ Manuscript: *Do Voters Punish Coalition Defectors? Evidence from a Paired-Choice
 
 ## Pre-Submit Report: Do Voters Punish Coalition Defectors?
 Date: 2026-04-18
+Recommendation: Major revisions before submit
 Issues: 3 critical, 5 recommended, 4 minor
+
+### Editor's Note (revision strategy — read first)
+
+The single most consequential addition is not a fix but an analysis: re-run the primary model on the *forced-choice* DV that the PAP designates as primary. If the AMCE for coalition defection holds there (and the pilot data suggest it will), the silent-deviation problem becomes a one-paragraph deviations note plus a strengthened claim — "robust across both elicitation modes" — instead of the paper's current soft underbelly. Do this before touching anything cosmetic.
+
+Two of the three critical issues require analysis or files, not rewriting: the forced-choice re-analysis above, and shipping `cleaned_v2.csv` (or its build script) so Table 3 reproduces. The third — the abstract/Table 2 AMCE mismatch — is a five-minute reconciliation, but do it last, after the re-analysis settles which estimate is final. Everything in the Recommended list is rewriting or small additions (balance table, attrition by arm, relabeling the partisanship analysis as exploratory) and can proceed in parallel.
+
+One concession the critiques above may undersell: the paper already flags task-order effects as a limitation (p. 14) and reports the order interaction in SI C. The baseline-balance and attrition-by-arm additions requested by Agent 6 therefore extend an argument the authors have started, rather than answering an objection they missed — frame the revision memo accordingly.
 
 ### Critical Issues (must fix before submission)
 

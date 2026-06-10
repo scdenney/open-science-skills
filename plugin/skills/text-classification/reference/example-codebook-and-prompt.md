@@ -62,6 +62,9 @@ Five components per label, as specified in SKILL.md Section 1: label string, def
   - "The H-1B lottery system needs reform — the cap doesn't match demand."
   - "Asylum backlogs are at a record high."
   - "Countries of the EU coordinate immigration through the Schengen framework."
+- **Negative examples** (common misclassifications that should NOT be `neutral`):
+  - "Just asking: why do we keep letting these people flood in?" (procedural surface, negative group framing -> `anti_immigration`)
+  - "I support legal immigration but oppose illegal crossings." (mixed stance -> both substantive labels, not `neutral`)
 
 ### Label: `none_of_above`
 
@@ -70,10 +73,16 @@ Five components per label, as specified in SKILL.md Section 1: label string, def
   - Off-topic posts, spam, or ambiguous posts too short to interpret.
   - Posts about emigration, tourism, citizenship-for-investment, or international travel without immigration-policy framing.
   - Posts that mention immigration only as a passing reference in an unrelated argument.
+- **Negative clarification (what is NOT included)**:
+  - Short posts that still convey a clear stance (code the stance, not `none_of_above`).
+  - Posts whose main argument is about something else but that still take an immigration position in passing (code the stance).
 - **Positive examples**:
   - "lol who cares"
   - "Check out my new business: www.example.com"
   - "The weather here is terrible today."
+- **Negative examples** (common misclassifications that should NOT be `none_of_above`):
+  - "Build the wall." (short but interpretable -> `anti_immigration`)
+  - "Refugees welcome." (short but interpretable -> `pro_immigration`)
 
 ### Multi-label note
 
@@ -132,14 +141,15 @@ Examples: "lol who cares"; "Check out my new business."
 
 ## Rules
 
-1. Return ONLY the label string(s). No quotes, no explanations, no preamble.
+1. Return ONLY the JSON object specified under Output format. No explanations,
+   no preamble, no code fences.
 2. If a post clearly expresses BOTH pro and anti positions (e.g., "I support
-   legal immigration but oppose illegal crossings"), return both labels
-   comma-separated: anti_immigration,pro_immigration
+   legal immigration but oppose illegal crossings"), return both labels:
+   {"labels": ["anti_immigration", "pro_immigration"]}
 3. none_of_above is exclusive: never combine with other labels.
 4. If the post is in a language other than English, classify based on meaning,
    not surface form.
-5. If you cannot confidently assign any label, return: none_of_above
+5. If you cannot confidently assign any label, return: {"labels": ["none_of_above"]}
 
 ## Output format
 

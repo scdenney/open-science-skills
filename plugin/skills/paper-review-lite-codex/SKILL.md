@@ -57,7 +57,7 @@ After each Codex Bash task notifies completion, `Read` its output file. Treat an
 
 Run the orientation step from `paper-review-lite` § 1 verbatim. Read the paper yourself to determine source format (LaTeX, Pandoc, Word), SI location, figure paths, replication archive, bibliography format, and design family. Use this to write specific review prompts that name actual file paths and section names. Generic prompts produce shallow reviews from both model families.
 
-For experimental manuscripts, also invoke `methods-reporting` in audit mode and fold its 45-item checklist into Agents 6 and 7 on both teams. For conjoint, list-experiment, topic-modeling, LLM-classification, or VLM-OCR manuscripts, invoke the matching sibling skill and fold its checklist into Agent 9 on both teams.
+For experimental manuscripts, also invoke `methods-reporting` in audit mode so its 45-item checklist becomes the baseline for Agents 1, 2, 6, 7, and 8 on both teams (matching `paper-review-lite` § 1). For conjoint, list-experiment, topic-modeling, LLM-classification, or VLM-OCR manuscripts, invoke the matching sibling skill and fold its checklist into Agent 9 on both teams.
 
 ### 2. Orchestration contract
 
@@ -96,6 +96,8 @@ Launch all 18 review calls in a single message.
 - **9 Codex sub-agents** via the `Bash` tool, following the pattern in § Codex invocation mechanism. Use the Codex Phase 2 template below as the prompt body, one call per dimension. Output to `.review-tmp/codex/agent-N-*.md`.
 
 Both teams apply the same dimension definitions, the same Critical-Reviewer posture, and the same severity rubric (`[CRITICAL]`, `[RECOMMENDED]`, `[MINOR]`) from `paper-review-lite` § 2. The point of running two model families on one specification is to compare independent applications of one standard, not to give them different jobs. Neither team sees the other's findings during Phase 2.
+
+**One carve-out — Codex Agent 4 (DOI audit) has no web access.** The `codex exec` sandbox cannot perform the web searches that the Agent 4 prompt asks for. Tell Codex's Agent 4 to limit itself to offline checks (DOI present/absent, format validity, internal consistency with the entry) and to tag entries `NEEDS WEB VERIFICATION` instead of attempting lookups; live DOI resolution and missing-DOI searches are the Claude team's Agent 4's job (it has WebSearch/WebFetch).
 
 Agents 6 (CONSORT) and 7 (pre-registration) are required for experimental manuscripts and marked `NA` for non-experimental ones on both teams.
 
@@ -231,7 +233,7 @@ Process every finding in the input files end-to-end. Do not ask clarifying quest
 ## Quality Checks
 
 - [ ] Orientation completed by the orchestrator before any review agent launches. Paper structure, SI location, archive location, and design family identified.
-- [ ] For experimental manuscripts, `methods-reporting` invoked in audit mode and its 45-item checklist folded into Agents 6 and 7 on both teams.
+- [ ] For experimental manuscripts, `methods-reporting` invoked in audit mode and its 45-item checklist made the baseline for Agents 1, 2, 6, 7, and 8 on both teams.
 - [ ] For domain-specific manuscripts (conjoint, list-experiment, topic-modeling, text-classification, VLM-OCR), the relevant sibling skill is invoked and its checklist folded into Agent 9 on both teams.
 - [ ] Three subdirectories created under `.review-tmp/`. `claude/`, `codex/`, `cross-check/`.
 - [ ] All 18 Phase 2 calls (9 Claude + 9 Codex) launched in a single parallel message.
@@ -241,6 +243,7 @@ Process every finding in the input files end-to-end. Do not ask clarifying quest
 - [ ] All 4 Phase 3 cross-check calls launched in a single parallel message after all 18 Phase 2 output files exist.
 - [ ] Phase 3 cross-checkers do not add new findings. Verify, refute, or downgrade only.
 - [ ] Adjudication produces one entry per underlying issue. Across-team deduplication done after within-team deduplication.
+- [ ] `.review-tmp/` (all three subdirectories) deleted after the final report was delivered, unless the user asked to keep it.
 - [ ] Quote-failed findings dropped as hallucinations on the finder's side.
 - [ ] Asymmetric, cross-refuted findings dropped by default. Retention requires an explicit orchestrator re-read of the manuscript and a note on the entry.
 - [ ] Final report annotates each retained Critical / Recommended issue with confidence. Mutual, Asymmetric-confirmed, or Asymmetric-after-adjudication.
