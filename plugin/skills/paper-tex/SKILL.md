@@ -79,6 +79,16 @@ After a successful build the driver deletes the latexmk/bibtex byproducts (`.aux
 
 Full options: `python3 "$SKILL/scripts/format_paper.py" --help`. Notable flags: `--anon`, `--cover-page`, `--spacing`, `--bib NAME`, `--engine pdflatex|xelatex`, `--no-here-floats`, `--keep-aux`.
 
+### The author block
+
+`--author` is inserted verbatim into `\author{...}`, so pass the full LaTeX for multiple authors. The house pattern is `\and`-separated names, each with its own `\thanks` footnote — `\maketitle` spaces the names evenly and assigns sequential markers (`*`, `†`, `‡`, …). The corresponding author's `\thanks` carries the institutional email (`mailto:` link); co-authors carry the affiliation only.
+
+```bash
+--author 'Steven Denney\thanks{Leiden University. Corresponding author: \href{mailto:name@inst.edu}{name@inst.edu}.} \and Remco Breuker\thanks{Leiden University.} \and Aron van de Pol\thanks{Leiden University.}'
+```
+
+Keep the affiliation in the footnote, not under the name. Use the institutional email, not a personal one. For `--anon`, the driver blanks the whole block. (Watch shell quoting: single-quote the value so `\thanks` and `\and` survive.)
+
 ## House-finishing (by hand, after the driver)
 
 The driver gets the structure right; these four steps make it house style. Do them in `build/body.tex` (and `si_body.tex`), then rebuild with `latexmk -pdf -bibtex main.tex` in `build/`.
