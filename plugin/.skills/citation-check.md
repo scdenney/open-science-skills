@@ -1,6 +1,6 @@
 ---
 name: citation-check
-description: Audit in-text/reference parity, DOIs, claim support, and citation style.
+description: Audit citation existence and fabrication risk, in-text/reference parity, DOIs, claim support, and style.
 argument-hint: "[path to manuscript and bibliography, or paste citation list; include target style/journal if known]"
 ---
 
@@ -21,6 +21,8 @@ Identify the inputs and constraints:
 - Target style: default to APA 7 unless the user names a journal or style.
 - Scope: whole manuscript, one section, bibliography only, or DOI-only pass.
 - Tool availability: if web lookup, Crossref, DataCite, DOI.org, Semantic Scholar, or OpenAlex are unavailable, mark verification status as `NOT CHECKED` rather than guessing.
+- For LaTeX/BibTeX, drive the audit off the keys actually `\cite`d in the manuscript (follow `\input`/`\include`), not every entry in a master `.bib`. Only cited keys reach the printed reference list, which is what readers and critics actually check.
+- Note the bibliography style. Many common styles (`apalike`, `plain`, `unsrt`) do not render the `doi` field, so a wrong or dead DOI is invisible in the compiled PDF and ranks as source-hygiene unless the style prints it. Author, year, title, volume, issue, and pages do render — prioritize those for any artifact that is already public.
 
 ### 2. Build the citation inventory
 
@@ -50,21 +52,43 @@ Do not "fix" ambiguous cases silently. List the likely match and the evidence.
 
 ### 4. Verify source existence and identifiers
 
-Use a tiered check when tools allow:
+This is the highest-stakes check: confirm each cited work actually exists and that its identifier points to *that* work. Hallucinated citations — a real author with a plausible but nonexistent title, or a DOI that resolves to a different paper — are the failure mode that ends careers. Use programmatic indexes first; they are near-deterministic and resist hallucination.
 
-1. **DOI resolution:** does the DOI resolve, and does the resolved title match the cited title?
-2. **Metadata lookup:** Crossref/DataCite/Semantic Scholar/OpenAlex title-author-year search for entries without DOI or with suspicious DOI.
-3. **Web search:** title in quotes plus first author, used for working papers, books, reports, and older items.
-4. **Manual-verification flag:** when no programmatic match is found, classify as `NEEDS AUTHOR VERIFICATION`, not fabricated.
+**Concrete lookups (via web fetch):**
 
-Flag these separately:
+- Crossref bibliographic search: `https://api.crossref.org/works?rows=5&query.bibliographic=<URL-encoded "title first-author year">`. Compare returned title/authors/year/DOI. Append `&mailto=<email>` for the polite pool. On HTTP 429, fall back to OpenAlex.
+- DOI resolution: `https://api.crossref.org/works/<doi>` (or `https://doi.org/<doi>`). Confirm the resolved title **and** authors match *this* entry. A DOI that resolves to a *different* real work is the single most common LLM-fabrication signature — never treat "DOI resolves" as "DOI correct."
+- OpenAlex: `https://api.openalex.org/works?search=<URL-encoded title>` or `?filter=doi:<doi>`. Independent index; use when Crossref is rate-limited or for abstracts.
+- Exact-title test: search the title in quotation marks. Zero hits anywhere is a strong fabrication signal.
+- Author-corpus cross-check (catches the "fabricated title grafted onto a real author" pattern): query the real author's works (`...query.author=<name>`) and confirm the cited title appears in their corpus. A real author + nonexistent title + invented co-authors/venue is the classic hallucination.
 
-- `MISSING DOI`: likely DOI exists but is absent from the reference.
-- `NO DOI FOUND`: searched, no DOI found; not necessarily an error.
-- `DOI MISMATCH`: DOI resolves to a different title or author set.
-- `TITLE DRIFT`: cited title differs materially from indexed title.
-- `STATUS UPDATE`: working paper, preprint, or conference paper appears to have a journal/book version.
-- `POSSIBLE NONEXISTENT SOURCE`: no evidence found after identifier and title searches; use this label sparingly.
+**Tiered fallback by source type:**
+
+- Journal articles → Crossref / OpenAlex / DOI resolution.
+- Books and chapters → publisher page, WorldCat, Google Books, OpenAlex. Book DOIs are spotty and frequently 404 even for real books; a dead book DOI is usually source-hygiene, not a missing source.
+- Datasets and official statistics → the issuing archive (ISSP, V-Dem, ANES, KGSS, national election studies, government statistical catalogues). Verify the catalogue/series number resolves to the *cited* title — a real catalogue number attached to the wrong title is a fabrication tell.
+- Grey literature / government / internal reports → the issuing agency's own site (`site:` search). If untraceable, classify as `NEEDS AUTHOR VERIFICATION`, not fabricated — an insider or co-author may be citing a real internal document.
+- News / web items → confirm the named outlet actually ran the piece.
+- Preprints / "forthcoming" → SSRN, arXiv, SocArXiv, OSF, author pages/CVs, conference programs. A forthcoming item's year is inherently uncertain; prefer the authors' own current listing.
+
+**Labels:**
+
+- `MISSING DOI`: likely DOI exists but is absent.
+- `NO DOI FOUND`: searched, none found; not necessarily an error.
+- `DEAD DOI`: the identifier 404s (common for real book DOIs).
+- `DOI RESOLVES TO DIFFERENT WORK`: DOI is live but points to another paper — high-signal hallucination tell.
+- `METADATA MISMATCH`: real work, wrong year/volume/issue/pages/author names.
+- `TITLE DRIFT`: cited title differs materially from the indexed title.
+- `STATUS UPDATE`: working paper/preprint now has a journal/book version.
+- `NEEDS AUTHOR VERIFICATION`: no programmatic match, but plausibly real grey literature.
+- `LIKELY FABRICATED`: no trace after identifier, exact-title, **and** author-corpus searches. Reserve for genuine non-existence, but do not shy away from it when the evidence is clear.
+
+**Do NOT over-flag these as fabricated:**
+
+- Double-blind anonymization placeholders (e.g. `title={Article withheld for review}`, author `{Author}`) — intentional blinding stubs, not citations.
+- The author's own work (self-citations) — flag metadata conflicts for the author to reconcile (their CV vs the canonical published record) rather than silently overwriting; the author is the authority on their own paper.
+
+**High-stakes audits (publication or public posting):** run a second, independent verification pass with different framing, defaulting to "fabricated until independently confirmed" for any suspect. A single pass misses real items; independent passes catch each other's gaps. When remediating rather than only reporting, never invent a replacement — substitute only a real, verified source (ideally the one the author intended), confirm any new DOI resolves to the right work before writing it, and re-verify the fix renders as expected.
 
 ### 5. Check style and completeness
 
@@ -130,6 +154,11 @@ Severity:
 ## Quality checks
 
 - [ ] In-text inventory and reference inventory were built before findings were listed.
+- [ ] For BibTeX, the audit covered the actually-cited keys, not just the easy-to-find entries.
+- [ ] Every "DOI resolves" was confirmed to resolve to the *cited* work, not merely to resolve.
+- [ ] Suspected fabrications were tested with exact-title and author-corpus searches before labeling.
+- [ ] Double-blind placeholders, grey literature, and self-citations were not mislabeled as fabricated.
+- [ ] For high-stakes audits, an independent second pass was run, or its absence was noted.
 - [ ] Every DOI mismatch was based on resolved metadata, not intuition.
 - [ ] Unverified sources are labeled as unresolved, not fabricated.
 - [ ] Existing author-year suffixes were checked for consistency.
