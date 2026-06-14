@@ -1,6 +1,6 @@
 ---
 name: fact-check
-description: Fact-check a manuscript's claims against the cited sources themselves. Locate each source's knowledge-base Markdown file and verify the in-text claim is actually supported. Runs citation-check first, then audits claim support, overclaiming, direction, scope, and misattribution.
+description: Fact-check a manuscript's claims against the cited sources themselves: locate each source's knowledge-base Markdown file and verify the in-text claim is actually supported. Runs a pre-flight gate that refuses unless a per-source Markdown knowledge base exists and is clean (PDFs converted via process-source); then runs citation-check; then audits claim support, overclaiming, direction, scope, and misattribution.
 argument-hint: "[path to manuscript + bibliography; point to the project's sources/ or knowledge_base/ directory if non-standard]"
 ---
 
@@ -12,13 +12,31 @@ This is an original Open Science Skills workflow. It extends `citation-check` (w
 
 ## Instructions
 
-### 1. Orient before checking
+### 1. Pre-flight gate — orient, then refuse if the knowledge base is not ready
+
+**Orient.** Identify the inputs:
 
 - **Manuscript source:** LaTeX, Markdown, Word/PDF text, or pasted prose with citations or footnotes.
 - **Bibliography:** `.bib`, CSL JSON, or reference list — used to resolve cite keys to author-year-title so source files can be found.
 - **Knowledge base:** the project's per-source Markdown directory. Search in order: `sources/md/`, `knowledge_base/md/`, `sources/`, `knowledge_base/`, then any chapter-local `*/sources/`. Also read any index or crosswalk file (`sources/inventory.md`, `notes/source_map.md`, `*source*crosswalk*`, `*source*matrix*`) that maps bib keys or titles to files.
-- If no knowledge base exists, say so up front. This skill checks claims against *local* source files; without them, every claim falls to `NEEDS SOURCE` and the right move is to run `process-source` first, not to guess from memory.
 - **Scope:** whole manuscript, one section, the literature review/theory sections, or a supplied list of claims.
+
+**Pre-flight gate (hard stop).** This skill verifies claims against *local* Markdown source files; it does not fact-check from memory or the open web. A fact-check run against an absent or half-built knowledge base produces false reassurance, which is worse than no check. So before doing anything else, decide readiness and **refuse to run** — return a `Pre-flight: NOT READY` notice instead of a report — when any of the following holds:
+
+1. **No knowledge base.** No per-source Markdown corpus exists: `sources/md/`, `knowledge_base/md/`, or an equivalent is missing or empty.
+2. **Unconverted sources (not cleaned up).** Raw documents — `.pdf`, `.docx`, `.epub`, or scanned images — sit in the sources area (a drop-zone, `sources/`, `sources/pdf/`, `*/source_pdfs/`) without a corresponding `.md`. The base is not clean: every source must be converted to Markdown first (or, if long, to a Markdown summary).
+3. **Coverage too low.** The available Markdown does not cover the cited works in scope. Compute coverage = matched source files ÷ cited non-background works; below roughly two-thirds, treat as not ready.
+
+Do not partially fact-check around the gap, and do not fall back to memory or web lookups for missing sources. Stop and report. The user may rerun after fixing it, or *explicitly* rescope the run to the already-covered subset; only then proceed with that subset.
+
+**Remediation to print on refusal:**
+
+- Convert each raw source to Markdown with the `process-source` skill (`/oss:process-source`, or the project's own `/process-source` command). It turns each PDF into `sources/md/<author>-<year>-<slug>.md`, summarizing long sources.
+- Populate any cited work that has no file yet: locate the PDF, then run `process-source`.
+- Re-run `fact-check` once `sources/md/` covers the cited set and no raw files remain unconverted.
+- Best practices: the per-source Markdown knowledge base and intake conventions are documented in the Open Science Skills repo (`github.com/scdenney/open-science-skills`) and the `process-source` skill; Anthropic's skill-authoring guidance is linked from that README.
+
+Only when the gate passes — knowledge base present, clean, and covering the cited set in scope — continue to step 2.
 
 ### 2. Run citation-check first (always)
 
@@ -76,7 +94,24 @@ Actively watch for:
 
 ## Output
 
-Produce a `Fact-Check Report`:
+**If the pre-flight gate failed, return this instead — do not fact-check anything:**
+
+```
+# Fact-Check — Pre-flight: NOT READY
+
+Reason: <no knowledge base | N unconverted sources | coverage X% below bar>
+Knowledge base searched: <dirs>
+Cited works with no Markdown file: <cite keys / author-year>
+Raw files needing conversion: <paths>
+
+## To proceed
+1. Run `process-source` on the raw files / missing sources listed above
+2. Confirm each cited work has sources/md/<author>-<year>-<slug>.md
+3. Re-run /fact-check
+Best practices: github.com/scdenney/open-science-skills · the process-source skill
+```
+
+Otherwise, produce a `Fact-Check Report`:
 
 ```
 # Fact-Check Report
@@ -107,6 +142,7 @@ Severity:
 
 ## Quality checks
 
+- [ ] The pre-flight gate ran first; the skill refused (with a remediation checklist) rather than fact-checking against an absent, unconverted, or low-coverage knowledge base.
 - [ ] `citation-check` was run first and its findings were carried into the claim verdicts.
 - [ ] Every SUPPORTED / PARTIAL / CONTRADICTED verdict quotes a verbatim source passage, not a paraphrase from memory.
 - [ ] "Source not in knowledge base" was kept separate from "source does not support the claim."
