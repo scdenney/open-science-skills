@@ -4,15 +4,15 @@
 
 # Open Science Skills
 
-[![version](https://img.shields.io/badge/version-2.4.0-blue)](https://github.com/scdenney/open-science-skills/releases)
+[![version](https://img.shields.io/badge/version-2.7.0-blue)](https://github.com/scdenney/open-science-skills/releases)
 [![License: CC BY-NC 4.0](https://img.shields.io/badge/license-CC%20BY--NC%204.0-lightgrey)](LICENSE)
-[![skills](https://img.shields.io/badge/skills-28-blue)](#skills)
+[![skills](https://img.shields.io/badge/skills-29-blue)](#skills)
 [![plugin](https://img.shields.io/badge/Claude%20Code-plugin-orange)](https://code.claude.com/docs/en/skills)
 [![updated](https://img.shields.io/badge/updated-June%202026-green)](https://github.com/scdenney/open-science-skills/commits/main)
 [![sources](https://img.shields.io/badge/sources-151-purple)](SOURCES.md)
 [![PRs welcome](https://img.shields.io/badge/PRs-welcome-brightgreen)](#contributing)
 
-A library of [Claude Code skills](https://code.claude.com/docs/en/skills) for experimental social science, computational text analysis, manuscript QA, and transparent reporting. Install as a plugin and you get help across the workflow — research design, analysis, citation and figure/table audits, replication-package scaffolding, and pre-submission review. All 28 skills auto-trigger from prompt context and are also available as explicit `/oss:skill-name` slash commands. The `oss:` prefix can be omitted when no other installed plugin claims the same name.
+A library of [Claude Code skills](https://code.claude.com/docs/en/skills) for experimental social science, computational text analysis, manuscript QA, and transparent reporting. Install as a plugin and you get help across the workflow — research design, analysis, citation and figure/table audits, replication-package scaffolding, and pre-submission review. All 29 skills auto-trigger from prompt context and are also available as explicit `/oss:skill-name` slash commands. The `oss:` prefix can be omitted when no other installed plugin claims the same name.
 
 This is the toolkit I use in my own research. It is built from a curated corpus of methodology texts and grows as I add new sources, ideas, and skills. Authoring and editing are mine, with help from Opus 4.8, Gemini 3.0, and ChatGPT 5.4.
 
@@ -48,7 +48,7 @@ flowchart LR
     B -.-> B1[topic modeling / text classification / OCR]
     C -.-> C1[hypotheses / literature review / narrative / preregistration]
     D -.-> D1[figures / tables / methods reporting]
-    E -.-> E1[FAIR / citations / figure-table-audit / replication-package / archive checks]
+    E -.-> E1[FAIR / citations / fact-check / figure-table-audit / replication-package / archive checks]
     F -.-> F1[paper-tex / paper-review-lite / paper-review-lite-codex / presubmit / journal-review]
     G -.-> G1[diverge / diverge-codex]
 ```
@@ -96,7 +96,7 @@ git clone https://github.com/scdenney/open-science-skills.git
 cd open-science-skills && claude --plugin-dir ./plugin
 ```
 
-All 28 skills auto-trigger based on your prompts. All 28 slash commands (`/oss:conjoint-design`, `/oss:fair-check`, `/oss:figures`, `/oss:tables`, `/oss:paper-tex`, `/oss:figure-table-audit`, `/oss:replication-package`, and so on) are immediately available. The prefix can be omitted when no other installed plugin claims the same name.
+All 29 skills auto-trigger based on your prompts. All 29 slash commands (`/oss:conjoint-design`, `/oss:fair-check`, `/oss:figures`, `/oss:tables`, `/oss:paper-tex`, `/oss:figure-table-audit`, `/oss:replication-package`, and so on) are immediately available. The prefix can be omitted when no other installed plugin claims the same name.
 
 <details>
 <summary><b>Option 2 — Selective install</b> (choose specific skills, auto-trigger only)</summary>
@@ -354,7 +354,12 @@ cp -R open-science-skills/plugin/skills/list-experiment ~/.claude/skills/
 <tr>
 <td><a href="plugin/skills/citation-check/SKILL.md"><strong>citation-check</strong></a></td>
 <td><code>/citation-check</code></td>
-<td>In-text/reference parity, DOI and source-status checks, stale working papers, citation-style and support audits</td>
+<td>In-text/reference parity, DOI and source-status checks, fabrication/existence verification (Crossref/OpenAlex), stale working papers, citation-style and support audits</td>
+</tr>
+<tr>
+<td><a href="plugin/skills/fact-check/SKILL.md"><strong>fact-check</strong></a></td>
+<td><code>/fact-check</code></td>
+<td>Verify each in-text claim is actually supported by its cited source. Runs <code>citation-check</code> first, then locates each source's knowledge-base Markdown (<code>sources/md/</code>) and audits claim support, overclaiming, direction, scope, and misattribution. Pairs with <code>process-source</code>.</td>
 </tr>
 <tr>
 <td><a href="plugin/skills/figure-table-audit/SKILL.md"><strong>figure-table-audit</strong></a></td>

@@ -79,6 +79,16 @@ After a successful build the driver deletes the latexmk/bibtex byproducts (`.aux
 
 Full options: `python3 "$SKILL/scripts/format_paper.py" --help`. Notable flags: `--anon`, `--cover-page`, `--spacing`, `--bib NAME`, `--engine pdflatex|xelatex`, `--no-here-floats`, `--keep-aux`.
 
+### The author block
+
+`--author` is inserted verbatim into `\author{...}`, so pass the full LaTeX for multiple authors. The house pattern is `\and`-separated names, each with its own `\thanks` footnote — `\maketitle` spaces the names evenly and assigns sequential markers (`*`, `†`, `‡`, …). The corresponding author's `\thanks` carries the institutional email (`mailto:` link); co-authors carry the affiliation only.
+
+```bash
+--author 'Steven Denney\thanks{Leiden University. Corresponding author: \href{mailto:name@inst.edu}{name@inst.edu}.} \and Remco Breuker\thanks{Leiden University.} \and Aron van de Pol\thanks{Leiden University.}'
+```
+
+Keep the affiliation in the footnote, not under the name. Use the institutional email, not a personal one. For `--anon`, the driver blanks the whole block. (Watch shell quoting: single-quote the value so `\thanks` and `\and` survive.)
+
 ## House-finishing (by hand, after the driver)
 
 The driver gets the structure right; these four steps make it house style. Do them in `build/body.tex` (and `si_body.tex`), then rebuild with `latexmk -pdf -bibtex main.tex` in `build/`.
@@ -122,8 +132,12 @@ Two more house rules the formatter cannot enforce for you: tables get a title an
 - **`.docx` tables need `calc`.** Word tables carry explicit column widths, so pandoc writes `p{(\columnwidth - ...) * \real{0.5}}`. Without `\usepackage{calc}` this throws `! Missing number, treated as zero.` The preamble loads it.
 - **Extracted media must be out-relative.** The driver runs pandoc with `cwd=build/` and `--extract-media=media`, so the image path is `media/...` and resolves at build time. Running pandoc elsewhere writes a path that breaks when latexmk runs from `build/`.
 - **Stage assets before building.** `--build` needs the bibliography and any local figures in `build/`. The driver auto-copies a sibling `references.bib` and any figure referenced by a relative path; supply `--bib NAME` if the file is named differently, and copy figures in by hand if they live elsewhere.
-- **EB Garamond builds with pdflatex** — no xelatex required. Use `--engine xelatex` only if you switch to an OpenType font.
+- **EB Garamond builds with pdflatex** — no xelatex required. Use `--engine xelatex` only if you switch to an OpenType font or need CJK (below).
 - **`apsr.bst`** lives in the texlive `harvard` collection (`bibtex/bst/harvard/apsr.bst`); basictex users install it with `tlmgr`.
+- **`apsr.bst` emits URLs through `\harvardurl`, which is undefined by default** and tokenizes its argument with normal catcodes, so a URL with `_` or `~` throws `! Missing $ inserted.` Alias it with `\let` (not a wrapper) so `\url` rescans verbatim: `\AtBeginDocument{\let\harvardurl\url}`. And **never put a literal `%` in a bib `url`/`doi` field** — it starts a comment mid-`.bbl` and produces a runaway `\harvardurl`; truncate the URL to its directory or drop the query string instead.
+- **Non-Latin scripts belong in romanization in the body, with the script in an SI glossary.** Do not mix Korean/Chinese/Cyrillic glyphs into the main prose. Use a scholarly romanization (McCune-Reischauer for Korean, italicized on first use with an English gloss) and collect the script in a glossary appendix (English term / romanization / script). This keeps the body in one font and confines CJK to one place. When the glossary (or any exhibit) does carry script, build with **`--engine xelatex`** and load `xeCJK` conditionally so hosts without the CJK font still compile: `\IfFontExistsTF{Noto Serif CJK KR}{\usepackage{xeCJK}\setCJKmainfont{Noto Serif CJK KR}}{}`. M-R diacritics (ŏ ŭ, breves, apostrophes) render in EB Garamond under XeLaTeX.
+- **Cross-references that run both ways need three passes.** When the main text cites SI sections *and* the SI cites main tables, neither `.aux` exists on the other's first build. Build `si → main → si` (the last SI pass picks up `main.aux`); a plain `main; si` leaves `??` in the SI. Encode this in the Makefile's `all` target.
+- **SI float and section numbering.** Letter the appendices and prefix the floats: `\renewcommand{\thesection}{\Alph{section}}`, `\numberwithin{figure}{section}`, `\numberwithin{table}{section}` give sections A, B, C and floats A.1, B.1 (roc-natid-cbc house style; the `si.template.tex` uses the `SI-A` variant — pick one and keep it consistent within a project).
 
 ## Troubleshooting
 
