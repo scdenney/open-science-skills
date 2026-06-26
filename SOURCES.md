@@ -206,6 +206,7 @@ Sources specific to vision-language model OCR pipelines, image handling, and acc
 * **Levchenko, M. A.** (2025). "Evaluating LLMs for Historical Document OCR: A Methodological Framework for Digital Humanities." *LM4DH 2025 @ RANLP*. arXiv:2510.06743.
 * **Li, S., Hu, Y., Ning, X., Liu, X., Hong, K., et al.** (2025). "MBQ: Modality-Balanced Quantization for Large Vision-Language Models." *CVPR 2025*. arXiv:2412.19509.
 * **Liu, Y., Li, Z., Huang, M., Yang, B., Yu, W., et al.** (2024). "OCRBench: On the Hidden Mystery of OCR in Large Multimodal Models." *Science China Information Sciences*. arXiv:2305.07895.
+* **Levenshtein, V. I.** (1966). "Binary Codes Capable of Correcting Deletions, Insertions, and Reversals." *Soviet Physics Doklady*, 10(8), 707–710. The edit-distance metric underlying character and word error rate (CER/WER).
 * **Neudecker, C., Baierer, K., Gerber, M., Clausner, C., Antonacopoulos, A., & Pletschacher, S.** (2021). "A Survey of OCR Evaluation Tools and Metrics." *6th International Workshop on Historical Document Imaging and Processing (HIP '21)*. DOI: 10.1145/3476887.3476888.
 * **Poznanski, J., Rangapur, A., Borchardt, J., Dunkelberger, J., Huff, R., Lin, D., Wilhelm, C., Lo, K., & Soldaini, L.** (2025). "olmOCR: Unlocking Trillions of Tokens in PDFs with Vision Language Models." *arXiv* preprint arXiv:2502.18443.
 * **University of Pittsburgh Library System** (n.d.). "Best Practices for Optical Character Recognition (OCR)." pitt.libguides.com/ocr/bestpractices.
@@ -235,3 +236,22 @@ Sources specific to post-OCR text correction, quality diagnostics, multilingual 
 Source for the brainstorm-then-select discipline behind the `diverge` and `diverge-codex` skills:
 
 * **Ismayilzada, M., Laverghetta Jr., A., Luchini, S. A., Patel, R., Bosselut, A., van der Plas, L., & Beaty, R. E.** (2025). "Creative Preference Optimization." *Findings of the Association for Computational Linguistics: EMNLP 2025*, 9580–9609. arXiv:2505.14442.
+
+## Model Council Voting (LLM panels as independent coders)
+
+Inter-rater agreement statistics and ensemble-diversity results behind treating a panel of language models as independent jurors (Barrie, Palmer & Spirling 2025 on open-weight reproducibility, and Simmons et al. 2011 / Nosek et al. 2018 on documenting discovery vs. confirmation, are listed under their primary sections above):
+
+* **Cohen, Jacob** (1960). "A Coefficient of Agreement for Nominal Scales." *Educational and Psychological Measurement*, 20(1), 37–46.
+* **Fleiss, Joseph L.** (1971). "Measuring Nominal Scale Agreement Among Many Raters." *Psychological Bulletin*, 76(5), 378–382.
+* **Landis, J. Richard, & Koch, Gary G.** (1977). "The Measurement of Observer Agreement for Categorical Data." *Biometrics*, 33(1), 159–174.
+* **Krippendorff, Klaus** (2019). *Content Analysis: An Introduction to Its Methodology* (4th ed.). SAGE. (Krippendorff's alpha.)
+* **Kuncheva, Ludmila I., & Whitaker, Christopher J.** (2003). "Measures of Diversity in Classifier Ensembles and Their Relationship with the Ensemble Accuracy." *Machine Learning*, 51(2), 181–207.
+
+## LLM Calibration and Token Log-Probabilities
+
+Reading and validating a model's own uncertainty from emitted token probabilities:
+
+* **Brier, Glenn W.** (1950). "Verification of Forecasts Expressed in Terms of Probability." *Monthly Weather Review*, 78(1), 1–3.
+* **Guo, Chuan, Pleiss, Geoff, Sun, Yu, & Weinberger, Kilian Q.** (2017). "On Calibration of Modern Neural Networks." *Proceedings of the 34th International Conference on Machine Learning (ICML)*, PMLR 70, 1321–1330.
+* **Kadavath, Saurav, Conerly, Tom, Askell, Amanda, et al.** (2022). "Language Models (Mostly) Know What They Know." arXiv:2207.05221.
+* **Tian, Katherine, Mitchell, Eric, Zhou, Allan, et al.** (2023). "Just Ask for Calibration: Strategies for Eliciting Calibrated Confidence Scores from Language Models Fine-Tuned with Human Feedback." *Proceedings of EMNLP 2023*.

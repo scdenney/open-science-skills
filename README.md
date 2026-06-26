@@ -4,12 +4,12 @@
 
 # Open Science Skills
 
-[![version](https://img.shields.io/badge/version-2.8.0-blue)](https://github.com/scdenney/open-science-skills/releases)
+[![version](https://img.shields.io/badge/version-2.9.0-blue)](https://github.com/scdenney/open-science-skills/releases)
 [![License: CC BY-NC 4.0](https://img.shields.io/badge/license-CC%20BY--NC%204.0-lightgrey)](LICENSE)
-[![skills](https://img.shields.io/badge/skills-29-blue)](#skills)
+[![skills](https://img.shields.io/badge/skills-32-blue)](#skills)
 [![plugin](https://img.shields.io/badge/Claude%20Code-plugin-orange)](https://code.claude.com/docs/en/skills)
 [![updated](https://img.shields.io/badge/updated-June%202026-green)](https://github.com/scdenney/open-science-skills/commits/main)
-[![sources](https://img.shields.io/badge/sources-151-purple)](SOURCES.md)
+[![sources](https://img.shields.io/badge/sources-161-purple)](SOURCES.md)
 [![PRs welcome](https://img.shields.io/badge/PRs-welcome-brightgreen)](#contributing)
 
 A library of [Claude Code skills](https://code.claude.com/docs/en/skills) for experimental social science, computational text analysis, manuscript QA, and transparent reporting. Install as a plugin and you get help across the workflow — research design, analysis, citation and figure/table audits, replication-package scaffolding, and pre-submission review. All 29 skills auto-trigger from prompt context and are also available as explicit `/oss:skill-name` slash commands. The `oss:` prefix can be omitted when no other installed plugin claims the same name.
@@ -45,7 +45,7 @@ flowchart LR
     G --> C
 
     A -.-> A1[conjoint / survey / list / cross-national]
-    B -.-> B1[topic modeling / text classification / OCR]
+    B -.-> B1[topic modeling / text classification / council voting / calibration / OCR + OCR eval]
     C -.-> C1[hypotheses / literature review / narrative / preregistration]
     D -.-> D1[figures / tables / methods reporting]
     E -.-> E1[FAIR / citations / fact-check / figure-table-audit / replication-package / archive checks]
@@ -240,6 +240,16 @@ cp -R open-science-skills/plugin/skills/list-experiment ~/.claude/skills/
 <td><code>/text-classification</code></td>
 <td>LLM-based classification: codebook design, learning regime selection, human-LLM hybrid workflows, validation</td>
 </tr>
+<tr>
+<td><a href="plugin/skills/model-council-voting/SKILL.md"><strong>model-council-voting</strong></a></td>
+<td><code>/model-council-voting</code></td>
+<td>Panel of models as independent coders: consensus rules, chance-corrected agreement (Cohen/Fleiss/Krippendorff), correlated-error diagnostics, validation beyond the panel</td>
+</tr>
+<tr>
+<td><a href="plugin/skills/llm-calibration-logprobs/SKILL.md"><strong>llm-calibration-logprobs</strong></a></td>
+<td><code>/llm-calibration-logprobs</code></td>
+<td>Within-model confidence from token log-probabilities: aggregation, triage, calibration (ECE, Brier, reliability diagrams) against human ground truth</td>
+</tr>
 </tbody>
 </table>
 
@@ -263,6 +273,11 @@ cp -R open-science-skills/plugin/skills/list-experiment ~/.claude/skills/
 <td><a href="plugin/skills/post-ocr-cleanup/SKILL.md"><strong>post-ocr-cleanup</strong></a></td>
 <td><code>/post-ocr-cleanup</code></td>
 <td>Post-OCR cleanup: LLM and rule-based correction, quality diagnostics, multilingual considerations, corpus-level QA, provenance</td>
+</tr>
+<tr>
+<td><a href="plugin/skills/vlm-ocr-evaluation/SKILL.md"><strong>vlm-ocr-evaluation</strong></a></td>
+<td><code>/vlm-ocr-evaluation</code></td>
+<td>Compare OCR systems before bulk runs: candidate set, stratified ground truth, CER/WER with declared normalization, per-language and per-stratum accuracy</td>
 </tr>
 </tbody>
 </table>

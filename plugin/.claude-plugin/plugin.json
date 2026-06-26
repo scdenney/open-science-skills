@@ -1,7 +1,7 @@
 {
   "name": "oss",
-  "version": "2.8.0",
-  "description": "Open Science Skills (oss). 29 Claude Code skills for experimental social science and computational text analysis. Conjoint design, diagnostics, and data cleaning; survey design; list experiments; cross-national design; topic modeling; LLM text classification; VLM-based OCR pipelines; post-OCR cleanup; FAIR manuscript checks; citation checking; source-claim fact-checking; literature review evidence mapping; figure design; table design; house-style LaTeX paper formatting from any draft, with a tested convert-and-build driver (paper-tex); figure/table auditing; replication-package scaffolding (FAIR + Horiuchi conventions); paper pre-submission review (single-model and cross-model Claude+Codex variants); hypothesis building; narrative building; pre-registration; methods reporting; presubmit activation; third-party journal review; and creative-divergence brainstorming in single-model and cross-model Claude+Codex variants (diverge, diverge-codex). Invoke as /oss:skill-name (or just /skill-name when there is no ambiguity) or let Claude auto-trigger based on context.",
+  "version": "2.9.0",
+  "description": "Open Science Skills (oss). 32 Claude Code skills for experimental social science and computational text analysis. Conjoint design, diagnostics, and data cleaning; survey design; list experiments; cross-national design; topic modeling; LLM text classification; VLM-based OCR pipelines and OCR system comparison/evaluation (CER/WER); post-OCR cleanup; multi-model council voting and inter-rater agreement; LLM calibration via token log-probabilities; FAIR manuscript checks; citation checking; source-claim fact-checking; literature review evidence mapping; figure design; table design; house-style LaTeX paper formatting from any draft, with a tested convert-and-build driver (paper-tex); figure/table auditing; replication-package scaffolding (FAIR + Horiuchi conventions); paper pre-submission review (single-model and cross-model Claude+Codex variants); hypothesis building; narrative building; pre-registration; methods reporting; presubmit activation; third-party journal review; and creative-divergence brainstorming in single-model and cross-model Claude+Codex variants (diverge, diverge-codex). Invoke as /oss:skill-name (or just /skill-name when there is no ambiguity) or let Claude auto-trigger based on context.",
   "author": {
     "name": "Steven Denney",
     "url": "https://github.com/scdenney"
@@ -60,7 +60,16 @@
     "brainstorming",
     "vlm-ocr",
     "post-ocr-cleanup",
-    "document-digitization"
+    "document-digitization",
+    "model-council-voting",
+    "ensemble",
+    "inter-rater-agreement",
+    "kappa",
+    "llm-calibration",
+    "logprobs",
+    "calibration",
+    "vlm-ocr-evaluation",
+    "cer-wer"
   ],
   "skills": "./skills/"
 }
