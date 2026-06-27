@@ -255,3 +255,12 @@ Reading and validating a model's own uncertainty from emitted token probabilitie
 * **Guo, Chuan, Pleiss, Geoff, Sun, Yu, & Weinberger, Kilian Q.** (2017). "On Calibration of Modern Neural Networks." *Proceedings of the 34th International Conference on Machine Learning (ICML)*, PMLR 70, 1321–1330.
 * **Kadavath, Saurav, Conerly, Tom, Askell, Amanda, et al.** (2022). "Language Models (Mostly) Know What They Know." arXiv:2207.05221.
 * **Tian, Katherine, Mitchell, Eric, Zhou, Allan, et al.** (2023). "Just Ask for Calibration: Strategies for Eliciting Calibrated Confidence Scores from Language Models Fine-Tuned with Human Feedback." *Proceedings of EMNLP 2023*.
+
+## Research Repository Organization
+
+Conventions and tooling behind organizing a research project repository around its source library — a tracked, LLM-readable knowledge base feeding a bibliography that the manuscript cites (the `research-repo` skill). The intake and naming conventions are this project's own documented workflow; the open-science framing draws on FAIR and DA-RT, listed above:
+
+* **Noble, William Stafford** (2009). "A Quick Guide to Organizing Computational Biology Projects." *PLOS Computational Biology*, 5(7), e1000424. https://doi.org/10.1371/journal.pcbi.1000424
+* **Wilson, Greg, Bryan, Jennifer, Cranston, Karen, Kitzes, Justin, Nederbragt, Lex, & Teal, Tracy K.** (2017). "Good Enough Practices in Scientific Computing." *PLOS Computational Biology*, 13(6), e1005510. https://doi.org/10.1371/journal.pcbi.1005510
+* **The Turing Way Community** (2022). *The Turing Way: A Handbook for Reproducible, Ethical and Collaborative Research.* Zenodo. https://doi.org/10.5281/zenodo.3233853
+* **OpenDataLoader PDF** (2026). *PDF Parser for AI-Ready Data* (open-source, Apache-2.0). GitHub: opendataloader-project/opendataloader-pdf. https://github.com/opendataloader-project/opendataloader-pdf — the PDF→Markdown converter the source-intake pipeline is built on.

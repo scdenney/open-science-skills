@@ -4,21 +4,21 @@
 
 # Open Science Skills
 
-[![version](https://img.shields.io/badge/version-2.9.0-blue)](https://github.com/scdenney/open-science-skills/releases)
+[![version](https://img.shields.io/badge/version-2.10.0-blue)](https://github.com/scdenney/open-science-skills/releases)
 [![License: CC BY-NC 4.0](https://img.shields.io/badge/license-CC%20BY--NC%204.0-lightgrey)](LICENSE)
-[![skills](https://img.shields.io/badge/skills-32-blue)](#skills)
+[![skills](https://img.shields.io/badge/skills-33-blue)](#skills)
 [![plugin](https://img.shields.io/badge/Claude%20Code-plugin-orange)](https://code.claude.com/docs/en/skills)
 [![updated](https://img.shields.io/badge/updated-June%202026-green)](https://github.com/scdenney/open-science-skills/commits/main)
 [![sources](https://img.shields.io/badge/sources-150%2B-purple)](SOURCES.md)
 [![PRs welcome](https://img.shields.io/badge/PRs-welcome-brightgreen)](#contributing)
 
-A library of [Claude Code skills](https://code.claude.com/docs/en/skills) for experimental social science, computational text analysis, manuscript QA, and transparent reporting. Install as a plugin and you get help across the workflow — research design, analysis, citation and figure/table audits, replication-package scaffolding, and pre-submission review. All 29 skills auto-trigger from prompt context and are also available as explicit `/oss:skill-name` slash commands. The `oss:` prefix can be omitted when no other installed plugin claims the same name.
+A library of [Claude Code skills](https://code.claude.com/docs/en/skills) for experimental social science, computational text analysis, manuscript QA, and transparent reporting. Install as a plugin and you get help across the workflow — research design, analysis, citation and figure/table audits, replication-package scaffolding, and pre-submission review. All 33 skills auto-trigger from prompt context and are also available as explicit `/oss:skill-name` slash commands. The `oss:` prefix can be omitted when no other installed plugin claims the same name.
 
 This is the toolkit I use in my own research. It is built from a curated corpus of methodology texts and grows as I add new sources, ideas, and skills. Authoring and editing are mine, with help from Opus 4.8, Gemini 3.0, and ChatGPT 5.4.
 
 The design follows Anthropic's [skill authoring best practices](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices). Procedural guidance over textbook definitions, trigger-rich YAML descriptions for auto-invocation, and progressive disclosure (instructions live in skills, the bibliography in SOURCES.md). Skills are periodically audited against the [Claude Code skills reference](https://code.claude.com/docs/en/skills) and the [skill authoring guide](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices) so descriptions, frontmatter, and substantive content stay current.
 
-> These skills support the research and writing process. They do not replace it. They follow APSA, JARS, DA-RT, TOP, and FAIR open-science expectations, and all guidance is grounded in 151 published sources and documented workflow patterns. See [**SOURCES.md**](SOURCES.md) for the full bibliography.
+> These skills support the research and writing process. They do not replace it. They follow APSA, JARS, DA-RT, TOP, and FAIR open-science expectations, and all guidance is grounded in 150+ published sources and documented workflow patterns. See [**SOURCES.md**](SOURCES.md) for the full bibliography.
 
 ---
 
@@ -26,7 +26,7 @@ The design follows Anthropic's [skill authoring best practices](https://platform
 
 [Skill Map](#skill-map) · [How Skills Work](#how-skills-work) · [Installation](#installation) · [Skills](#skills) · [Contributing](#contributing) · [License](#license)
 
-**Skills:** [Ideation](#ideation) · [Research Design](#research-design) · [Analysis](#analysis) · [Corpus Processing](#corpus-processing) · [Writing &amp; Reporting](#writing--reporting) · [Figures &amp; Tables](#figures--tables) · [Manuscript QA](#manuscript-qa) · [Review &amp; Submission](#review--submission)
+**Skills:** [Project Setup](#project-setup) · [Ideation](#ideation) · [Research Design](#research-design) · [Analysis](#analysis) · [Corpus Processing](#corpus-processing) · [Writing &amp; Reporting](#writing--reporting) · [Figures &amp; Tables](#figures--tables) · [Manuscript QA](#manuscript-qa) · [Review &amp; Submission](#review--submission)
 
 ---
 
@@ -96,7 +96,7 @@ git clone https://github.com/scdenney/open-science-skills.git
 cd open-science-skills && claude --plugin-dir ./plugin
 ```
 
-All 29 skills auto-trigger based on your prompts. All 29 slash commands (`/oss:conjoint-design`, `/oss:fair-check`, `/oss:figures`, `/oss:tables`, `/oss:paper-tex`, `/oss:figure-table-audit`, `/oss:replication-package`, and so on) are immediately available. The prefix can be omitted when no other installed plugin claims the same name.
+All 33 skills auto-trigger based on your prompts. All 33 slash commands (`/oss:research-repo`, `/oss:conjoint-design`, `/oss:fair-check`, `/oss:figures`, `/oss:tables`, `/oss:paper-tex`, `/oss:figure-table-audit`, `/oss:replication-package`, and so on) are immediately available. The prefix can be omitted when no other installed plugin claims the same name.
 
 <details>
 <summary><b>Option 2 — Selective install</b> (choose specific skills, auto-trigger only)</summary>
@@ -150,6 +150,25 @@ cp -R open-science-skills/plugin/skills/list-experiment ~/.claude/skills/
 ---
 
 ## Skills
+
+### Project Setup
+
+<table width="100%">
+<thead>
+<tr>
+<th width="18%">Skill</th>
+<th width="16%">Slash command</th>
+<th width="66%">What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="plugin/skills/research-repo/SKILL.md"><strong>research-repo</strong></a></td>
+<td><code>/research-repo</code></td>
+<td>Scaffold or audit a research project repository organized around its source library. New repo → build the <code>sources/{og,md,unprocessed}</code> + <code>references.bib</code> spine (PDF→Markdown via <a href="https://github.com/opendataloader-project/opendataloader-pdf">OpenDataLoader PDF</a>), a <code>process-source</code> intake command, <code>CLAUDE.md</code>/<code>AGENTS.md</code>, <code>.gitignore</code>, and the archetype-appropriate analysis/manuscript/review folders, then smoke-test the pipeline; existing repo → audit against the convention with detection recipes for orphan PDFs, bib drift, and naming. Pairs with <code>process-source</code> (per-PDF intake) and <code>replication-package</code> (publication output).</td>
+</tr>
+</tbody>
+</table>
 
 ### Ideation
 
