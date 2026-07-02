@@ -1,6 +1,6 @@
 ---
 name: presubmit
-description: Run the standalone presubmit CLI: adversarial 30+ stage peer-review pipeline.
+description: Run the standalone presubmit CLI. Adversarial 30+ stage peer-review pipeline.
 argument-hint: "[path to your draft to review, or describe the setup task]"
 ---
 

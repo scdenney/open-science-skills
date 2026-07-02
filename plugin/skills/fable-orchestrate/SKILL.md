@@ -1,6 +1,6 @@
 ---
 name: fable-orchestrate
-description: Run a multi-model orchestration workflow with Fable 5 as the lead. Use when you want to orchestrate, delegate, or fan out a coding task across models — a "deep-reasoner" subagent (Opus) for reasoning-heavy work, a "fast-worker" subagent (Sonnet) for mechanical work, and Codex (GPT-5, a different-vendor peer) for fresh-perspective problems and high-stakes parallel cross-checks. Triggers: "orchestrate this," "delegate to deep-reasoner / fast-worker," "get a second opinion from Codex," "run Opus and Codex in parallel and synthesize," "be the tech lead." Keeps the orchestrator's context lean; the orchestrator plans, decomposes, and synthesizes but does not do the heavy lifting itself.
+description: Run a multi-model orchestration workflow with Fable 5 as the lead. Delegate reasoning-heavy work (architecture, debugging, algorithm design) to a deep-reasoner subagent (Opus), mechanical work (boilerplate, tests, formatting, bulk edits) to a fast-worker subagent (Sonnet), and fresh-perspective or high-stakes problems to Codex, a different-vendor GPT-5 peer. Use to orchestrate, delegate, fan out, get a second opinion from Codex, run Opus and Codex in parallel and synthesize, or act as tech lead.
 allowed-tools:
   - Agent
   - Bash

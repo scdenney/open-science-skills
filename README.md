@@ -2,15 +2,12 @@
   <img src="assets/hero.jpg" alt="Open Science Skills — vintage typewriter, globe, and books labeled Open Access, Collaboration, Transparency, Reproducibility, beneath a framed title sign." width="900">
 </p>
 
-<p align="center">
-  <a href="https://code.claude.com/docs/en/skills"><img src="https://img.shields.io/badge/Claude_Code-35_skills-D97757?style=for-the-badge&logo=anthropic&logoColor=white" alt="Claude Code — 35 skills"></a>
-  <a href="codex/README.md"><img src="https://img.shields.io/badge/OpenAI_Codex-34_skills-111111?style=for-the-badge&logo=openai&logoColor=white" alt="OpenAI Codex — 34 skills"></a>
-</p>
-
 # Open Science Skills
 
+[![Claude Code](https://img.shields.io/badge/Claude_Code-plugin-D97757?logo=anthropic&logoColor=white)](https://code.claude.com/docs/en/skills)
+[![OpenAI Codex](https://img.shields.io/badge/OpenAI_Codex-library-111111?logo=openai&logoColor=white)](codex/README.md)
 [![version](https://img.shields.io/badge/version-2.12.0-blue)](https://github.com/scdenney/open-science-skills/releases)
-[![License: CC BY-NC 4.0](https://img.shields.io/badge/license-CC%20BY--NC%204.0-lightgrey)](LICENSE)
+[![license](https://img.shields.io/badge/license-CC%20BY--NC%204.0-lightgrey)](LICENSE)
 [![skills](https://img.shields.io/badge/skills-35-blue)](#skills)
 [![updated](https://img.shields.io/badge/updated-July%202026-green)](https://github.com/scdenney/open-science-skills/commits/main)
 [![sources](https://img.shields.io/badge/sources-150%2B-purple)](SOURCES.md)
@@ -23,11 +20,11 @@ Reusable agent workflows for experimental social science, computational text ana
 | [Claude Code](https://code.claude.com/docs/en/skills) | 35 skills in the [`oss` plugin](plugin/skills) | `/oss:skill-name` |
 | [OpenAI Codex](https://developers.openai.com/codex/skills) | 34 skills in the [`codex/` library](codex/README.md) | `$skill-name` |
 
-Codex intentionally omits `presubmit`; its Sol-led [`46-orchestrate`](codex/46-orchestrate/SKILL.md) replaces Claude Code's `fable-orchestrate`. Everything else spans the research workflow: design, analysis, source and citation checks, figures and tables, repository and replication scaffolding, typesetting, and manuscript review.
+The two libraries track each other closely. On the Codex side there is no `presubmit`, and [`46-orchestrate`](codex/46-orchestrate/SKILL.md) stands in for `fable-orchestrate`.
 
 This is the toolkit I use in my own research. It is built from a curated corpus of methodology texts and grows as I add new sources, ideas, and skills. Authoring and editing are mine, with help from Opus 4.8, Gemini 3.0, and ChatGPT 5.4.
 
-The design follows the [Claude Code](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices) and [Codex](https://developers.openai.com/codex/skills) authoring guidance: procedural workflows over textbook definitions, precise trigger descriptions, and progressive disclosure. Substantive methods stay aligned across platforms; invocation, tools, agents, and installation are adapted to each runtime.
+Both libraries follow the official authoring guidance for [Claude Code](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices) and [Codex](https://developers.openai.com/codex/skills): procedural workflows over definitions, with trigger-rich descriptions and progressive disclosure. The methods stay aligned across platforms; only invocation and tooling adapt to each runtime.
 
 > These skills support the research and writing process. They do not replace it. They follow APSA, JARS, DA-RT, TOP, and FAIR open-science expectations, and all guidance is grounded in 150+ published sources and documented workflow patterns. See [**SOURCES.md**](SOURCES.md) for the full bibliography.
 
@@ -193,7 +190,7 @@ The detailed catalog below describes the Claude plugin names and slash commands.
 <tr>
 <td><a href="plugin/skills/research-repo/SKILL.md"><strong>research-repo</strong></a></td>
 <td><code>/research-repo</code></td>
-<td>Scaffold or audit a research project repository organized around its source library. New repo → build the <code>sources/{og,md,unprocessed}</code> + <code>references.bib</code> spine (PDF→Markdown via <a href="https://github.com/opendataloader-project/opendataloader-pdf">OpenDataLoader PDF</a>), a <code>process-source</code> intake command, <code>CLAUDE.md</code>/<code>AGENTS.md</code>, <code>.gitignore</code>, and the archetype-appropriate analysis/manuscript/review folders, then smoke-test the pipeline; existing repo → audit against the convention with detection recipes for orphan PDFs, bib drift, and naming. Pairs with <code>process-source</code> (per-PDF intake) and <code>replication-package</code> (publication output).</td>
+<td>Scaffold or audit a research project repository organized around its source library. For a new repo, build the <code>sources/{og,md,unprocessed}</code> + <code>references.bib</code> spine (PDF to Markdown via <a href="https://github.com/opendataloader-project/opendataloader-pdf">OpenDataLoader PDF</a>), a <code>process-source</code> intake command, <code>CLAUDE.md</code>/<code>AGENTS.md</code>, <code>.gitignore</code>, and the archetype-appropriate analysis/manuscript/review folders, then smoke-test the pipeline; for an existing repo, audit against the convention with detection recipes for orphan PDFs, bib drift, and naming. Pairs with <code>process-source</code> (per-PDF intake) and <code>replication-package</code> (publication output).</td>
 </tr>
 </tbody>
 </table>
@@ -212,7 +209,7 @@ The detailed catalog below describes the Claude plugin names and slash commands.
 <tr>
 <td><a href="plugin/skills/fable-orchestrate/SKILL.md"><strong>fable-orchestrate</strong></a></td>
 <td><code>/fable-orchestrate</code></td>
-<td>Multi-model orchestration workflow with a lightweight lead model (Fable 5) as tech lead. Plans and decomposes, then routes each piece by a first-match rule: reasoning-heavy work → a <strong>deep-reasoner</strong> subagent (Opus); mechanical, fully-specified work → a <strong>fast-worker</strong> subagent (Sonnet); fresh-perspective or high-stakes work → <strong>Codex</strong> (a different-vendor GPT-5 peer) via a verified <code>codex-peer.sh</code> wrapper. When a task is both high-blast-radius and hard to verify, runs Opus and Codex on it in parallel — blind to each other — then synthesizes, never breaking ties by confidence. General-purpose (not social-science-specific); ships the two agent definitions and the Codex driver.</td>
+<td>Multi-model orchestration with Fable 5 as tech lead. Routes reasoning-heavy work to a deep-reasoner subagent (Opus), mechanical work to a fast-worker subagent (Sonnet), and fresh-perspective or high-stakes work to Codex, a different-vendor GPT-5 peer. High-stakes tasks run Opus and Codex in parallel, then synthesize. Ships the two agent definitions and a <code>codex-peer.sh</code> driver.</td>
 </tr>
 </tbody>
 </table>

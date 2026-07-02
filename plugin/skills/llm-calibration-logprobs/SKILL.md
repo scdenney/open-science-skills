@@ -1,6 +1,6 @@
 ---
 name: llm-calibration-logprobs
-description: LLM token logprobs and calibration: per-decision confidence, ECE, Brier, reliability diagrams, low-confidence triage.
+description: LLM token logprobs and calibration. Per-decision confidence, ECE, Brier, reliability diagrams, low-confidence triage.
 argument-hint: "[describe your classifier, the label set, and where logprobs come from]"
 ---
 

@@ -1,6 +1,6 @@
 ---
 name: fact-check
-description: Fact-check a manuscript's claims against the cited sources themselves: locate each source's knowledge-base Markdown file and verify the in-text claim is actually supported. Runs a pre-flight gate that refuses unless a per-source Markdown knowledge base exists and is clean (PDFs converted via process-source); then runs citation-check; then audits claim support, overclaiming, direction, scope, and misattribution.
+description: Fact-check a manuscript's claims against the cited sources themselves. Locate each source's knowledge-base Markdown file and verify the in-text claim is actually supported. Runs a pre-flight gate that refuses unless a per-source Markdown knowledge base exists and is clean (PDFs converted via process-source); then runs citation-check; then audits claim support, overclaiming, direction, scope, and misattribution.
 argument-hint: "[path to manuscript + bibliography; point to the project's sources/ or knowledge_base/ directory if non-standard]"
 ---
 
