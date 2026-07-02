@@ -6,6 +6,7 @@ on:
     paths:
       - "plugin/skills/**"
       - "README.md"
+  workflow_dispatch: {}
 
 jobs:
   notify:
