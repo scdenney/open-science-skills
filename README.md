@@ -4,15 +4,15 @@
 
 # Open Science Skills
 
-[![version](https://img.shields.io/badge/version-2.10.0-blue)](https://github.com/scdenney/open-science-skills/releases)
+[![version](https://img.shields.io/badge/version-2.11.0-blue)](https://github.com/scdenney/open-science-skills/releases)
 [![License: CC BY-NC 4.0](https://img.shields.io/badge/license-CC%20BY--NC%204.0-lightgrey)](LICENSE)
-[![skills](https://img.shields.io/badge/skills-33-blue)](#skills)
+[![skills](https://img.shields.io/badge/skills-34-blue)](#skills)
 [![plugin](https://img.shields.io/badge/Claude%20Code-plugin-orange)](https://code.claude.com/docs/en/skills)
-[![updated](https://img.shields.io/badge/updated-June%202026-green)](https://github.com/scdenney/open-science-skills/commits/main)
+[![updated](https://img.shields.io/badge/updated-July%202026-green)](https://github.com/scdenney/open-science-skills/commits/main)
 [![sources](https://img.shields.io/badge/sources-150%2B-purple)](SOURCES.md)
 [![PRs welcome](https://img.shields.io/badge/PRs-welcome-brightgreen)](#contributing)
 
-A library of [Claude Code skills](https://code.claude.com/docs/en/skills) for experimental social science, computational text analysis, manuscript QA, and transparent reporting. Install as a plugin and you get help across the workflow — research design, analysis, citation and figure/table audits, replication-package scaffolding, and pre-submission review. All 33 skills auto-trigger from prompt context and are also available as explicit `/oss:skill-name` slash commands. The `oss:` prefix can be omitted when no other installed plugin claims the same name.
+A library of [Claude Code skills](https://code.claude.com/docs/en/skills) for experimental social science, computational text analysis, manuscript QA, and transparent reporting. Install as a plugin and you get help across the workflow — research design, analysis, citation and figure/table audits, replication-package scaffolding, and pre-submission review. All 34 skills auto-trigger from prompt context and are also available as explicit `/oss:skill-name` slash commands. The `oss:` prefix can be omitted when no other installed plugin claims the same name.
 
 This is the toolkit I use in my own research. It is built from a curated corpus of methodology texts and grows as I add new sources, ideas, and skills. Authoring and editing are mine, with help from Opus 4.8, Gemini 3.0, and ChatGPT 5.4.
 
@@ -96,7 +96,7 @@ git clone https://github.com/scdenney/open-science-skills.git
 cd open-science-skills && claude --plugin-dir ./plugin
 ```
 
-All 33 skills auto-trigger based on your prompts. All 33 slash commands (`/oss:research-repo`, `/oss:conjoint-design`, `/oss:fair-check`, `/oss:figures`, `/oss:tables`, `/oss:paper-tex`, `/oss:figure-table-audit`, `/oss:replication-package`, and so on) are immediately available. The prefix can be omitted when no other installed plugin claims the same name.
+All 34 skills auto-trigger based on your prompts. All 34 slash commands (`/oss:research-repo`, `/oss:conjoint-design`, `/oss:fair-check`, `/oss:figures`, `/oss:tables`, `/oss:paper-tex`, `/oss:figure-table-audit`, `/oss:replication-package`, and so on) are immediately available. The prefix can be omitted when no other installed plugin claims the same name.
 
 <details>
 <summary><b>Option 2 — Selective install</b> (choose specific skills, auto-trigger only)</summary>
@@ -166,6 +166,25 @@ cp -R open-science-skills/plugin/skills/list-experiment ~/.claude/skills/
 <td><a href="plugin/skills/research-repo/SKILL.md"><strong>research-repo</strong></a></td>
 <td><code>/research-repo</code></td>
 <td>Scaffold or audit a research project repository organized around its source library. New repo → build the <code>sources/{og,md,unprocessed}</code> + <code>references.bib</code> spine (PDF→Markdown via <a href="https://github.com/opendataloader-project/opendataloader-pdf">OpenDataLoader PDF</a>), a <code>process-source</code> intake command, <code>CLAUDE.md</code>/<code>AGENTS.md</code>, <code>.gitignore</code>, and the archetype-appropriate analysis/manuscript/review folders, then smoke-test the pipeline; existing repo → audit against the convention with detection recipes for orphan PDFs, bib drift, and naming. Pairs with <code>process-source</code> (per-PDF intake) and <code>replication-package</code> (publication output).</td>
+</tr>
+</tbody>
+</table>
+
+### Workflow & Orchestration
+
+<table width="100%">
+<thead>
+<tr>
+<th width="18%">Skill</th>
+<th width="16%">Slash command</th>
+<th width="66%">What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="plugin/skills/fable-orchestrate/SKILL.md"><strong>fable-orchestrate</strong></a></td>
+<td><code>/fable-orchestrate</code></td>
+<td>Multi-model orchestration workflow with a lightweight lead model (Fable 5) as tech lead. Plans and decomposes, then routes each piece by a first-match rule: reasoning-heavy work → a <strong>deep-reasoner</strong> subagent (Opus); mechanical, fully-specified work → a <strong>fast-worker</strong> subagent (Sonnet); fresh-perspective or high-stakes work → <strong>Codex</strong> (a different-vendor GPT-5 peer) via a verified <code>codex-peer.sh</code> wrapper. When a task is both high-blast-radius and hard to verify, runs Opus and Codex on it in parallel — blind to each other — then synthesizes, never breaking ties by confidence. General-purpose (not social-science-specific); ships the two agent definitions and the Codex driver.</td>
 </tr>
 </tbody>
 </table>
