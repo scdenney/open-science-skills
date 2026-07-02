@@ -1,0 +1,19 @@
+name: Notify ai-for-research of skill changes
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "plugin/skills/**"
+      - "README.md"
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dispatch to ai-for-research
+        env:
+          GH_TOKEN: ${{ secrets.AI_FOR_RESEARCH_DISPATCH_TOKEN }}
+        run: |
+          gh api repos/scdenney/ai-for-research/dispatches \
+            -f event_type=oss-skills-updated
