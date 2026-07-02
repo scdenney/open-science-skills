@@ -20,7 +20,7 @@ Reusable agent workflows for experimental social science, computational text ana
 | [Claude Code](https://code.claude.com/docs/en/skills) | 35 skills in the [`oss` plugin](plugin/skills) | `/oss:skill-name` |
 | [OpenAI Codex](https://developers.openai.com/codex/skills) | 34 skills in the [`codex/` library](codex/README.md) | `$skill-name` |
 
-The two libraries track each other closely. On the Codex side there is no `presubmit`, and [`46-orchestrate`](codex/46-orchestrate/SKILL.md) stands in for `fable-orchestrate`.
+The two libraries track each other closely. On the Codex side there is no `presubmit`.
 
 This is the toolkit I use in my own research. It is built from a curated corpus of methodology texts and grows as I add new sources, ideas, and skills. Authoring and editing are mine, with help from Opus 4.8, Gemini 3.0, and ChatGPT 5.4.
 
@@ -174,7 +174,7 @@ For selective and repository-scoped installation, plus the compact Codex catalog
 
 ## Skills
 
-The detailed catalog below describes the Claude plugin names and slash commands. Except for `presubmit`, each research workflow has a Codex-native counterpart in the [Codex catalog](codex/README.md); `46-orchestrate` replaces `fable-orchestrate` there.
+The detailed catalog shows Claude Code commands by default. Platform-specific entries are labeled: **Codex** means a Codex-native skill, while **Claude Code → Codex** means a Claude Code skill that calls Codex. Unmarked research workflows also have counterparts in the [Codex catalog](codex/README.md), except for `presubmit`.
 
 ### Project Setup
 
@@ -182,7 +182,7 @@ The detailed catalog below describes the Claude plugin names and slash commands.
 <thead>
 <tr>
 <th width="18%">Skill</th>
-<th width="16%">Slash command</th>
+<th width="16%">Invoke</th>
 <th width="66%">What it does</th>
 </tr>
 </thead>
@@ -201,15 +201,20 @@ The detailed catalog below describes the Claude plugin names and slash commands.
 <thead>
 <tr>
 <th width="18%">Skill</th>
-<th width="16%">Slash command</th>
+<th width="16%">Invoke</th>
 <th width="66%">What it does</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><a href="plugin/skills/fable-orchestrate/SKILL.md"><strong>fable-orchestrate</strong></a></td>
+<td><a href="plugin/skills/fable-orchestrate/SKILL.md"><strong>fable-orchestrate</strong></a><br><sub>Claude Code</sub></td>
 <td><code>/fable-orchestrate</code></td>
 <td>Multi-model orchestration with Fable 5 as tech lead. Routes reasoning-heavy work to a deep-reasoner subagent (Opus), mechanical work to a fast-worker subagent (Sonnet), and fresh-perspective or high-stakes work to Codex, a different-vendor GPT-5 peer. High-stakes tasks run Opus and Codex in parallel, then synthesize. Ships the two agent definitions and a <code>codex-peer.sh</code> driver.</td>
+</tr>
+<tr>
+<td><a href="codex/46-orchestrate/SKILL.md"><strong>46-orchestrate</strong></a><br><sub>Codex</sub></td>
+<td><code>$46-orchestrate</code></td>
+<td>Sol-led Codex orchestration for complex work. Routes bounded research, implementation, and verification to role-based subagents; uses blind parallel review for high-blast-radius work that is difficult to verify; and keeps planning, integration, and final accountability with the lead.</td>
 </tr>
 </tbody>
 </table>
@@ -220,7 +225,7 @@ The detailed catalog below describes the Claude plugin names and slash commands.
 <thead>
 <tr>
 <th width="18%">Skill</th>
-<th width="16%">Slash command</th>
+<th width="16%">Invoke</th>
 <th width="66%">What it does</th>
 </tr>
 </thead>
@@ -231,7 +236,7 @@ The detailed catalog below describes the Claude plugin names and slash commands.
 <td>Brainstorm-then-select: before implementing, generate 3–5 conceptually distinct approaches labeled by creativity dimension ([Novel], [Surprising], [Diverse], [Conventional]) and hold for selection. Resists defaulting to the most obvious solution. After Creative Preference Optimization (Ismayilzada et al., 2025).</td>
 </tr>
 <tr>
-<td><a href="plugin/skills/diverge-codex/SKILL.md"><strong>diverge-codex</strong></a></td>
+<td><a href="plugin/skills/diverge-codex/SKILL.md"><strong>diverge-codex</strong></a><br><sub>Claude Code → Codex</sub></td>
 <td><code>/diverge-codex</code></td>
 <td>Cross-model variant of <code>diverge</code>. Delegates the brainstorm to Codex (GPT-5.4) via <code>codex exec</code>, presents its approaches for selection, then has Codex implement the chosen one. A second model family widens the space of approaches.</td>
 </tr>
@@ -244,7 +249,7 @@ The detailed catalog below describes the Claude plugin names and slash commands.
 <thead>
 <tr>
 <th width="18%">Skill</th>
-<th width="16%">Slash command</th>
+<th width="16%">Invoke</th>
 <th width="66%">What it does</th>
 </tr>
 </thead>
@@ -288,7 +293,7 @@ The detailed catalog below describes the Claude plugin names and slash commands.
 <thead>
 <tr>
 <th width="18%">Skill</th>
-<th width="16%">Slash command</th>
+<th width="16%">Invoke</th>
 <th width="66%">What it does</th>
 </tr>
 </thead>
@@ -309,8 +314,8 @@ The detailed catalog below describes the Claude plugin names and slash commands.
 <td>Panel of models as independent coders: consensus rules, chance-corrected agreement (Cohen/Fleiss/Krippendorff), correlated-error diagnostics, validation beyond the panel</td>
 </tr>
 <tr>
-<td><a href="plugin/skills/model-committee/SKILL.md"><strong>model-committee</strong></a></td>
-<td><code>/model-committee</code></td>
+<td><a href="plugin/skills/model-committee/SKILL.md"><strong>model-committee</strong></a><br><sub>Claude Code + Codex</sub></td>
+<td><code>/model-committee</code><br><code>$model-committee</code></td>
 <td>GPT-5.5 and Claude Opus 4.8 as a deliberative committee: use-case gate, blind proposals, cross-critique and revision, blinded cross-ranking, and a precommitted rule for one decision</td>
 </tr>
 <tr>
@@ -327,7 +332,7 @@ The detailed catalog below describes the Claude plugin names and slash commands.
 <thead>
 <tr>
 <th width="18%">Skill</th>
-<th width="16%">Slash command</th>
+<th width="16%">Invoke</th>
 <th width="66%">What it does</th>
 </tr>
 </thead>
@@ -356,7 +361,7 @@ The detailed catalog below describes the Claude plugin names and slash commands.
 <thead>
 <tr>
 <th width="18%">Skill</th>
-<th width="16%">Slash command</th>
+<th width="16%">Invoke</th>
 <th width="66%">What it does</th>
 </tr>
 </thead>
@@ -400,7 +405,7 @@ The detailed catalog below describes the Claude plugin names and slash commands.
 <thead>
 <tr>
 <th width="18%">Skill</th>
-<th width="16%">Slash command</th>
+<th width="16%">Invoke</th>
 <th width="66%">What it does</th>
 </tr>
 </thead>
@@ -424,7 +429,7 @@ The detailed catalog below describes the Claude plugin names and slash commands.
 <thead>
 <tr>
 <th width="18%">Skill</th>
-<th width="16%">Slash command</th>
+<th width="16%">Invoke</th>
 <th width="66%">What it does</th>
 </tr>
 </thead>
@@ -463,7 +468,7 @@ The detailed catalog below describes the Claude plugin names and slash commands.
 <thead>
 <tr>
 <th width="18%">Skill</th>
-<th width="16%">Slash command</th>
+<th width="16%">Invoke</th>
 <th width="66%">What it does</th>
 </tr>
 </thead>
@@ -474,7 +479,7 @@ The detailed catalog below describes the Claude plugin names and slash commands.
 <td>Critical-Reviewer-style pre-submission audit. Parallel quote-grounded sub-agents, verification cross-check, CONSORT and pre-reg audit for experimental papers. Single-model, in-session counterpart to the standalone <a href="https://github.com/scdenney/presubmit"><code>presubmit</code></a> CLI.</td>
 </tr>
 <tr>
-<td><a href="plugin/skills/paper-review-lite-codex/SKILL.md"><strong>paper-review-lite-codex</strong></a></td>
+<td><a href="plugin/skills/paper-review-lite-codex/SKILL.md"><strong>paper-review-lite-codex</strong></a><br><sub>Claude Code → Codex</sub></td>
 <td><code>/paper-review-lite-codex</code></td>
 <td>Cross-model adversarial variant of <code>paper-review-lite</code>. Claude and Codex (GPT-5.4) independently apply the same review specification, then each cross-checks the other's findings; surviving issues are annotated by confidence (mutual, asymmetric-confirmed, single-model-adjudicated). Roughly 22 model calls. Use before submission for maximum pressure and a second model family's blind spots.</td>
 </tr>
