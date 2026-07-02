@@ -39,7 +39,7 @@ codex login status        # must say "Logged in" — otherwise: codex login
 
 `mkdir -p` first is required: `~/.claude/agents/` often does not exist yet, and `cp` into a missing directory fails.
 
-Then set the orchestrator up as intended: `/model` → Fable 5, `/effort` → max. (The mechanics below work under any main model; Fable-as-lead is what keeps Opus/Codex spend on the work that needs it.)
+Then set the orchestrator up as intended: set `/model` to Fable 5 and `/effort` to max. (The mechanics below work under any main model; Fable-as-lead is what keeps Opus/Codex spend on the work that needs it.)
 
 ## Run (the orchestration loop)
 
@@ -70,6 +70,20 @@ Two equivalent forms — both verified in this environment:
 
 Spawn slow work with `run_in_background: true` (the default) and keep planning; you are notified on completion. Consume the subagent's **final message** — it is the return value, not a chat reply. Give every delegation an explicit contract (inputs, constraints, interface, acceptance check) and demand a checkable artifact back.
 
+### Mixing fast-worker (Sonnet) and deep-reasoner (Opus)
+
+Sonnet and Opus often take turns on the *same* task. Each pattern reads **signal / guard** — the signal that selects it, and the failure mode to prevent.
+
+- **Spec then build.** Opus fixes the interface and acceptance check; Sonnet implements. *Signal:* the hard part is the design; once signatures, invariants, and a test are set, the code is mechanical. *Guard:* an under-specified handoff makes Sonnet invent design silently. Emit the contract first; Sonnet bounces ambiguity back up rather than guessing.
+- **Draft then harden.** Sonnet writes a fast first cut; Opus reviews and hardens it. *Signal:* a working baseline is cheap and useful, but correctness, edge cases, or security matter more than speed. *Guard:* Opus rubber-stamps a fluent-but-wrong draft. Aim it at failure modes (concurrency, boundaries, auth, error paths) and demand a specific defect list, not polish.
+- **Plan then fan out.** Opus plans and partitions; N Sonnet workers do the pieces in parallel. *Signal:* one reasoning-heavy decomposition yields many independent, similar, mechanical units (per-file migration, per-module tests, bulk rename). *Guard:* fragmentation. Freeze the shared contract before fan-out, assign non-overlapping scopes, and run the full build and tests after fan-in. Piecewise-correct is not integrated-correct.
+- **Gather then reason.** Sonnet greps and collects; Opus reasons over the digest. *Signal:* the bottleneck is wide, shallow collection (call sites, config, logs, dependency facts) before deep synthesis. *Guard:* Sonnet pre-selecting the cause or dumping raw volume. Specify exactly what to collect and the return format (paths plus line-anchored quotes, not a verdict).
+- **Reason then verify.** Opus produces the fix or design; Sonnet writes the test or reproduction that proves it. *Signal:* Opus's output is high-stakes but checkable. *Guard:* a vacuous test that restates the implementation. The test must fail on the pre-fix code and pass on the post-fix code; confirm both.
+- **Triage then deep-dive.** Sonnet reproduces and localizes; Opus root-causes; Sonnet applies the bounded fix. *Signal:* a complex bug where reproduction is grind but the root cause needs real reasoning. *Guard:* Sonnet "fixing" a symptom. Its job ends at a reliable minimal repro plus a suspected locus; the fix decision is Opus's, and the repro stays as a regression test.
+- **Routine vs. exceptional split.** Sonnet takes the conventional path; Opus owns the one hard subsystem. *Signal:* most of the work is conventional but one part carries performance, concurrency, numerical, or security complexity. *Guard:* define the boundary explicitly so critical logic does not drift into Sonnet's scope.
+
+Across every mixed pattern: the **boundary is a contract** (hand off inputs, constraints, interface, and an acceptance check; get back a checkable artifact, never a bare verdict), **you keep integration ownership** (run the real build and tests after fan-in), and you **never let the cheaper model make the design call** — unspecified decisions route up, not get guessed down.
+
 ### Consult Codex (the peer)
 
 ```bash
@@ -79,6 +93,26 @@ Spawn slow work with `run_in_background: true` (the default) and keep planning; 
 ```
 
 For Codex to edit files, use `--mode implement` (workspace-write) and point `-C` at the working directory. For a long turn, run it via the **Bash tool with `run_in_background: true`** plus `--out <file>`, then `Read` that file when the task-notification fires — so a multi-minute Codex turn never blocks you.
+
+### When to reach for Codex — the decorrelated peer
+
+Route to Codex when the value is a **decorrelated prior**, not more horsepower. Never pick it because it is "better than Opus." Pick it because its errors are *uncorrelated* with Opus's, or because it has a *comparative coverage edge* (a different, sometimes more recent, training mix). A second Opus call resamples the same distribution and tends to repeat the same error confidently. Fire on any one signal:
+
+- **Unverifiable check.** Opus answered, and you need an independent check on a claim you cannot cheaply verify (no test, no ground truth).
+- **You are looping.** Two or more rounds have circled the same framing or repeated the same wrong fix. A vendor switch breaks the fixation.
+- **Disputed, expensive-to-undo design.** API shape, schema, concurrency model, or migration strategy where reasonable engineers disagree and being wrong is costly.
+- **High-stakes parallel path (row 3).** High blast radius *and* hard to verify: launch Opus and Codex blind, then reconcile.
+- **"Am I framing this wrong?"** You suspect your own decomposition, not the answer within it.
+- **Unfamiliar or recent ecosystem.** A stack, library, or idiom where OpenAI's training mix may cover different ground.
+- **Adversarial cross-review.** Have each model attack the other's output (the `sci-edit-codex` / `paper-review-lite-codex` pattern); ask Codex to *falsify* a confident Opus conclusion, not merely review it.
+
+Do **not** reach for Codex when:
+
+- The task is **cheaply verifiable** (a test runs, a type checks, a diff applies). Verify instead; decorrelation buys nothing you can just check.
+- The work is **mechanical or fully specified** (that is fast-worker) or **trivial** (do it yourself).
+- The answer needs **deep in-repo context** Codex would have to re-acquire. The briefing cost exceeds the benefit; keep it with Opus.
+- You **only want more confidence** on something Opus already verified. Confidence is not a reason; a checkable artifact is.
+- **Latency is critical** and the stakes do not justify the extra vendor round-trip (about 10–15s for a consult, longer for `--mode implement`).
 
 ### The high-stakes parallel path (verified)
 
@@ -94,7 +128,7 @@ Launch **both** executors on the **same** problem, **in one message, blind to ea
 **Reconciling the two answers — the rules you must follow:**
 - Never reveal one executor's answer to the other during the round.
 - **Do not break ties by confidence.** Substantive disagreement is a *stop condition*, not a coin-flip.
-- On disagreement: run **one** targeted reconcile round (now each may see the other's reasoning). Still unresolved → escalate to the human.
+- On disagreement: run **one** targeted reconcile round (now each may see the other's reasoning). If still unresolved, escalate to the human.
 - Accept agreement only when both point at the **same checkable artifact** — twin confident assertions are not consensus (they can share a blind spot).
 
 ## Guardrail — the one failure mode to defend against
