@@ -1,0 +1,4 @@
+interface:
+  display_name: "Hypothesis Building"
+  short_description: "Build falsifiable causal hypotheses"
+  default_prompt: "Use $hypothesis-building to turn this theory into testable hypotheses."

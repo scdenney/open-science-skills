@@ -1,0 +1,4 @@
+interface:
+  display_name: "Replication Package"
+  short_description: "Scaffold or audit a replication archive"
+  default_prompt: "Use $replication-package to scaffold or audit this replication package."

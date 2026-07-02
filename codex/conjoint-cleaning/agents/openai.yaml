@@ -1,0 +1,4 @@
+interface:
+  display_name: "Conjoint Data Cleaning"
+  short_description: "Reshape Qualtrics conjoint data safely"
+  default_prompt: "Use $conjoint-cleaning to turn this conjoint export into analysis-ready data."

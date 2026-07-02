@@ -1,0 +1,4 @@
+interface:
+  display_name: "Diverge"
+  short_description: "Explore distinct approaches before implementation"
+  default_prompt: "Use $diverge to propose distinct approaches before implementing."

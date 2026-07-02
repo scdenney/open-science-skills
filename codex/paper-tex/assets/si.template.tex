@@ -1,0 +1,25 @@
+\documentclass[12pt]{article}
+\input{preamble}
+
+% Supplementary information: sections numbered SI-A, SI-B, ...; floats SI-1, SI-2, ...
+% (secnumdepth stays 1 from the preamble so sections step their counter and are \ref-able)
+\renewcommand{\thesection}{SI-\Alph{section}}
+\renewcommand{\thefigure}{SI-\arabic{figure}}
+\renewcommand{\thetable}{SI-\arabic{table}}
+
+\title{\textbf{Supplementary Information}\\[3pt]
+\normalsize {{TITLE}}}
+\author{{{AUTHOR}}}
+\date{{{DATE}}}
+
+\begin{document}
+\maketitle
+\thispagestyle{empty}
+\singlespacing
+
+\input{{{BODYFILE}}}
+
+\clearpage
+\bibliography{{{BIB}}}
+
+\end{document}

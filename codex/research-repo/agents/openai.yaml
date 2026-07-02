@@ -1,0 +1,4 @@
+interface:
+  display_name: "Research Repository"
+  short_description: "Scaffold or audit a source-centered research repo"
+  default_prompt: "Use $research-repo to scaffold or audit this research repository."

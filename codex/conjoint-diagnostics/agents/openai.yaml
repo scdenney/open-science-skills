@@ -1,0 +1,4 @@
+interface:
+  display_name: "Conjoint Diagnostics"
+  short_description: "Audit conjoint design and estimation choices"
+  default_prompt: "Use $conjoint-diagnostics to audit this conjoint study and analysis."

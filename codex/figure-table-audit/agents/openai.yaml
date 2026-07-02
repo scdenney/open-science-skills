@@ -1,0 +1,4 @@
+interface:
+  display_name: "Figure and Table Audit"
+  short_description: "Audit manuscript figures, tables, and callouts"
+  default_prompt: "Use $figure-table-audit to inspect this manuscript's figures and tables."

@@ -1,44 +1,65 @@
 ---
 name: diverge
-description: |
-  Generate 3–5 conceptually distinct approaches to a task before implementing.
-  Labels each by creativity dimension: Novel, Surprising, Diverse, or Conventional.
-  Holds for user selection before writing any code. Based on Creative Preference
-  Optimization (Ismayilzada et al., 2025) — brainstorm-then-select for maximizing
-  novelty, surprise, and diversity in outputs.
+description: Before implementing, generate 3-5 conceptually distinct approaches labeled by creativity dimension (Novel, Surprising, Diverse, Conventional), then hold for selection. Brainstorm-then-select to resist defaulting to the most obvious solution.
 ---
 
 # Diverge
 
-Use this skill when solving a problem where multiple non-obvious approaches exist.
+Interrupt the default path of jumping to the most probable — and least creative — solution.
+
+## Heritage and scope
+
+This is an original Open Science Skills workflow grounded in **Creative Preference Optimization** (Ismayilzada et al., 2025; background in [`reference/creative-preference-optimization.md`](reference/creative-preference-optimization.md)). Standard preference alignment (RLHF/DPO) optimizes for the most human-expected output, which is by construction the least surprising one. The paper's most accessible remedy — its own "brainstorm-then-select" baseline — needs no fine-tuning: force divergence before convergence by generating several conceptually distinct approaches, requiring that at least one is surprising and one is novel, and deferring quality and implementation until after selection.
+
+Use `diverge` for creative, architectural, or analytical work where more than one non-obvious solution exists. To isolate the brainstorm in a fresh Codex context, use the sibling `$diverge-codex`.
+
+## When to invoke
+
+Use `$diverge <task>` when:
+- multiple non-obvious implementations exist
+- you want to avoid the conventional approach
+- the task is creative, architectural, or analytical, not purely mechanical
+
+Do not use for rote tasks with one correct answer (e.g., fix this syntax error).
 
 ## Behavior
 
-When this skill is active and you receive a task, do not implement immediately.
+Given the task supplied with the invocation:
 
-First, generate **3–5 approaches** that are genuinely conceptually distinct — different in underlying mechanism, not just vocabulary.
+### Step 1 — Clarify if needed
 
-Label each:
+If the task is ambiguous about what "good" looks like, ask **one** focused question before proceeding. Skip this if the goal is clear. Do not ask about implementation details.
+
+### Step 2 — Generate approaches
+
+Produce **3–5 approaches** that are genuinely conceptually distinct. Differences must be in underlying mechanism, not surface vocabulary.
+
+Label each with its primary creativity dimension:
+
 - **[Novel]** — semantically far from the conventional solution; different conceptual basis
-- **[Surprising]** — violates the obvious assumption; would not be the first answer
-- **[Diverse]** — maximally different from the other options in this list
-- **[Conventional]** — the expected path, included for contrast
+- **[Surprising]** — violates the obvious assumption about how this should work; would not be the first answer
+- **[Diverse]** — maximally different from the other approaches in this list
+- **[Conventional]** — the expected path, included as a reference point
 
-For each provide:
-1. Core mechanism — one sentence
-2. How it works and what makes it distinct — two to three sentences
+For each approach provide:
+1. Core mechanism — one sentence naming the key insight
+2. How it works — two to three sentences on the mechanism and what makes it distinct
 3. Main tradeoff — one sentence
 
-Then stop. Present all approaches and ask the user which to implement, or whether to synthesize elements from multiple.
+### Step 3 — Hold
+
+Do not implement. Present all approaches, then ask:
+
+> "Which approach should I pursue? Or should I synthesize elements from multiple?"
 
 ## Constraints
 
 - At least one approach must be **[Surprising]**
 - At least one must be **[Novel]**
-- No two approaches should restate the same idea in different vocabulary
-- Novelty and surprise take priority over quality in this phase
-- Do not write implementation code until the user selects a direction
+- Approaches must not merely restate each other with different vocabulary
+- Quality matters second in this phase — novelty and surprise come first
+- Do not use markdown headers per approach — keep the list scannable
 
 ## After selection
 
-Implement the selected approach fully. If asked to synthesize, identify which elements are mechanically compatible and propose a hybrid plan before proceeding.
+Implement the selected approach directly. If the user asks to synthesize, identify which elements are mechanically compatible and propose a brief hybrid plan before implementing.

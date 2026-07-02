@@ -1,0 +1,4 @@
+interface:
+  display_name: "Preregistration Writing"
+  short_description: "Draft a precise pre-analysis plan"
+  default_prompt: "Use $pre-registration-writing to draft or audit this preregistration."

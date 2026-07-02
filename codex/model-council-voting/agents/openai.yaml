@@ -1,0 +1,4 @@
+interface:
+  display_name: "Model Council Voting"
+  short_description: "Design multi-model coding and agreement rules"
+  default_prompt: "Use $model-council-voting to design and validate this model council."

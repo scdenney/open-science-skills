@@ -1,0 +1,4 @@
+interface:
+  display_name: "Paper Review Lite"
+  short_description: "Run a focused pre-submission manuscript audit"
+  default_prompt: "Use $paper-review-lite to run a focused pre-submission audit."

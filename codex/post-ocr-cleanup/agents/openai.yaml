@@ -1,0 +1,4 @@
+interface:
+  display_name: "Post-OCR Cleanup"
+  short_description: "Clean OCR text with provenance and QA"
+  default_prompt: "Use $post-ocr-cleanup to clean and validate this OCR output."

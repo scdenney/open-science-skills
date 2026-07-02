@@ -1,0 +1,4 @@
+interface:
+  display_name: "Scientific Narrative Building"
+  short_description: "Build a coherent scientific introduction"
+  default_prompt: "Use $narrative-building to draft or audit this paper's introduction."

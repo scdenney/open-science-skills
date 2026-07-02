@@ -1,0 +1,4 @@
+interface:
+  display_name: "Survey Design"
+  short_description: "Design clear, valid survey instruments"
+  default_prompt: "Use $survey-design to design or audit this survey instrument."

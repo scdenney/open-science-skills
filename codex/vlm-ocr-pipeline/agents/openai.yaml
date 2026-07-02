@@ -1,0 +1,4 @@
+interface:
+  display_name: "VLM OCR Pipeline"
+  short_description: "Design a validated multimodal OCR pipeline"
+  default_prompt: "Use $vlm-ocr-pipeline to design this corpus OCR pipeline."

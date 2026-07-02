@@ -1,0 +1,6 @@
+interface:
+  display_name: "Diverge with Codex"
+  short_description: "Brainstorm in a fresh Codex context"
+  default_prompt: "Use $diverge-codex to delegate distinct approaches before implementation."
+policy:
+  allow_implicit_invocation: false

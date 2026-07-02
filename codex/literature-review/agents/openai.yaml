@@ -1,0 +1,4 @@
+interface:
+  display_name: "Literature Review"
+  short_description: "Map evidence, gaps, and synthesis plans"
+  default_prompt: "Use $literature-review to build or audit this literature review."

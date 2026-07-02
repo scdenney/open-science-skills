@@ -1,0 +1,4 @@
+interface:
+  display_name: "Topic Modeling"
+  short_description: "Design and diagnose structural topic models"
+  default_prompt: "Use $topic-modeling to design or audit this topic-modeling analysis."

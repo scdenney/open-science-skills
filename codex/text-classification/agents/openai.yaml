@@ -1,0 +1,4 @@
+interface:
+  display_name: "Text Classification"
+  short_description: "Design and validate LLM text coding"
+  default_prompt: "Use $text-classification to design and validate this text-classification workflow."

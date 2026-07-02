@@ -1,0 +1,4 @@
+interface:
+  display_name: "List Experiment Design"
+  short_description: "Design and diagnose item-count experiments"
+  default_prompt: "Use $list-experiment to design or diagnose this list experiment."

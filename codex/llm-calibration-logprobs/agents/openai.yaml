@@ -1,0 +1,4 @@
+interface:
+  display_name: "LLM Calibration and Logprobs"
+  short_description: "Calibrate LLM confidence from token logprobs"
+  default_prompt: "Use $llm-calibration-logprobs to design this calibration analysis."

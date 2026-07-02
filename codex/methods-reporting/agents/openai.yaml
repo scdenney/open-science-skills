@@ -1,0 +1,4 @@
+interface:
+  display_name: "Methods Reporting"
+  short_description: "Audit methods against reporting standards"
+  default_prompt: "Use $methods-reporting to audit or revise this methods section."

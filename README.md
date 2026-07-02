@@ -2,21 +2,32 @@
   <img src="assets/hero.jpg" alt="Open Science Skills — vintage typewriter, globe, and books labeled Open Access, Collaboration, Transparency, Reproducibility, beneath a framed title sign." width="900">
 </p>
 
+<p align="center">
+  <a href="https://code.claude.com/docs/en/skills"><img src="https://img.shields.io/badge/Claude_Code-35_skills-D97757?style=for-the-badge&logo=anthropic&logoColor=white" alt="Claude Code — 35 skills"></a>
+  <a href="codex/README.md"><img src="https://img.shields.io/badge/OpenAI_Codex-34_skills-111111?style=for-the-badge&logo=openai&logoColor=white" alt="OpenAI Codex — 34 skills"></a>
+</p>
+
 # Open Science Skills
 
-[![version](https://img.shields.io/badge/version-2.11.0-blue)](https://github.com/scdenney/open-science-skills/releases)
+[![version](https://img.shields.io/badge/version-2.12.0-blue)](https://github.com/scdenney/open-science-skills/releases)
 [![License: CC BY-NC 4.0](https://img.shields.io/badge/license-CC%20BY--NC%204.0-lightgrey)](LICENSE)
-[![skills](https://img.shields.io/badge/skills-34-blue)](#skills)
-[![plugin](https://img.shields.io/badge/Claude%20Code-plugin-orange)](https://code.claude.com/docs/en/skills)
+[![skills](https://img.shields.io/badge/skills-35-blue)](#skills)
 [![updated](https://img.shields.io/badge/updated-July%202026-green)](https://github.com/scdenney/open-science-skills/commits/main)
 [![sources](https://img.shields.io/badge/sources-150%2B-purple)](SOURCES.md)
 [![PRs welcome](https://img.shields.io/badge/PRs-welcome-brightgreen)](#contributing)
 
-A library of [Claude Code skills](https://code.claude.com/docs/en/skills) for experimental social science, computational text analysis, manuscript QA, and transparent reporting. Install as a plugin and you get help across the workflow — research design, analysis, citation and figure/table audits, replication-package scaffolding, and pre-submission review. All 34 skills auto-trigger from prompt context and are also available as explicit `/oss:skill-name` slash commands. The `oss:` prefix can be omitted when no other installed plugin claims the same name.
+Reusable agent workflows for experimental social science, computational text analysis, manuscript QA, and transparent reporting. The same research methods are packaged natively for both Claude Code and OpenAI Codex.
+
+| Platform | Package | Invoke |
+|---|---|---|
+| [Claude Code](https://code.claude.com/docs/en/skills) | 35 skills in the [`oss` plugin](plugin/skills) | `/oss:skill-name` |
+| [OpenAI Codex](https://developers.openai.com/codex/skills) | 34 skills in the [`codex/` library](codex/README.md) | `$skill-name` |
+
+Codex intentionally omits `presubmit`; its Sol-led [`46-orchestrate`](codex/46-orchestrate/SKILL.md) replaces Claude Code's `fable-orchestrate`. Everything else spans the research workflow: design, analysis, source and citation checks, figures and tables, repository and replication scaffolding, typesetting, and manuscript review.
 
 This is the toolkit I use in my own research. It is built from a curated corpus of methodology texts and grows as I add new sources, ideas, and skills. Authoring and editing are mine, with help from Opus 4.8, Gemini 3.0, and ChatGPT 5.4.
 
-The design follows Anthropic's [skill authoring best practices](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices). Procedural guidance over textbook definitions, trigger-rich YAML descriptions for auto-invocation, and progressive disclosure (instructions live in skills, the bibliography in SOURCES.md). Skills are periodically audited against the [Claude Code skills reference](https://code.claude.com/docs/en/skills) and the [skill authoring guide](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices) so descriptions, frontmatter, and substantive content stay current.
+The design follows the [Claude Code](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices) and [Codex](https://developers.openai.com/codex/skills) authoring guidance: procedural workflows over textbook definitions, precise trigger descriptions, and progressive disclosure. Substantive methods stay aligned across platforms; invocation, tools, agents, and installation are adapted to each runtime.
 
 > These skills support the research and writing process. They do not replace it. They follow APSA, JARS, DA-RT, TOP, and FAIR open-science expectations, and all guidance is grounded in 150+ published sources and documented workflow patterns. See [**SOURCES.md**](SOURCES.md) for the full bibliography.
 
@@ -45,12 +56,12 @@ flowchart LR
     G --> C
 
     A -.-> A1[conjoint / survey / list / cross-national]
-    B -.-> B1[topic modeling / text classification / council voting / calibration / OCR + OCR eval]
+    B -.-> B1[topic modeling / text classification / council voting / model committee / calibration / OCR + OCR eval]
     C -.-> C1[hypotheses / literature review / narrative / preregistration]
     D -.-> D1[figures / tables / methods reporting]
     E -.-> E1[FAIR / citations / fact-check / figure-table-audit / replication-package / archive checks]
     F -.-> F1[paper-tex / paper-review-lite / paper-review-lite-codex / presubmit / journal-review]
-    G -.-> G1[diverge / diverge-codex]
+    G -.-> G1[diverge / diverge-codex / fable-orchestrate or 46-orchestrate]
 ```
 
 Use the domain skills when designing or analyzing a study. Use the manuscript-QA skills when a draft exists and you need to check whether FAIR availability, citations, figures, tables, reporting, and replication materials can survive review.
@@ -59,20 +70,22 @@ Use the domain skills when designing or analyzing a study. Use the manuscript-QA
 
 ## How Skills Work
 
-Each skill is available in two ways:
+Invocation depends on the platform:
 
-| Mode | How | When to use |
-|------|-----|-------------|
-| **Auto-trigger** | Claude reads your prompt and loads the relevant skill silently | Working naturally — Claude detects context |
-| **Slash command** | Type `/oss:skill-name` (or just `/skill-name` when there is no ambiguity) | When you want to invoke a skill explicitly |
+| Platform | Implicit | Explicit | Source |
+|---|---|---|---|
+| Claude Code | Loads matching skills from prompt context | `/oss:skill-name` | [`plugin/skills/`](plugin/skills) |
+| Codex | Loads matching skills from their descriptions | `$skill-name` | [`codex/`](codex) |
 
-Both modes are available when installed as a plugin. Individual skills can also be installed manually (auto-trigger only).
+Orchestration and delegated-review variants require explicit invocation because they start subagents or external model calls.
 
 ---
 
 ## Installation
 
-### Option 1 — Plugin (recommended, installs all skills + slash commands)
+### Claude Code
+
+#### Option 1 — Plugin (recommended, installs all skills + slash commands)
 
 **Permanent install** (user-wide, persists across all projects):
 
@@ -96,7 +109,7 @@ git clone https://github.com/scdenney/open-science-skills.git
 cd open-science-skills && claude --plugin-dir ./plugin
 ```
 
-All 34 skills auto-trigger based on your prompts. All 34 slash commands (`/oss:research-repo`, `/oss:conjoint-design`, `/oss:fair-check`, `/oss:figures`, `/oss:tables`, `/oss:paper-tex`, `/oss:figure-table-audit`, `/oss:replication-package`, and so on) are immediately available. The prefix can be omitted when no other installed plugin claims the same name.
+All 35 skills auto-trigger based on your prompts. All 35 slash commands (`/oss:research-repo`, `/oss:conjoint-design`, `/oss:fair-check`, `/oss:figures`, `/oss:tables`, `/oss:paper-tex`, `/oss:figure-table-audit`, `/oss:replication-package`, and so on) are immediately available. The prefix can be omitted when no other installed plugin claims the same name.
 
 <details>
 <summary><b>Option 2 — Selective install</b> (choose specific skills, auto-trigger only)</summary>
@@ -147,9 +160,24 @@ cp -R open-science-skills/plugin/skills/list-experiment ~/.claude/skills/
 
 </details>
 
+### Codex
+
+Codex discovers repository skills under `.agents/skills` and user-wide skills under `~/.agents/skills`. From the repository root, install all 34 native skills user-wide:
+
+```bash
+mkdir -p "$HOME/.agents/skills"
+for skill in "$PWD"/codex/*/; do
+  ln -sfn "${skill%/}" "$HOME/.agents/skills/$(basename "$skill")"
+done
+```
+
+For selective and repository-scoped installation, plus the compact Codex catalog, see [`codex/README.md`](codex/README.md).
+
 ---
 
 ## Skills
+
+The detailed catalog below describes the Claude plugin names and slash commands. Except for `presubmit`, each research workflow has a Codex-native counterpart in the [Codex catalog](codex/README.md); `46-orchestrate` replaces `fable-orchestrate` there.
 
 ### Project Setup
 
@@ -282,6 +310,11 @@ cp -R open-science-skills/plugin/skills/list-experiment ~/.claude/skills/
 <td><a href="plugin/skills/model-council-voting/SKILL.md"><strong>model-council-voting</strong></a></td>
 <td><code>/model-council-voting</code></td>
 <td>Panel of models as independent coders: consensus rules, chance-corrected agreement (Cohen/Fleiss/Krippendorff), correlated-error diagnostics, validation beyond the panel</td>
+</tr>
+<tr>
+<td><a href="plugin/skills/model-committee/SKILL.md"><strong>model-committee</strong></a></td>
+<td><code>/model-committee</code></td>
+<td>GPT-5.5 and Claude Opus 4.8 as a deliberative committee: use-case gate, blind proposals, cross-critique and revision, blinded cross-ranking, and a precommitted rule for one decision</td>
 </tr>
 <tr>
 <td><a href="plugin/skills/llm-calibration-logprobs/SKILL.md"><strong>llm-calibration-logprobs</strong></a></td>
@@ -469,9 +502,10 @@ PRs welcome. To add a new skill:
 
 1. Create `plugin/skills/<name>/SKILL.md` following the [skill authoring best practices](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices)
 2. Add `plugin/commands/<name>.md` (see existing examples — one paragraph activation prompt + `$ARGUMENTS`)
-3. Add sources to `SOURCES.md` under a new or existing section
-4. Update badges and table in this README
-5. Run `bash plugin/scripts/check.sh` before opening a PR
+3. Add the Codex-native package at `codex/<name>/` with `SKILL.md` and `agents/openai.yaml`, unless the workflow is intentionally platform-specific
+4. Add sources to `SOURCES.md` under a new or existing section
+5. Update the platform catalogs and badges
+6. Run `bash plugin/scripts/check.sh` and validate each changed Codex skill before opening a PR
 
 ## License
 
@@ -479,4 +513,4 @@ This project is licensed under [Creative Commons Attribution-NonCommercial 4.0 I
 
 The `citation-check`, `literature-review`, `figures`, `tables`, and `figure-table-audit` skills remix workflow ideas from [Cheng-I Wu's Academic Research Skills for Claude Code](https://github.com/Imbad0202/academic-research-skills), also licensed CC BY-NC 4.0. The instructions here are rewritten for this repository's open-science and experimental-social-science scope.
 
-The `replication-package` skill adapts the structural conventions in [Yusaku Horiuchi's replication-package-guide](https://github.com/yhoriuchi/replication-package-guide) (the source for single-entry-point, compact vs. build/analyze layouts, figure/table crosswalk, paper-consistency check, correction workflow, and pre-release checklist). FAIR-principle integration and the Claude Code skill packaging are added on top; Harvard Dataverse and other platform-specific upload mechanics are not included. Cite Horiuchi's guide if you publish a package built with this skill.
+The `replication-package` skill adapts the structural conventions in [Yusaku Horiuchi's replication-package-guide](https://github.com/yhoriuchi/replication-package-guide) (the source for single-entry-point, compact vs. build/analyze layouts, figure/table crosswalk, paper-consistency check, correction workflow, and pre-release checklist). FAIR-principle integration and Claude Code/Codex skill packaging are added on top; Harvard Dataverse and other platform-specific upload mechanics are not included. Cite Horiuchi's guide if you publish a package built with this skill.

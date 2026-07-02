@@ -1,0 +1,6 @@
+interface:
+  display_name: "Cross-Model Paper Review"
+  short_description: "Cross-check a paper with Codex and Claude"
+  default_prompt: "Use $paper-review-lite-codex to run a cross-model pre-submission audit."
+policy:
+  allow_implicit_invocation: false

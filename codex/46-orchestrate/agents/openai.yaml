@@ -1,0 +1,6 @@
+interface:
+  display_name: "4.6 Orchestrate"
+  short_description: "Let Sol lead parallel Codex workstreams"
+  default_prompt: "Use $46-orchestrate to lead and verify this task across Codex subagents."
+policy:
+  allow_implicit_invocation: false

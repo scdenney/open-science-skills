@@ -1,0 +1,4 @@
+interface:
+  display_name: "Journal Review"
+  short_description: "Draft a rigorous social-science referee report"
+  default_prompt: "Use $journal-review to draft a referee report for this manuscript."

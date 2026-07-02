@@ -1,0 +1,4 @@
+interface:
+  display_name: "VLM OCR Evaluation"
+  short_description: "Compare OCR systems before scaling up"
+  default_prompt: "Use $vlm-ocr-evaluation to compare OCR systems on this corpus."

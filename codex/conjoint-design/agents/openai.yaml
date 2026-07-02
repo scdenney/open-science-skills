@@ -1,0 +1,4 @@
+interface:
+  display_name: "Conjoint Design"
+  short_description: "Design attributes, estimands, and power"
+  default_prompt: "Use $conjoint-design to design or refine this conjoint experiment."

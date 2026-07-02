@@ -1,0 +1,4 @@
+interface:
+  display_name: "Publication Figures"
+  short_description: "Design clear, reproducible research figures"
+  default_prompt: "Use $figures to design or improve this publication figure."

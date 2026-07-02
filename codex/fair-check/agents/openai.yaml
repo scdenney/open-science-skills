@@ -1,0 +1,4 @@
+interface:
+  display_name: "FAIR Check"
+  short_description: "Audit FAIR access, metadata, and reuse"
+  default_prompt: "Use $fair-check to audit this manuscript and archive against FAIR principles."

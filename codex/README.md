@@ -1,17 +1,56 @@
-# Codex-native skills
+<p align="center">
+  <img src="https://img.shields.io/badge/OpenAI_Codex-34_open--science_skills-111111?style=for-the-badge&logo=openai&logoColor=white" alt="OpenAI Codex — 34 open-science skills">
+</p>
 
-Skills in this directory run inside **OpenAI Codex** (the `codex` CLI), not the Claude Code `oss` plugin. They are kept here as repo assets so the Codex-native variants stay versioned alongside their Claude siblings. The Claude plugin loader and `plugin/scripts/check.sh` do not touch this directory.
+# Codex skills
 
-## diverge
+This directory contains 34 Codex-native Open Science Skills. They mirror the Claude Code library with two intentional differences:
 
-Codex-native version of the [`diverge`](../plugin/skills/diverge/SKILL.md) skill: generate 3–5 conceptually distinct approaches before implementing, each labeled by creativity dimension (Novel, Surprising, Diverse, Conventional), holding for selection. Based on Creative Preference Optimization (Ismayilzada et al., 2025; see [`../plugin/skills/diverge/reference/creative-preference-optimization.md`](../plugin/skills/diverge/reference/creative-preference-optimization.md)).
+- `presubmit` is omitted.
+- [`46-orchestrate`](46-orchestrate/SKILL.md) replaces `fable-orchestrate` and is designed for 4.6 “Sol” as the lead.
 
-Install into Codex:
+Every skill is a self-contained directory with `SKILL.md`, `agents/openai.yaml`, and only the references, scripts, or assets it needs. Codex supports these skills in the CLI, IDE extension, and app.
+
+## Install
+
+From the repository root, symlink all skills for the current user:
 
 ```bash
-ln -sfn "$(pwd)/codex/diverge" ~/.codex/skills/diverge
+mkdir -p "$HOME/.agents/skills"
+for skill in "$PWD"/codex/*/; do
+  ln -sfn "${skill%/}" "$HOME/.agents/skills/$(basename "$skill")"
+done
 ```
 
-Then invoke `$diverge <task>` inside Codex.
+For one repository only, replace `$HOME/.agents/skills` with `<repo>/.agents/skills`. Install one skill by linking or copying only its directory:
 
-For the Claude Code equivalents, install the `oss` plugin and use `/oss:diverge` (Claude-only) or `/oss:diverge-codex` (Claude delegates the brainstorm to Codex).
+```bash
+mkdir -p "$HOME/.agents/skills"
+ln -sfn "$PWD/codex/citation-check" "$HOME/.agents/skills/citation-check"
+```
+
+Invoke a skill as `$citation-check`, `$survey-design`, or another `$skill-name`. Codex can also load most skills implicitly from the task description. Restart Codex only if a new or changed skill does not appear automatically.
+
+See the official [Codex skills documentation](https://developers.openai.com/codex/skills) for discovery scopes and invocation behavior.
+
+## Catalog
+
+| Area | Skills |
+|---|---|
+| Project setup | [`research-repo`](research-repo/SKILL.md) |
+| Orchestration | [`46-orchestrate`](46-orchestrate/SKILL.md) |
+| Ideation | [`diverge`](diverge/SKILL.md), [`diverge-codex`](diverge-codex/SKILL.md) |
+| Research design | [`conjoint-cleaning`](conjoint-cleaning/SKILL.md), [`conjoint-design`](conjoint-design/SKILL.md), [`conjoint-diagnostics`](conjoint-diagnostics/SKILL.md), [`cross-national-design`](cross-national-design/SKILL.md), [`list-experiment`](list-experiment/SKILL.md), [`survey-design`](survey-design/SKILL.md) |
+| Analysis | [`llm-calibration-logprobs`](llm-calibration-logprobs/SKILL.md), [`model-committee`](model-committee/SKILL.md), [`model-council-voting`](model-council-voting/SKILL.md), [`text-classification`](text-classification/SKILL.md), [`topic-modeling`](topic-modeling/SKILL.md) |
+| Corpus processing | [`post-ocr-cleanup`](post-ocr-cleanup/SKILL.md), [`vlm-ocr-evaluation`](vlm-ocr-evaluation/SKILL.md), [`vlm-ocr-pipeline`](vlm-ocr-pipeline/SKILL.md) |
+| Writing and reporting | [`hypothesis-building`](hypothesis-building/SKILL.md), [`literature-review`](literature-review/SKILL.md), [`methods-reporting`](methods-reporting/SKILL.md), [`narrative-building`](narrative-building/SKILL.md), [`pre-registration-writing`](pre-registration-writing/SKILL.md) |
+| Figures and tables | [`figure-table-audit`](figure-table-audit/SKILL.md), [`figures`](figures/SKILL.md), [`tables`](tables/SKILL.md) |
+| Manuscript QA | [`citation-check`](citation-check/SKILL.md), [`fact-check`](fact-check/SKILL.md), [`fair-check`](fair-check/SKILL.md), [`replication-package`](replication-package/SKILL.md) |
+| Review and submission | [`journal-review`](journal-review/SKILL.md), [`paper-review-lite`](paper-review-lite/SKILL.md), [`paper-review-lite-codex`](paper-review-lite-codex/SKILL.md), [`paper-tex`](paper-tex/SKILL.md) |
+
+## Variant notes
+
+- `$model-committee` runs exact GPT-5.5 and Claude Opus 4.8 members through their read-only CLIs, after first checking that deliberation is the right instrument for the task.
+- `$diverge-codex` uses a fresh Codex subagent context. It does not claim a second model family.
+- `$paper-review-lite-codex` preserves cross-model review by using Codex as lead and Claude Code's documented `claude -p` interface as the independent peer. It discloses and confirms external credit use before running.
+- `$46-orchestrate` is explicit-invocation only because it fans work out to subagents. It routes by role, risk, and verifiability and does not assume model pins that the runtime has not configured.
