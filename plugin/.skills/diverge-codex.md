@@ -1,6 +1,6 @@
 ---
 name: diverge-codex
-description: Delegate creative divergence to Codex (GPT-5.4). Codex generates 3-5 conceptually distinct approaches before any implementation; Claude presents them for selection, then has Codex implement the chosen one. Cross-model brainstorm-then-select.
+description: Delegate creative divergence to Codex (GPT-5.5). Codex generates 3-5 conceptually distinct approaches before any implementation; Claude presents them for selection, then has Codex implement the chosen one. Cross-model brainstorm-then-select.
 argument-hint: "[describe the task to delegate to Codex for divergent brainstorming]"
 allowed-tools:
   - Read
@@ -10,7 +10,7 @@ allowed-tools:
 
 # Diverge → Codex
 
-Delegate a task to Codex (GPT-5.4) with explicit creative divergence instructions. Claude structures the prompt; Codex brainstorms; Claude presents the options for selection; Codex implements the chosen approach. Running the brainstorm on a second model family widens the space of approaches beyond what one model proposes.
+Delegate a task to Codex (GPT-5.5) with explicit creative divergence instructions. Claude structures the prompt; Codex brainstorms; Claude presents the options for selection; Codex implements the chosen approach. Running the brainstorm on a second model family widens the space of approaches beyond what one model proposes.
 
 ## Heritage and scope
 

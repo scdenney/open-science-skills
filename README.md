@@ -243,7 +243,7 @@ The detailed catalog shows Claude Code commands by default. Platform-specific en
 <tr>
 <td><a href="plugin/skills/diverge-codex/SKILL.md"><strong>diverge-codex</strong></a><br><sub>Claude Code → Codex</sub></td>
 <td><code>/diverge-codex</code></td>
-<td>Cross-model variant of <code>diverge</code>. Delegates the brainstorm to Codex (GPT-5.4) via <code>codex exec</code>, presents its approaches for selection, then has Codex implement the chosen one. A second model family widens the space of approaches.</td>
+<td>Cross-model variant of <code>diverge</code>. Delegates the brainstorm to Codex (GPT-5.5) via <code>codex exec</code>, presents its approaches for selection, then has Codex implement the chosen one. A second model family widens the space of approaches.</td>
 </tr>
 </tbody>
 </table>
