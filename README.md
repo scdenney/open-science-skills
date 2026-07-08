@@ -6,9 +6,9 @@
 
 [![Claude Code](https://img.shields.io/badge/Claude_Code-plugin-D97757?logo=anthropic&logoColor=white)](https://code.claude.com/docs/en/skills)
 [![OpenAI Codex](https://img.shields.io/badge/OpenAI_Codex-library-111111?logo=openai&logoColor=white)](codex/README.md)
-[![version](https://img.shields.io/badge/version-2.12.0-blue)](https://github.com/scdenney/open-science-skills/releases)
+[![version](https://img.shields.io/badge/version-2.13.0-blue)](https://github.com/scdenney/open-science-skills/releases)
 [![license](https://img.shields.io/badge/license-CC%20BY--NC%204.0-lightgrey)](LICENSE)
-[![skills](https://img.shields.io/badge/skills-35-blue)](#skills)
+[![skills](https://img.shields.io/badge/skills-36-blue)](#skills)
 [![updated](https://img.shields.io/badge/updated-July%202026-green)](https://github.com/scdenney/open-science-skills/commits/main)
 [![sources](https://img.shields.io/badge/sources-150%2B-purple)](SOURCES.md)
 [![PRs welcome](https://img.shields.io/badge/PRs-welcome-brightgreen)](#contributing)
@@ -17,7 +17,7 @@ Reusable agent workflows for experimental social science, computational text ana
 
 | Platform | Package | Invoke |
 |---|---|---|
-| [Claude Code](https://code.claude.com/docs/en/skills) | 35 skills in the [`oss` plugin](plugin/skills) | `/oss:skill-name` |
+| [Claude Code](https://code.claude.com/docs/en/skills) | 36 skills in the [`oss` plugin](plugin/skills) | `/oss:skill-name` |
 | [OpenAI Codex](https://developers.openai.com/codex/skills) | 34 skills in the [`codex/` library](codex/README.md) | `$skill-name` |
 
 The two libraries track each other closely. On the Codex side there is no `presubmit`.
@@ -58,7 +58,7 @@ flowchart LR
     D -.-> D1[figures / tables / methods reporting]
     E -.-> E1[FAIR / citations / fact-check / figure-table-audit / replication-package / archive checks]
     F -.-> F1[paper-tex / paper-review-lite / paper-review-lite-codex / presubmit / journal-review]
-    G -.-> G1[diverge / diverge-codex / fable-orchestrate or 46-orchestrate]
+    G -.-> G1[diverge / diverge-codex / fable-orchestrate / opus-orchestrate or 46-orchestrate]
 ```
 
 Use the domain skills when designing or analyzing a study. Use the manuscript-QA skills when a draft exists and you need to check whether FAIR availability, citations, figures, tables, reporting, and replication materials can survive review.
@@ -106,7 +106,7 @@ git clone https://github.com/scdenney/open-science-skills.git
 cd open-science-skills && claude --plugin-dir ./plugin
 ```
 
-All 35 skills auto-trigger based on your prompts. All 35 slash commands (`/oss:research-repo`, `/oss:conjoint-design`, `/oss:fair-check`, `/oss:figures`, `/oss:tables`, `/oss:paper-tex`, `/oss:figure-table-audit`, `/oss:replication-package`, and so on) are immediately available. The prefix can be omitted when no other installed plugin claims the same name.
+All 36 skills auto-trigger based on your prompts. All 36 slash commands (`/oss:research-repo`, `/oss:conjoint-design`, `/oss:fair-check`, `/oss:figures`, `/oss:tables`, `/oss:paper-tex`, `/oss:figure-table-audit`, `/oss:replication-package`, and so on) are immediately available. The prefix can be omitted when no other installed plugin claims the same name.
 
 <details>
 <summary><b>Option 2 — Selective install</b> (choose specific skills, auto-trigger only)</summary>
@@ -210,6 +210,11 @@ The detailed catalog shows Claude Code commands by default. Platform-specific en
 <td><a href="plugin/skills/fable-orchestrate/SKILL.md"><strong>fable-orchestrate</strong></a><br><sub>Claude Code</sub></td>
 <td><code>/fable-orchestrate</code></td>
 <td>Multi-model orchestration with Fable 5 as tech lead. Routes reasoning-heavy work to a deep-reasoner subagent (Opus), mechanical work to a fast-worker subagent (Sonnet), and fresh-perspective or high-stakes work to Codex, a different-vendor GPT-5 peer. High-stakes tasks run Opus and Codex in parallel, then synthesize. Ships the two agent definitions and a <code>codex-peer.sh</code> driver.</td>
+</tr>
+<tr>
+<td><a href="plugin/skills/opus-orchestrate/SKILL.md"><strong>opus-orchestrate</strong></a><br><sub>Claude Code</sub></td>
+<td><code>/opus-orchestrate</code></td>
+<td>The same multi-model orchestration with <strong>Claude Opus 4.8 as the lead, driven by ultracode</strong> (xhigh reasoning + dynamic <code>Workflow</code> fan-out). The inversion from <code>fable-orchestrate</code>: the lead is itself the deep reasoner, so compact hard problems stay with it and reasoning is delegated only to fan out, stay context-lean, or get a blind independent line. Mechanical work routes to a fast-worker (Sonnet); the decorrelated peer is Codex (GPT-5.5). Ultracode's Workflow fan-out replaces Fable's cheap-lead economics. Ships the same agent definitions and <code>codex-peer.sh</code> driver.</td>
 </tr>
 <tr>
 <td><a href="codex/46-orchestrate/SKILL.md"><strong>46-orchestrate</strong></a><br><sub>Codex</sub></td>
