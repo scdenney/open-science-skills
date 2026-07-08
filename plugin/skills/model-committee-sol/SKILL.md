@@ -1,6 +1,6 @@
 ---
 name: model-committee-sol
-description: Run a deliberative two-model committee between GPT-5.5 and Claude Opus 4.8, chaired by GPT-5.6 "Sol" (via Codex). Same two deliberating members as model-committee; the difference is the chair — Sol aggregates the scores, applies the tie rule, and synthesizes the decision, so its judgment (decorrelated from both members' final call) drives the tie-breaks. Use when the user needs one consequential decision from multiple defensible options and wants a Sol-chaired deliberation. Suitable for architecture, research design and interpretation, manuscript strategy, ambiguous diagnosis, evaluation design, and policy or standards tradeoffs. Not for factual lookups, independent-coder reliability, open-ended brainstorming, routine implementation, or final high-stakes professional judgment.
+description: Run a deliberative two-model committee between GPT-5.5 and Claude Opus 4.8, chaired by GPT-5.6 "Sol" (via Codex). Same two deliberating members as model-committee; the difference is the chair — Sol aggregates the scores, applies the tie rule, and synthesizes the decision; being neither deliberating member, its read on which components are compatible sits outside both. Use when the user needs one consequential decision from multiple defensible options and wants a Sol-chaired deliberation. Suitable for architecture, research design and interpretation, manuscript strategy, ambiguous diagnosis, evaluation design, and policy or standards tradeoffs. Not for factual lookups, independent-coder reliability, open-ended brainstorming, routine implementation, or final high-stakes professional judgment.
 argument-hint: "[decision or problem for GPT-5.5 and Opus 4.8 to deliberate, Sol to chair]"
 allowed-tools:
   - Read
@@ -16,7 +16,7 @@ Run GPT-5.5 and Claude Opus 4.8 as a deliberating committee, with **GPT-5.6 "Sol
 
 Read [`reference/protocol.md`](reference/protocol.md) completely before running a committee.
 
-**Chair variant.** This is the **Sol-chaired** member of a three-variant family; all three deliberate the same two members (GPT-5.5 + Opus 4.8) and differ only in which model chairs the synthesis. The chair is not neutral machinery — its aggregation, tie-breaking, and compatible-component synthesis carry that model's judgment. Sol's value here is a chair whose final call is **decorrelated from both members' own revisions**: a GPT-5.5 member and a GPT-5.6 chair are close but not identical, and an Opus member gets a cross-family adjudicator. Siblings: [`model-committee`](../model-committee/SKILL.md) (Opus 4.8 chairs) and [`model-committee-fable`](../model-committee-fable/SKILL.md) (Fable 5 chairs).
+**Chair variant.** This is the **Sol-chaired** member of a three-variant family; all three deliberate the same two members (GPT-5.5 + Opus 4.8) and differ only in which model chairs the synthesis. The chair is not neutral machinery — its validation and compatible-component synthesis carry that model's judgment (the score aggregation and tie rule are mechanical, per the protocol). Sol's value here is a chair that is **neither deliberating member** — cross-family to the Opus member, and a newer sibling of (not a clone of) the GPT-5.5 member — so of the three chairs it is the least entangled with the Claude-family member's reasoning. Note it is *not* independent of the GPT-family member. Siblings: [`model-committee`](../model-committee/SKILL.md) (Opus 4.8 chairs) and [`model-committee-fable`](../model-committee-fable/SKILL.md) (Fable 5 chairs).
 
 ## Gate the workflow
 
@@ -46,7 +46,7 @@ Default pins:
 - Claude member: `claude-opus-4-8`
 - **Chair: `gpt-5.6` (Sol)**
 
-These are deliberately exact pins, not moving aliases. Do not silently substitute another model. If a pin is unavailable, report it and ask whether to stop or use a named replacement. In particular, if `gpt-5.6` is not yet available on this machine, stop and ask — do not fall back to `gpt-5.5` for the chair, because a chair identical to a member defeats the point of this variant.
+These are deliberately exact pins, not moving aliases. Do not silently substitute another model. The `--check` above only confirms the CLI is installed; whether a specific pin such as `gpt-5.6` is actually available surfaces on the first real call, not at preflight. If a pin is unavailable, report it and ask whether to stop or use a named replacement. In particular, if `gpt-5.6` is not yet available on this machine, stop and ask — do not fall back to `gpt-5.5` for the chair, because a chair identical to a member defeats the point of this variant.
 
 ## Run the committee
 

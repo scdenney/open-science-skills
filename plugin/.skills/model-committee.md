@@ -16,7 +16,7 @@ Run GPT-5.5 and Claude Opus 4.8 as a deliberating committee. Preserve a clear di
 
 Read [`reference/protocol.md`](reference/protocol.md) completely before running a committee.
 
-**Chair variant.** This is the **Opus-chaired** member of a three-variant family; all three deliberate the same two members (GPT-5.5 + Opus 4.8) and differ only in which model chairs the synthesis. The chair is not neutral machinery — its aggregation, tie-breaking, and compatible-component synthesis carry that model's judgment, which is exactly why the variant matters. Siblings: [`model-committee-sol`](../model-committee-sol/SKILL.md) (GPT-5.6 "Sol" chairs) and [`model-committee-fable`](../model-committee-fable/SKILL.md) (Fable 5 chairs). Reach for a chair whose judgment you want on the tie-breaks, or for one decorrelated from both members.
+**Chair variant.** This is the **Opus-chaired** member of a three-variant family; all three deliberate the same two members (GPT-5.5 + Opus 4.8) and differ only in which model chairs the synthesis. The chair is not neutral machinery — its validation and compatible-component synthesis carry that model's judgment (the score aggregation and tie rule are mechanical, per the protocol), which is exactly why the variant matters. Siblings: [`model-committee-sol`](../model-committee-sol/SKILL.md) (GPT-5.6 "Sol" chairs) and [`model-committee-fable`](../model-committee-fable/SKILL.md) (Fable 5 chairs). Reach for a chair whose judgment you want on the synthesis, or for one that is neither deliberating member.
 
 ## Gate the workflow
 
@@ -76,7 +76,7 @@ Launch the two calls in each round concurrently when the runtime supports it. Se
 
 ## Chair without becoming a third debater
 
-The chair for this variant is **Claude Opus 4.8** — normally the model you are already running in-session. When you are on Opus, chair directly and **run under ultracode** (xhigh reasoning + dynamic orchestration): the score aggregation is mechanical, but the compatible-component synthesis and the tie-break call are where xhigh reasoning earns its cost. If the session is on a different model, delegate only the post-round-3 chair step to Opus via `"$SKILL_DIR/scripts/claude-member.sh" --model claude-opus-4-8 --prompt-file chair.prompt.md --out decision.md -C <working-directory>`, bundling the brief and all round outputs into `chair.prompt.md`.
+The chair for this variant is **Claude Opus 4.8** — normally the model you are already running in-session. When you are on Opus, chair directly and **run under ultracode** (xhigh reasoning + dynamic orchestration): the score aggregation and tie rule are mechanical, but the compatible-component synthesis and the escalate-or-synthesize call are where xhigh reasoning earns its cost. If the session is on a different model, delegate only the post-round-3 chair step to Opus via `"$SKILL_DIR/scripts/claude-member.sh" --model claude-opus-4-8 --prompt-file chair.prompt.md --out decision.md -C <working-directory>`, bundling the brief and all round outputs into `chair.prompt.md`.
 
 Act as a procedural chair after round 3:
 

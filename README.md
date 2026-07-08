@@ -321,12 +321,12 @@ The detailed catalog shows Claude Code commands by default. Platform-specific en
 <tr>
 <td><a href="plugin/skills/model-committee/SKILL.md"><strong>model-committee</strong></a><br><sub>Claude Code + Codex</sub></td>
 <td><code>/model-committee</code><br><code>$model-committee</code></td>
-<td>GPT-5.5 and Claude Opus 4.8 as a deliberative committee: use-case gate, blind proposals, cross-critique and revision, blinded cross-ranking, and a precommitted rule for one decision. The <strong>Opus-chaired</strong> member of a three-variant family (below); the chair carries the tie-break judgment</td>
+<td>GPT-5.5 and Claude Opus 4.8 as a deliberative committee: use-case gate, blind proposals, cross-critique and revision, blinded cross-ranking, and a precommitted rule for one decision. The <strong>Opus-chaired</strong> member of a three-variant family (below); the chair runs the tally and compatible-component synthesis under the rubric</td>
 </tr>
 <tr>
 <td><a href="plugin/skills/model-committee-sol/SKILL.md"><strong>model-committee-sol</strong></a><br><sub>Claude Code + Codex</sub></td>
 <td><code>/model-committee-sol</code><br><code>$model-committee-sol</code></td>
-<td>Same GPT-5.5 + Opus 4.8 committee, <strong>chaired by GPT-5.6 "Sol"</strong> (via Codex). The chair's synthesis and tie-breaks are decorrelated from both members' final call</td>
+<td>Same GPT-5.5 + Opus 4.8 committee, <strong>chaired by GPT-5.6 "Sol"</strong> (via Codex). The chair is neither deliberating member — cross-family to Opus, a newer sibling of the GPT-5.5 member</td>
 </tr>
 <tr>
 <td><a href="plugin/skills/model-committee-fable/SKILL.md"><strong>model-committee-fable</strong></a><br><sub>Claude Code + Codex</sub></td>

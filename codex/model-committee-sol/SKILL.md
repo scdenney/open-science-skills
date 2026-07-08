@@ -9,7 +9,7 @@ Run GPT-5.5 and Claude Opus 4.8 as a deliberating committee, with **GPT-5.6 "Sol
 
 Read [`references/protocol.md`](references/protocol.md) completely before running a committee.
 
-**Chair variant.** This is the **Sol-chaired** member of a three-variant family; all three deliberate the same two members (GPT-5.5 + Opus 4.8) and differ only in which model chairs the synthesis. When you run `$model-committee-sol` inside a Codex/Sol session, Sol chairs natively — that is the intended home for this variant. The chair is not neutral machinery: its aggregation, tie-breaking, and compatible-component synthesis carry Sol's judgment, decorrelated from both members' own revisions. Siblings: [`model-committee`](../model-committee/SKILL.md) (Opus 4.8 chairs) and [`model-committee-fable`](../model-committee-fable/SKILL.md) (Fable 5 chairs).
+**Chair variant.** This is the **Sol-chaired** member of a three-variant family; all three deliberate the same two members (GPT-5.5 + Opus 4.8) and differ only in which model chairs the synthesis. When you run `$model-committee-sol` inside a Codex/Sol session, Sol chairs natively — that is the intended home for this variant. The chair is not neutral machinery: its validation and compatible-component synthesis carry Sol's judgment (the score aggregation and tie rule are mechanical, per the protocol), and Sol is neither deliberating member — cross-family to Opus, and a newer sibling of (not a clone of) the GPT-5.5 member. Siblings: [`model-committee`](../model-committee/SKILL.md) (Opus 4.8 chairs) and [`model-committee-fable`](../model-committee-fable/SKILL.md) (Fable 5 chairs).
 
 ## Gate the workflow
 
