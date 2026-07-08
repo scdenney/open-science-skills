@@ -1,0 +1,6 @@
+interface:
+  display_name: "Model Committee (Fable-chaired)"
+  short_description: "GPT-5.5 and Opus 4.8 deliberate; Fable 5 chairs"
+  default_prompt: "Use $model-committee-fable to have GPT-5.5 and Claude Opus 4.8 deliberate, with Fable 5 chairing the decision."
+policy:
+  allow_implicit_invocation: false

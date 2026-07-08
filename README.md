@@ -6,9 +6,9 @@
 
 [![Claude Code](https://img.shields.io/badge/Claude_Code-plugin-D97757?logo=anthropic&logoColor=white)](https://code.claude.com/docs/en/skills)
 [![OpenAI Codex](https://img.shields.io/badge/OpenAI_Codex-library-111111?logo=openai&logoColor=white)](codex/README.md)
-[![version](https://img.shields.io/badge/version-2.13.0-blue)](https://github.com/scdenney/open-science-skills/releases)
+[![version](https://img.shields.io/badge/version-2.14.0-blue)](https://github.com/scdenney/open-science-skills/releases)
 [![license](https://img.shields.io/badge/license-CC%20BY--NC%204.0-lightgrey)](LICENSE)
-[![skills](https://img.shields.io/badge/skills-36-blue)](#skills)
+[![skills](https://img.shields.io/badge/skills-38-blue)](#skills)
 [![updated](https://img.shields.io/badge/updated-July%202026-green)](https://github.com/scdenney/open-science-skills/commits/main)
 [![sources](https://img.shields.io/badge/sources-150%2B-purple)](SOURCES.md)
 [![PRs welcome](https://img.shields.io/badge/PRs-welcome-brightgreen)](#contributing)
@@ -17,8 +17,8 @@ Reusable agent workflows for experimental social science, computational text ana
 
 | Platform | Package | Invoke |
 |---|---|---|
-| [Claude Code](https://code.claude.com/docs/en/skills) | 36 skills in the [`oss` plugin](plugin/skills) | `/oss:skill-name` |
-| [OpenAI Codex](https://developers.openai.com/codex/skills) | 34 skills in the [`codex/` library](codex/README.md) | `$skill-name` |
+| [Claude Code](https://code.claude.com/docs/en/skills) | 38 skills in the [`oss` plugin](plugin/skills) | `/oss:skill-name` |
+| [OpenAI Codex](https://developers.openai.com/codex/skills) | 36 skills in the [`codex/` library](codex/README.md) | `$skill-name` |
 
 The two libraries track each other closely. On the Codex side there is no `presubmit`.
 
@@ -53,7 +53,7 @@ flowchart LR
     G --> C
 
     A -.-> A1[conjoint / survey / list / cross-national]
-    B -.-> B1[topic modeling / text classification / council voting / model committee / calibration / OCR + OCR eval]
+    B -.-> B1[topic modeling / text classification / council voting / model committee + sol/fable chairs / calibration / OCR + OCR eval]
     C -.-> C1[hypotheses / literature review / narrative / preregistration]
     D -.-> D1[figures / tables / methods reporting]
     E -.-> E1[FAIR / citations / fact-check / figure-table-audit / replication-package / archive checks]
@@ -106,7 +106,7 @@ git clone https://github.com/scdenney/open-science-skills.git
 cd open-science-skills && claude --plugin-dir ./plugin
 ```
 
-All 36 skills auto-trigger based on your prompts. All 36 slash commands (`/oss:research-repo`, `/oss:conjoint-design`, `/oss:fair-check`, `/oss:figures`, `/oss:tables`, `/oss:paper-tex`, `/oss:figure-table-audit`, `/oss:replication-package`, and so on) are immediately available. The prefix can be omitted when no other installed plugin claims the same name.
+All 38 skills auto-trigger based on your prompts. All 38 slash commands (`/oss:research-repo`, `/oss:conjoint-design`, `/oss:fair-check`, `/oss:figures`, `/oss:tables`, `/oss:paper-tex`, `/oss:figure-table-audit`, `/oss:replication-package`, and so on) are immediately available. The prefix can be omitted when no other installed plugin claims the same name.
 
 <details>
 <summary><b>Option 2 — Selective install</b> (choose specific skills, auto-trigger only)</summary>
@@ -159,7 +159,7 @@ cp -R open-science-skills/plugin/skills/list-experiment ~/.claude/skills/
 
 ### Codex
 
-Codex discovers repository skills under `.agents/skills` and user-wide skills under `~/.agents/skills`. From the repository root, install all 34 native skills user-wide:
+Codex discovers repository skills under `.agents/skills` and user-wide skills under `~/.agents/skills`. From the repository root, install all 36 native skills user-wide:
 
 ```bash
 mkdir -p "$HOME/.agents/skills"
@@ -321,7 +321,17 @@ The detailed catalog shows Claude Code commands by default. Platform-specific en
 <tr>
 <td><a href="plugin/skills/model-committee/SKILL.md"><strong>model-committee</strong></a><br><sub>Claude Code + Codex</sub></td>
 <td><code>/model-committee</code><br><code>$model-committee</code></td>
-<td>GPT-5.5 and Claude Opus 4.8 as a deliberative committee: use-case gate, blind proposals, cross-critique and revision, blinded cross-ranking, and a precommitted rule for one decision</td>
+<td>GPT-5.5 and Claude Opus 4.8 as a deliberative committee: use-case gate, blind proposals, cross-critique and revision, blinded cross-ranking, and a precommitted rule for one decision. The <strong>Opus-chaired</strong> member of a three-variant family (below); the chair carries the tie-break judgment</td>
+</tr>
+<tr>
+<td><a href="plugin/skills/model-committee-sol/SKILL.md"><strong>model-committee-sol</strong></a><br><sub>Claude Code + Codex</sub></td>
+<td><code>/model-committee-sol</code><br><code>$model-committee-sol</code></td>
+<td>Same GPT-5.5 + Opus 4.8 committee, <strong>chaired by GPT-5.6 "Sol"</strong> (via Codex). The chair's synthesis and tie-breaks are decorrelated from both members' final call</td>
+</tr>
+<tr>
+<td><a href="plugin/skills/model-committee-fable/SKILL.md"><strong>model-committee-fable</strong></a><br><sub>Claude Code + Codex</sub></td>
+<td><code>/model-committee-fable</code><br><code>$model-committee-fable</code></td>
+<td>Same GPT-5.5 + Opus 4.8 committee, <strong>chaired by Fable 5</strong> — a lightweight, fast, procedurally disciplined chair that cannot vote its own prior a third time</td>
 </tr>
 <tr>
 <td><a href="plugin/skills/llm-calibration-logprobs/SKILL.md"><strong>llm-calibration-logprobs</strong></a></td>
@@ -486,7 +496,7 @@ The detailed catalog shows Claude Code commands by default. Platform-specific en
 <tr>
 <td><a href="plugin/skills/paper-review-lite-codex/SKILL.md"><strong>paper-review-lite-codex</strong></a><br><sub>Claude Code → Codex</sub></td>
 <td><code>/paper-review-lite-codex</code></td>
-<td>Cross-model adversarial variant of <code>paper-review-lite</code>. Claude and Codex (GPT-5.4) independently apply the same review specification, then each cross-checks the other's findings; surviving issues are annotated by confidence (mutual, asymmetric-confirmed, single-model-adjudicated). Roughly 22 model calls. Use before submission for maximum pressure and a second model family's blind spots.</td>
+<td>Cross-model adversarial variant of <code>paper-review-lite</code>. Claude and Codex (GPT-5.5) independently apply the same review specification, then each cross-checks the other's findings; surviving issues are annotated by confidence (mutual, asymmetric-confirmed, single-model-adjudicated). Roughly 22 model calls. Use before submission for maximum pressure and a second model family's blind spots.</td>
 </tr>
 <tr>
 <td><a href="plugin/skills/presubmit/SKILL.md"><strong>presubmit</strong></a></td>

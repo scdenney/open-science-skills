@@ -43,7 +43,7 @@ case "$OUT" in /*) ;; *) OUT="$PWD/$OUT" ;; esac
 WORKDIR="$(cd "$WORKDIR" && pwd -P)"
 mkdir -p "$(dirname "$OUT")"
 
-cmd=(codex exec --ephemeral --model "$MODEL" --sandbox read-only --skip-git-repo-check -C "$WORKDIR" --output-last-message "$OUT" 'Follow the complete committee-member instructions supplied on stdin. Return only the requested structured response.')
+cmd=(codex exec --ephemeral --model "$MODEL" --sandbox read-only --skip-git-repo-check -C "$WORKDIR" --output-last-message "$OUT" 'Follow the complete committee instructions supplied on stdin. Return only the requested structured response.')
 
 if command -v timeout >/dev/null; then
   timeout "${TIMEOUT_SECONDS}s" "${cmd[@]}" < "$PROMPT_FILE" >/dev/null

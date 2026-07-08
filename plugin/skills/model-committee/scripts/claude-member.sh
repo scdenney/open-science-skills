@@ -43,7 +43,7 @@ case "$OUT" in /*) ;; *) OUT="$PWD/$OUT" ;; esac
 WORKDIR="$(cd "$WORKDIR" && pwd -P)"
 mkdir -p "$(dirname "$OUT")"
 
-cmd=(claude --safe-mode -p --model "$MODEL" --permission-mode plan --output-format text --no-session-persistence 'Follow the complete committee-member instructions supplied on stdin. Return only the requested structured response.')
+cmd=(claude --safe-mode -p --model "$MODEL" --permission-mode plan --output-format text --no-session-persistence 'Follow the complete committee instructions supplied on stdin. Return only the requested structured response.')
 
 if command -v timeout >/dev/null; then
   (cd "$WORKDIR" && timeout "${TIMEOUT_SECONDS}s" "${cmd[@]}" < "$PROMPT_FILE" > "$OUT")

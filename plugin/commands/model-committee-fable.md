@@ -1,0 +1,5 @@
+# Model Committee (Fable-chaired)
+
+Run GPT-5.5 and Claude Opus 4.8 as a deliberative committee **chaired by Fable 5.** Same two deliberating members as `/model-committee`; the difference is the chair. First determine whether the task genuinely benefits from committee treatment, then freeze a shared brief and rubric, collect blind proposals, exchange critiques, let both models revise, cross-rank the revised candidates, and hand the post-round-3 synthesis to Fable 5 — a lightweight, fast, procedurally disciplined chair that validates schemas, aggregates the weighted scores, applies the precommitted tie rule, and writes the decision without voting its own prior a third time. Delegate the chair step to Fable via `claude-member.sh --model claude-fable-5` unless you are already running under Fable. Use this for consequential, ambiguous choices that require one answer; route factual verification, independent-coder reliability, open-ended ideation, and routine implementation to the simpler matching workflow.
+
+$ARGUMENTS

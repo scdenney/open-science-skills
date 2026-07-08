@@ -1,12 +1,13 @@
 <p align="center">
-  <img src="https://img.shields.io/badge/OpenAI_Codex-34_open--science_skills-111111?style=for-the-badge&logo=openai&logoColor=white" alt="OpenAI Codex — 34 open-science skills">
+  <img src="https://img.shields.io/badge/OpenAI_Codex-36_open--science_skills-111111?style=for-the-badge&logo=openai&logoColor=white" alt="OpenAI Codex — 36 open-science skills">
 </p>
 
 # Codex skills
 
-This directory contains 34 Codex-native Open Science Skills. They mirror the Claude Code library with two intentional differences:
+This directory contains 36 Codex-native Open Science Skills. They mirror the Claude Code library with three intentional differences:
 
 - `presubmit` is omitted.
+- `opus-orchestrate` is omitted: it depends on Claude Code's ultracode Workflow orchestration, which has no Codex equivalent.
 - [`46-orchestrate`](46-orchestrate/SKILL.md) replaces `fable-orchestrate` and is designed for 4.6 “Sol” as the lead.
 
 Every skill is a self-contained directory with `SKILL.md`, `agents/openai.yaml`, and only the references, scripts, or assets it needs. Codex supports these skills in the CLI, IDE extension, and app.
@@ -41,7 +42,7 @@ See the official [Codex skills documentation](https://developers.openai.com/code
 | Orchestration | [`46-orchestrate`](46-orchestrate/SKILL.md) |
 | Ideation | [`diverge`](diverge/SKILL.md), [`diverge-codex`](diverge-codex/SKILL.md) |
 | Research design | [`conjoint-cleaning`](conjoint-cleaning/SKILL.md), [`conjoint-design`](conjoint-design/SKILL.md), [`conjoint-diagnostics`](conjoint-diagnostics/SKILL.md), [`cross-national-design`](cross-national-design/SKILL.md), [`list-experiment`](list-experiment/SKILL.md), [`survey-design`](survey-design/SKILL.md) |
-| Analysis | [`llm-calibration-logprobs`](llm-calibration-logprobs/SKILL.md), [`model-committee`](model-committee/SKILL.md), [`model-council-voting`](model-council-voting/SKILL.md), [`text-classification`](text-classification/SKILL.md), [`topic-modeling`](topic-modeling/SKILL.md) |
+| Analysis | [`llm-calibration-logprobs`](llm-calibration-logprobs/SKILL.md), [`model-committee`](model-committee/SKILL.md), [`model-committee-fable`](model-committee-fable/SKILL.md), [`model-committee-sol`](model-committee-sol/SKILL.md), [`model-council-voting`](model-council-voting/SKILL.md), [`text-classification`](text-classification/SKILL.md), [`topic-modeling`](topic-modeling/SKILL.md) |
 | Corpus processing | [`post-ocr-cleanup`](post-ocr-cleanup/SKILL.md), [`vlm-ocr-evaluation`](vlm-ocr-evaluation/SKILL.md), [`vlm-ocr-pipeline`](vlm-ocr-pipeline/SKILL.md) |
 | Writing and reporting | [`hypothesis-building`](hypothesis-building/SKILL.md), [`literature-review`](literature-review/SKILL.md), [`methods-reporting`](methods-reporting/SKILL.md), [`narrative-building`](narrative-building/SKILL.md), [`pre-registration-writing`](pre-registration-writing/SKILL.md) |
 | Figures and tables | [`figure-table-audit`](figure-table-audit/SKILL.md), [`figures`](figures/SKILL.md), [`tables`](tables/SKILL.md) |
@@ -50,7 +51,7 @@ See the official [Codex skills documentation](https://developers.openai.com/code
 
 ## Variant notes
 
-- `$model-committee` runs exact GPT-5.5 and Claude Opus 4.8 members through their read-only CLIs, after first checking that deliberation is the right instrument for the task.
+- `$model-committee` runs exact GPT-5.5 and Claude Opus 4.8 members through their read-only CLIs, after first checking that deliberation is the right instrument for the task. It is the **Opus-chaired** member of a three-variant family; `$model-committee-sol` and `$model-committee-fable` deliberate the same two members but hand the post-round-3 synthesis to GPT-5.6 “Sol” or Fable 5, so the chair's judgment (not the members') drives the tie-breaks. Under Codex, `$model-committee-sol` chairs natively with Sol; `$model-committee-fable` delegates the chair step to Fable 5 through the bundled `claude-member.sh`.
 - `$diverge-codex` uses a fresh Codex subagent context. It does not claim a second model family.
 - `$paper-review-lite-codex` preserves cross-model review by using Codex as lead and Claude Code's documented `claude -p` interface as the independent peer. It discloses and confirms external credit use before running.
 - `$46-orchestrate` is explicit-invocation only because it fans work out to subagents. It routes by role, risk, and verifiability and does not assume model pins that the runtime has not configured.

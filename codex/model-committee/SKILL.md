@@ -9,6 +9,8 @@ Run GPT-5.5 and Claude Opus 4.8 as a deliberating committee. Preserve a clear di
 
 Read [`references/protocol.md`](references/protocol.md) completely before running a committee.
 
+**Chair variant.** This is the **Opus-chaired** member of a three-variant family; all three deliberate the same two members (GPT-5.5 + Opus 4.8) and differ only in which model chairs the synthesis. The chair is not neutral machinery — its aggregation, tie-breaking, and compatible-component synthesis carry that model's judgment. Siblings: [`model-committee-sol`](../model-committee-sol/SKILL.md) (GPT-5.6 "Sol" chairs) and [`model-committee-fable`](../model-committee-fable/SKILL.md) (Fable 5 chairs).
+
 ## Gate the workflow
 
 Run only when the user explicitly invokes `$model-committee` or requests GPT-5.5 and Opus 4.8 to deliberate. The workflow makes external model calls and uses more tokens than a single answer.
