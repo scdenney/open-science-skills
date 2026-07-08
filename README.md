@@ -22,7 +22,7 @@ Reusable agent workflows for experimental social science, computational text ana
 
 The two libraries track each other closely. On the Codex side there is no `presubmit`.
 
-This is the toolkit I use in my own research. It is built from a curated corpus of methodology texts and grows as I add new sources, ideas, and skills. Authoring and editing are mine, with help from Opus 4.8, Gemini 3.0, and ChatGPT 5.4.
+This is the toolkit I use in my own research. It is built from a curated corpus of methodology texts and grows as I add new sources, ideas, and skills. Authoring and editing are mine, with help from Opus 4.8, Gemini 3.0, and ChatGPT 5.4+.
 
 Both libraries follow the official authoring guidance for [Claude Code](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices) and [Codex](https://developers.openai.com/codex/skills): procedural workflows over definitions, with trigger-rich descriptions and progressive disclosure. The methods stay aligned across platforms; only invocation and tooling adapt to each runtime.
 
