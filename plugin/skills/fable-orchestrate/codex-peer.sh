@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# codex-peer.sh — invoke Codex (GPT-5 family) as a peer engineer for /fable-orchestrate.
+# codex-peer.sh — invoke Codex (GPT-5.6 "Sol") as a peer engineer for /fable-orchestrate.
 #
 # Codex is a different-vendor peer, not a reviewer. Use it two ways:
 #   consult   (default) — read-only. Ask a question / get a second approach. Prints the answer.
@@ -19,17 +19,18 @@
 #
 # Usage:
 #   codex-peer.sh [--mode consult|implement] [-C DIR] [--timeout SEC]
-#                 [--out FILE] (--prompt TEXT | --prompt-file PATH | -)
+#                 [--model ID] [--out FILE] (--prompt TEXT | --prompt-file PATH | -)
 #
 #   -C DIR          working dir Codex sees (default: $PWD)
 #   --timeout SEC   hard kill after SEC seconds (default: 600)
+#   --model ID      Codex model to pin (default: gpt-5.6 — "Sol")
 #   --out FILE      also tee Codex's stdout+stderr here (for background reads)
 #   --prompt TEXT   prompt as a single argument
 #   --prompt-file P read prompt from file P
 #   -               read prompt from stdin (the wrapper handles the /dev/null dance)
 set -euo pipefail
 
-MODE="consult"; DIR="$PWD"; TIMEOUT=600; OUT=""; PROMPT=""; PROMPT_SET=0
+MODE="consult"; DIR="$PWD"; TIMEOUT=600; MODEL="gpt-5.6"; OUT=""; PROMPT=""; PROMPT_SET=0
 
 die(){ echo "codex-peer: $*" >&2; exit 2; }
 
@@ -38,11 +39,12 @@ while [ $# -gt 0 ]; do
     --mode)        MODE="${2:?}"; shift 2 ;;
     -C|--dir)      DIR="${2:?}"; shift 2 ;;
     --timeout)     TIMEOUT="${2:?}"; shift 2 ;;
+    --model)       MODEL="${2:?}"; shift 2 ;;
     --out)         OUT="${2:?}"; shift 2 ;;
     --prompt)      PROMPT="${2:?}"; PROMPT_SET=1; shift 2 ;;
     --prompt-file) PROMPT="$(cat "${2:?}")"; PROMPT_SET=1; shift 2 ;;
     -)             PROMPT="$(cat)"; PROMPT_SET=1; shift ;;   # read stdin NOW, before codex runs
-    -h|--help)     sed -n '2,33p' "$0"; exit 0 ;;
+    -h|--help)     sed -n '2,34p' "$0"; exit 0 ;;
     *)             die "unknown arg: $1 (see --help)" ;;
   esac
 done
@@ -62,6 +64,7 @@ run(){
   # `< /dev/null` is mandatory: prompt is already captured above; feeding
   # /dev/null gives codex an immediate EOF on stdin so it does not block.
   timeout "${TIMEOUT}s" codex exec \
+    --model "$MODEL" \
     --sandbox "$SANDBOX" \
     --skip-git-repo-check \
     -C "$DIR" \
