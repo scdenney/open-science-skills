@@ -1,0 +1,4 @@
+interface:
+  display_name: "Advisor (Sol-consulted)"
+  short_description: "Independent second-reviewer consult with GPT-5.6 Sol"
+  default_prompt: "Use $advisor to consult GPT-5.6 Sol as an independent second reviewer before committing to an approach or declaring a task complete."

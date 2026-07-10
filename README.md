@@ -6,9 +6,9 @@
 
 [![Claude Code](https://img.shields.io/badge/Claude_Code-plugin-D97757?logo=anthropic&logoColor=white)](https://code.claude.com/docs/en/skills)
 [![OpenAI Codex](https://img.shields.io/badge/OpenAI_Codex-library-111111?logo=openai&logoColor=white)](codex/README.md)
-[![version](https://img.shields.io/badge/version-2.14.0-blue)](https://github.com/scdenney/open-science-skills/releases)
+[![version](https://img.shields.io/badge/version-2.15.0-blue)](https://github.com/scdenney/open-science-skills/releases)
 [![license](https://img.shields.io/badge/license-CC%20BY--NC%204.0-lightgrey)](LICENSE)
-[![skills](https://img.shields.io/badge/skills-38-blue)](#skills)
+[![skills](https://img.shields.io/badge/skills-39-blue)](#skills)
 [![updated](https://img.shields.io/badge/updated-July%202026-green)](https://github.com/scdenney/open-science-skills/commits/main)
 [![sources](https://img.shields.io/badge/sources-150%2B-purple)](SOURCES.md)
 [![PRs welcome](https://img.shields.io/badge/PRs-welcome-brightgreen)](#contributing)
@@ -17,8 +17,8 @@ Reusable agent workflows for experimental social science, computational text ana
 
 | Platform | Package | Invoke |
 |---|---|---|
-| [Claude Code](https://code.claude.com/docs/en/skills) | 38 skills in the [`oss` plugin](plugin/skills) | `/oss:skill-name` |
-| [OpenAI Codex](https://developers.openai.com/codex/skills) | 36 skills in the [`codex/` library](codex/README.md) | `$skill-name` |
+| [Claude Code](https://code.claude.com/docs/en/skills) | 39 skills in the [`oss` plugin](plugin/skills) | `/oss:skill-name` |
+| [OpenAI Codex](https://developers.openai.com/codex/skills) | 37 skills in the [`codex/` library](codex/README.md) | `$skill-name` |
 
 The two libraries track each other closely. On the Codex side there is no `presubmit`.
 
@@ -58,7 +58,7 @@ flowchart LR
     D -.-> D1[figures / tables / methods reporting]
     E -.-> E1[FAIR / citations / fact-check / figure-table-audit / replication-package / archive checks]
     F -.-> F1[paper-tex / paper-review-lite / paper-review-lite-codex / presubmit / journal-review]
-    G -.-> G1[diverge / diverge-codex / fable-orchestrate / opus-orchestrate or 46-orchestrate]
+    G -.-> G1[diverge / diverge-codex / fable-orchestrate / opus-orchestrate or 46-orchestrate / advisor]
 ```
 
 Use the domain skills when designing or analyzing a study. Use the manuscript-QA skills when a draft exists and you need to check whether FAIR availability, citations, figures, tables, reporting, and replication materials can survive review.
@@ -106,7 +106,7 @@ git clone https://github.com/scdenney/open-science-skills.git
 cd open-science-skills && claude --plugin-dir ./plugin
 ```
 
-All 38 skills auto-trigger based on your prompts. All 38 slash commands (`/oss:research-repo`, `/oss:conjoint-design`, `/oss:fair-check`, `/oss:figures`, `/oss:tables`, `/oss:paper-tex`, `/oss:figure-table-audit`, `/oss:replication-package`, and so on) are immediately available. The prefix can be omitted when no other installed plugin claims the same name.
+All 39 skills auto-trigger based on your prompts. All 39 slash commands (`/oss:research-repo`, `/oss:conjoint-design`, `/oss:fair-check`, `/oss:figures`, `/oss:tables`, `/oss:paper-tex`, `/oss:figure-table-audit`, `/oss:replication-package`, and so on) are immediately available. The prefix can be omitted when no other installed plugin claims the same name.
 
 <details>
 <summary><b>Option 2 — Selective install</b> (choose specific skills, auto-trigger only)</summary>
@@ -220,6 +220,16 @@ The detailed catalog shows Claude Code commands by default. Platform-specific en
 <td><a href="codex/46-orchestrate/SKILL.md"><strong>46-orchestrate</strong></a><br><sub>Codex</sub></td>
 <td><code>$46-orchestrate</code></td>
 <td>Sol-led Codex orchestration for complex work. Routes bounded research, implementation, and verification to role-based subagents; uses blind parallel review for high-blast-radius work that is difficult to verify; and keeps planning, integration, and final accountability with the lead.</td>
+</tr>
+<tr>
+<td><a href="plugin/skills/advisor/SKILL.md"><strong>advisor</strong></a><br><sub>Claude Code</sub></td>
+<td><code>/advisor</code></td>
+<td>Single-turn independent second-reviewer consult with <strong>Fable 5</strong>, matched to the calling session's current reasoning effort via the live <code>$CLAUDE_EFFORT</code> environment variable. Fallback for when the native <code>advisor()</code> tool reports itself unavailable; unlike that tool, it has no automatic transcript access, so the caller composes a self-contained briefing before consulting. Read-only advisory — never edits files. Ships a <code>fable-advisor.sh</code> driver.</td>
+</tr>
+<tr>
+<td><a href="codex/advisor/SKILL.md"><strong>advisor</strong></a><br><sub>Codex</sub></td>
+<td><code>$advisor</code></td>
+<td>Same single-turn independent second-reviewer pattern, consulting <strong>GPT-5.6 "Sol"</strong>. Since Codex does not expose its own live reasoning effort as an inheritable environment variable, the caller reads its own effort from its session banner and passes it explicitly. Read-only advisory. Ships a <code>sol-advisor.sh</code> driver.</td>
 </tr>
 </tbody>
 </table>

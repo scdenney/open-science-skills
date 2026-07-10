@@ -1,10 +1,10 @@
 <p align="center">
-  <img src="https://img.shields.io/badge/OpenAI_Codex-36_open--science_skills-111111?style=for-the-badge&logo=openai&logoColor=white" alt="OpenAI Codex — 36 open-science skills">
+  <img src="https://img.shields.io/badge/OpenAI_Codex-37_open--science_skills-111111?style=for-the-badge&logo=openai&logoColor=white" alt="OpenAI Codex — 37 open-science skills">
 </p>
 
 # Codex skills
 
-This directory contains 36 Codex-native Open Science Skills. They mirror the Claude Code library with three intentional differences:
+This directory contains 37 Codex-native Open Science Skills. They mirror the Claude Code library with three intentional differences:
 
 - `presubmit` is omitted.
 - `opus-orchestrate` is omitted: it depends on Claude Code's ultracode Workflow orchestration, which has no Codex equivalent.
@@ -39,7 +39,7 @@ See the official [Codex skills documentation](https://developers.openai.com/code
 | Area | Skills |
 |---|---|
 | Project setup | [`research-repo`](research-repo/SKILL.md) |
-| Orchestration | [`46-orchestrate`](46-orchestrate/SKILL.md) |
+| Orchestration | [`46-orchestrate`](46-orchestrate/SKILL.md), [`advisor`](advisor/SKILL.md) |
 | Ideation | [`diverge`](diverge/SKILL.md), [`diverge-codex`](diverge-codex/SKILL.md) |
 | Research design | [`conjoint-cleaning`](conjoint-cleaning/SKILL.md), [`conjoint-design`](conjoint-design/SKILL.md), [`conjoint-diagnostics`](conjoint-diagnostics/SKILL.md), [`cross-national-design`](cross-national-design/SKILL.md), [`list-experiment`](list-experiment/SKILL.md), [`survey-design`](survey-design/SKILL.md) |
 | Analysis | [`llm-calibration-logprobs`](llm-calibration-logprobs/SKILL.md), [`model-committee`](model-committee/SKILL.md), [`model-committee-fable`](model-committee-fable/SKILL.md), [`model-committee-sol`](model-committee-sol/SKILL.md), [`model-council-voting`](model-council-voting/SKILL.md), [`text-classification`](text-classification/SKILL.md), [`topic-modeling`](topic-modeling/SKILL.md) |
@@ -55,3 +55,4 @@ See the official [Codex skills documentation](https://developers.openai.com/code
 - `$diverge-codex` uses a fresh Codex subagent context. It does not claim a second model family.
 - `$paper-review-lite-codex` preserves cross-model review by using Codex as lead and Claude Code's documented `claude -p` interface as the independent peer. It discloses and confirms external credit use before running.
 - `$46-orchestrate` is explicit-invocation only because it fans work out to subagents. It routes by role, risk, and verifiability and does not assume model pins that the runtime has not configured.
+- `$advisor` is a single-turn independent second-reviewer consult with GPT-5.6 "Sol," at an effort level the caller reads from its own session banner and passes explicitly (Codex has no inheritable effort environment variable the way Claude Code does). Read-only — never edits files. Companion to the Claude-side `advisor` skill, which consults Fable 5 instead and reads effort from `$CLAUDE_EFFORT` automatically.

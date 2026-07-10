@@ -63,12 +63,15 @@ esac
 run(){
   # `< /dev/null` is mandatory: prompt is already captured above; feeding
   # /dev/null gives codex an immediate EOF on stdin so it does not block.
-  timeout "${TIMEOUT}s" codex exec \
-    --model "$MODEL" \
-    --sandbox "$SANDBOX" \
-    --skip-git-repo-check \
-    -C "$DIR" \
-    "$PROMPT" < /dev/null
+  local cmd=(codex exec --model "$MODEL" --sandbox "$SANDBOX" --skip-git-repo-check -C "$DIR" "$PROMPT")
+  # `timeout` is not preinstalled on macOS (only via GNU coreutils) — guard
+  # rather than assume, matching model-committee-sol's claude-member.sh /
+  # codex-member.sh, which already learned this the hard way.
+  if command -v timeout >/dev/null; then
+    timeout "${TIMEOUT}s" "${cmd[@]}" < /dev/null
+  else
+    "${cmd[@]}" < /dev/null
+  fi
 }
 
 if [ -n "$OUT" ]; then
