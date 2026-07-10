@@ -1,6 +1,6 @@
 ---
 name: fable-orchestrate
-description: Run a multi-model orchestration workflow with Fable 5 as the lead. Delegate reasoning-heavy work (architecture, debugging, algorithm design) to a deep-reasoner subagent (Opus), mechanical work (boilerplate, tests, formatting, bulk edits) to a fast-worker subagent (Sonnet), and fresh-perspective or high-stakes problems to Codex, a different-vendor GPT-5.6 ("Sol") peer. Use to orchestrate, delegate, fan out, get a second opinion from Codex, run Opus and Codex in parallel and synthesize, or act as tech lead.
+description: Run a multi-model orchestration workflow with Fable 5 as the lead. Delegate reasoning-heavy work (architecture, debugging, algorithm design) to a deep-reasoner subagent (Opus), mechanical work (boilerplate, tests, formatting, bulk edits) to a fast-worker subagent (Sonnet), and fresh-perspective or high-stakes problems to Codex, a different-vendor GPT-5.6 (Terra by default) peer. Use to orchestrate, delegate, fan out, get a second opinion from Codex, run Opus and Codex in parallel and synthesize, or act as tech lead.
 allowed-tools:
   - Agent
   - Bash
@@ -15,7 +15,7 @@ You are the **orchestrator** (intended: Fable 5, reasoning `/effort` max). You p
 
 Two handles do the driving:
 - **Subagents** — the native `Agent` tool, model-pinned (Opus / Sonnet).
-- **Codex peer** — `~/.claude/skills/fable-orchestrate/codex-peer.sh`, a verified wrapper around `codex exec` (a different-vendor GPT-5.6 "Sol" engineer).
+- **Codex peer** — `~/.claude/skills/fable-orchestrate/codex-peer.sh`, a verified wrapper around `codex exec` (a different-vendor GPT-5.6 engineer, `gpt-5.6-terra` by default).
 
 ## The team
 
@@ -24,7 +24,7 @@ Two handles do the driving:
 | **you** (orchestrator) | Fable 5 | planning, decomposition, synthesis, integration, reconciling others' output |
 | **deep-reasoner** | Opus | architecture, complex/multi-file debugging, algorithm design, hard trade-offs, ambiguous specs |
 | **fast-worker** | Sonnet | boilerplate, tests-from-spec, formatting, simple edits, renames, bulk transforms |
-| **Codex** | GPT-5.6 (`gpt-5.6`, "Sol"), peer | fresh-perspective problems, unfamiliar stacks, disputed designs, high-stakes parallel cross-checks |
+| **Codex** | GPT-5.6 (`gpt-5.6-terra` by default; `gpt-5.6-sol` on request, once its account gate lifts), peer | fresh-perspective problems, unfamiliar stacks, disputed designs, high-stakes parallel cross-checks |
 
 ## Setup (one-time)
 
@@ -147,10 +147,10 @@ Two names for the same trap, one defense:
 ## Gotchas
 
 - **`codex exec` hangs without `< /dev/null`.** It prints `Reading additional input from stdin...` and blocks forever, *even when the prompt is passed as an argument*. `codex-peer.sh` always redirects `/dev/null` and captures any real prompt (`--prompt-file` / `-`) before invoking codex. Never call `codex exec` bare in a background job.
-- **Codex reasons at `xhigh` by default** and prints a header (`model: gpt-5.6`, `sandbox: read-only`) before the answer. The final answer is the text after the last `codex` marker; `--out` captures the whole transcript. A trivial consult is ~5s; a real design question ~10–15s.
+- **Codex reasons at `xhigh` by default** and prints a header (`model: gpt-5.6-terra`, `sandbox: read-only`) before the answer. The final answer is the text after the last `codex` marker; `--out` captures the whole transcript. A trivial consult is ~5s; a real design question ~10–15s.
 - **`~/.claude/agents/` may not exist.** The first `cp` fails with `No such file or directory`. `mkdir -p` first (the Setup block does).
 - **A named subagent only resolves after its def is installed AND a session reload.** In the session where you first install `deep-reasoner`/`fast-worker`, fall back to `Agent(subagent_type: "general-purpose", model: "opus" | "sonnet")` — same pinning, no reload needed.
-- **Model pins are real.** Verified this session: the Sonnet spawn reported `model-check: Sonnet 5`; the Opus spawn reported `Running as: Opus (claude-opus-4-8)`; Codex is pinned to `gpt-5.6` ("Sol") and reports `model: gpt-5.6` in its header. If `gpt-5.6` is unavailable on this machine, the call surfaces the error on first use — pass `--model gpt-5.5` to `codex-peer.sh` to fall back.
+- **Model pins are real.** Verified this session: the Sonnet spawn reported `model-check: Sonnet 5`; the Opus spawn reported `Running as: Opus (claude-opus-4-8)`; Codex is pinned to `gpt-5.6-terra` and reports `model: gpt-5.6-terra` in its header. **`gpt-5.6` alone is not a valid slug** — `codex debug models` lists three distinct GPT-5.6 tiers (`gpt-5.6-sol` flagship, `gpt-5.6-terra` balanced, `gpt-5.6-luna` fast); the bare `gpt-5.6` triggers a "metadata not found" warning and falls back to whichever tier Codex defaults to. `gpt-5.6-sol` is confirmed rejected outright on a ChatGPT-account-authenticated Codex CLI ("not supported when using Codex with a ChatGPT account"); `gpt-5.6-terra` works fine under the identical auth, which is why it is the default here. Pass `--model gpt-5.6-sol` explicitly for a stronger peer once/if that account gate lifts.
 - **Keep your own context lean.** Do not read a subagent's full transcript file — consume its returned final message. Long/slow executors go to the background so they never stall the loop.
 
 ## Troubleshooting
