@@ -7,7 +7,7 @@ description: Orchestrate complex work with 4.6 “Sol” as the Codex lead. Use 
 
 Act as the lead orchestrator, designed for 4.6 “Sol.” Plan, decompose, delegate, integrate, and verify. Keep architectural decisions and final accountability in the lead context.
 
-Treat “Sol” as the intended runtime identity, not a capability claim to verify at run time. Honor explicit worker model and reasoning pins from configured Codex agent files; otherwise route by role and let Codex choose the worker configuration. Never claim a pin that is not present in runtime configuration.
+The lead ("Sol") is the currently-running Codex session itself — it is **not** spawned via any script. Subagents are pinned to a specific model tier by shelling out through `scripts/codex-worker.sh`, the only proven way in this repo to pin a model to a Codex subagent (Codex's native in-process subagent tool — the built-in explorer/worker/default types — has no way to pin a model per call). Honor explicit worker model and reasoning pins from configured Codex agent files where present; otherwise route by role per the tier table below.
 
 ## Delegation gate
 
@@ -33,17 +33,21 @@ High blast radius includes security/authentication, destructive data operations,
 
 Do not use multiple agents merely to increase activity. Parallelize independent work or genuinely independent judgments.
 
-## Choose the worker type
+## Choose the worker tier
 
-Use the narrowest configured agent that fits the contract:
+Every subagent is spawned by shelling out to `scripts/codex-worker.sh`, which pins a GPT-5.6 tier via `--tier {luna,terra,sol}` (mapped internally to `gpt-5.6-<tier>`) and a sandbox via `--mode {consult,implement}`. The lead itself is never spawned this way — it is the running session.
 
-| Role | Preferred Codex agent | Behavior |
-|---|---|---|
-| analyst | built-in `explorer` or a read-only custom analyst | inspect, inventory, diagnose, and return evidence without editing |
-| implementer | built-in `worker` or a scoped custom implementer | make bounded edits and run the assigned acceptance checks |
-| verifier | built-in `default` or a read-only custom reviewer | challenge an artifact independently and cite concrete failures |
+| Role | Tier | Invocation | Behavior |
+|---|---|---|---|
+| analyst / verifier | `terra` (balanced) | `scripts/codex-worker.sh --tier terra --mode consult` | inspect, inventory, diagnose, adversarially review, or high-stakes cross-check without editing |
+| implementer | `luna` (fast/cheap — the token-saving tier) | `scripts/codex-worker.sh --tier luna --mode implement` | make bounded, fully-specified edits with objective acceptance checks and run them |
+| high-stakes independent check | `terra` × 2, parallel | two `scripts/codex-worker.sh --tier terra --mode consult` calls on the same prompt, blind to each other | the two-independent-check path (see below); use `--tier sol` instead of one or both `terra` calls for a stronger check once/if the account gate lifts |
 
-If these names are unavailable in the current surface, use the general subagent type and include the role in the delegation contract. Prefer runtime-configured custom agents when they provide explicit model, reasoning, sandbox, or skill settings appropriate to the work.
+**Honest caveat, carried from the script's header:** `sol` (flagship) is rejected outright on this machine's ChatGPT-account Codex auth ("not supported when using Codex with a ChatGPT account"), confirmed via `codex debug models`. `luna` (fast/cheap) is the intended tier for implementer work but is **untested** in this repo — smoke-test it before relying on it for real work: `scripts/codex-worker.sh --tier luna --mode consult --prompt "reply OK" -C .`. `terra` is the proven, working default for analyst/verifier consults.
+
+For a long tier call, run `scripts/codex-worker.sh` via a backgroundable shell invocation (e.g. `run_in_background:true`, or `&` plus a wait) with `--out <file>`, then read that file once the call completes — so a multi-minute Codex turn never blocks the lead's loop.
+
+If a task does not cleanly map to analyst/verifier or implementer, keep it with the lead until it can be cleanly contracted (row 7 of the routing table above).
 
 ## Respect capacity
 
@@ -99,7 +103,7 @@ Send concise progress updates during long work so the user is not left without v
 
 For work that is both high blast radius and hard to verify:
 
-1. Send the same factual problem and evidence to two independent subagents in one round.
+1. Send the same factual problem and evidence to two independent subagents in one round — two parallel `scripts/codex-worker.sh --tier terra --mode consult` calls on the identical prompt (swap in `--tier sol` for a stronger check once/if the account gate lifts).
 2. Keep them blind to each other's reasoning.
 3. Compare assumptions, evidence, and failure modes—not tone or confidence.
 4. Accept agreement only when both point to the same checkable evidence.

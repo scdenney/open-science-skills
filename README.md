@@ -219,7 +219,7 @@ The detailed catalog shows Claude Code commands by default. Platform-specific en
 <tr>
 <td><a href="codex/46-orchestrate/SKILL.md"><strong>46-orchestrate</strong></a><br><sub>Codex</sub></td>
 <td><code>$46-orchestrate</code></td>
-<td>Sol-led Codex orchestration for complex work. Routes bounded research, implementation, and verification to role-based subagents; uses blind parallel review for high-blast-radius work that is difficult to verify; and keeps planning, integration, and final accountability with the lead.</td>
+<td>Sol-led Codex orchestration for complex work. Routes bounded research, implementation, and verification to role-based subagents, each pinned to a GPT-5.6 tier via a bundled <code>codex-worker.sh</code> driver: <code>gpt-5.6-luna</code> (fast/cheap) for fully-specified implementer work, <code>gpt-5.6-terra</code> (balanced) for analyst/verifier consults and as the default. Uses two parallel <code>terra</code> calls, blind to each other, for high-blast-radius work that is difficult to verify; keeps planning, integration, and final accountability with the lead, which is the running Codex session itself and is never spawned by the script.</td>
 </tr>
 <tr>
 <td><a href="plugin/skills/advisor/SKILL.md"><strong>advisor</strong></a><br><sub>Claude Code</sub></td>
