@@ -229,7 +229,7 @@ The detailed catalog shows Claude Code commands by default. Platform-specific en
 <tr>
 <td><a href="codex/advisor/SKILL.md"><strong>advisor</strong></a><br><sub>Codex</sub></td>
 <td><code>$advisor</code></td>
-<td>Same single-turn independent second-reviewer pattern, consulting <strong>GPT-5.6</strong> — <code>gpt-5.6-terra</code> by default (<code>gpt-5.6-sol</code>, the flagship tier, is rejected outright under this account's Codex auth; pass it explicitly once that gate lifts). Since Codex does not expose its own live reasoning effort as an inheritable environment variable, the caller reads its own effort from its session banner and passes it explicitly. Read-only advisory. Ships a <code>sol-advisor.sh</code> driver.</td>
+<td>Same single-turn independent second-reviewer pattern, consulting <strong>GPT-5.6</strong> — <code>gpt-5.6-terra</code> by default for routine consults (cheaper); pass <code>--model gpt-5.6-sol</code> explicitly for a stronger, costlier review — confirmed working as of July 2026. Since Codex does not expose its own live reasoning effort as an inheritable environment variable, the caller reads its own effort from its session banner and passes it explicitly. Read-only advisory. Ships a <code>sol-advisor.sh</code> driver.</td>
 </tr>
 </tbody>
 </table>

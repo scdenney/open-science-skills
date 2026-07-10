@@ -19,11 +19,13 @@
 #   terra (default) — balanced. Use for analyst/verifier consult calls.
 #   luna            — fast/cheap. Use for implementer calls (the actual
 #                     token-saving tier).
-#   sol             — flagship. Rejected outright under some accounts'
-#                     ChatGPT-based Codex auth ("not supported when using
-#                     Codex with a ChatGPT account") — confirm with a smoke
-#                     test on your own account before relying on it. Kept as
-#                     an option for the two-independent-check high-stakes path.
+#   sol             — flagship. Confirmed working (smoke-tested directly,
+#                     July 2026) on both hosts this repo runs on. Some
+#                     ChatGPT-based Codex auth setups have rejected it in the
+#                     past ("not supported when using Codex with a ChatGPT
+#                     account") — if you hit that error on your own account,
+#                     fall back to terra. Not the default (terra is cheaper
+#                     for routine consults) but a real option, not a gated one.
 #
 # EFFORT MATTERS AS MUCH AS TIER — do not skip --effort. If the caller's own
 # ~/.codex/config.toml sets a global model_reasoning_effort (e.g. "max" for

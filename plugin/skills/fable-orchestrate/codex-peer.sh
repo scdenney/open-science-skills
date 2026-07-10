@@ -24,14 +24,16 @@
 #   -C DIR          working dir Codex sees (default: $PWD)
 #   --timeout SEC   hard kill after SEC seconds (default: 600)
 #   --model ID      Codex model to pin (default: gpt-5.6-terra — the balanced
-#                   5.6 tier. `codex debug models` lists three distinct 5.6
-#                   tiers, not one model: gpt-5.6-sol (flagship), gpt-5.6-terra
-#                   (balanced), gpt-5.6-luna (fast). Sol is rejected outright
-#                   on this machine's ChatGPT-account Codex auth ("not
-#                   supported when using Codex with a ChatGPT account");
-#                   terra is not account-gated the same way. Pass --model
-#                   gpt-5.6-sol explicitly for a stronger peer once/if that
-#                   gate lifts.)
+#                   5.6 tier, cheaper for routine peer consults). There are
+#                   three distinct 5.6 tiers, not one model: gpt-5.6-sol
+#                   (flagship), gpt-5.6-terra (balanced), gpt-5.6-luna (fast).
+#                   gpt-5.6-sol is confirmed working as of July 2026 on
+#                   ChatGPT-account Codex auth (an earlier "rejected outright"
+#                   finding no longer reproduces — if it ever errors, check
+#                   `codex --version` before assuming a gate; an outdated CLI
+#                   rejects terra/luna too, with a different error). Pass
+#                   --model gpt-5.6-sol explicitly for a stronger peer at
+#                   higher cost.)
 #   --out FILE      also tee Codex's stdout+stderr here (for background reads)
 #   --prompt TEXT   prompt as a single argument
 #   --prompt-file P read prompt from file P

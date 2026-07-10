@@ -23,15 +23,16 @@
 #   --out FILE          where Sol's advice is written
 #   -C DIR              working dir Sol sees (default: $PWD)
 #   --model ID          Codex model to pin (default: gpt-5.6-terra — the
-#                        balanced 5.6 tier; gpt-5.6-sol is the flagship tier
-#                        but is rejected outright on this machine's ChatGPT-
-#                        account Codex auth, "not supported when using Codex
-#                        with a ChatGPT account" — confirmed via `codex debug
-#                        models`: sol/terra/luna are three distinct tiers,
-#                        not one gpt-5.6 model; terra and luna are not
-#                        account-gated the way sol is. Pass --model gpt-5.6-sol
-#                        explicitly once/if that gate lifts for a stronger
-#                        reviewer at the cost of reliability.)
+#                        balanced 5.6 tier, cheaper for routine consults;
+#                        sol/terra/luna are three distinct tiers, not one
+#                        gpt-5.6 model. gpt-5.6-sol is the flagship tier and
+#                        is confirmed WORKING as of July 2026 on ChatGPT-
+#                        account Codex auth (an earlier "rejected outright"
+#                        finding no longer reproduces — re-check `codex
+#                        --version` before assuming a gate if it ever errors,
+#                        since an outdated CLI rejects terra/luna too, with a
+#                        different error). Pass --model gpt-5.6-sol explicitly
+#                        for a stronger reviewer at higher cost.)
 #   --effort LEVEL      none|minimal|low|medium|high|xhigh (default: high —
 #                        the caller should pass its own actual level; this
 #                        default is a fallback only, not a substitute for it)
