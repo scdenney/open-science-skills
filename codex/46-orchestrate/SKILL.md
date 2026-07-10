@@ -1,13 +1,15 @@
 ---
 name: 46-orchestrate
-description: Orchestrate complex work with 4.6 “Sol” as the Codex lead. Use when the user explicitly asks to orchestrate, delegate, fan out, parallelize, assign subagents, obtain independent checks, or have Sol act as tech lead. Decompose work, route bounded tasks to role-based Codex subagents, preserve integration ownership, and synthesize verified results.
+description: Orchestrate complex work with 4.6 "Sol" as the Codex lead. Use when the user explicitly asks to orchestrate, delegate, fan out, parallelize, assign subagents, obtain independent checks, or have Sol act as tech lead. Decompose work, route bounded tasks to role-based subagents via Codex's native spawn_agent tool, preserve integration ownership, and synthesize verified results.
 ---
 
 # 4.6 Orchestrate
 
-Act as the lead orchestrator, designed for 4.6 “Sol.” Plan, decompose, delegate, integrate, and verify. Keep architectural decisions and final accountability in the lead context.
+Act as the lead orchestrator, designed for 4.6 "Sol." Plan, decompose, delegate, integrate, and verify. Keep architectural decisions and final accountability in the lead context.
 
-The lead ("Sol") is the currently-running Codex session itself — it is **not** spawned via any script. Subagents are pinned to a specific model tier by shelling out through `scripts/codex-worker.sh`, the only proven way in this repo to pin a model to a Codex subagent (Codex's native in-process subagent tool — the built-in explorer/worker/default types — has no way to pin a model per call). Honor explicit worker model and reasoning pins from configured Codex agent files where present; otherwise route by role per the tier table below.
+The lead ("Sol") is the currently-running Codex session itself. Subagents are spawned with Codex's **native, in-process multi-agent tool** (`functions.collaboration.spawn_agent`, plus `send_message`, `followup_task`, `wait_agent`, `interrupt_agent`, `list_agents` — feature `multi_agent`, stable). Do not shell out to a nested `codex exec` subprocess for delegation: a `codex exec` process running under any sandbox mode cannot spawn a working nested `codex exec` child — confirmed by direct reproduction on both macOS (`Operation not permitted, os error 1`) and Linux (`Read-only file system, os error 30`) hosts, and unfixable by passing bypass flags to the child, since an OS-level sandbox applies transitively to the whole process tree regardless of what the child requests. `spawn_agent` has no such problem: it runs in-process, in the same sandbox as the lead.
+
+**Honest capability limit — read this before promising cost savings.** `spawn_agent`'s schema has no `model` or `effort` parameter (confirmed empirically: asked to request a cheaper tier for a spawned agent, Sol reported the tool schema exposes none). Every subagent runs at the **same model and reasoning effort as the lead** — spawning agents under a Sol-at-max lead produces Sol-at-max subagents, not a cheaper tier. This tool cannot reproduce `fable-orchestrate`'s Opus/Sonnet-style cost tiering. What it *does* save: the lead's own context never has to grow with the full working-through of every subtask. A single lead handling everything serially in one continuously-growing context re-pays the cost of that whole context on every turn; spawning several parallel subagents with short, fresh, task-scoped contexts and pulling back only their summaries avoids that growth. The saving is from **context isolation and parallelism**, not from a cheaper model — say so plainly if a user asks whether this delegates to a cheaper tier.
 
 ## Delegation gate
 
@@ -29,37 +31,29 @@ Before spawning work, publish a compact plan that names each workstream, owner r
 | 6 | verification, tests, review, or adversarial challenge of an existing artifact | verifier subagent |
 | 7 | ambiguous or tightly coupled work that cannot be cleanly contracted | Sol lead until separable |
 
-High blast radius includes security/authentication, destructive data operations, public API compatibility, concurrency, cryptography, production incidents, privacy, and externally visible irreversible changes. “Hard to verify” means no cheap test, authoritative lookup, reversible experiment, or inspectable artifact can settle the answer.
+High blast radius includes security/authentication, destructive data operations, public API compatibility, concurrency, cryptography, production incidents, privacy, and externally visible irreversible changes. "Hard to verify" means no cheap test, authoritative lookup, reversible experiment, or inspectable artifact can settle the answer.
 
-Do not use multiple agents merely to increase activity. Parallelize independent work or genuinely independent judgments.
+Do not use multiple agents merely to increase activity. Parallelize independent work or genuinely independent judgments — since spawning does not reduce per-call cost here, an unnecessary spawn is pure overhead, not a cheap experiment.
 
-## Choose the worker tier
+## Spawn subagents correctly
 
-Every subagent is spawned by shelling out to `scripts/codex-worker.sh`, which pins a GPT-5.6 tier via `--tier {luna,terra,sol}` (mapped internally to `gpt-5.6-<tier>`), a reasoning effort via `--effort`, and a sandbox via `--mode {consult,implement}`. The lead itself is never spawned this way — it is the running session.
+Every subagent is created with `spawn_agent`. Confirmed parameters: `task_name` (a short identifier other calls use to address this agent), `message` (the task brief — this is the subagent's entire starting context unless `fork_turns` adds more), and `fork_turns` (how much of the lead's own conversation to propagate — `"all"` gives the subagent full history; for a bounded, fully-specified task, propagate the minimum needed, since a large `fork_turns` value defeats the context-isolation saving this tool exists for). Consult the tool's own schema at call time for any parameters not listed here — this list reflects what has been directly exercised, not a full spec.
 
-| Role | Tier | Invocation | Behavior |
-|---|---|---|---|
-| analyst / verifier | `terra` (balanced), `--effort medium` | `scripts/codex-worker.sh --tier terra --mode consult` | inspect, inventory, diagnose, adversarially review, or high-stakes cross-check without editing |
-| implementer | `luna` (fast/cheap — the token-saving tier), `--effort low` | `scripts/codex-worker.sh --tier luna --mode implement` | make bounded, fully-specified edits with objective acceptance checks and run them |
-| high-stakes independent check | `terra` × 2, parallel, `--effort medium` | two `scripts/codex-worker.sh --tier terra --mode consult` calls on the same prompt, blind to each other | the two-independent-check path (see below); use `--tier sol --effort high` instead of one or both `terra` calls for a stronger check once/if the account gate lifts |
+| Role | Behavior | fork_turns |
+|---|---|---|
+| analyst / verifier | inspect, inventory, diagnose, adversarially review, or high-stakes cross-check without editing | minimal — pass only the artifact path and the specific question, not the lead's full history |
+| implementer | make bounded, fully-specified edits with objective acceptance checks and run them | minimal — a complete delegation contract (below) should make full history unnecessary |
+| high-stakes independent check | two agents spawned in the same round on the identical prompt, blind to each other's reasoning | minimal, identical for both, so neither is anchored by the other |
 
-**Effort matters as much as tier — never omit it implicitly.** `codex-worker.sh` always passes `-c model_reasoning_effort=` explicitly; if you ever call `codex exec` directly instead of through the script, do the same. Without it, a spawned subagent silently inherits the *lead's own* `~/.codex/config.toml` effort default — confirmed empirically to be `max` on this machine, since that's how the interactive Sol-max lead session itself is configured. A `luna` call at an inherited `max` effort is not cheap; it defeats the entire point of tiering. `codex-worker.sh`'s defaults when `--effort` is omitted are `luna`→`low`, `terra`→`medium`, `sol`→`high`; override per call with `--effort none|minimal|low|medium|high|xhigh` when a task needs more or less than the tier default.
+All agents share the same container, filesystem, and working directory as the lead — edits by one are immediately visible to all others, including the lead. This makes write-collision discipline (below) load-bearing, not optional.
 
-**Honest caveat, carried from the script's header:** all three tiers (`luna`, `terra`, `sol`) are confirmed working (smoke-tested directly on both Mac and Linux hosts this repo runs on, July 2026: `scripts/codex-worker.sh --tier <tier> --mode consult --prompt "reply OK" -C .`) — **but only on a current Codex CLI**. An outdated CLI rejects `luna`/`terra` with "requires a newer version of Codex" and may reject `sol` under some ChatGPT-account auth setups with "not supported when using Codex with a ChatGPT account." Run `codex --version` and update if any delegation call fails immediately; a failed delegation call means the lead falls back to doing the work itself, silently burning far more tokens than tiering was meant to save. `terra` stays the default for routine consults regardless — `sol` costs more and is reserved for the high-stakes independent-check path.
+**Concurrency is real and bounded.** The tool itself states 4 available concurrency slots, including the lead — so at most 3 subagents run at once regardless of how many are queued. Batch additional work after prior agents finish; do not assume unlimited fan-out.
 
-For a long tier call, run `scripts/codex-worker.sh` via a backgroundable shell invocation (e.g. `run_in_background:true`, or `&` plus a wait) with `--out <file>`, then read that file once the call completes — so a multi-minute Codex turn never blocks the lead's loop.
-
-If a task does not cleanly map to analyst/verifier or implementer, keep it with the lead until it can be cleanly contracted (row 7 of the routing table above).
-
-## Respect capacity
-
-Read the runtime's current concurrency limit. Reserve one slot for the lead and use only the remaining slots. When the limit is unknown, run no more than three workers concurrently. Batch additional work after prior agents finish.
-
-Avoid assigning one workstream per file by default. Partition by coherent responsibility so the integration boundary is explicit.
+Use `wait_agent` to block on a spawned agent's result, `send_message` to pass it a message without triggering a new turn, `followup_task` to give a *running* agent a new task, `list_agents` to check what's active, and `interrupt_agent` to reclaim a stalled one.
 
 ## Write a delegation contract
 
-Every subagent brief must specify:
+Every subagent brief (the `message` passed to `spawn_agent`) must specify:
 
 ```text
 Objective:
@@ -91,10 +85,10 @@ The lead owns shared configuration, interfaces between workstreams, and final in
 1. Inspect authoritative workspace state.
 2. Decompose work and identify dependencies.
 3. Publish the route and acceptance checks.
-4. Spawn all ready, independent workstreams concurrently within capacity.
+4. Spawn all ready, independent workstreams concurrently within the 3-subagent capacity.
 5. Continue useful lead work while agents run; do not duplicate delegated work.
-6. Consume each agent's final response and inspect its artifact directly.
-7. Send focused follow-ups to the same agent when its artifact is incomplete.
+6. Use `wait_agent` to consume each agent's final response and inspect its artifact directly.
+7. Send a focused `followup_task` to the same agent when its artifact is incomplete, rather than spawning a fresh one that repeats the briefing cost.
 8. Integrate in dependency order.
 9. Run end-to-end checks at the lead level.
 10. Report the outcome, verification evidence, and unresolved risk.
@@ -105,9 +99,9 @@ Send concise progress updates during long work so the user is not left without v
 
 For work that is both high blast radius and hard to verify:
 
-1. Send the same factual problem and evidence to two independent subagents in one round — two parallel `scripts/codex-worker.sh --tier terra --mode consult` calls on the identical prompt (swap in `--tier sol` for a stronger check once/if the account gate lifts).
-2. Keep them blind to each other's reasoning.
-3. Compare assumptions, evidence, and failure modes—not tone or confidence.
+1. Spawn two independent subagents in one round with the identical prompt and identical (minimal) `fork_turns`, so neither sees the other's reasoning.
+2. Keep them blind to each other's reasoning — do not relay one's output into the other's task.
+3. Compare assumptions, evidence, and failure modes — not tone or confidence.
 4. Accept agreement only when both point to the same checkable evidence.
 5. On substantive disagreement, run one targeted reconciliation round where each can see the competing reasoning.
 6. If disagreement survives or evidence remains insufficient, stop and ask the user; do not break the tie by confidence.
@@ -133,7 +127,7 @@ Complete only when every requested deliverable has authoritative evidence, integ
 
 ## Failure handling
 
-- If an agent stalls, send one narrower follow-up; then reclaim or reassign the task.
+- If an agent stalls, use `interrupt_agent` to reclaim it, then send one narrower `followup_task` or reassign.
 - If an agent fails after editing, inspect the shared worktree before retrying.
-- If capacity is exhausted, queue dependent work rather than spawning redundant agents.
-- If the runtime has no subagent capability, state that `$46-orchestrate` cannot perform delegation and continue locally only with the user's approval.
+- If capacity is exhausted (3 subagents already active), queue dependent work rather than spawning redundant agents.
+- If a spawn fails outright, report the exact error rather than silently falling back to doing the work in the lead context — a silent fallback is what causes runaway lead-context token growth. If the failure looks environmental (not a task-brief problem), stop and ask rather than spending tokens on unbounded self-diagnosis.
