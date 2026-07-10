@@ -9,6 +9,10 @@ Run Codex as the lead and use Claude Code's non-interactive CLI as the independe
 
 Read [`../paper-review-lite/SKILL.md`](../paper-review-lite/SKILL.md) completely before starting. It defines the review dimensions, severity rubric, evidence requirements, and final report format. If the sibling skill is unavailable, stop and tell the user to install it; do not reconstruct a partial protocol from memory.
 
+## Sandbox constraint — read before the first `claude -p` call
+
+`claude -p` is a different binary than `codex exec`, so it does not hit the identical `codex exec` in-process IPC failure that breaks nested `codex exec` calls under sandbox. But under `workspace-write` sandbox, an outbound `claude -p` network call was observed (July 2026) to hang rather than complete or fail cleanly — Codex's sandbox restricts network access, and `claude -p` needs it to reach Anthropic's API. This finding is less rigorously isolated than the nested-`codex exec` failure (it wasn't captured as a distinct error message, just an unresponsive process that had to be killed), so treat it as a strong warning rather than a certainty. If a `claude -p` call in this skill hangs rather than returning, do not assume it will eventually resolve — consider requesting escalation (`sandbox_permissions: require_escalated`) for that call, or running from an unsandboxed session, before retrying.
+
 ## Preflight
 
 1. Confirm that the user explicitly requested `$paper-review-lite-codex` or a cross-model audit. Otherwise use `$paper-review-lite`.

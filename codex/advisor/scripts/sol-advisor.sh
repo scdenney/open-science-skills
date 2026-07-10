@@ -14,6 +14,19 @@
 # conversation, so the caller must compose a self-contained briefing and
 # pass it as --prompt-file.
 #
+# SANDBOX WARNING (confirmed by direct reproduction, July 2026): this script
+# nests a `codex exec` process inside whatever process runs it. If the
+# CALLER is itself a sandboxed `codex exec`/Codex session, this nested call
+# fails immediately with "failed to initialize in-process app-server
+# client: Operation not permitted" (macOS) or "Read-only file system"
+# (Linux) -- an OS-level sandbox applies transitively to the whole process
+# tree, and passing --dangerously-bypass-approvals-and-sandbox to THIS
+# script does not help, since the restriction is imposed on the parent, not
+# requested by the child. Only an unsandboxed caller, or an interactive
+# caller that requests escalation (sandbox_permissions: require_escalated)
+# for this specific call, can succeed. See SKILL.md's "Sandbox constraint"
+# section before assuming this "just works."
+#
 # Usage:
 #   sol-advisor.sh --prompt-file FILE --out FILE [-C DIR] [--model ID]
 #                   [--effort LEVEL] [--timeout SEC]

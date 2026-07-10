@@ -24,6 +24,12 @@ Before the first call:
 3. Explain that both CLIs may consume separate plan credits or API spend; obtain confirmation unless already explicit.
 4. Precommit the evaluation criteria, weights, and tie rule.
 
+## Sandbox constraint — read before the first call
+
+`scripts/codex-member.sh` shells out to a nested `codex exec` process. Confirmed by direct reproduction (July 2026, both hosts this repo runs on): a `codex exec` process running under **any** sandbox mode cannot spawn a working nested `codex exec` child — it fails immediately with `Error: failed to initialize in-process app-server client: Operation not permitted` (macOS) or `Read-only file system` (Linux). This is structural (the OS sandbox applies transitively to the whole process tree) and is not fixed by bypass flags on the nested call. If you are running non-interactively (`approval: never` in your own session banner), this call cannot succeed — report the failure rather than fabricating the GPT member's response yourself. If interactive, request escalation (`sandbox_permissions: require_escalated`) for that one call.
+
+`scripts/claude-member.sh` shells out to `claude -p` instead (used for both the Opus member and the Fable chair here) — a different binary, so it does not hit the identical `codex exec` IPC failure, but under `workspace-write` sandbox its outbound network call was observed to hang rather than complete (network access is restricted by the sandbox) — less rigorously isolated than the `codex-member.sh` finding, but treat an unresponsive `claude-member.sh` call the same way: do not assume it will resolve on its own, and consider escalation or an unsandboxed session if it hangs.
+
 ## Preflight members and chair
 
 Resolve `SKILL_DIR` as the directory containing this `SKILL.md`, then run:

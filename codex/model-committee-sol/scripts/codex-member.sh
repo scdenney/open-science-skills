@@ -1,4 +1,15 @@
 #!/usr/bin/env bash
+# SANDBOX WARNING (confirmed by direct reproduction, July 2026): this script
+# nests a `codex exec` process inside whatever process runs it. If the
+# CALLER is itself a sandboxed `codex exec`/Codex session, this nested call
+# fails immediately with "failed to initialize in-process app-server
+# client: Operation not permitted" (macOS) or "Read-only file system"
+# (Linux) -- an OS-level sandbox applies transitively to the whole process
+# tree, and bypass flags on THIS call do not help, since the restriction is
+# imposed on the parent, not requested by the child. Only an unsandboxed
+# caller, or an interactive caller that requests escalation
+# (sandbox_permissions: require_escalated) for this specific call, can
+# succeed. See SKILL.md's "Sandbox constraint" section.
 set -euo pipefail
 
 MODEL="gpt-5.5"
