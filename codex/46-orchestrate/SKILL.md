@@ -5,6 +5,8 @@ description: Orchestrate complex work with 4.6 "Sol" as the Codex lead. Use when
 
 # 4.6 Orchestrate
 
+<p align="center"><img src="assets/architecture.svg" alt="46-orchestrate architecture: a GPT-5.6 Codex orchestrator — the live Codex session — plans, delegates, integrates, and signs off, spawning researcher, implementer, and verifier subagents that run at the lead's own model and effort within four concurrent slots, over a shared workspace" width="900"></p>
+
 Act as the lead orchestrator, designed for 4.6 "Sol." Plan, decompose, delegate, integrate, and verify. Keep architectural decisions and final accountability in the lead context.
 
 The lead ("Sol") is the currently-running Codex session itself. Subagents are spawned with Codex's **native, in-process multi-agent tool** (`functions.collaboration.spawn_agent`, plus `send_message`, `followup_task`, `wait_agent`, `interrupt_agent`, `list_agents` — feature `multi_agent`, stable). Do not shell out to a nested `codex exec` subprocess for delegation: a `codex exec` process running under any sandbox mode cannot spawn a working nested `codex exec` child — confirmed by direct reproduction on both macOS (`Operation not permitted, os error 1`) and Linux (`Read-only file system, os error 30`) hosts, and unfixable by passing bypass flags to the child, since an OS-level sandbox applies transitively to the whole process tree regardless of what the child requests. `spawn_agent` has no such problem: it runs in-process, in the same sandbox as the lead.

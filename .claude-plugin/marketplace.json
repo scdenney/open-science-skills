@@ -10,7 +10,7 @@
     {
       "name": "oss",
       "description": "Open Science Skills — 39 skills for experimental social science: research-repository scaffolding and auditing around a sources/ knowledge base (research-repo), conjoint design / cleaning / diagnostics, survey design, list experiments, cross-national design, topic modeling, LLM text classification, VLM-OCR pipelines + OCR comparison/evaluation (CER/WER) + post-OCR cleanup, independent model-council voting and inter-rater agreement, deliberative GPT-5.5 and Claude Opus 4.8 model committees chaired by Opus 4.8, GPT-5.6 Sol, or Fable 5, an independent-second-reviewer advisor consult (Fable 5, matched to the session's current reasoning effort), LLM calibration via token logprobs, FAIR manuscript checks, citation checking, source-claim fact-checking, literature-review evidence mapping, figure design, table design, house-style LaTeX paper formatting from any draft (paper-tex), figure/table auditing, replication-package scaffolding, hypothesis building, narrative building, pre-registration writing, methods reporting, creative divergence (diverge + diverge-codex), paper-review-lite, paper-review-lite-codex, presubmit, journal-review, and general multi-model orchestration workflows (fable-orchestrate, opus-orchestrate). All skills auto-trigger from context and are available as /oss:skill-name slash commands (or just /skill-name when there is no ambiguity).",
-      "version": "2.15.1",
+      "version": "2.16.0",
       "license": "CC-BY-NC-4.0",
       "author": {
         "name": "Steven Denney",
