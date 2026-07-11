@@ -214,7 +214,7 @@ The detailed catalog shows Claude Code commands by default. Platform-specific en
 <tr>
 <td><a href="plugin/skills/opus-orchestrate/SKILL.md"><strong>opus-orchestrate</strong></a><br><sub>Claude Code</sub></td>
 <td><code>/opus-orchestrate</code></td>
-<td>The same multi-model orchestration with <strong>Claude Opus 4.8 as the lead, driven by ultracode</strong> (xhigh reasoning + dynamic <code>Workflow</code> fan-out). The inversion from <code>fable-orchestrate</code>: the lead is itself the deep reasoner, so compact hard problems stay with it and reasoning is delegated only to fan out, stay context-lean, or get a blind independent line. Mechanical work routes to a fast-worker (Sonnet); the decorrelated peer is Codex (GPT-5.5). Ultracode's Workflow fan-out replaces Fable's cheap-lead economics. Ships the same agent definitions and <code>codex-peer.sh</code> driver.</td>
+<td>The same multi-model orchestration with <strong>Claude Opus 4.8 as the lead, driven by ultracode</strong> (xhigh reasoning + dynamic <code>Workflow</code> fan-out). The inversion from <code>fable-orchestrate</code>: the lead is itself the deep reasoner, so compact hard problems stay with it and reasoning is delegated only to fan out, stay context-lean, or get a blind independent line. Mechanical work routes to a fast-worker (Sonnet); the decorrelated peer is Codex (GPT-5.6, <code>gpt-5.6-terra</code> by default). Ultracode's Workflow fan-out replaces Fable's cheap-lead economics. Ships the same agent definitions and <code>codex-peer.sh</code> driver.</td>
 </tr>
 <tr>
 <td><a href="codex/46-orchestrate/SKILL.md"><strong>46-orchestrate</strong></a><br><sub>Codex</sub></td>

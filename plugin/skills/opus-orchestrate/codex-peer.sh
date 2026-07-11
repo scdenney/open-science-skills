@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# codex-peer.sh — invoke Codex (GPT-5 family) as a peer engineer for /fable-orchestrate.
+# codex-peer.sh — invoke Codex (GPT-5.6 "Terra") as a peer engineer for /opus-orchestrate.
 #
 # Codex is a different-vendor peer, not a reviewer. Use it two ways:
 #   consult   (default) — read-only. Ask a question / get a second approach. Prints the answer.
@@ -19,17 +19,33 @@
 #
 # Usage:
 #   codex-peer.sh [--mode consult|implement] [-C DIR] [--timeout SEC]
-#                 [--out FILE] (--prompt TEXT | --prompt-file PATH | -)
+#                 [--model ID] [--out FILE] (--prompt TEXT | --prompt-file PATH | -)
 #
 #   -C DIR          working dir Codex sees (default: $PWD)
 #   --timeout SEC   hard kill after SEC seconds (default: 600)
+#   --model ID      Codex model to pin (default: gpt-5.6-terra — the balanced
+#                   5.6 tier, cheaper for routine peer consults). There are
+#                   three distinct 5.6 tiers, not one model: gpt-5.6-sol
+#                   (flagship), gpt-5.6-terra (balanced), gpt-5.6-luna (fast).
+#                   gpt-5.6-sol is confirmed working as of July 2026 on
+#                   ChatGPT-account Codex auth (an earlier "rejected outright"
+#                   finding no longer reproduces — if it ever errors, check
+#                   `codex --version` before assuming a gate; an outdated CLI
+#                   rejects terra/luna too, with a different error). Pass
+#                   --model gpt-5.6-sol explicitly for a stronger peer at
+#                   higher cost.)
+#   --effort LEVEL  Codex reasoning effort, passed as
+#                   -c model_reasoning_effort=LEVEL (default: xhigh — this was
+#                   already terra's implicit default with no flag; stated
+#                   explicitly here so it does not silently drift if Codex's
+#                   own defaults change upstream).
 #   --out FILE      also tee Codex's stdout+stderr here (for background reads)
 #   --prompt TEXT   prompt as a single argument
 #   --prompt-file P read prompt from file P
 #   -               read prompt from stdin (the wrapper handles the /dev/null dance)
 set -euo pipefail
 
-MODE="consult"; DIR="$PWD"; TIMEOUT=600; OUT=""; PROMPT=""; PROMPT_SET=0
+MODE="consult"; DIR="$PWD"; TIMEOUT=600; MODEL="gpt-5.6-terra"; EFFORT="xhigh"; OUT=""; PROMPT=""; PROMPT_SET=0
 
 die(){ echo "codex-peer: $*" >&2; exit 2; }
 
@@ -38,11 +54,13 @@ while [ $# -gt 0 ]; do
     --mode)        MODE="${2:?}"; shift 2 ;;
     -C|--dir)      DIR="${2:?}"; shift 2 ;;
     --timeout)     TIMEOUT="${2:?}"; shift 2 ;;
+    --model)       MODEL="${2:?}"; shift 2 ;;
+    --effort)      EFFORT="${2:?}"; shift 2 ;;
     --out)         OUT="${2:?}"; shift 2 ;;
     --prompt)      PROMPT="${2:?}"; PROMPT_SET=1; shift 2 ;;
     --prompt-file) PROMPT="$(cat "${2:?}")"; PROMPT_SET=1; shift 2 ;;
     -)             PROMPT="$(cat)"; PROMPT_SET=1; shift ;;   # read stdin NOW, before codex runs
-    -h|--help)     sed -n '2,33p' "$0"; exit 0 ;;
+    -h|--help)     sed -n '2,45p' "$0"; exit 0 ;;
     *)             die "unknown arg: $1 (see --help)" ;;
   esac
 done
@@ -61,11 +79,15 @@ esac
 run(){
   # `< /dev/null` is mandatory: prompt is already captured above; feeding
   # /dev/null gives codex an immediate EOF on stdin so it does not block.
-  timeout "${TIMEOUT}s" codex exec \
-    --sandbox "$SANDBOX" \
-    --skip-git-repo-check \
-    -C "$DIR" \
-    "$PROMPT" < /dev/null
+  local cmd=(codex exec --model "$MODEL" -c "model_reasoning_effort=$EFFORT" --sandbox "$SANDBOX" --skip-git-repo-check -C "$DIR" "$PROMPT")
+  # `timeout` is not preinstalled on macOS (only via GNU coreutils) — guard
+  # rather than assume, matching model-committee-sol's claude-member.sh /
+  # codex-member.sh, which already learned this the hard way.
+  if command -v timeout >/dev/null; then
+    timeout "${TIMEOUT}s" "${cmd[@]}" < /dev/null
+  else
+    "${cmd[@]}" < /dev/null
+  fi
 }
 
 if [ -n "$OUT" ]; then

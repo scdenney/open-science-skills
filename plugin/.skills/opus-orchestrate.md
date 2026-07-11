@@ -1,6 +1,6 @@
 ---
 name: opus-orchestrate
-description: Run a multi-model orchestration workflow with Claude Opus 4.8 as the lead, driven by ultracode (xhigh reasoning + dynamic Workflow fan-out). The lead is itself the deep reasoner, so it reasons directly on compact hard problems and delegates only to fan out or stay context-lean. Route mechanical work (boilerplate, tests, formatting, bulk edits) to a fast-worker subagent (Sonnet), parallel or context-heavy reasoning to deep-reasoner subagents (Opus), and fresh-perspective or high-stakes problems to Codex, a different-vendor GPT-5.5 peer. Use to orchestrate, delegate, fan out, run a Workflow, get a second opinion from Codex, run Opus and Codex in parallel and synthesize, or act as tech lead on Opus.
+description: Run a multi-model orchestration workflow with Claude Opus 4.8 as the lead, driven by ultracode (xhigh reasoning + dynamic Workflow fan-out). The lead is itself the deep reasoner, so it reasons directly on compact hard problems and delegates only to fan out or stay context-lean. Route mechanical work (boilerplate, tests, formatting, bulk edits) to a fast-worker subagent (Sonnet), parallel or context-heavy reasoning to deep-reasoner subagents (Opus), and fresh-perspective or high-stakes problems to Codex, a different-vendor GPT-5.6 peer. Use to orchestrate, delegate, fan out, run a Workflow, get a second opinion from Codex, run Opus and Codex in parallel and synthesize, or act as tech lead on Opus.
 allowed-tools:
   - Agent
   - Workflow
@@ -19,7 +19,7 @@ The Fable variant of this skill (`fable-orchestrate`) keeps its lead cheap and o
 Three handles do the driving:
 - **Workflow** — the `Workflow` tool: author a script that fans out `agent()` calls (parallel, pipeline, loop-until-dry) with deterministic control flow. This is the ultracode default for anything with structure.
 - **Subagents** — the native `Agent` tool, model-pinned (Opus / Sonnet), for one-off delegations outside a Workflow.
-- **Codex peer** — `~/.claude/skills/opus-orchestrate/codex-peer.sh`, a verified wrapper around `codex exec` (a different-vendor GPT-5.5 engineer).
+- **Codex peer** — `~/.claude/skills/opus-orchestrate/codex-peer.sh`, a verified wrapper around `codex exec` (a different-vendor GPT-5.6 engineer, `gpt-5.6-terra` by default).
 
 ## The team
 
@@ -28,7 +28,7 @@ Three handles do the driving:
 | **you** (orchestrator) | Opus 4.8, ultracode | planning, decomposition, **the hard reasoning itself when it fits one context**, Workflow authoring, synthesis, integration, reconciling others' output |
 | **deep-reasoner** | Opus | reasoning you delegate to *fan out in parallel*, to *keep your own context lean*, or to get a *blind independent* second line — architecture, complex debugging, algorithm design, hard trade-offs |
 | **fast-worker** | Sonnet | boilerplate, tests-from-spec, formatting, simple edits, renames, bulk transforms |
-| **Codex** | GPT-5 (`gpt-5.5`), peer | fresh-perspective problems, unfamiliar stacks, disputed designs, high-stakes parallel cross-checks |
+| **Codex** | GPT-5.6 (`gpt-5.6-terra` by default; `gpt-5.6-sol` on request), peer | fresh-perspective problems, unfamiliar stacks, disputed designs, high-stakes parallel cross-checks |
 
 The inversion from `fable-orchestrate`: a Fable lead *must* send reasoning to Opus. You *are* Opus. Delegating a reasoning task to a `deep-reasoner` subagent buys you one of three things — **parallelism** (many independent hard sub-problems at once), **context hygiene** (a big investigation whose transcript would bloat your working context), or **independence** (a blind second opinion on the high-stakes path). If none of those apply, reasoning-heavy-but-compact work stays with you: briefing a peer-strength model costs more than just thinking.
 
@@ -138,7 +138,7 @@ Do **not** reach for Codex when:
 
 ### The high-stakes parallel path (verified)
 
-Launch **both** executors on the **same** problem, **in one message, blind to each other** — then you synthesize. On an Opus lead the two blind halves are a **deep-reasoner (Opus)** and **Codex (GPT-5.5)**, deliberately different vendors so their errors do not correlate. The two calls:
+Launch **both** executors on the **same** problem, **in one message, blind to each other** — then you synthesize. On an Opus lead the two blind halves are a **deep-reasoner (Opus)** and **Codex (GPT-5.6, `gpt-5.6-terra` by default)**, deliberately different vendors so their errors do not correlate. The two calls:
 
 ```bash
 # Codex half — backgrounded, output teed to a file:
@@ -167,10 +167,10 @@ Launch **both** executors on the **same** problem, **in one message, blind to ea
 ## Gotchas
 
 - **`codex exec` hangs without `< /dev/null`.** It prints `Reading additional input from stdin...` and blocks forever, *even when the prompt is passed as an argument*. `codex-peer.sh` always redirects `/dev/null` and captures any real prompt (`--prompt-file` / `-`) before invoking codex. Never call `codex exec` bare in a background job.
-- **Codex reasons at `xhigh` by default** and prints a header (`model: gpt-5.5`, `sandbox: read-only`) before the answer. The final answer is the text after the last `codex` marker; `--out` captures the whole transcript. A trivial consult is ~5s; a real design question ~10–15s.
+- **Codex reasons at `xhigh` by default; `codex-peer.sh` now sets it explicitly** via `--effort xhigh` → `-c model_reasoning_effort=xhigh`, rather than relying on Codex's own implicit default. It prints a header (`model: gpt-5.6-terra`, `sandbox: read-only`) before the answer. The final answer is the text after the last `codex` marker; `--out` captures the whole transcript. A trivial consult is ~5s; a real design question ~10–15s. Pass `--effort` to override per-call if a future Codex version adds a stronger tier.
 - **`~/.claude/agents/` may not exist.** The first `cp` fails with `No such file or directory`. `mkdir -p` first (the Setup block does).
 - **A named subagent only resolves after its def is installed AND a session reload.** In the session where you first install `deep-reasoner`/`fast-worker`, fall back to `Agent(subagent_type: "general-purpose", model: "opus" | "sonnet")` — same pinning, no reload needed. Inside a Workflow, `agent(..., {model: "opus" | "sonnet"})` needs no installed def at all.
-- **Model pins are real.** The Sonnet spawn reports `Sonnet 5`; the Opus spawn reports `Opus (claude-opus-4-8)`; Codex reports `model: gpt-5.5`.
+- **Model pins are real.** The Sonnet spawn reports `Sonnet 5`; the Opus spawn reports `Opus (claude-opus-4-8)`; Codex reports `model: gpt-5.6-terra`. **`gpt-5.6` alone is not a valid slug** — there are three distinct GPT-5.6 tiers (`gpt-5.6-sol` flagship, `gpt-5.6-terra` balanced, `gpt-5.6-luna` fast); the bare `gpt-5.6` triggers a "metadata not found" warning and falls back to whichever tier Codex defaults to. `gpt-5.6-terra` is the default here because it's cheaper for routine peer consults — pass `--model gpt-5.6-sol` explicitly for a stronger peer at higher cost.
 - **Keep your own context lean.** Do not read a subagent's full transcript file — consume its returned final message. Long/slow executors go to the background. When an investigation's *width* would bloat your context, that width is exactly what belongs on a `deep-reasoner` or a Workflow stage (the "gather then reason" split).
 - **Don't fan out for its own sake.** Ultracode makes Workflows cheap to reach for, but a barrier (`parallel()`) wastes wall-clock when one stage lags, and a compact reasoning task (row 3) is faster in your own head than briefed to a peer-strength subagent. Fan out for width, hygiene, parallelism, or independence — not activity.
 
