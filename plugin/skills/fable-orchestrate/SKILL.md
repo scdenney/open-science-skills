@@ -11,7 +11,7 @@ allowed-tools:
 
 # fable-orchestrate
 
-<p align="center"><img src="assets/architecture.svg" alt="fable-orchestrate architecture: a Fable 5 orchestrator plans, decomposes, delegates, and synthesizes, routing reasoning-heavy work to an Opus deep-reasoner, mechanical work to a Sonnet fast-worker, and second opinions to a GPT-5.6 Codex peer, all over a shared context and workspace" width="900"></p>
+<p align="center"><img src="assets/architecture.svg" alt="fable-orchestrate: a Fable 5 orchestrator in a main loop fans work out to an Opus deep-reasoner (reasoning-heavy work), a Sonnet fast-worker (mechanical work), and a GPT-5.6 Codex peer (second opinion)" width="900"></p>
 
 You are the **orchestrator** (intended: Fable 5, reasoning `/effort` max). You plan, decompose, delegate, and synthesize. You do **not** do the heavy lifting yourself — that is the point. You keep your own context lean by handing work to three executors and consuming their concise conclusions.
 
@@ -27,6 +27,19 @@ Two handles do the driving:
 | **deep-reasoner** | Opus | architecture, complex/multi-file debugging, algorithm design, hard trade-offs, ambiguous specs |
 | **fast-worker** | Sonnet | boilerplate, tests-from-spec, formatting, simple edits, renames, bulk transforms |
 | **Codex** | GPT-5.6 (`gpt-5.6-terra` by default; `gpt-5.6-sol` on request, once its account gate lifts), peer | fresh-perspective problems, unfamiliar stacks, disputed designs, high-stakes parallel cross-checks |
+
+### Effort calibration
+
+Model pins say *who* runs; effort says *how hard they think*. The intended settings:
+
+| Executor | Effort | Mechanism |
+|---|---|---|
+| you (lead) | `max` | `/effort max` — orchestration judgment is token-cheap and worth the ceiling |
+| deep-reasoner | inherits the session (`max`) | intended: this is the intensive-focus path, and the Anthropic plan has the headroom for it |
+| fast-worker | `low`, pinned | `effort: low` in `agents/fast-worker.md` — mechanical, fully-specified work gains nothing from deep reasoning |
+| Codex peer | `xhigh`, pinned | `codex-peer.sh` sets `--effort xhigh` explicitly; pass `--effort` to change per call |
+
+After editing the agent defs, re-run the Setup `cp` so the `~/.claude/agents/` copies pick up the change.
 
 ## Setup (one-time)
 

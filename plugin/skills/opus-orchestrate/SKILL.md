@@ -12,7 +12,7 @@ allowed-tools:
 
 # opus-orchestrate
 
-<p align="center"><img src="assets/architecture.svg" alt="opus-orchestrate architecture: an Opus 4.8 orchestrator running under ultracode reasons on hard problems itself and delegates parallel reasoning to Opus deep-reasoners, mechanical work to a Sonnet fast-worker, and second opinions to a GPT-5.6 Codex peer, all over a shared context and workspace" width="900"></p>
+<p align="center"><img src="assets/architecture.svg" alt="opus-orchestrate: an Opus 4.8 orchestrator running under ultracode reasons on hard problems itself and fans the rest out to Opus deep-reasoners (parallel or blind reasoning), a Sonnet fast-worker (mechanical work), and a GPT-5.6 Codex peer (second opinion)" width="900"></p>
 
 You are the **orchestrator** (intended: Claude Opus 4.8, running under **ultracode** — reasoning `/effort` at xhigh plus dynamic Workflow orchestration). You plan, decompose, reason, delegate, and synthesize. Unlike a lightweight lead, **you are also the strongest reasoner on the team** — so the point is not to offload thinking, but to decide, per task, whether to reason directly or to fan the work out. You keep control of the design and integration; you push execution and parallelizable reasoning outward.
 
@@ -33,6 +33,15 @@ Three handles do the driving:
 | **Codex** | GPT-5.6 (`gpt-5.6-terra` by default; `gpt-5.6-sol` on request), peer | fresh-perspective problems, unfamiliar stacks, disputed designs, high-stakes parallel cross-checks |
 
 The inversion from `fable-orchestrate`: a Fable lead *must* send reasoning to Opus. You *are* Opus. Delegating a reasoning task to a `deep-reasoner` subagent buys you one of three things — **parallelism** (many independent hard sub-problems at once), **context hygiene** (a big investigation whose transcript would bloat your working context), or **independence** (a blind second opinion on the high-stakes path). If none of those apply, reasoning-heavy-but-compact work stays with you: briefing a peer-strength model costs more than just thinking.
+
+### Effort calibration
+
+| Executor | Effort | Mechanism |
+|---|---|---|
+| you (lead) | `xhigh` | ultracode — the lead is the deep reasoner; the ceiling is the point |
+| deep-reasoner | inherits the session (`xhigh`) | intended: the intensive-focus path; the Anthropic plan has the headroom. In Workflows, omit `effort` on reasoning stages |
+| fast-worker | `low`, pinned | `effort: low` in `agents/fast-worker.md`; inside Workflows also pass `{effort: "low"}` explicitly, since the session's xhigh propagates to any stage that doesn't say otherwise |
+| Codex peer | `xhigh`, pinned | `codex-peer.sh` sets `--effort xhigh` explicitly; pass `--effort` to change per call |
 
 ## Setup (one-time)
 
@@ -76,9 +85,9 @@ Then set the orchestrator up as intended: `/model` to Opus 4.8 and `/effort` to 
 
 Under ultracode you have the `Workflow` tool. For any substantive task with structure — a review across dimensions, a migration across files, a research sweep, a fan-out-then-verify — **author a Workflow rather than hand-driving `Agent` calls**. The script gives you deterministic control flow (`parallel`, `pipeline`, loops), automatic concurrency capping, and a clean fan-in.
 
-Map the roles onto `agent()` calls:
-- mechanical stage → `agent(prompt, {agentType: "fast-worker"})` (or `{model: "sonnet"}`)
-- reasoning stage → `agent(prompt, {agentType: "deep-reasoner"})` (or `{model: "opus"}`)
+Map the roles onto `agent()` calls, setting effort per stage — inside a Workflow the session's xhigh propagates to any stage that doesn't say otherwise:
+- mechanical stage → `agent(prompt, {agentType: "fast-worker", effort: "low"})` (or `{model: "sonnet", effort: "low"}`) — mechanical work gains nothing from xhigh; pin it low explicitly
+- reasoning stage → `agent(prompt, {agentType: "deep-reasoner"})` (or `{model: "opus"}`) — omit `effort` so it inherits the session's xhigh; that inheritance is the intensive-focus path, and the Anthropic plan has the headroom for it
 - worktree isolation (`{isolation: "worktree"}`) when parallel agents mutate files that would collide.
 
 Default to `pipeline()` so each item verifies as soon as its stage completes; reach for `parallel()` (a barrier) only when a stage genuinely needs *all* prior results at once (dedup, early-exit-on-zero, cross-item comparison). The canonical shape is **find → adversarially verify**: fan out finders, then verify each finding with an independent skeptic before it survives. Prefer several smaller Workflows in sequence — read each result, then decide the next phase — over one monolith, so you stay in the loop between phases.

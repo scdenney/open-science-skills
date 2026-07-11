@@ -1,44 +1,28 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1680 940" width="1680" height="940" role="img">
-<defs><marker id="ah-o" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="13" markerHeight="13" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L10,5 L0,10 z" fill="#C0562F"/></marker><marker id="ah-g" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="12" markerHeight="12" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L10,5 L0,10 z" fill="#8A8A85"/></marker></defs>
-<rect x="0" y="0" width="1680" height="940" fill="#F2EEE4"/>
-<rect x="430" y="210" width="380" height="220" rx="16" ry="16" fill="#FEFDFB" stroke="#2F2F2A" stroke-width="2"/>
-<text x="620" y="262" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="30" fill="#2F2F2A" font-weight="bold" font-style="normal" text-anchor="middle"><tspan x="620" dy="0">Orchestrator</tspan></text>
-<text x="620" y="300" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="24" fill="#4A4A45" font-weight="normal" font-style="italic" text-anchor="middle"><tspan x="620" dy="0">Opus 4.8 · ultracode</tspan></text>
-<text x="620" y="344" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="19" fill="#4A4A45" font-weight="normal" font-style="normal" text-anchor="middle"><tspan x="620" dy="0">Plans · reasons on hard problems</tspan><tspan x="620" dy="26">itself · delegates · synthesizes</tspan></text>
-<text x="620" y="458" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="20" fill="#4A4A45" font-weight="normal" font-style="italic" text-anchor="middle"><tspan x="620" dy="0">xhigh reasoning · Workflow fan-out</tspan></text>
-<path d="M 428 288 C 326 273, 326 362, 426 350" fill="none" stroke="#8A8A85" stroke-width="2" marker-end="url(#ah-g)"/>
-<text x="252" y="306" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="20" fill="#4A4A45" font-weight="normal" font-style="italic" text-anchor="middle"><tspan x="252" dy="0">orchestration</tspan><tspan x="252" dy="26">loop</tspan></text>
-<rect x="1230" y="60" width="370" height="190" rx="16" ry="16" fill="#FEFDFB" stroke="#2F2F2A" stroke-width="2"/>
-<text x="1415" y="108" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="30" fill="#2F2F2A" font-weight="bold" font-style="normal" text-anchor="middle"><tspan x="1415" dy="0">Deep-reasoner</tspan></text>
-<text x="1415" y="146" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="24" fill="#4A4A45" font-weight="normal" font-style="italic" text-anchor="middle"><tspan x="1415" dy="0">Opus</tspan></text>
-<text x="1415" y="184" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="20" fill="#8A8A85" font-weight="normal" font-style="italic" text-anchor="middle"><tspan x="1415" dy="0">parallel fan-out · context</tspan><tspan x="1415" dy="27">hygiene · blind second line</tspan></text>
-<rect x="1230" y="300" width="370" height="190" rx="16" ry="16" fill="#FEFDFB" stroke="#2F2F2A" stroke-width="2"/>
-<text x="1415" y="348" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="30" fill="#2F2F2A" font-weight="bold" font-style="normal" text-anchor="middle"><tspan x="1415" dy="0">Fast-worker</tspan></text>
-<text x="1415" y="386" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="24" fill="#4A4A45" font-weight="normal" font-style="italic" text-anchor="middle"><tspan x="1415" dy="0">Sonnet</tspan></text>
-<text x="1415" y="424" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="20" fill="#8A8A85" font-weight="normal" font-style="italic" text-anchor="middle"><tspan x="1415" dy="0">boilerplate · tests</tspan><tspan x="1415" dy="27">formatting · bulk edits</tspan></text>
-<rect x="1230" y="545" width="370" height="190" rx="16" ry="16" fill="#FEFDFB" stroke="#2F2F2A" stroke-width="2"/>
-<text x="1415" y="593" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="30" fill="#2F2F2A" font-weight="bold" font-style="normal" text-anchor="middle"><tspan x="1415" dy="0">Codex peer</tspan></text>
-<text x="1415" y="631" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="24" fill="#4A4A45" font-weight="normal" font-style="italic" text-anchor="middle"><tspan x="1415" dy="0">GPT-5.6 · gpt-5.6-terra</tspan></text>
-<text x="1415" y="669" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="20" fill="#8A8A85" font-weight="normal" font-style="italic" text-anchor="middle"><tspan x="1415" dy="0">fresh perspective</tspan><tspan x="1415" dy="27">cross-check · disputed design</tspan></text>
-<rect x="510" y="660" width="520" height="170" rx="14" ry="14" fill="#E7E2D4" stroke="#C9C2B0" stroke-width="2"/>
-<text x="770" y="725" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="28" fill="#2F2F2A" font-weight="bold" font-style="normal" text-anchor="middle"><tspan x="770" dy="0">Shared context / workspace</tspan></text>
-<text x="770" y="763" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="22" fill="#4A4A45" font-weight="normal" font-style="italic" text-anchor="middle"><tspan x="770" dy="0">conversation · repo · tools · history</tspan></text>
-<path d="M 606 470 L 606 654" fill="none" stroke="#C0562F" stroke-width="2" marker-end="url(#ah-o)"/>
-<path d="M 654 654 L 654 470" fill="none" stroke="#8A8A85" stroke-width="2" stroke-dasharray="7 5" marker-end="url(#ah-g)"/>
-<text x="676" y="560" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="22" fill="#4A4A45" font-weight="normal" font-style="italic" text-anchor="start"><tspan x="676" dy="0">read / write</tspan></text>
-<path d="M 812 250 C 980 205, 1100 158, 1226 150" fill="none" stroke="#C0562F" stroke-width="2" marker-end="url(#ah-o)"/>
-<path d="M 812 315 C 980 348, 1100 375, 1226 385" fill="none" stroke="#C0562F" stroke-width="2" marker-end="url(#ah-o)"/>
-<path d="M 812 390 C 902 600, 1010 606, 1226 606" fill="none" stroke="#C0562F" stroke-width="2" marker-end="url(#ah-o)"/>
-<path d="M 1226 190 C 1100 212, 980 250, 812 278" fill="none" stroke="#8A8A85" stroke-width="2" stroke-dasharray="7 5" marker-end="url(#ah-g)"/>
-<path d="M 1226 428 C 1100 445, 980 402, 812 360" fill="none" stroke="#8A8A85" stroke-width="2" stroke-dasharray="7 5" marker-end="url(#ah-g)"/>
-<path d="M 1226 650 C 1050 648, 950 640, 812 430" fill="none" stroke="#8A8A85" stroke-width="2" stroke-dasharray="7 5" marker-end="url(#ah-g)"/>
-<text x="1055" y="120" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="21" fill="#C0562F" font-weight="normal" font-style="italic" text-anchor="middle"><tspan x="1055" dy="0">reasoning that fans out</tspan><tspan x="1055" dy="25">or must stay independent</tspan></text>
-<text x="1010" y="272" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="20" fill="#8A8A85" font-weight="normal" font-style="italic" text-anchor="middle"><tspan x="1010" dy="0">concise conclusion</tspan></text>
-<text x="1050" y="338" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="21" fill="#C0562F" font-weight="normal" font-style="italic" text-anchor="middle"><tspan x="1050" dy="0">mechanical, fully specified work</tspan></text>
-<text x="1050" y="468" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="20" fill="#8A8A85" font-weight="normal" font-style="italic" text-anchor="middle"><tspan x="1050" dy="0">checkable artifact</tspan></text>
-<text x="1080" y="560" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="21" fill="#C0562F" font-weight="normal" font-style="italic" text-anchor="middle"><tspan x="1080" dy="0">second opinion /</tspan><tspan x="1080" dy="25">high-stakes cross-check</tspan></text>
-<text x="1130" y="674" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="20" fill="#8A8A85" font-weight="normal" font-style="italic" text-anchor="middle"><tspan x="1130" dy="0">checkable artifact</tspan></text>
-<line x1="490" y1="891" x2="690" y2="891" stroke="#B9B2A0" stroke-width="1"/>
-<line x1="990" y1="891" x2="1190" y2="891" stroke="#B9B2A0" stroke-width="1"/>
-<text x="840" y="900" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="30" fill="#C0562F" font-weight="normal" font-style="italic" text-anchor="middle"><tspan x="840" dy="0">opus-orchestrate</tspan></text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" role="img">
+<defs><marker id="ah-o" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="12" markerHeight="12" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L10,5 L0,10 z" fill="#C0562F"/></marker><marker id="ah-k" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="11" markerHeight="11" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L10,5 L0,10 z" fill="#1E1E1B"/></marker></defs>
+<rect x="0" y="0" width="1600" height="900" fill="#F2EEE4"/>
+<rect x="260" y="300" width="400" height="280" rx="22" ry="22" fill="#C4674A" stroke="#2F2F2A" stroke-width="2.5" stroke-dasharray="7 5"/>
+<text x="460" y="402" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="40" fill="#1E1E1B" font-weight="bold" text-anchor="middle">Orchestrator</text>
+<text x="460" y="452" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="28" fill="#F7EFE2" font-style="italic" text-anchor="middle">Opus 4.8 · ultracode</text>
+<text x="460" y="500" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="19" fill="#3B2A22" font-style="italic" text-anchor="middle">reasons itself · delegates the rest</text>
+<path d="M 260 360 C 180 345, 180 515, 258 500" fill="none" stroke="#1E1E1B" stroke-width="3" marker-end="url(#ah-k)"/>
+<text x="200" y="548" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="22" fill="#4A4A45" font-style="italic" text-anchor="middle">main loop</text>
+<rect x="1010" y="90" width="390" height="180" rx="16" ry="16" fill="#FEFDFB" stroke="#2F2F2A" stroke-width="2"/>
+<text x="1205" y="170" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="30" fill="#1E1E1B" font-weight="bold" text-anchor="middle">Deep-reasoner</text>
+<text x="1205" y="207" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="24" fill="#4A4A45" font-style="italic" text-anchor="middle">Opus</text>
+<rect x="1010" y="360" width="390" height="180" rx="16" ry="16" fill="#FEFDFB" stroke="#2F2F2A" stroke-width="2"/>
+<text x="1205" y="440" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="30" fill="#1E1E1B" font-weight="bold" text-anchor="middle">Fast-worker</text>
+<text x="1205" y="477" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="24" fill="#4A4A45" font-style="italic" text-anchor="middle">Sonnet</text>
+<rect x="1010" y="630" width="390" height="180" rx="16" ry="16" fill="#FEFDFB" stroke="#2F2F2A" stroke-width="2"/>
+<text x="1205" y="710" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="30" fill="#1E1E1B" font-weight="bold" text-anchor="middle">Codex peer</text>
+<text x="1205" y="747" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="24" fill="#4A4A45" font-style="italic" text-anchor="middle">GPT-5.6 · gpt-5.6-terra</text>
+<line x1="660" y1="345" x2="1010" y2="180" stroke="#C0562F" stroke-width="3" marker-end="url(#ah-o)"/>
+<line x1="660" y1="440" x2="1010" y2="450" stroke="#C0562F" stroke-width="3" marker-end="url(#ah-o)"/>
+<line x1="660" y1="535" x2="1010" y2="720" stroke="#C0562F" stroke-width="3" marker-end="url(#ah-o)"/>
+<text x="780" y="208" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="22" fill="#C0562F" font-style="italic" text-anchor="middle">parallel or blind reasoning</text>
+<text x="835" y="424" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="22" fill="#C0562F" font-style="italic" text-anchor="middle">mechanical work</text>
+<text x="845" y="578" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="22" fill="#C0562F" font-style="italic" text-anchor="middle">second opinion</text>
+<line x1="470" y1="861" x2="645" y2="861" stroke="#B9B2A0" stroke-width="1"/>
+<line x1="955" y1="861" x2="1130" y2="861" stroke="#B9B2A0" stroke-width="1"/>
+<text x="800" y="870" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="28" fill="#C0562F" font-style="italic" text-anchor="middle">opus-orchestrate</text>
 </svg>
