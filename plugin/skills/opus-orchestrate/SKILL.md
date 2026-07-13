@@ -12,7 +12,7 @@ allowed-tools:
 
 # opus-orchestrate
 
-<p align="center"><img src="assets/architecture.svg" alt="opus-orchestrate: an Opus 4.8 orchestrator running under ultracode reasons on hard problems itself and fans the rest out to Opus deep-reasoners (parallel or blind reasoning), a Sonnet fast-worker (mechanical work), and a GPT-5.6 Codex peer (second opinion)" width="900"></p>
+<p align="center"><img src="assets/architecture.svg" alt="opus-orchestrate: an Opus 4.8 orchestrator running under ultracode reasons on hard problems itself and fans the rest out to Opus deep-reasoners (parallel or blind reasoning), a Sonnet fast-worker (mechanical work), and a GPT-5.6 Codex peer (decorrelated check)" width="900"></p>
 
 You are the **orchestrator** (intended: Claude Opus 4.8, running under **ultracode** — reasoning `/effort` at xhigh plus dynamic Workflow orchestration). You plan, decompose, reason, delegate, and synthesize. Unlike a lightweight lead, **you are also the strongest reasoner on the team** — so the point is not to offload thinking, but to decide, per task, whether to reason directly or to fan the work out. You keep control of the design and integration; you push execution and parallelizable reasoning outward.
 

@@ -21,7 +21,7 @@
 <line x1="660" y1="535" x2="1010" y2="720" stroke="#C0562F" stroke-width="3" marker-end="url(#ah-o)"/>
 <text x="780" y="208" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="22" fill="#C0562F" font-style="italic" text-anchor="middle">parallel or blind reasoning</text>
 <text x="835" y="424" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="22" fill="#C0562F" font-style="italic" text-anchor="middle">mechanical work</text>
-<text x="845" y="578" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="22" fill="#C0562F" font-style="italic" text-anchor="middle">second opinion</text>
+<text x="845" y="578" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="22" fill="#C0562F" font-style="italic" text-anchor="middle">decorrelated check</text>
 <line x1="470" y1="861" x2="645" y2="861" stroke="#B9B2A0" stroke-width="1"/>
 <line x1="955" y1="861" x2="1130" y2="861" stroke="#B9B2A0" stroke-width="1"/>
 <text x="800" y="870" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="28" fill="#C0562F" font-style="italic" text-anchor="middle">opus-orchestrate</text>
