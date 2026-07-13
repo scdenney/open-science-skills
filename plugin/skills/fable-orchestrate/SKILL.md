@@ -160,7 +160,7 @@ Two names for the same trap, one defense:
 **Defense (apply to every delegation):**
 1. **Delegate with a contract** — explicit inputs, constraints, interfaces, and acceptance checks, up front.
 2. **Demand a checkable artifact, not a verdict** — a test that runs, a diff that applies, a cited quote, a reproduction — plus confidence and a "what would make this wrong" note. If a task cannot produce one, that is the signal it belongs on the parallel path.
-3. **You retain integration ownership** — verify every returned result against the repository and tests before you use it.
+3. **You retain integration ownership — of correctness *and* rigor.** Verify every returned result against the repository and tests, then read the deliverable as the domain expert you are: a fast delegate returns work that is correct but *thin* — an approximate figure where precision matters, a result asserted where the mechanism behind it should be explained, a lone headline where a careful reader needs the comparison or the bound. Do not ship the delegate's summary as-is. Add the depth a rigorous expert would: the exact quantity, the mechanism spelled out, the comparison made explicit. This is why you lead with the strongest model — the delegate gets it right; you make it rigorous.
 4. On the parallel path, enforce the disagreement-as-gate rule above.
 
 ## Gotchas
