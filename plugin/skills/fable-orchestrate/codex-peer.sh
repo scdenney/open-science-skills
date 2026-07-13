@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# codex-peer.sh — invoke Codex (GPT-5.6 "Sol") as a peer engineer for /fable-orchestrate.
+# codex-peer.sh — invoke Codex (GPT-5.6 "Terra") as a peer engineer for /fable-orchestrate.
 #
 # Codex is a different-vendor peer, not a reviewer. Use it two ways:
 #   consult   (default) — read-only. Ask a question / get a second approach. Prints the answer.

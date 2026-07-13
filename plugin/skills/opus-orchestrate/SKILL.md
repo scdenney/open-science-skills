@@ -40,7 +40,7 @@ The inversion from `fable-orchestrate`: a Fable lead *must* send reasoning to Op
 |---|---|---|
 | you (lead) | `xhigh` | ultracode — the lead is the deep reasoner; the ceiling is the point |
 | deep-reasoner | inherits the session (`xhigh`) | intended: the intensive-focus path; the Anthropic plan has the headroom. In Workflows, omit `effort` on reasoning stages |
-| fast-worker | `low`, pinned | `effort: low` in `agents/fast-worker.md`; inside Workflows also pass `{effort: "low"}` explicitly, since the session's xhigh propagates to any stage that doesn't say otherwise |
+| fast-worker | `medium`, pinned | `effort: medium` in `agents/fast-worker.md`; inside Workflows also pass `{effort: "medium"}` explicitly, since the session's xhigh propagates to any stage that doesn't say otherwise |
 | Codex peer | `xhigh`, pinned | `codex-peer.sh` sets `--effort xhigh` explicitly; pass `--effort` to change per call |
 
 ## Setup (one-time)
@@ -86,7 +86,7 @@ Then set the orchestrator up as intended: `/model` to Opus 4.8 and `/effort` to 
 Under ultracode you have the `Workflow` tool. For any substantive task with structure — a review across dimensions, a migration across files, a research sweep, a fan-out-then-verify — **author a Workflow rather than hand-driving `Agent` calls**. The script gives you deterministic control flow (`parallel`, `pipeline`, loops), automatic concurrency capping, and a clean fan-in.
 
 Map the roles onto `agent()` calls, setting effort per stage — inside a Workflow the session's xhigh propagates to any stage that doesn't say otherwise:
-- mechanical stage → `agent(prompt, {agentType: "fast-worker", effort: "low"})` (or `{model: "sonnet", effort: "low"}`) — mechanical work gains nothing from xhigh; pin it low explicitly
+- mechanical stage → `agent(prompt, {agentType: "fast-worker", effort: "medium"})` (or `{model: "sonnet", effort: "medium"}`) — mechanical work gains nothing from xhigh; pin it to medium explicitly
 - reasoning stage → `agent(prompt, {agentType: "deep-reasoner"})` (or `{model: "opus"}`) — omit `effort` so it inherits the session's xhigh; that inheritance is the intensive-focus path, and the Anthropic plan has the headroom for it
 - worktree isolation (`{isolation: "worktree"}`) when parallel agents mutate files that would collide.
 

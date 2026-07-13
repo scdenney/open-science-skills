@@ -36,7 +36,7 @@ Model pins say *who* runs; effort says *how hard they think*. The intended setti
 |---|---|---|
 | you (lead) | `max` | `/effort max` — orchestration judgment is token-cheap and worth the ceiling |
 | deep-reasoner | inherits the session (`max`) | intended: this is the intensive-focus path, and the Anthropic plan has the headroom for it |
-| fast-worker | `low`, pinned | `effort: low` in `agents/fast-worker.md` — mechanical, fully-specified work gains nothing from deep reasoning |
+| fast-worker | `medium`, pinned | `effort: medium` in `agents/fast-worker.md` — fully-specified work still has to get the API and conventions right; medium is Sonnet's balance point, cheap enough to stay the default execution tier |
 | Codex peer | `xhigh`, pinned | `codex-peer.sh` sets `--effort xhigh` explicitly; pass `--effort` to change per call |
 
 After editing the agent defs, re-run the Setup `cp` so the `~/.claude/agents/` copies pick up the change.

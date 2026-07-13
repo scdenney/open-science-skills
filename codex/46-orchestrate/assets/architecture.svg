@@ -1,24 +1,25 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" role="img">
 <defs><marker id="ah-o" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="12" markerHeight="12" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L10,5 L0,10 z" fill="#C0562F"/></marker><marker id="ah-k" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="11" markerHeight="11" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L10,5 L0,10 z" fill="#1E1E1B"/></marker></defs>
 <rect x="0" y="0" width="1600" height="900" fill="#F2EEE4"/>
+<text x="1205" y="66" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="21" fill="#C0562F" font-style="italic" text-anchor="middle">out-of-band · interactive-only</text>
 <rect x="240" y="300" width="440" height="280" rx="22" ry="22" fill="#C4674A" stroke="#2F2F2A" stroke-width="2.5" stroke-dasharray="7 5"/>
 <text x="460" y="402" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="36" fill="#1E1E1B" font-weight="bold" text-anchor="middle">Codex orchestrator</text>
-<text x="460" y="452" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="28" fill="#F7EFE2" font-style="italic" text-anchor="middle">GPT-5.6 · terra</text>
-<text x="460" y="500" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="20" fill="#3B2A22" font-style="italic" text-anchor="middle">plans · delegates · integrates</text>
+<text x="460" y="452" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="28" fill="#F7EFE2" font-style="italic" text-anchor="middle">gpt-5.6-sol · medium</text>
+<text x="460" y="500" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="20" fill="#3B2A22" font-style="italic" text-anchor="middle">reasons hard parts · delegates down</text>
 <path d="M 240 360 C 160 345, 160 515, 238 500" fill="none" stroke="#1E1E1B" stroke-width="3" marker-end="url(#ah-k)"/>
 <text x="180" y="548" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="22" fill="#4A4A45" font-style="italic" text-anchor="middle">main loop</text>
 <rect x="1010" y="90" width="390" height="150" rx="16" ry="16" fill="#FEFDFB" stroke="#2F2F2A" stroke-width="2"/>
 <text x="1205" y="155" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="30" fill="#1E1E1B" font-weight="bold" text-anchor="middle">Researcher</text>
-<text x="1205" y="192" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="24" fill="#4A4A45" font-style="italic" text-anchor="middle">same model as the lead</text>
+<text x="1205" y="192" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="24" fill="#4A4A45" font-style="italic" text-anchor="middle">gpt-5.6-terra · out-of-band</text>
 <rect x="1010" y="280" width="390" height="150" rx="16" ry="16" fill="#FEFDFB" stroke="#2F2F2A" stroke-width="2"/>
 <text x="1205" y="345" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="30" fill="#1E1E1B" font-weight="bold" text-anchor="middle">Implementer</text>
-<text x="1205" y="382" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="24" fill="#4A4A45" font-style="italic" text-anchor="middle">same model as the lead</text>
+<text x="1205" y="382" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="24" fill="#4A4A45" font-style="italic" text-anchor="middle">gpt-5.6-terra · out-of-band</text>
 <rect x="1010" y="470" width="390" height="150" rx="16" ry="16" fill="#FEFDFB" stroke="#2F2F2A" stroke-width="2"/>
 <text x="1205" y="535" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="30" fill="#1E1E1B" font-weight="bold" text-anchor="middle">Verifier</text>
-<text x="1205" y="572" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="24" fill="#4A4A45" font-style="italic" text-anchor="middle">same model as the lead</text>
+<text x="1205" y="572" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="24" fill="#4A4A45" font-style="italic" text-anchor="middle">gpt-5.6-terra · out-of-band</text>
 <rect x="1010" y="660" width="390" height="150" rx="16" ry="16" fill="#FEFDFB" stroke="#2F2F2A" stroke-width="2" stroke-dasharray="7 5"/>
-<text x="1205" y="725" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="30" fill="#1E1E1B" font-weight="bold" text-anchor="middle">Sol consult</text>
-<text x="1205" y="762" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="24" fill="#4A4A45" font-style="italic" text-anchor="middle">gpt-5.6-sol · xhigh</text>
+<text x="1205" y="725" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="30" fill="#1E1E1B" font-weight="bold" text-anchor="middle">Headless fallback</text>
+<text x="1205" y="762" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="24" fill="#4A4A45" font-style="italic" text-anchor="middle">gpt-5.6-terra lead</text>
 <line x1="680" y1="335" x2="1010" y2="165" stroke="#C0562F" stroke-width="3" marker-end="url(#ah-o)"/>
 <line x1="680" y1="405" x2="1010" y2="355" stroke="#C0562F" stroke-width="3" marker-end="url(#ah-o)"/>
 <line x1="680" y1="475" x2="1010" y2="545" stroke="#C0562F" stroke-width="3" marker-end="url(#ah-o)"/>
@@ -26,7 +27,7 @@
 <text x="845" y="190" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="22" fill="#C0562F" font-style="italic" text-anchor="middle">bounded research</text>
 <text x="855" y="345" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="22" fill="#C0562F" font-style="italic" text-anchor="middle">specified implementation</text>
 <text x="845" y="484" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="22" fill="#C0562F" font-style="italic" text-anchor="middle">verification</text>
-<text x="770" y="710" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="22" fill="#C0562F" font-style="italic" text-anchor="middle">hardest problems · one-shot</text>
+<text x="770" y="710" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="22" fill="#C0562F" font-style="italic" text-anchor="middle">when out-of-band can't run</text>
 <line x1="491" y1="861" x2="666" y2="861" stroke="#B9B2A0" stroke-width="1"/>
 <line x1="934" y1="861" x2="1109" y2="861" stroke="#B9B2A0" stroke-width="1"/>
 <text x="800" y="870" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="28" fill="#C0562F" font-style="italic" text-anchor="middle">46-orchestrate</text>
