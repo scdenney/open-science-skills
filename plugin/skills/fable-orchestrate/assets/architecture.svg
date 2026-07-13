@@ -4,7 +4,7 @@
 <rect x="260" y="300" width="400" height="280" rx="22" ry="22" fill="#C4674A" stroke="#2F2F2A" stroke-width="2.5" stroke-dasharray="7 5"/>
 <text x="460" y="402" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="40" fill="#1E1E1B" font-weight="bold" text-anchor="middle">Orchestrator</text>
 <text x="460" y="452" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="28" fill="#F7EFE2" font-style="italic" text-anchor="middle">Fable 5</text>
-<text x="460" y="500" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="20" fill="#3B2A22" font-style="italic" text-anchor="middle">plans · delegates · synthesizes</text>
+<text x="460" y="500" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="20" fill="#3B2A22" font-style="italic" text-anchor="middle">reasons · delegates · integrates</text>
 <path d="M 260 360 C 180 345, 180 515, 258 500" fill="none" stroke="#1E1E1B" stroke-width="3" marker-end="url(#ah-k)"/>
 <text x="200" y="548" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="22" fill="#4A4A45" font-style="italic" text-anchor="middle">main loop</text>
 <rect x="1010" y="90" width="390" height="180" rx="16" ry="16" fill="#FEFDFB" stroke="#2F2F2A" stroke-width="2"/>
@@ -19,9 +19,9 @@
 <line x1="660" y1="345" x2="1010" y2="180" stroke="#C0562F" stroke-width="3" marker-end="url(#ah-o)"/>
 <line x1="660" y1="440" x2="1010" y2="450" stroke="#C0562F" stroke-width="3" marker-end="url(#ah-o)"/>
 <line x1="660" y1="535" x2="1010" y2="720" stroke="#C0562F" stroke-width="3" marker-end="url(#ah-o)"/>
-<text x="785" y="222" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="22" fill="#C0562F" font-style="italic" text-anchor="middle">reasoning-heavy work</text>
+<text x="785" y="222" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="22" fill="#C0562F" font-style="italic" text-anchor="middle">wide / parallel reasoning</text>
 <text x="835" y="424" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="22" fill="#C0562F" font-style="italic" text-anchor="middle">mechanical work</text>
-<text x="845" y="578" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="22" fill="#C0562F" font-style="italic" text-anchor="middle">second opinion</text>
+<text x="845" y="578" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="22" fill="#C0562F" font-style="italic" text-anchor="middle">decorrelated check</text>
 <line x1="470" y1="861" x2="645" y2="861" stroke="#B9B2A0" stroke-width="1"/>
 <line x1="955" y1="861" x2="1130" y2="861" stroke="#B9B2A0" stroke-width="1"/>
 <text x="800" y="870" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="28" fill="#C0562F" font-style="italic" text-anchor="middle">fable-orchestrate</text>

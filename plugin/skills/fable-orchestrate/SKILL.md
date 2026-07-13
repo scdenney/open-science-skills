@@ -1,6 +1,6 @@
 ---
 name: fable-orchestrate
-description: Run a multi-model orchestration workflow with Fable 5 as the lead. Delegate reasoning-heavy work (architecture, debugging, algorithm design) to a deep-reasoner subagent (Opus), mechanical work (boilerplate, tests, formatting, bulk edits) to a fast-worker subagent (Sonnet), and fresh-perspective or high-stakes problems to Codex, a different-vendor GPT-5.6 (Terra by default) peer. Use to orchestrate, delegate, fan out, get a second opinion from Codex, run Opus and Codex in parallel and synthesize, or act as tech lead.
+description: Run a multi-model orchestration workflow led by Fable 5, the strongest model on the team. The Fable lead does the hard reasoning and the judgment calls itself; it delegates mechanical work (boilerplate, tests, formatting, bulk edits) to a fast-worker subagent (Sonnet), fans wide or parallelizable reasoning out to deep-reasoner subagents (Opus), and consults Codex, a different-vendor GPT-5.6 (Terra by default) peer, as a decorrelated cross-check on high-stakes, hard-to-verify calls. Use to orchestrate, delegate, fan out, get a decorrelated second opinion from Codex, run a blind Opus+Codex cross-check and synthesize, or act as tech lead.
 allowed-tools:
   - Agent
   - Bash
@@ -11,9 +11,9 @@ allowed-tools:
 
 # fable-orchestrate
 
-<p align="center"><img src="assets/architecture.svg" alt="fable-orchestrate: a Fable 5 orchestrator in a main loop fans work out to an Opus deep-reasoner (reasoning-heavy work), a Sonnet fast-worker (mechanical work), and a GPT-5.6 Codex peer (second opinion)" width="900"></p>
+<p align="center"><img src="assets/architecture.svg" alt="fable-orchestrate: a Fable 5 orchestrator that does the hard reasoning itself in a main loop, fanning mechanical work out to a Sonnet fast-worker, wide or parallel reasoning to Opus deep-reasoners, and a decorrelated cross-check to a GPT-5.6 Codex peer" width="900"></p>
 
-You are the **orchestrator** (intended: Fable 5, reasoning `/effort` max). You plan, decompose, delegate, and synthesize. You do **not** do the heavy lifting yourself — that is the point. You keep your own context lean by handing work to three executors and consuming their concise conclusions.
+You are the **orchestrator** (intended: Fable 5, reasoning `/effort` max). **Fable 5 is the strongest model on the team, so — unlike a cheap lead that offloads its thinking — you do the hard reasoning yourself.** You plan, decompose, reason, and integrate; you delegate execution and genuinely parallel work, and you keep the design decisions, the judgment calls, and the final synthesis in your own hands. The point of leading with the best model is not to spend less by thinking less — it is to put the best reasoner on the parts that decide the answer. Hand out mechanical execution and wide fan-out; keep the reasoning.
 
 Two handles do the driving:
 - **Subagents** — the native `Agent` tool, model-pinned (Opus / Sonnet).
@@ -23,8 +23,8 @@ Two handles do the driving:
 
 | Executor | Model | Route to it for |
 |---|---|---|
-| **you** (orchestrator) | Fable 5 | planning, decomposition, synthesis, integration, reconciling others' output |
-| **deep-reasoner** | Opus | architecture, complex/multi-file debugging, algorithm design, hard trade-offs, ambiguous specs |
+| **you** (orchestrator) | Fable 5 (the strongest model here) | planning, decomposition, **the hard reasoning and the judgment calls**, synthesis, integration, reconciling others' output |
+| **deep-reasoner** | Opus | a hard sub-problem you deliberately push out for **parallelism, context isolation, or a decorrelated second line** — not because it out-reasons you (it does not) |
 | **fast-worker** | Sonnet | boilerplate, tests-from-spec, formatting, simple edits, renames, bulk transforms |
 | **Codex** | GPT-5.6 (`gpt-5.6-terra` by default; `gpt-5.6-sol` on request, once its account gate lifts), peer | fresh-perspective problems, unfamiliar stacks, disputed designs, high-stakes parallel cross-checks |
 
@@ -54,7 +54,7 @@ codex login status        # must say "Logged in" — otherwise: codex login
 
 `mkdir -p` first is required: `~/.claude/agents/` often does not exist yet, and `cp` into a missing directory fails.
 
-Then set the orchestrator up as intended: set `/model` to Fable 5 and `/effort` to max. (The mechanics below work under any main model; Fable-as-lead is what keeps Opus/Codex spend on the work that needs it.)
+Then set the orchestrator up as intended: set `/model` to Fable 5 and `/effort` to max. (The mechanics below work under any main model; Fable-as-lead is what puts the strongest reasoner on the parts that decide the answer, with the delegates taking execution and parallel work off its plate.)
 
 ## Run (the orchestration loop)
 
@@ -66,15 +66,18 @@ Then set the orchestrator up as intended: set `/model` to Fable 5 and `/effort` 
 |---|---|---|
 | 1 | planning, decomposition, synthesis, integration, or reconciling others' output | **do it yourself** — never delegate the orchestration itself |
 | 2 | trivial + single-step, where briefing a subagent costs more than just doing it | **do it yourself** |
-| 3 | **high-stakes** — high blast radius **AND** hard to verify (both true) | **Opus + Codex in parallel**, you reconcile |
-| 4 | mechanical **and** fully specified (no design decision left; success is objectively checkable) | **fast-worker** (Sonnet) |
-| 5 | reasoning-heavy: architecture, complex debug, algorithm design, hard trade-off, ambiguous spec | **deep-reasoner** (Opus) |
-| 6 | a genuinely different prior is the point (novel problem, suspected blind spot, "am I framing this wrong?"), or you're looping | **Codex** (instead of, or after, deep-reasoner) |
-| 7 | anything left over | **do it yourself** |
+| 3 | **reasoning-heavy but compact** — one hard design / debug / analysis / judgment problem that fits your context | **do it yourself** — you are the strongest reasoner; own the hard call *and* the completeness of the result |
+| 4 | **high-stakes** — high blast radius **AND** hard to verify (both true) | **you reason it, plus a blind Codex (and/or Opus) cross-check**, you reconcile |
+| 5 | mechanical **and** fully specified (no design decision left; success is objectively checkable) | **fast-worker** (Sonnet) |
+| 6 | **reasoning-heavy but wide** — decomposes into many independent hard units, or would bloat your context, or wins from parallel fan-out | **deep-reasoner** (Opus), one per unit — for parallelism/isolation, not because Opus reasons better |
+| 7 | a genuinely different prior is the point (novel problem, suspected blind spot, "am I framing this wrong?"), or you're looping | **Codex** (instead of, or after, deep-reasoner) |
+| 8 | anything left over | **do it yourself** |
+
+**Row 3 is the point of leading with Fable.** Do not reflexively send hard reasoning to a `deep-reasoner` — you are the strongest reasoner on the team, and a compact hard problem gets a *better* answer, and a more *complete* deliverable, if you keep it. Delegate reasoning only when row 6 fires (it is genuinely wide or would bloat your context) or row 4 does (you want a decorrelated line on an unverifiable call). Holding the reasoning is also how you keep the small completeness details a lean synthesize-from-summaries pass drops.
 
 **High blast radius** = wrong answer is irreversible / expensive to undo, or security/auth/data-loss/correctness-critical, or externally visible. Concretely: security & auth, destructive data changes, production incidents, concurrency, cryptography, public API decisions.
 
-**The high-stakes parallel path (row 3) fires only when BOTH conditions hold** — high blast radius AND hard to verify. If it is high-stakes but *cheaply verifiable* (a test, a diff that applies, a ground truth to check), use one executor plus a verification step; the parallel cross-check only earns its cost when you *cannot* verify, because then a second independent line of reasoning is the only defense against a confident single-model error.
+**The high-stakes cross-check (row 4) fires only when BOTH conditions hold** — high blast radius AND hard to verify. If it is high-stakes but *cheaply verifiable* (a test, a diff that applies, a ground truth to check), reason it yourself plus a verification step; the decorrelated cross-check only earns its cost when you *cannot* verify, because then a second independent line of reasoning — ideally a different vendor (Codex) — is the only defense against a confident single-model error, even your own.
 
 ### Delegate to a subagent
 
@@ -85,19 +88,20 @@ Two equivalent forms — both verified in this environment:
 
 Spawn slow work with `run_in_background: true` (the default) and keep planning; you are notified on completion. Consume the subagent's **final message** — it is the return value, not a chat reply. Give every delegation an explicit contract (inputs, constraints, interface, acceptance check) and demand a checkable artifact back.
 
-### Mixing fast-worker (Sonnet) and deep-reasoner (Opus)
+### Interleaving your reasoning with Sonnet execution
 
-Sonnet and Opus often take turns on the *same* task. Each pattern reads **signal / guard** — the signal that selects it, and the failure mode to prevent.
+You are the reasoner; Sonnet is the executor. They take turns on the *same* task. Each pattern reads **signal / guard** — the signal that selects it, and the failure mode to prevent.
 
-- **Spec then build.** Opus fixes the interface and acceptance check; Sonnet implements. *Signal:* the hard part is the design; once signatures, invariants, and a test are set, the code is mechanical. *Guard:* an under-specified handoff makes Sonnet invent design silently. Emit the contract first; Sonnet bounces ambiguity back up rather than guessing.
-- **Draft then harden.** Sonnet writes a fast first cut; Opus reviews and hardens it. *Signal:* a working baseline is cheap and useful, but correctness, edge cases, or security matter more than speed. *Guard:* Opus rubber-stamps a fluent-but-wrong draft. Aim it at failure modes (concurrency, boundaries, auth, error paths) and demand a specific defect list, not polish.
-- **Plan then fan out.** Opus plans and partitions; N Sonnet workers do the pieces in parallel. *Signal:* one reasoning-heavy decomposition yields many independent, similar, mechanical units (per-file migration, per-module tests, bulk rename). *Guard:* fragmentation. Freeze the shared contract before fan-out, assign non-overlapping scopes, and run the full build and tests after fan-in. Piecewise-correct is not integrated-correct.
-- **Gather then reason.** Sonnet greps and collects; Opus reasons over the digest. *Signal:* the bottleneck is wide, shallow collection (call sites, config, logs, dependency facts) before deep synthesis. *Guard:* Sonnet pre-selecting the cause or dumping raw volume. Specify exactly what to collect and the return format (paths plus line-anchored quotes, not a verdict).
-- **Reason then verify.** Opus produces the fix or design; Sonnet writes the test or reproduction that proves it. *Signal:* Opus's output is high-stakes but checkable. *Guard:* a vacuous test that restates the implementation. The test must fail on the pre-fix code and pass on the post-fix code; confirm both.
-- **Triage then deep-dive.** Sonnet reproduces and localizes; Opus root-causes; Sonnet applies the bounded fix. *Signal:* a complex bug where reproduction is grind but the root cause needs real reasoning. *Guard:* Sonnet "fixing" a symptom. Its job ends at a reliable minimal repro plus a suspected locus; the fix decision is Opus's, and the repro stays as a regression test.
-- **Routine vs. exceptional split.** Sonnet takes the conventional path; Opus owns the one hard subsystem. *Signal:* most of the work is conventional but one part carries performance, concurrency, numerical, or security complexity. *Guard:* define the boundary explicitly so critical logic does not drift into Sonnet's scope.
+- **Reason then build.** You fix the interface, invariants, and acceptance check; Sonnet implements. *Signal:* the hard part is the design; once signatures and a test are set, the code is mechanical. *Guard:* an under-specified handoff makes Sonnet invent design silently. Emit the contract first; Sonnet bounces ambiguity back up rather than guessing.
+- **Draft then harden.** Sonnet writes a fast first cut; you review and harden it. *Signal:* a working baseline is cheap, but correctness, edge cases, or security matter more than speed. *Guard:* aim your review at failure modes (concurrency, boundaries, auth, error paths) and demand a specific defect list, not polish.
+- **Plan then fan out.** You plan and partition; N Sonnet workers do the pieces in parallel. *Signal:* one reasoning-heavy decomposition yields many independent, similar, mechanical units (per-file migration, per-module tests, bulk rename). *Guard:* fragmentation. Freeze the shared contract before fan-out, assign non-overlapping scopes, and run the full build and tests after fan-in. Piecewise-correct is not integrated-correct.
+- **Gather then reason.** Sonnet greps and collects; you reason over the digest. *Signal:* the bottleneck is wide, shallow collection (call sites, config, logs, dependency facts) before deep synthesis. *Guard:* Sonnet pre-selecting the cause or dumping raw volume. Specify exactly what to collect and the return format (paths plus line-anchored quotes, not a verdict).
+- **Reason then verify.** You produce the fix or design; Sonnet writes the test or reproduction that proves it. *Signal:* your output is high-stakes but checkable. *Guard:* a vacuous test that restates the implementation. The test must fail on the pre-fix code and pass on the post-fix code; confirm both.
+- **Triage then deep-dive.** Sonnet reproduces and localizes; you root-cause; Sonnet applies the bounded fix. *Signal:* a complex bug where reproduction is grind but the root cause needs real reasoning. *Guard:* Sonnet "fixing" a symptom. Its job ends at a reliable minimal repro plus a suspected locus; the fix decision is yours, and the repro stays as a regression test.
 
-Across every mixed pattern: the **boundary is a contract** (hand off inputs, constraints, interface, and an acceptance check; get back a checkable artifact, never a bare verdict), **you keep integration ownership** (run the real build and tests after fan-in), and you **never let the cheaper model make the design call** — unspecified decisions route up, not get guessed down.
+When a reasoning step is itself **wide** — it decomposes into many independent hard units, or holding it would bloat your context — fan it out to Opus deep-reasoners in parallel (routing row 6), then integrate. That is the one time reasoning leaves your hands, and it leaves for parallelism, not because Opus reasons better than you.
+
+Across every pattern: the **boundary is a contract** (hand off inputs, constraints, interface, and an acceptance check; get back a checkable artifact, never a bare verdict), **you keep integration ownership** (run the real build and tests after fan-in), and you **never let the cheaper model make the design call** — unspecified decisions route up to you, not get guessed down.
 
 ### Consult Codex (the peer)
 
@@ -116,7 +120,7 @@ Route to Codex when the value is a **decorrelated prior**, not more horsepower. 
 - **Unverifiable check.** Opus answered, and you need an independent check on a claim you cannot cheaply verify (no test, no ground truth).
 - **You are looping.** Two or more rounds have circled the same framing or repeated the same wrong fix. A vendor switch breaks the fixation.
 - **Disputed, expensive-to-undo design.** API shape, schema, concurrency model, or migration strategy where reasonable engineers disagree and being wrong is costly.
-- **High-stakes parallel path (row 3).** High blast radius *and* hard to verify: launch Opus and Codex blind, then reconcile.
+- **High-stakes cross-check (row 4).** High blast radius *and* hard to verify: reason it yourself and launch a blind, decorrelated Codex (optionally a blind Opus) on the same problem, then reconcile.
 - **"Am I framing this wrong?"** You suspect your own decomposition, not the answer within it.
 - **Unfamiliar or recent ecosystem.** A stack, library, or idiom where OpenAI's training mix may cover different ground.
 - **Adversarial cross-review.** Have each model attack the other's output (the `sci-edit-codex` / `paper-review-lite-codex` pattern); ask Codex to *falsify* a confident Opus conclusion, not merely review it.
@@ -131,14 +135,14 @@ Do **not** reach for Codex when:
 
 ### The high-stakes parallel path (verified)
 
-Launch **both** executors on the **same** problem, **in one message, blind to each other** — then you synthesize. This is the signature move; it is how this very skill's routing rule was written. The two calls were:
+You reason the problem yourself, and in the **same turn** launch a **decorrelated** cross-check — a blind Codex (a different vendor), and optionally a blind Opus — on the **same** problem, none seeing the others. Then you reconcile your own line against theirs. This is the signature move; it is how this very skill's routing rule was written — a blind Opus and a blind Codex were launched in one turn, and the two calls were:
 
 ```bash
 # Codex half — backgrounded, output teed to a file:
 ~/.claude/skills/fable-orchestrate/codex-peer.sh --mode consult -C "$PWD" \
   --out codex_out.txt --prompt "$(cat routing_q.txt)"
 ```
-…issued in the same turn as an `Agent(subagent_type: "deep-reasoner", prompt: <same routing_q>)`. Neither saw the other's answer. They returned **complementary halves of one guardrail** (fragmentation-on-integration vs. lightest-model-rubber-stamping); the orchestrator merged them into the rule above and the guardrail below.
+…issued in the same turn as an `Agent(subagent_type: "deep-reasoner", prompt: <same routing_q>)`. Neither saw the other's answer. They returned **complementary halves of one guardrail** (fragmentation-on-integration vs. over-trusting-your-own-line); the orchestrator merged them into the rule above and the guardrail below.
 
 **Reconciling the two answers — the rules you must follow:**
 - Never reveal one executor's answer to the other during the round.
@@ -151,7 +155,7 @@ Launch **both** executors on the **same** problem, **in one message, blind to ea
 Two names for the same trap, one defense:
 
 - **Fragmentation** (integration view): delegated pieces are each locally correct but conflict when you stitch them together.
-- **Rubber-stamping** (reconciler view): you are the *lightest* model, judging Opus/Codex output you often cannot yourself evaluate — so you drift toward the more fluent, more confident answer. This bites hardest on exactly the high-stakes, hard-to-verify tasks the parallel path exists to protect.
+- **Over-trusting your own line** (reconciler view): you are the *strongest* model, so your trap is the opposite of rubber-stamping — you skip the independent check and ship your first line of reasoning. Even the best single model can be confidently wrong on a high-stakes, hard-to-verify call; the decorrelated Codex cross-check is the defense, and you must actually run it and weigh it — not wave it through because it agrees, nor dismiss it because it does not.
 
 **Defense (apply to every delegation):**
 1. **Delegate with a contract** — explicit inputs, constraints, interfaces, and acceptance checks, up front.
@@ -177,5 +181,5 @@ Two names for the same trap, one defense:
 ## Notes
 
 - **Why direct `codex exec`, not the `/codex:rescue` plugin?** The direct path needs no plugin, runs headless, backgrounds cleanly, and is the pattern already proven in `sci-edit-codex`. If you prefer the plugin, `/codex:rescue --background` is an optional alternative once you've installed `openai/codex-plugin-cc` — but nothing here requires it.
-- **Cost shape:** the orchestrator is the cheapest model; reasoning spend lands on Opus/Codex only when the routing rule sends it there. The parallel path is ~2× a single consult — spend it only when row 3 fires.
+- **Cost shape:** you put the strongest model on the reasoning, so the lead is the most valuable part of the run, not the cheapest. Mechanical execution still goes to Sonnet and wide/parallel reasoning to Opus, so spend leaves your plate only where it does not decide the answer. This deliberately trades a delegate-heavy lead's cost savings for quality — leading with the best reasoner is the point. The decorrelated cross-check is ~1 extra Codex consult — spend it only when row 4 fires.
 - **Driver:** `codex-peer.sh` (run `--help` for flags). Agent defs: `agents/deep-reasoner.md`, `agents/fast-worker.md`.
