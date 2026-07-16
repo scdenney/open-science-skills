@@ -70,7 +70,10 @@ case "$OUT" in /*) ;; *) OUT="$PWD/$OUT" ;; esac
 WORKDIR="$(cd "$WORKDIR" && pwd -P)"
 mkdir -p "$(dirname "$OUT")"
 
-cmd=(claude --safe-mode -p --model "$MODEL" --effort "$EFFORT" --permission-mode plan --output-format text --no-session-persistence \
+# ANTHROPIC_API_KEY= : force subscription billing for the spawned session even
+# if the caller's shell happens to export a live API key (it would otherwise
+# be inherited and silently switch this consult to API billing).
+cmd=(env ANTHROPIC_API_KEY= claude --safe-mode -p --model "$MODEL" --effort "$EFFORT" --permission-mode plan --output-format text --no-session-persistence \
   'You are consulted as an independent, stronger second reviewer for one specific decision point — not a co-implementer. Read the self-contained briefing supplied on stdin (the task, what has been done so far, the current approach or findings, and the specific question). You have no access to the original conversation beyond this briefing, so if it seems to be missing something you need, say what is missing rather than guessing. Give direct, decisive advice on the specific question asked. If you disagree with the stated approach, say so plainly and explain the specific failure mode, do not hedge into a survey of options. Do not edit any files — you are read-only advisory only. Return only your advice, no preamble.')
 
 if command -v timeout >/dev/null; then
