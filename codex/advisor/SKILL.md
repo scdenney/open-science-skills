@@ -7,6 +7,8 @@ description: Consult this library's independent GPT-5.6 advisor before committin
 
 This is the Codex-native advisor maintained in this library. It is a single-turn, independent, read-only consult — not delegated implementation and not a substitute for the lead's judgment.
 
+<p align="center"><img src="assets/architecture.svg" alt="Codex advisor: a working GPT-5.6 session sends a self-contained briefing to a Terra high advisor by default; Sol high is reserved for difficult or high-stakes reviews; the advisor returns one decisive read-only review" width="900"></p>
+
 ## Default hierarchy
 
 | Decision | Advisor | Effort | Use when |

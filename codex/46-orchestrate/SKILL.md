@@ -5,7 +5,7 @@ description: Orchestrate complex work as the Codex lead on the GPT-5.6 family. D
 
 # 4.6 Orchestrate
 
-<p align="center"><img src="assets/architecture.svg" alt="46-orchestrate: a gpt-5.6-sol Codex orchestrator at high effort owns hard decisions and routes bounded work to out-of-band Terra workers; Luna is reserved for mechanical work" width="900"></p>
+<p align="center"><img src="assets/architecture.svg" alt="46-orchestrate: a gpt-5.6-sol Codex orchestrator at high effort owns hard decisions and routes bounded work to out-of-band Terra workers; Luna is used only for tightly specified mechanical implementation" width="900"></p>
 
 Act as the lead orchestrator for the GPT-5.6 family. Plan, decompose, delegate, integrate, and verify. Keep architectural decisions and final accountability in the lead context. The default lead is **`gpt-5.6-sol`** at effort **`high`**. Sol owns the hard decisions; it delegates bounded, independently checkable work *down* to `gpt-5.6-terra` through out-of-band `codex exec` one-shots. Use `gpt-5.6-luna` only for tightly specified mechanical work with objective acceptance checks. This hierarchy works **only in an interactive/escalated session**: `spawn_agent` cannot downgrade a child's model, so Terra/Luna work must go out-of-band, which is impossible headless. In a **headless** (`codex exec`, approval `never`) run, say that cross-tier delegation is unavailable; use the current lead directly, or start a separate Terra session if the user authorizes that fallback.
 
