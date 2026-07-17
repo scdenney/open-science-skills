@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# codex-peer.sh — invoke Codex (GPT-5.6 "Terra") as a peer engineer for /opus-orchestrate.
+# codex-peer.sh — invoke Codex (GPT-5.6 "Sol") as a peer engineer for /opus-orchestrate.
 #
 # Codex is a different-vendor peer, not a reviewer. Use it two ways:
 #   consult   (default) — read-only. Ask a question / get a second approach. Prints the answer.
@@ -23,29 +23,27 @@
 #
 #   -C DIR          working dir Codex sees (default: $PWD)
 #   --timeout SEC   hard kill after SEC seconds (default: 600)
-#   --model ID      Codex model to pin (default: gpt-5.6-terra — the balanced
-#                   5.6 tier, cheaper for routine peer consults). There are
-#                   three distinct 5.6 tiers, not one model: gpt-5.6-sol
-#                   (flagship), gpt-5.6-terra (balanced), gpt-5.6-luna (fast).
-#                   gpt-5.6-sol is confirmed working as of July 2026 on
-#                   ChatGPT-account Codex auth (an earlier "rejected outright"
+#   --model ID      Codex model to pin (default: gpt-5.6-sol — the flagship
+#                   5.6 tier, confirmed working as of July 2026 on
+#                   ChatGPT-account Codex auth; an earlier "rejected outright"
 #                   finding no longer reproduces — if it ever errors, check
-#                   `codex --version` before assuming a gate; an outdated CLI
-#                   rejects terra/luna too, with a different error). Pass
-#                   --model gpt-5.6-sol explicitly for a stronger peer at
-#                   higher cost.)
+#                   `codex --version` before assuming a gate, since an
+#                   outdated CLI rejects sol/luna too, with a different
+#                   error). There are three distinct 5.6 tiers, not one
+#                   model: gpt-5.6-sol (flagship), gpt-5.6-terra (balanced),
+#                   gpt-5.6-luna (fast). Pass --model gpt-5.6-terra for a
+#                   cheaper peer on routine consults.
 #   --effort LEVEL  Codex reasoning effort, passed as
-#                   -c model_reasoning_effort=LEVEL (default: xhigh — this was
-#                   already terra's implicit default with no flag; stated
-#                   explicitly here so it does not silently drift if Codex's
-#                   own defaults change upstream).
+#                   -c model_reasoning_effort=LEVEL (default: high — stated
+#                   explicitly so it does not silently drift if Codex's own
+#                   defaults change upstream).
 #   --out FILE      also tee Codex's stdout+stderr here (for background reads)
 #   --prompt TEXT   prompt as a single argument
 #   --prompt-file P read prompt from file P
 #   -               read prompt from stdin (the wrapper handles the /dev/null dance)
 set -euo pipefail
 
-MODE="consult"; DIR="$PWD"; TIMEOUT=600; MODEL="gpt-5.6-terra"; EFFORT="xhigh"; OUT=""; PROMPT=""; PROMPT_SET=0
+MODE="consult"; DIR="$PWD"; TIMEOUT=600; MODEL="gpt-5.6-sol"; EFFORT="high"; OUT=""; PROMPT=""; PROMPT_SET=0
 
 die(){ echo "codex-peer: $*" >&2; exit 2; }
 
