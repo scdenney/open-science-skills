@@ -1,4 +1,4 @@
 interface:
   display_name: "Advisor (GPT-5.6)"
-  short_description: "Independent Terra/high review; Sol/high for hard decisions"
+  short_description: "Independent Sol/high review"
   default_prompt: "Use $advisor to consult an independent GPT-5.6 reviewer before committing to an approach or declaring a task complete."

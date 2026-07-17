@@ -1,11 +1,9 @@
 #!/usr/bin/env bash
-# sol-advisor.sh — consult a GPT-5.6 advisor (Terra/high by default).
+# sol-advisor.sh — consult GPT-5.6 "Sol" as an independent advisor (Sol/high by default).
 #
 # Read-only advisory consult, not implementation. Spawns a fresh, ephemeral
 # `codex exec` session (--sandbox read-only: no edits) at the explicit
-# effort selected by the library policy. The advisor skill owns the routing:
-# Terra/high by default, Sol/high only for genuinely difficult or high-stakes
-# questions. See SKILL.md.
+# effort selected by the library policy: Sol/high, always. See SKILL.md.
 #
 # This spawns an ISOLATED session with no automatic access to the calling
 # conversation, so the caller must compose a self-contained briefing and
@@ -32,22 +30,21 @@
 #   --prompt-file FILE  the self-contained briefing (task, progress, question)
 #   --out FILE          where Sol's advice is written
 #   -C DIR              working dir Sol sees (default: $PWD)
-#   --model ID          Codex model to pin (default: gpt-5.6-terra — the
-#                        balanced 5.6 tier, cheaper for routine consults;
-#                        sol/terra/luna are three distinct tiers, not one
-#                        gpt-5.6 model. gpt-5.6-sol is the flagship tier and
-#                        is confirmed WORKING as of July 2026 on ChatGPT-
-#                        account Codex auth (an earlier "rejected outright"
-#                        finding no longer reproduces — re-check `codex
-#                        --version` before assuming a gate if it ever errors,
-#                        since an outdated CLI rejects terra/luna too, with a
-#                        different error). Pass --model gpt-5.6-sol explicitly
-#                        for a stronger reviewer at higher cost.)
+#   --model ID          Codex model to pin (default: gpt-5.6-sol — the
+#                        flagship 5.6 tier, confirmed WORKING as of July 2026
+#                        on ChatGPT-account Codex auth; an earlier "rejected
+#                        outright" finding no longer reproduces — re-check
+#                        `codex --version` before assuming a gate if it ever
+#                        errors, since an outdated CLI rejects sol/luna too,
+#                        with a different error). sol/terra/luna are three
+#                        distinct tiers, not one gpt-5.6 model. Pass --model
+#                        gpt-5.6-terra explicitly for a cheaper reviewer on
+#                        routine consults.
 #   --effort LEVEL      none|minimal|low|medium|high|xhigh (default: high)
 #   --timeout SEC        hard kill after SEC seconds (default: 900)
 set -euo pipefail
 
-MODEL="gpt-5.6-terra"
+MODEL="gpt-5.6-sol"
 WORKDIR="$PWD"
 PROMPT_FILE=""
 OUT=""
