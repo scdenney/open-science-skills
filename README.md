@@ -25,7 +25,7 @@ This is the toolkit I use in my own research, and it grows as I add sources and 
 | [Claude Code](https://code.claude.com/docs/en/skills) | 39, as the [`oss` plugin](plugin/skills) | `/oss:skill-name` |
 | [OpenAI Codex](https://developers.openai.com/codex/skills) | 37, as the [`codex/` library](codex/README.md) | `$skill-name` |
 
-The two libraries carry the same methods; only invocation and tooling differ. The Codex side omits `presubmit`, `fable-orchestrate`, and `opus-orchestrate`, and adds `46-orchestrate`; see [`codex/README.md`](codex/README.md).
+The two libraries differ only in invocation and tooling. The Codex side omits `presubmit`, `fable-orchestrate`, and `opus-orchestrate`, and adds `46-orchestrate`; see [`codex/README.md`](codex/README.md).
 
 [Quick start](#quick-start) · [Skills](#skills) · [How skills trigger](#how-skills-trigger) · [Installation](#installation) · [Sources](#knowledge-base-and-sources) · [Contributing](#contributing) · [License](#license)
 
