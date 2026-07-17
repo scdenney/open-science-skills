@@ -14,11 +14,11 @@
 [![sources](https://img.shields.io/badge/sources-150%2B-purple)](SOURCES.md)
 [![PRs welcome](https://img.shields.io/badge/PRs-welcome-brightgreen)](#contributing)
 
-Open Science Skills is a library of 39 agentic skills for Claude Code, with a parallel 37-skill library for OpenAI Codex, written for empirical social scientists. Each skill teaches the assistant to work the way the field expects: identify the data-generating process before proposing an estimator, design experiments and instruments to a standard, and hold drafts to established reporting norms. The point is discipline: where rigor matters, a skill deliberately slows the assistant down.
+Open Science Skills is a library of 39 agentic skills for Claude Code, with a parallel 37-skill library for OpenAI Codex, written for computational social scientists and digital humanists. Each skill is meant to work the way the field expects: identify the data-generating process before proposing an estimator, design experiments and instruments to a standard, and hold drafts to established reporting norms. 
 
-The library follows the research lifecycle: conjoint and survey design, list experiments, topic modeling, LLM text classification, VLM-based OCR pipelines, manuscript QA, multi-model orchestration, and transparent reporting under APSA, JARS, DA-RT, TOP, and FAIR expectations. Every skill is grounded in published methods sources rather than whatever the model happens to remember; see [SOURCES.md](SOURCES.md) for the bibliography of 150+ works.
+The library follows the research lifecycle: survey design, list experiments, topic modeling, LLM text classification, VLM-based OCR pipelines, manuscript QA, multi-model orchestration, and transparent reporting under APSA, JARS, DA-RT, TOP, and FAIR expectations. Every skill is grounded in published methods sources and based on best practices for writing skills. See [SOURCES.md](SOURCES.md) for the bibliography of 150+ works consulted.
 
-This is the toolkit I use in my own research, and it grows as I add sources and skills. The authoring is mine, with editing help from Opus 4.8, Gemini 3.0, and ChatGPT 5.4+.
+This is the toolkit I use in my own research, and it grows as I add sources and skills. The authoring is mine, with editing help from Opus 4.8, Fable 5, and ChatGPT 5.5/6.
 
 | Platform | Skills | Invoke |
 |---|---|---|
