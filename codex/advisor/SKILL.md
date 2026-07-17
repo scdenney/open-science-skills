@@ -1,62 +1,63 @@
 ---
 name: advisor
-description: Consult an independent GPT-5.6 reviewer (Terra by default; Sol on request, for a stronger but costlier review), matched to your current reasoning-effort level. Use before committing to an interpretation or a substantial piece of writing/analysis, when stuck (recurring errors, a non-converging approach, results that do not fit), when considering a change of approach, or when you believe a task is complete and want a check before finalizing. Not a co-implementer — read-only advisory only, does not edit files.
+description: Consult this library's independent GPT-5.6 advisor before committing to a substantive interpretation, approach, or final result. Default: gpt-5.6-terra at high effort. Escalate to gpt-5.6-sol only for genuinely difficult, high-stakes, or deeply cross-cutting questions. Read-only advisory only; it never edits files.
 ---
 
-# Advisor (GPT-5.6 consulted)
+# Advisor (GPT-5.6)
 
-Consult an independent **GPT-5.6** reviewer for one specific decision point, at the same reasoning effort you are currently running at. This is the Codex-side counterpart of the Claude-side `advisor` skill (`plugin/skills/advisor/` in `open-science-skills`), built the same session for the same reason: a single-turn advisory consult, not a delegated implementation.
+This is the Codex-native advisor maintained in this library. It is a single-turn, independent, read-only consult — not delegated implementation and not a substitute for the lead's judgment.
 
-**Which 5.6 tier, and why it matters.** There are three distinct GPT-5.6 tiers, not one model: `gpt-5.6-sol` (flagship, "most capable"), `gpt-5.6-terra` (balanced, "everyday work"), `gpt-5.6-luna` (fast/cheap). This skill defaults to **`gpt-5.6-terra`** for routine consults — it is cheaper and confirmed reliable. `gpt-5.6-sol` is confirmed working on both hosts this repo runs on (July 2026, both authenticated via ChatGPT login) — an earlier "rejected outright under ChatGPT-account auth" finding no longer reproduces; whether that was a temporary rollout gate or a stale/outdated-CLI artifact is unclear, so re-verify with a smoke test if `sol` ever errors on your account rather than assuming it's gated. Pass `--model gpt-5.6-sol` explicitly for a stronger, costlier consult — see *Effort calibration* below.
+## Default hierarchy
 
-Read [`scripts/sol-advisor.sh`](scripts/sol-advisor.sh) before the first run — the flags and the effort-handling note there are load-bearing.
+| Decision | Advisor | Effort | Use when |
+|---|---|---|---|
+| Default | `gpt-5.6-terra` | `high` | A substantive interpretation, approach, draft, analysis, or completion check needs an independent review. |
+| Escalated | `gpt-5.6-sol` | `high` | The decision is high-stakes, unusually difficult, deeply cross-cutting, or the Terra review exposes a material unresolved issue. |
 
-## Sandbox constraint — read this before your first run
+Do **not** match the calling session's effort. This skill has an owned, predictable policy: Terra/high by default; Sol/high only when the value of deeper review clearly exceeds its cost. Do not use `xhigh` or Ultra. Do not escalate merely because a question is vague — first narrow the briefing.
 
-`sol-advisor.sh` shells out to a nested `codex exec` process. Confirmed by direct reproduction (July 2026, both hosts this repo runs on): a `codex exec` process running under **any** sandbox mode (`read-only` or `workspace-write`) cannot spawn a working nested `codex exec` child — it fails immediately with `Error: failed to initialize in-process app-server client: Operation not permitted` (macOS) or `Read-only file system` (Linux). This is structural — the OS sandbox applies transitively to the whole process tree — and is **not** fixed by passing `--dangerously-bypass-approvals-and-sandbox` to the nested call itself; only an unsandboxed top-level session avoids it entirely.
+Luna is not an advisor tier. It is appropriate only for tightly specified mechanical work with objective acceptance checks, not for judgment or synthesis.
 
-- If you are interactive (not `codex exec` invoked non-interactively) and this failure surfaces, request escalation for that one shell command (`sandbox_permissions: require_escalated`, with a short justification) so it runs outside the sandbox — this is exactly the case the built-in escalation path exists for.
-- If you are running non-interactively (`codex exec` at the top level shows `approval: never` in its own banner — no human is available to approve an escalation), this call cannot succeed. Report the failure honestly; do not silently produce the review yourself in place of the consult (that defeats the point of an independent second opinion) and do not retry indefinitely.
+## When to consult
 
-## When to use
+- Before committing to a substantive interpretation, writing/analysis strategy, or change of approach.
+- When stuck: repeated errors, a non-converging approach, or results that do not fit.
+- Before declaring a multi-step task complete, after the deliverable is durable.
+- Before high-impact decisions that are hard to verify cheaply.
 
-- **Before substantive work** — before writing, before committing to an interpretation, before building on an assumption. Orientation (finding files, reading a source) is not substantive; writing, editing, and declaring an answer are.
-- **When you believe a task is complete.** Make the deliverable durable first (write the file, save the result, commit the change) — the consult takes real time.
-- **When stuck** — errors recurring, an approach not converging, results that do not fit.
-- **When considering a change of approach.**
+Do not consult for simple orientation or routine, cheaply verifiable work. On longer work, use one focused consultation before committing to the approach and one before final sign-off when the residual risk warrants it.
 
-On tasks longer than a few steps, consult at least once before committing to an approach and once before declaring done. Give the advice serious weight: if a step you followed on the consult's advice fails empirically, or you have primary-source evidence contradicting a specific claim, adapt. If your own evidence and the consult's advice point different directions, surface the conflict in one more consult rather than silently picking a side.
+## Sandbox constraint
 
-## Effort calibration — read this before running
+[`scripts/sol-advisor.sh`](scripts/sol-advisor.sh) launches a nested `codex exec`. It works only from an unsandboxed or escalated interactive parent session. A nested call from a sandboxed or headless `codex exec` fails structurally; do not retry it indefinitely or pretend that a self-review was independent.
 
-The consulted model should run at the **same reasoning effort you are currently running at**, not a hardcoded default. Codex does not expose its own live reasoning-effort setting as an environment variable inheritable by subprocesses (confirmed empirically: dumping `env` inside a running `codex exec` call shows no `CODEX_REASONING_EFFORT` or equivalent — only Claude Code's own `$CLAUDE_EFFORT` leaked through from an enclosing Claude Code process, which is not your effort level when you are the one running as Codex).
+- In an interactive session, request escalation for this one command if needed.
+- In a headless/non-interactive session, report that the independent consult is unavailable and ask whether to continue without it or restart in an interactive session.
 
-What Codex *does* expose: the "reasoning effort: `<level>`" line shown in your own session banner at startup, visible in your own context. Before running the consult, **read that value from your own session context** and pass it explicitly:
+## Run a consult
 
-```bash
-scripts/sol-advisor.sh --prompt-file <briefing-path> --out <output-path> -C "$PWD" --effort <your-own-level>
-```
-
-Do not omit `--effort` and let it silently default to the script's fallback (`high`) unless `high` genuinely is your own current level — the fallback exists so the script never errors on a missing flag, not as a substitute for checking your own level.
-
-## Steps
-
-1. **Compose the briefing.** A self-contained document: the task, what you have done so far (key steps, findings, decisions), your current approach or the specific claim to check, and the precise question. Concrete — file paths, line numbers, the actual claim. Save to a scratch file. The consulted model has no access to your conversation beyond this file.
-
-2. **If declaring a task complete, make the deliverable durable first.**
-
-3. **Read your own current reasoning-effort level from your session context**, then run:
+1. Write a self-contained briefing: task, key evidence and paths, current approach or claim, alternatives considered, exact question, and any irreversible or high-impact consequences. The advisor has no access to the original conversation.
+2. Make any deliverable durable before a completion review.
+3. Run the Terra/high default:
 
    ```bash
-   scripts/sol-advisor.sh --prompt-file <briefing-path> --out <output-path> -C "$PWD" --effort <your-level>
+   scripts/sol-advisor.sh --prompt-file <briefing-path> --out <output-path> -C "$PWD" --model gpt-5.6-terra --effort high
    ```
 
-4. **Read the output file** and weigh the advice. Integrate it; if you diverge from it, be able to say why.
+4. Use Sol/high only when the escalation gate is met:
 
-## Notes
+   ```bash
+   scripts/sol-advisor.sh --prompt-file <briefing-path> --out <output-path> -C "$PWD" --model gpt-5.6-sol --effort high
+   ```
 
-- `scripts/sol-advisor.sh --check` verifies the `codex` CLI is on PATH.
-- The spawned session runs `--sandbox read-only` and `--ephemeral` — advisory only, no edits, not saved as a resumable session.
-- **Default model is `gpt-5.6-terra`, not `gpt-5.6-sol`** — cost, not reliability. There are three distinct GPT-5.6 tiers (`sol` flagship / `terra` balanced / `luna` fast) — not one model with a shorthand. An earlier finding claimed `gpt-5.6-sol` was rejected outright on a Codex CLI authenticated via `codex login` with a ChatGPT account (as opposed to an API key) — `"The 'gpt-5.6' model is not supported when using Codex with a ChatGPT account."` This has since been re-tested (July 2026) and no longer reproduces: `sol` now works on hosts authenticated the identical way (`codex login status` → `Logged in using ChatGPT`). Whether the original block was a temporary rollout gate or an artifact of an outdated CLI on that host is unclear — if `sol` ever errors on your account, check `codex --version` first (an outdated CLI rejects even `terra`/`luna` with a *different*, version-specific error) before concluding it's an account gate. Pass `--model gpt-5.6-sol` explicitly for a stronger reviewer at higher cost. If the model you asked for is unreachable for any reason, report it and ask whether to stop or use a named replacement — do not silently fall back further (e.g. to `gpt-5.5`) for what is supposed to be a genuinely independent second opinion (a reviewer identical to the executor defeats the point of this specific skill; if a same-model consult is actually fine for the task at hand, the calling agent should use its own judgment directly rather than spend a consult on it).
-- Effort enum: `none, minimal, low, medium, high, xhigh` (Codex's scale — no `max`; Claude Code's `max` has no Codex equivalent).
-- Companion skill: `plugin/skills/advisor/` (Claude-side) — same pattern, consulting Fable 5, effort read from `$CLAUDE_EFFORT` instead of the session banner.
+5. Read the output, verify factual claims where possible, and record why you follow or decline any material recommendation.
+
+The spawned session is `--sandbox read-only` and `--ephemeral`; it must not edit files. `scripts/sol-advisor.sh --check` verifies that the Codex CLI is available.
+
+## Decision rules
+
+- Ask one decision-focused question per consult; do not turn the advisor into an unbounded co-worker.
+- Treat advice as evidence, not authority. Primary evidence and direct checks outrank confidence or rhetoric.
+- If Terra identifies an unresolved material conflict, run one focused Sol consult rather than broadening the first prompt.
+- If the advisor's recommendation conflicts with authoritative evidence, state the conflict and follow the evidence.
+- If high-impact uncertainty remains after a Sol consult, stop and ask the human rather than manufacturing certainty.

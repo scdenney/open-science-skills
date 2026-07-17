@@ -1,14 +1,11 @@
 #!/usr/bin/env bash
-# sol-advisor.sh — consult GPT-5.6 "Sol" as an independent second reviewer.
+# sol-advisor.sh — consult a GPT-5.6 advisor (Terra/high by default).
 #
 # Read-only advisory consult, not implementation. Spawns a fresh, ephemeral
-# `codex exec` session (--sandbox read-only: no edits) at an explicit
-# reasoning effort level, since (unlike Claude Code's $CLAUDE_EFFORT) Codex
-# does not expose its own live effort as an inheritable environment variable
-# to subprocesses — confirmed empirically by dumping env inside a running
-# codex exec call. The caller must therefore READ its own effort level from
-# its own visible session context (the "reasoning effort: <level>" line
-# shown at session start) and pass it explicitly via --effort. See SKILL.md.
+# `codex exec` session (--sandbox read-only: no edits) at the explicit
+# effort selected by the library policy. The advisor skill owns the routing:
+# Terra/high by default, Sol/high only for genuinely difficult or high-stakes
+# questions. See SKILL.md.
 #
 # This spawns an ISOLATED session with no automatic access to the calling
 # conversation, so the caller must compose a self-contained briefing and
@@ -46,9 +43,7 @@
 #                        since an outdated CLI rejects terra/luna too, with a
 #                        different error). Pass --model gpt-5.6-sol explicitly
 #                        for a stronger reviewer at higher cost.)
-#   --effort LEVEL      none|minimal|low|medium|high|xhigh (default: high —
-#                        the caller should pass its own actual level; this
-#                        default is a fallback only, not a substitute for it)
+#   --effort LEVEL      none|minimal|low|medium|high|xhigh (default: high)
 #   --timeout SEC        hard kill after SEC seconds (default: 900)
 set -euo pipefail
 
@@ -98,7 +93,7 @@ WORKDIR="$(cd "$WORKDIR" && pwd -P)"
 mkdir -p "$(dirname "$OUT")"
 
 cmd=(codex exec --ephemeral --model "$MODEL" -c model_reasoning_effort="$EFFORT" --sandbox read-only --skip-git-repo-check -C "$WORKDIR" --output-last-message "$OUT" \
-  'You are consulted as an independent, stronger second reviewer for one specific decision point — not a co-implementer. Read the self-contained briefing supplied on stdin (the task, what has been done so far, the current approach or findings, and the specific question). You have no access to the original conversation beyond this briefing, so if it seems to be missing something you need, say what is missing rather than guessing. Give direct, decisive advice on the specific question asked. If you disagree with the stated approach, say so plainly and explain the specific failure mode, do not hedge into a survey of options. Do not edit any files — you are read-only advisory only. Return only your advice, no preamble.')
+  'You are consulted as an independent GPT-5.6 advisor for one specific decision point — not a co-implementer. Read the self-contained briefing supplied on stdin (the task, what has been done so far, the current approach or findings, and the specific question). You have no access to the original conversation beyond this briefing, so if it seems to be missing something you need, say what is missing rather than guessing. Give direct, decisive advice on the specific question asked. If you disagree with the stated approach, say so plainly and explain the specific failure mode, do not hedge into a survey of options. Do not edit any files — you are read-only advisory only. Return only your advice, no preamble.')
 
 if command -v timeout >/dev/null; then
   timeout "${TIMEOUT_SECONDS}s" "${cmd[@]}" < "$PROMPT_FILE" >/dev/null
