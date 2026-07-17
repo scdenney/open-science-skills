@@ -1,6 +1,6 @@
 ---
 name: advisor
-description: Consult this library's independent GPT-5.6 advisor before committing to a substantive interpretation, approach, or final result. Always gpt-5.6-sol at high effort — the flagship 5.6 tier, not a cheaper one. Read-only advisory only; it never edits files.
+description: Consult this library's independent GPT-5.6 advisor before committing to a substantive interpretation, approach, or final result. Always gpt-5.6-sol at xhigh (Extra high) effort — the flagship 5.6 tier at its strongest routine tier, not a cheaper one. Read-only advisory only; it never edits files.
 ---
 
 # Advisor (GPT-5.6)
@@ -13,9 +13,9 @@ This is the Codex-native advisor maintained in this library. It is a single-turn
 
 | Advisor | Effort | Use when |
 |---|---|---|
-| `gpt-5.6-sol` | `high` | A substantive interpretation, approach, draft, analysis, or completion check needs an independent review. |
+| `gpt-5.6-sol` | `xhigh` (Extra high) | A substantive interpretation, approach, draft, analysis, or completion check needs an independent review. |
 
-Do **not** match the calling session's effort. This skill has an owned, predictable policy: Sol/high, always. Do not use `xhigh` or Ultra. Pass `--model gpt-5.6-terra` explicitly only if cost is a hard constraint for a routine, low-stakes consult — the default is the flagship tier because this is meant to be a stronger reviewer, not a cheap one.
+Do **not** match the calling session's effort. This skill has an owned, predictable policy: Sol/xhigh, always. Do not use Max or Ultra (they consume usage limits faster for no established benefit here). Pass `--model gpt-5.6-terra` explicitly only if cost is a hard constraint for a routine, low-stakes consult — the default is the flagship tier at its strongest routine effort because this is meant to be a stronger reviewer, not a cheap one.
 
 Luna is not an advisor tier. It is appropriate only for tightly specified mechanical work with objective acceptance checks, not for judgment or synthesis.
 
@@ -39,10 +39,10 @@ Do not consult for simple orientation or routine, cheaply verifiable work. On lo
 
 1. Write a self-contained briefing: task, key evidence and paths, current approach or claim, alternatives considered, exact question, and any irreversible or high-impact consequences. The advisor has no access to the original conversation.
 2. Make any deliverable durable before a completion review.
-3. Run the Sol/high default:
+3. Run the Sol/xhigh default:
 
    ```bash
-   scripts/sol-advisor.sh --prompt-file <briefing-path> --out <output-path> -C "$PWD" --model gpt-5.6-sol --effort high
+   scripts/sol-advisor.sh --prompt-file <briefing-path> --out <output-path> -C "$PWD" --model gpt-5.6-sol --effort xhigh
    ```
 
 4. Read the output, verify factual claims where possible, and record why you follow or decline any material recommendation.

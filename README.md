@@ -6,7 +6,7 @@
 
 [![Claude Code](https://img.shields.io/badge/Claude_Code-plugin-D97757?logo=anthropic&logoColor=white)](https://code.claude.com/docs/en/skills)
 [![OpenAI Codex](https://img.shields.io/badge/OpenAI_Codex-library-111111?logo=openai&logoColor=white)](codex/README.md)
-[![version](https://img.shields.io/badge/version-2.19.2-blue)](https://github.com/scdenney/open-science-skills/releases)
+[![version](https://img.shields.io/badge/version-2.19.3-blue)](https://github.com/scdenney/open-science-skills/releases)
 [![license](https://img.shields.io/badge/license-CC%20BY--NC%204.0-lightgrey)](LICENSE)
 [![Claude skills](https://img.shields.io/badge/Claude_skills-39-D97757?logo=anthropic&logoColor=white)](#skills)
 [![Codex skills](https://img.shields.io/badge/Codex_skills-37-111111?logo=openai&logoColor=white)](#skills)
@@ -68,7 +68,7 @@ Skills are grouped by where they fall in a project. Unless the Platform column s
 |---|---|---|---|
 | [fable-orchestrate](plugin/skills/fable-orchestrate/SKILL.md) | Claude Code | `/oss:fable-orchestrate` | Run a multi-model workflow with Fable 5 as lead: an Opus subagent takes heavy reasoning, a Sonnet subagent takes mechanical work, and a GPT-5.6 Codex peer gives a second opinion. |
 | [opus-orchestrate](plugin/skills/opus-orchestrate/SKILL.md) | Claude Code | `/oss:opus-orchestrate` | The same workflow with Opus 4.8 as lead via ultracode (xhigh reasoning, dynamic Workflow fan-out). Opus reasons on hard problems itself and delegates only to fan out; the Codex peer is gpt-5.6-sol. |
-| [advisor](codex/advisor/SKILL.md) | Both | `/oss:advisor` / `$advisor` | Consult an independent second reviewer before committing to an interpretation or calling a task done. Fable 5 on Claude Code; this Codex library's GPT-5.6 advisor always runs Sol/high. |
+| [advisor](codex/advisor/SKILL.md) | Both | `/oss:advisor` / `$advisor` | Consult an independent second reviewer before committing to an interpretation or calling a task done. Fable 5 on Claude Code; this Codex library's GPT-5.6 advisor always runs Sol/xhigh. |
 | [46-orchestrate](codex/46-orchestrate/SKILL.md) | Codex | `$46-orchestrate` | Sol/high owns orchestration, integration, and sign-off; it routes bounded work to Terra workers and reserves Luna for tightly specified mechanical work. |
 
 ### Ideation

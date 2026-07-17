@@ -40,7 +40,7 @@
 #                        distinct tiers, not one gpt-5.6 model. Pass --model
 #                        gpt-5.6-terra explicitly for a cheaper reviewer on
 #                        routine consults.
-#   --effort LEVEL      none|minimal|low|medium|high|xhigh (default: high)
+#   --effort LEVEL      none|minimal|low|medium|high|xhigh (default: xhigh)
 #   --timeout SEC        hard kill after SEC seconds (default: 900)
 set -euo pipefail
 
@@ -48,7 +48,7 @@ MODEL="gpt-5.6-sol"
 WORKDIR="$PWD"
 PROMPT_FILE=""
 OUT=""
-EFFORT="high"
+EFFORT="xhigh"
 TIMEOUT_SECONDS=900
 
 usage() {

@@ -41,7 +41,7 @@ The inversion from `fable-orchestrate`: a Fable lead *must* send reasoning to Op
 | you (lead) | `xhigh` | ultracode — the lead is the deep reasoner; the ceiling is the point |
 | deep-reasoner | inherits the session (`xhigh`) | intended: the intensive-focus path; the Anthropic plan has the headroom. In Workflows, omit `effort` on reasoning stages |
 | fast-worker | `medium`, pinned | `effort: medium` in `agents/fast-worker.md`; inside Workflows also pass `{effort: "medium"}` explicitly, since the session's xhigh propagates to any stage that doesn't say otherwise |
-| Codex peer | `high`, pinned | `codex-peer.sh` sets `--effort high` explicitly; pass `--effort` to change per call |
+| Codex peer | `xhigh`, pinned | `codex-peer.sh` sets `--effort xhigh` explicitly; pass `--effort` to change per call |
 
 ## Setup (one-time)
 
@@ -178,7 +178,7 @@ Launch **both** executors on the **same** problem, **in one message, blind to ea
 ## Gotchas
 
 - **`codex exec` hangs without `< /dev/null`.** It prints `Reading additional input from stdin...` and blocks forever, *even when the prompt is passed as an argument*. `codex-peer.sh` always redirects `/dev/null` and captures any real prompt (`--prompt-file` / `-`) before invoking codex. Never call `codex exec` bare in a background job.
-- **Codex reasons at `high` by default; `codex-peer.sh` sets it explicitly** via `--effort high` → `-c model_reasoning_effort=high`, rather than relying on Codex's own implicit default. It prints a header (`model: gpt-5.6-sol`, `sandbox: read-only`) before the answer. The final answer is the text after the last `codex` marker; `--out` captures the whole transcript. A trivial consult is ~5s; a real design question ~10–15s. Pass `--effort` to override per-call for a stronger or cheaper tier.
+- **Codex reasons at `xhigh` by default; `codex-peer.sh` sets it explicitly** via `--effort xhigh` → `-c model_reasoning_effort=xhigh`, rather than relying on Codex's own implicit default. It prints a header (`model: gpt-5.6-sol`, `sandbox: read-only`) before the answer. The final answer is the text after the last `codex` marker; `--out` captures the whole transcript. A trivial consult is ~5s; a real design question ~10–15s. Pass `--effort` to override per-call for a stronger or cheaper tier.
 - **`~/.claude/agents/` may not exist.** The first `cp` fails with `No such file or directory`. `mkdir -p` first (the Setup block does).
 - **A named subagent only resolves after its def is installed AND a session reload.** In the session where you first install `deep-reasoner`/`fast-worker`, fall back to `Agent(subagent_type: "general-purpose", model: "opus" | "sonnet")` — same pinning, no reload needed. Inside a Workflow, `agent(..., {model: "opus" | "sonnet"})` needs no installed def at all.
 - **Model pins are real.** The Sonnet spawn reports `Sonnet 5`; the Opus spawn reports `Opus (claude-opus-4-8)`; Codex reports `model: gpt-5.6-sol`. **`gpt-5.6` alone is not a valid slug** — there are three distinct GPT-5.6 tiers (`gpt-5.6-sol` flagship, `gpt-5.6-terra` balanced, `gpt-5.6-luna` fast); the bare `gpt-5.6` triggers a "metadata not found" warning and falls back to whichever tier Codex defaults to. `gpt-5.6-sol` is the default here because it's the strongest peer for a decorrelated cross-check — pass `--model gpt-5.6-terra` explicitly for a cheaper peer on routine consults.

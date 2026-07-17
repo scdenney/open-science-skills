@@ -34,16 +34,17 @@
 #                   gpt-5.6-luna (fast). Pass --model gpt-5.6-terra for a
 #                   cheaper peer on routine consults.
 #   --effort LEVEL  Codex reasoning effort, passed as
-#                   -c model_reasoning_effort=LEVEL (default: high — stated
-#                   explicitly so it does not silently drift if Codex's own
-#                   defaults change upstream).
+#                   -c model_reasoning_effort=LEVEL (default: xhigh — Sol's
+#                   "Extra high" tier, one below Max/Ultra, which consume
+#                   usage limits faster; stated explicitly so it does not
+#                   silently drift if Codex's own defaults change upstream).
 #   --out FILE      also tee Codex's stdout+stderr here (for background reads)
 #   --prompt TEXT   prompt as a single argument
 #   --prompt-file P read prompt from file P
 #   -               read prompt from stdin (the wrapper handles the /dev/null dance)
 set -euo pipefail
 
-MODE="consult"; DIR="$PWD"; TIMEOUT=600; MODEL="gpt-5.6-sol"; EFFORT="high"; OUT=""; PROMPT=""; PROMPT_SET=0
+MODE="consult"; DIR="$PWD"; TIMEOUT=600; MODEL="gpt-5.6-sol"; EFFORT="xhigh"; OUT=""; PROMPT=""; PROMPT_SET=0
 
 die(){ echo "codex-peer: $*" >&2; exit 2; }
 
