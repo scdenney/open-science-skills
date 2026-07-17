@@ -11,6 +11,10 @@ allowed-tools:
 
 The native `advisor()` tool sometimes reports itself unavailable ("The advisor tool is unavailable. Do not try to use it again.") mid-session. This skill is the fallback: it spawns an independent, isolated Fable 5 session as a stronger reviewer, matched to whatever reasoning-effort level the calling session is currently running at.
 
+The two seats are deliberately asymmetric. **The advisor seat is always Fable 5** — that is the point of the design, and the script guards it (no silent fallback to another model family). **The calling seat can be any model**: a Sonnet or Opus session invoking this skill gets Fable as its stronger second reviewer, and a Fable session gets a fresh, isolated Fable instance with no anchoring from the conversation. Only two things carry over from the caller: the working directory (`-C`) and the reasoning-effort level.
+
+<p align="center"><img src="assets/architecture.svg" alt="advisor: a working session on any Claude model composes one self-contained briefing, sends it to an isolated Fable 5 advisor at the caller's effort level, and receives one decisive read-only review in return" width="900"></p>
+
 ## What this is not
 
 The native tool automatically forwards your entire conversation transcript — no composition required. This skill cannot do that: `fable-advisor.sh` spawns a brand-new `claude` process with no memory of this conversation. **You must compose a self-contained briefing** (see Steps) before invoking it. This is the one real difference from the native tool; the rest of the behavior (independent judgment, read-only, called before substantive work or when stuck) is designed to match it.
@@ -32,7 +36,7 @@ Give the advice serious weight. If a step you followed on Fable's advice fails e
 
 Fable runs at the **same reasoning-effort level as the calling session**, not a hardcoded default. This is load-bearing: a cheap consult under a `max`-effort task wastes the point of asking, and a maximal consult under a `low`-effort quick task wastes time and money for no benefit.
 
-Mechanism (verified empirically this session, not assumed from documentation): Claude Code exposes the current session's effort level as the environment variable `$CLAUDE_EFFORT` (confirmed present via `env`, and confirmed to propagate into spawned subprocesses). `fable-advisor.sh` defaults `--effort` to `$CLAUDE_EFFORT` automatically — you do not need to pass it explicitly unless you want to deliberately override (e.g., a cheaper `medium`-effort consult mid-task even though the session itself is at `max`).
+Mechanism (verified empirically during development, not assumed from documentation): Claude Code exposes the current session's effort level as the environment variable `$CLAUDE_EFFORT` (confirmed present via `env`, and confirmed to propagate into spawned subprocesses). `fable-advisor.sh` defaults `--effort` to `$CLAUDE_EFFORT` automatically — you do not need to pass it explicitly unless you want to deliberately override (e.g., a cheaper `medium`-effort consult mid-task even though the session itself is at `max`).
 
 ## Steps
 
@@ -43,7 +47,7 @@ Mechanism (verified empirically this session, not assumed from documentation): C
 3. **Run the consult** (Bash tool, `timeout: 900000` as a backstop — the script has its own internal timeout too):
 
    ```bash
-   ~/.claude/skills/advisor/scripts/fable-advisor.sh \
+   "${CLAUDE_PLUGIN_ROOT}/skills/advisor/scripts/fable-advisor.sh" \
      --prompt-file <briefing-path> \
      --out <output-path> \
      -C "$PWD"
@@ -59,8 +63,9 @@ Mechanism (verified empirically this session, not assumed from documentation): C
 
 ## Notes
 
-- `~/.claude/skills/advisor/scripts/fable-advisor.sh --check` verifies the `claude` CLI is on PATH and reports the live `$CLAUDE_EFFORT` value — run once after install, or when a consult behaves unexpectedly.
+- `"${CLAUDE_PLUGIN_ROOT}/skills/advisor/scripts/fable-advisor.sh" --check` verifies the `claude` CLI is on PATH and reports the live `$CLAUDE_EFFORT` value — run once after install, or when a consult behaves unexpectedly. `${CLAUDE_PLUGIN_ROOT}` resolves to this plugin's installed directory at runtime; do not hand-install a copy under `~/.claude/skills/` (a stray copy shadows the plugin's own and silently drifts out of date).
 - The spawned Fable session runs `--permission-mode plan` (no file edits) and `--no-session-persistence` (not saved as a resumable session) — advisory only, by design, matching the native tool's own scope.
+- The script clears `ANTHROPIC_API_KEY` for the spawned session, so the consult bills the claude.ai subscription plan even if the calling shell happens to export a live API key.
 - Default model is `fable` (the latest Fable alias). Override with `--model <id>` if a specific pinned version is ever needed.
 - Effort enum: `low, medium, high, xhigh, max` — matches `/effort` in Claude Code. If `$CLAUDE_EFFORT` is unset for some reason, the script falls back to `high` rather than guessing low or silently failing.
 - Companion skill: `codex/advisor/` — the same pattern for a Codex-native session (GPT-5.5/5.6 executor consulting GPT-5.6 "Sol"). Effort detection works differently there since Codex does not expose an inheritable effort env var; see that skill's own notes.

@@ -1,13 +1,13 @@
 ---
 name: 46-orchestrate
-description: Orchestrate complex work as the Codex lead on the GPT-5.6 family. Interactive default — a gpt-5.6-sol lead at medium effort reasons the hard parts itself and delegates the bulk down to gpt-5.6-terra via out-of-band codex exec one-shots (interactive sessions only). Headless or cost-paramount fallback — a gpt-5.6-terra lead whose whole in-process spawn tree is Terra. Use when the user explicitly asks to orchestrate, delegate, fan out, parallelize, assign subagents, obtain independent checks, or have Codex act as tech lead. Decompose work, route bounded tasks to role-based subagents via Codex's native spawn_agent tool (subagents inherit the lead's model and effort — there is no per-agent override), preserve integration ownership, and synthesize verified results.
+description: Orchestrate complex work as the Codex lead on the GPT-5.6 family. Default — a gpt-5.6-sol lead at high effort owns decomposition, integration, and verification; it routes bounded work down to gpt-5.6-terra through out-of-band codex exec one-shots when the session permits them. Use gpt-5.6-luna only for tightly specified mechanical work with objective checks. Native spawn_agent children inherit the lead's model and effort, so they are not Terra/Luna delegation. Use when the user explicitly asks to orchestrate, delegate, fan out, parallelize, assign subagents, obtain independent checks, or have Codex act as tech lead.
 ---
 
 # 4.6 Orchestrate
 
-<p align="center"><img src="assets/architecture.svg" alt="46-orchestrate: a gpt-5.6-sol Codex orchestrator at medium effort reasons the hard parts itself and delegates bulk work down to gpt-5.6-terra via out-of-band codex exec one-shots (interactive sessions only); headless runs fall back to a gpt-5.6-terra lead whose in-process spawn subagents all inherit Terra" width="900"></p>
+<p align="center"><img src="assets/architecture.svg" alt="46-orchestrate: a gpt-5.6-sol Codex orchestrator at high effort owns hard decisions and routes bounded work to out-of-band Terra workers; Luna is used only for tightly specified mechanical implementation" width="900"></p>
 
-Act as the lead orchestrator for the GPT-5.6 family. Plan, decompose, delegate, integrate, and verify. Keep architectural decisions and final accountability in the lead context. The intended interactive lead is **`gpt-5.6-sol`** at effort `medium` — the strongest tier, which reasons the compact hard problems itself and delegates the bulk *down* to `gpt-5.6-terra` through out-of-band `codex exec` one-shots. That top-model-leads-and-delegates-down shape mirrors `fable-orchestrate`/`opus-orchestrate`, but it works **only in an interactive/escalated session**: `spawn_agent` cannot downgrade a child's model (next paragraph), so Terra work must go out-of-band, which is impossible headless. In a **headless** (`codex exec`, approval `never`) or cost-paramount run, fall back to a **`gpt-5.6-terra` lead**, whose in-process spawn tree is Terra by construction (see *Model and effort calibration*).
+Act as the lead orchestrator for the GPT-5.6 family. Plan, decompose, delegate, integrate, and verify. Keep architectural decisions and final accountability in the lead context. The default lead is **`gpt-5.6-sol`** at effort **`high`**. Sol owns the hard decisions; it delegates bounded, independently checkable work *down* to `gpt-5.6-terra` through out-of-band `codex exec` one-shots. Use `gpt-5.6-luna` only for tightly specified mechanical work with objective acceptance checks. This hierarchy works **only in an interactive/escalated session**: `spawn_agent` cannot downgrade a child's model, so Terra/Luna work must go out-of-band, which is impossible headless. In a **headless** (`codex exec`, approval `never`) run, say that cross-tier delegation is unavailable; use the current lead directly, or start a separate Terra session if the user authorizes that fallback.
 
 The lead is the currently-running Codex session itself, and it has two delegation mechanisms that differ in one decisive way — the worker's model. **In-process** subagents use Codex's native multi-agent tool (`functions.collaboration.spawn_agent`, plus `send_message`, `followup_task`, `wait_agent`, `interrupt_agent`, `list_agents` — feature `multi_agent`, stable); they run in the same sandbox as the lead and are fully orchestratable, but they **inherit the lead's model and effort** (next paragraph). **Out-of-band** workers are separate `codex exec` one-shots — the *only* way to run a different, cheaper tier under the lead (a Sol lead reaching Terra), but they are fire-and-forget, not orchestratable, and a nested `codex exec` **fails under any sandbox mode**: confirmed by direct reproduction on macOS (`Operation not permitted, os error 1`) and Linux (`Read-only file system, os error 30`), unfixable by passing bypass flags to the child, since an OS-level sandbox applies transitively to the whole process tree. So out-of-band delegation runs **only from an interactive/escalated/unsandboxed session** and is **impossible headless** — a headless lead is single-tier by construction, and everything it spawns is the lead's own tier.
 
@@ -19,19 +19,19 @@ The lead's `--model` and `model_reasoning_effort` set the price of everything th
 
 | Choice | Setting | Why |
 |---|---|---|
-| **Lead — interactive default** | `gpt-5.6-sol`, effort `medium` (raise to `high` only for a genuinely hard orchestration/architecture turn; never `xhigh` while a spawn is live) | Sol is the strongest tier and the lead is where lead-quality pays off. Sol reasons compact hard problems *directly* — nothing outranks it, so there is no escalation *up*. `medium` bounds Sol's token appetite. |
-| **Bulk workers — "Terra does the bulk"** | out-of-band one-shot: `codex exec --model gpt-5.6-terra -c model_reasoning_effort=medium --sandbox read-only --skip-git-repo-check "<self-contained brief>" < /dev/null` (use `--sandbox workspace-write` + `-c model_reasoning_effort=low` for mechanical implementer work that edits files) | the ONLY way to run Terra under a Sol lead. Fire-and-forget, not orchestratable; background several with `--out <file>` and reap them for parallelism. **Interactive-only** — impossible headless. |
-| **Cheapest bulk** | out-of-band one-shot: `codex exec --model gpt-5.6-luna -c model_reasoning_effort=low …` | Luna (about 2.5× cheaper than Terra) for fully-specified mechanical work worth taking out of process. |
+| **Lead — default** | `gpt-5.6-sol`, effort `high` | Sol is the strongest tier and lead quality pays off in decomposition, architecture, integration, and final verification. Do not use `xhigh`/Ultra. |
+| **Bounded workers — Terra** | out-of-band one-shot: `codex exec --model gpt-5.6-terra -c model_reasoning_effort=medium --sandbox read-only --skip-git-repo-check "<self-contained brief>" < /dev/null` (raise a specific difficult review to `high`) | The only way for a Sol lead to reach Terra. Use for bounded research, diagnosis, implementation, or verification. Interactive-only. |
+| **Mechanical workers — Luna** | out-of-band one-shot: `codex exec --model gpt-5.6-luna -c model_reasoning_effort=low …` | Only for fully specified, low-judgment work with objective checks. Never use Luna for synthesis, safety-critical changes, or unresolved ambiguity. |
 | **Live / blind Sol subagent** | `spawn_agent` (inherits Sol + the lead's effort) | only when you need what a one-shot can't give: live orchestration (`followup_task`/`wait_agent`), context isolation, or a blind parallel resample *at the lead's tier*. Sol-priced — spawn sparingly. |
-| **Lead — headless / cost-paramount fallback** | `gpt-5.6-terra`, effort `medium`; the whole in-process spawn tree is Terra by construction | when out-of-band calls are impossible (headless) or cost dominates. The prior default, retained. Reach Sol/Luna only if you can later escalate the session. |
+| **Headless constraint** | no cross-tier worker can be launched | Do not promise Terra/Luna delegation. Keep the work in the lead or ask to restart in an interactive/escalated session. |
 
 Rules of thumb:
 
 - **Choose the lead tier first** — it prices everything that inherits it.
 - **Under a Sol lead, reason compact hard problems in the lead and delegate *down* to Terra out-of-band for bulk, width, and mechanical work — never escalate up; nothing outranks Sol.**
-- **Escalate effort before spawning a second Sol child** — a spawn is Sol-priced overhead here, not a cheap experiment. Never leave the session at `xhigh` while a spawn is live; the effort propagates to every child.
-- **Cross-tier delegation needs an interactive/escalated session.** Headless is single-tier: run the Terra-lead fallback and keep hard problems in the lead. The `< /dev/null` on every out-of-band call is load-bearing — without it `codex exec` hangs waiting on stdin.
-- **The Sol lead is the cost floor.** Terra bulk helps, but every lead turn is Sol-priced and the lead context grows as it integrates; keep the lead lean (ingest only worker summaries/stdout) and cap effort at `medium`.
+- **Do not use `xhigh` or Ultra.** A Sol child inherits Sol/high and is expensive overhead, not a cheaper worker.
+- **Cross-tier delegation needs an interactive/escalated session.** Headless is single-tier: keep hard problems in the lead, or ask to restart a separate Terra session. The `< /dev/null` on every out-of-band call is load-bearing — without it `codex exec` hangs waiting on stdin.
+- **The Sol lead is the cost floor.** Terra bulk helps, but every lead turn is Sol-priced and the lead context grows as it integrates; keep the lead lean and ingest only worker summaries/stdout.
 
 ## Delegation gate
 
@@ -43,7 +43,7 @@ Before spawning work, publish a compact plan that names each workstream, owner r
 
 ## Route by first match
 
-Owners below assume the **Sol-lead interactive** default. Under the **Terra-lead headless fallback**, every "Terra out-of-band" owner collapses to an in-process `spawn_agent` subagent (which is Terra, since the lead is Terra), and rows 3–4 stay in the lead.
+Owners below assume the **Sol-lead interactive** default. In headless mode, do not silently reinterpret these routes as Terra delegation: cross-tier work cannot launch. Keep the task in the lead or ask to restart a separate Terra session.
 
 | Priority | Work type | Owner (Sol-lead interactive) |
 |---|---|---|
@@ -52,7 +52,7 @@ Owners below assume the **Sol-lead interactive** default. Under the **Terra-lead
 | 3 | high blast radius **and** hard to verify | two independent lines (see the high-stakes path), then the lead adjudicates |
 | 4 | compact hard reasoning — one architecture call, gnarly debug, or hard trade-off that fits the lead's context | **lead** — Sol *is* the deep reasoner; nothing outranks it, so there is no escalation up |
 | 5 | bounded research, inventory, or diagnosis with no overlapping writes | Terra out-of-band one-shot (cheaper) — or a Sol `spawn_agent` when the work needs live orchestration or lead-tier context isolation |
-| 6 | fully specified implementation with objective acceptance checks | Terra (Luna if purely mechanical) out-of-band one-shot |
+| 6 | fully specified implementation with objective acceptance checks | Terra out-of-band one-shot; Luna only if the work is purely mechanical and carries no material judgment |
 | 7 | verification, tests, review, or adversarial challenge of an existing artifact | Terra out-of-band one-shot — or a Sol `spawn_agent` for a live back-and-forth review |
 | 8 | ambiguous or tightly coupled work that cannot be cleanly contracted | lead until separable |
 
@@ -62,7 +62,7 @@ Do not use multiple agents merely to increase activity. Parallelize independent 
 
 ## Spawn subagents correctly
 
-**Under a Sol lead, every `spawn_agent` child is Sol-priced** — it inherits the lead's model and effort. Use `spawn_agent` only for what a one-shot cannot give (live orchestration, context isolation, or a blind same-tier resample), and send bulk, mechanical, or wide work to Terra out-of-band instead. Under the Terra-lead fallback there is no such premium — the whole tree is Terra and `spawn_agent` is the primary delegation tool.
+**Under a Sol lead, every `spawn_agent` child is Sol-priced** — it inherits the lead's model and effort. Use `spawn_agent` only for what a one-shot cannot give (live orchestration, context isolation, or a blind same-tier resample), and send bulk, mechanical, or wide work to Terra out-of-band instead. A separately started Terra session can use native Terra spawns, but that is a different lead session, not a hidden fallback.
 
 Every subagent is created with `spawn_agent`. Confirmed parameters: `task_name` (a short identifier other calls use to address this agent), `message` (the task brief — this is the subagent's entire starting context unless `fork_turns` adds more), and `fork_turns` (how much of the lead's own conversation to propagate — `"all"` gives the subagent full history; for a bounded, fully-specified task, propagate the minimum needed, since a large `fork_turns` value defeats the context-isolation saving this tool exists for). Consult the tool's own schema at call time for any parameters not listed here — this list reflects what has been directly exercised, not a full spec.
 
@@ -113,7 +113,7 @@ The lead owns shared configuration, interfaces between workstreams, and final in
 1. Inspect authoritative workspace state.
 2. Decompose work and identify dependencies.
 3. Publish the route and acceptance checks.
-4. Start all ready, independent workstreams concurrently — Sol `spawn_agent` children (within the 3-subagent capacity) for live/blind/isolation work, and backgrounded Terra `codex exec` one-shots (`--out <file>`) for bulk. Under the headless Terra-lead fallback there are no one-shots; everything is an in-process Terra spawn within that same capacity.
+4. Start all ready, independent workstreams concurrently — Sol `spawn_agent` children (within the 3-subagent capacity) for live/blind/isolation work, and backgrounded Terra `codex exec` one-shots (`--out <file>`) for bulk. In headless mode, do not start cross-tier work; keep the work in the lead or request an interactive restart.
 5. Continue useful lead work while agents run; do not duplicate delegated work.
 6. Use `wait_agent` to consume each agent's final response and inspect its artifact directly.
 7. Send a focused `followup_task` to the same agent when its artifact is incomplete, rather than spawning a fresh one that repeats the briefing cost.

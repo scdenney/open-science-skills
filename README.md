@@ -8,12 +8,13 @@
 [![OpenAI Codex](https://img.shields.io/badge/OpenAI_Codex-library-111111?logo=openai&logoColor=white)](codex/README.md)
 [![version](https://img.shields.io/badge/version-2.18.2-blue)](https://github.com/scdenney/open-science-skills/releases)
 [![license](https://img.shields.io/badge/license-CC%20BY--NC%204.0-lightgrey)](LICENSE)
-[![skills](https://img.shields.io/badge/skills-39-blue)](#skills)
+[![Claude skills](https://img.shields.io/badge/Claude_skills-39-D97757?logo=anthropic&logoColor=white)](#skills)
+[![Codex skills](https://img.shields.io/badge/Codex_skills-37-111111?logo=openai&logoColor=white)](#skills)
 [![updated](https://img.shields.io/badge/updated-July%202026-green)](https://github.com/scdenney/open-science-skills/commits/main)
 [![sources](https://img.shields.io/badge/sources-150%2B-purple)](SOURCES.md)
 [![PRs welcome](https://img.shields.io/badge/PRs-welcome-brightgreen)](#contributing)
 
-Open Science Skills is a library of 39 agentic skills for Claude Code and OpenAI Codex, written for empirical social scientists. Each skill teaches the assistant to work the way the field expects: identify the data-generating process before proposing an estimator, design experiments and instruments to a standard, and hold drafts to established reporting norms. The point is discipline: where rigor matters, a skill deliberately slows the assistant down.
+Open Science Skills is a library of 39 agentic skills for Claude Code, with a parallel 37-skill library for OpenAI Codex, written for empirical social scientists. Each skill teaches the assistant to work the way the field expects: identify the data-generating process before proposing an estimator, design experiments and instruments to a standard, and hold drafts to established reporting norms. The point is discipline: where rigor matters, a skill deliberately slows the assistant down.
 
 The library follows the research lifecycle: conjoint and survey design, list experiments, topic modeling, LLM text classification, VLM-based OCR pipelines, manuscript QA, multi-model orchestration, and transparent reporting under APSA, JARS, DA-RT, TOP, and FAIR expectations. Every skill is grounded in published methods sources rather than whatever the model happens to remember; see [SOURCES.md](SOURCES.md) for the bibliography of 150+ works.
 
@@ -67,8 +68,8 @@ Skills are grouped by where they fall in a project. Unless the Platform column s
 |---|---|---|---|
 | [fable-orchestrate](plugin/skills/fable-orchestrate/SKILL.md) | Claude Code | `/oss:fable-orchestrate` | Run a multi-model workflow with Fable 5 as lead: an Opus subagent takes heavy reasoning, a Sonnet subagent takes mechanical work, and a GPT-5.6 Codex peer gives a second opinion. |
 | [opus-orchestrate](plugin/skills/opus-orchestrate/SKILL.md) | Claude Code | `/oss:opus-orchestrate` | The same workflow with Opus 4.8 as lead via ultracode (xhigh reasoning, dynamic Workflow fan-out). Opus reasons on hard problems itself and delegates only to fan out; the Codex peer is gpt-5.6-terra. |
-| [advisor](plugin/skills/advisor/SKILL.md) | Both | `/oss:advisor` | Consult a stronger model as an independent second reviewer before you commit to an interpretation or call a task done. Fable 5 on Claude Code; GPT-5.6 (gpt-5.6-terra) on Codex. |
-| [46-orchestrate](codex/46-orchestrate/SKILL.md) | Codex | `$46-orchestrate` | Codex-native orchestration led by GPT-5.6 Sol. Fans bounded tasks out to role-based subagents through Codex's in-process `spawn_agent` tool, keeping planning, integration, and final sign-off with the lead. |
+| [advisor](codex/advisor/SKILL.md) | Both | `/oss:advisor` / `$advisor` | Consult an independent second reviewer before committing to an interpretation or calling a task done. Fable 5 on Claude Code; this Codex library's GPT-5.6 advisor uses Terra/high by default and Sol/high only for difficult or high-stakes questions. |
+| [46-orchestrate](codex/46-orchestrate/SKILL.md) | Codex | `$46-orchestrate` | Sol/high owns orchestration, integration, and sign-off; it routes bounded work to Terra workers and reserves Luna for tightly specified mechanical work. |
 
 ### Ideation
 

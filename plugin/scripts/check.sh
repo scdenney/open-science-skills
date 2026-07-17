@@ -59,9 +59,15 @@ while IFS= read -r skill; do
 done < "$tmpdir/skills"
 
 count="$(wc -l < "$tmpdir/skills" | tr -d ' ')"
-if ! grep -q "skills-$count-blue" README.md; then
-  echo "README skill badge does not match count $count" >&2
+if ! grep -q "Claude_skills-$count-" README.md; then
+  echo "README Claude skills badge does not match count $count" >&2
   exit 1
 fi
 
-echo "package ok: $count skills"
+codex_count="$(find codex -mindepth 1 -maxdepth 1 -type d ! -name assets | wc -l | tr -d ' ')"
+if ! grep -q "Codex_skills-$codex_count-" README.md; then
+  echo "README Codex skills badge does not match count $codex_count" >&2
+  exit 1
+fi
+
+echo "package ok: $count Claude skills, $codex_count Codex skills"
