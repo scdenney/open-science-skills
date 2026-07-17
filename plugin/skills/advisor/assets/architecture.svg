@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" role="img">
+<title>Advisor architecture: a working session on any Claude model sends one self-contained briefing to an isolated Fable 5 advisor and receives one decisive read-only review in return.</title>
+<defs><marker id="ah-o" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="12" markerHeight="12" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L10,5 L0,10 z" fill="#C0562F"/></marker><marker id="ah-k" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="11" markerHeight="11" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L10,5 L0,10 z" fill="#1E1E1B"/></marker></defs>
+<rect x="0" y="0" width="1600" height="900" fill="#F2EEE4"/>
+<rect x="210" y="305" width="430" height="290" rx="22" ry="22" fill="#C4674A" stroke="#2F2F2A" stroke-width="2.5" stroke-dasharray="7 5"/>
+<text x="425" y="405" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="38" fill="#1E1E1B" font-weight="bold" text-anchor="middle">Working session</text>
+<text x="425" y="455" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="28" fill="#F7EFE2" font-style="italic" text-anchor="middle">any model · Sonnet, Opus, or Fable</text>
+<text x="425" y="503" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="20" fill="#3B2A22" font-style="italic" text-anchor="middle">solves the task itself</text>
+<path d="M 210 380 C 130 365, 130 535, 208 520" fill="none" stroke="#1E1E1B" stroke-width="3" marker-end="url(#ah-k)"/>
+<text x="150" y="568" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="22" fill="#4A4A45" font-style="italic" text-anchor="middle">main loop</text>
+<rect x="980" y="335" width="430" height="230" rx="16" ry="16" fill="#FEFDFB" stroke="#2F2F2A" stroke-width="2"/>
+<text x="1195" y="410" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="30" fill="#1E1E1B" font-weight="bold" text-anchor="middle">Advisor</text>
+<text x="1195" y="455" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="24" fill="#4A4A45" font-style="italic" text-anchor="middle">Fable 5 · caller&apos;s effort</text>
+<line x1="640" y1="410" x2="980" y2="410" stroke="#C0562F" stroke-width="3" marker-end="url(#ah-o)"/>
+<text x="810" y="388" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="22" fill="#C0562F" font-style="italic" text-anchor="middle">self-contained briefing</text>
+<line x1="980" y1="500" x2="640" y2="500" stroke="#C0562F" stroke-width="3" stroke-dasharray="7 5" marker-end="url(#ah-o)"/>
+<text x="810" y="532" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="22" fill="#C0562F" font-style="italic" text-anchor="middle">one decisive review</text>
+<text x="1195" y="605" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="19" fill="#4A4A45" font-style="italic" text-anchor="middle">read-only · never edits files · one consult per decision point</text>
+<line x1="541" y1="861" x2="716" y2="861" stroke="#B9B2A0" stroke-width="1"/>
+<line x1="884" y1="861" x2="1059" y2="861" stroke="#B9B2A0" stroke-width="1"/>
+<text x="800" y="870" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="28" fill="#C0562F" font-style="italic" text-anchor="middle">advisor</text>
+</svg>
