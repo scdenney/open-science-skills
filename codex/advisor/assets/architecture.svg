@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" role="img">
-<title>Codex advisor architecture: a working GPT-5.6 session sends one self-contained briefing to a Sol high advisor; it receives one decisive read-only review.</title>
+<title>Codex advisor architecture: a working GPT-5.6 session sends one self-contained briefing to a Sol xhigh advisor; it receives one decisive read-only review.</title>
 <defs>
   <marker id="arrow" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="12" markerHeight="12" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L10,5 L0,10 z" fill="#C0562F"/></marker>
   <marker id="return" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="12" markerHeight="12" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L10,5 L0,10 z" fill="#C0562F"/></marker>
