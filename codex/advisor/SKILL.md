@@ -7,7 +7,7 @@ description: Consult this library's independent GPT-5.6 advisor before committin
 
 This is the Codex-native advisor maintained in this library. It is a single-turn, independent, read-only consult — not delegated implementation and not a substitute for the lead's judgment.
 
-<p align="center"><img src="assets/architecture.svg" alt="Codex advisor: the caller (any GPT-5.6 lead) sends a self-contained briefing to a Sol xhigh advisor; the advisor returns one decisive read-only review" width="900"></p>
+<p align="center"><img src="assets/architecture.svg" alt="Codex advisor: the orchestrator (any GPT-5.6 lead) sends a self-contained briefing to a Sol xhigh advisor; the advisor returns one decisive read-only review" width="900"></p>
 
 ## Default
 
