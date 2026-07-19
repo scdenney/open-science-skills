@@ -7,8 +7,9 @@
 <text x="460" y="452" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="28" fill="#F7EFE2" font-style="italic" text-anchor="middle">gpt-5.6-sol &#183; xhigh</text>
 <text x="460" y="500" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="20" fill="#3B2A22" font-style="italic" text-anchor="middle">reasons hard parts &#183; delegates</text>
 <text x="460" y="526" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="20" fill="#3B2A22" font-style="italic" text-anchor="middle">bounded &amp; wide work</text>
-<path d="M 240 360 C 160 345, 160 515, 238 500" fill="none" stroke="#1E1E1B" stroke-width="3" marker-end="url(#ah-k)"/>
-<text x="180" y="548" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="22" fill="#4A4A45" font-style="italic" text-anchor="middle">main loop</text>
+<rect x="264" y="510" width="46" height="46" rx="8" ry="8" fill="none" stroke="#1E1E1B" stroke-width="2"/>
+<path d="M 302 518 C 272 514, 272 548, 296 544" fill="none" stroke="#1E1E1B" stroke-width="2.5" marker-end="url(#ah-k)"/>
+<text x="287" y="573" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="15" fill="#F7EFE2" font-style="italic" text-anchor="middle">main loop</text>
 <rect x="1010" y="185" width="390" height="160" rx="16" ry="16" fill="#FEFDFB" stroke="#2F2F2A" stroke-width="2"/>
 <text x="1205" y="255" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="30" fill="#1E1E1B" font-weight="bold" text-anchor="middle">Terra one-shot(s)</text>
 <text x="1205" y="292" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="24" fill="#4A4A45" font-style="italic" text-anchor="middle">gpt-5.6-terra</text>

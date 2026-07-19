@@ -5,8 +5,9 @@
 <text x="460" y="402" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="40" fill="#1E1E1B" font-weight="bold" text-anchor="middle">Orchestrator</text>
 <text x="460" y="452" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="28" fill="#F7EFE2" font-style="italic" text-anchor="middle">Fable 5 · max</text>
 <text x="460" y="500" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="20" fill="#3B2A22" font-style="italic" text-anchor="middle">reasons · delegates · integrates</text>
-<path d="M 260 360 C 180 345, 180 515, 258 500" fill="none" stroke="#1E1E1B" stroke-width="3" marker-end="url(#ah-k)"/>
-<text x="200" y="548" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="22" fill="#4A4A45" font-style="italic" text-anchor="middle">main loop</text>
+<rect x="284" y="510" width="46" height="46" rx="8" ry="8" fill="none" stroke="#1E1E1B" stroke-width="2"/>
+<path d="M 322 518 C 292 514, 292 548, 316 544" fill="none" stroke="#1E1E1B" stroke-width="2.5" marker-end="url(#ah-k)"/>
+<text x="307" y="573" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="15" fill="#F7EFE2" font-style="italic" text-anchor="middle">main loop</text>
 <rect x="1010" y="90" width="390" height="180" rx="16" ry="16" fill="#FEFDFB" stroke="#2F2F2A" stroke-width="2"/>
 <text x="1205" y="170" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="30" fill="#1E1E1B" font-weight="bold" text-anchor="middle">Deep-reasoner</text>
 <text x="1205" y="207" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="24" fill="#4A4A45" font-style="italic" text-anchor="middle">Opus</text>

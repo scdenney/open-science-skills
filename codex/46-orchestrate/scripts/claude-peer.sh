@@ -31,10 +31,12 @@
 #
 #   -C DIR          working dir Claude sees (default: $PWD)
 #   --timeout SEC   hard kill after SEC seconds (default: 600)
-#   --model ID      Claude model to pin (default: sonnet — a capable, inexpensive
-#                   cross-vendor line for routine consults; pass --model opus for a
-#                   stronger check on a genuinely high-stakes call, mirroring how
-#                   codex-peer.sh defaults to Sol, the flagship Codex tier)
+#   --model ID      Claude model to pin (default: fable — flagship for flagship,
+#                   matching how codex-peer.sh defaults to Sol, the flagship Codex
+#                   tier; confirmed in a same-brief benchmark rerun, 2026-07-19,
+#                   where a Sol/xhigh lead with a Fable peer reached Distinction on
+#                   5 of 6 tiers. Pass --model sonnet or --model opus for a cheaper
+#                   check on a routine, lower-stakes consult)
 #   --effort LEVEL  reasoning effort, passed as CLAUDE_EFFORT=LEVEL in the child's
 #                   environment (default: high)
 #   --out FILE      also tee Claude's stdout+stderr here (for background reads)
@@ -43,7 +45,7 @@
 #   -               read prompt from stdin
 set -euo pipefail
 
-DIR="$PWD"; TIMEOUT=600; MODEL="sonnet"; EFFORT="high"; OUT=""; PROMPT=""; PROMPT_SET=0
+DIR="$PWD"; TIMEOUT=600; MODEL="fable"; EFFORT="high"; OUT=""; PROMPT=""; PROMPT_SET=0
 
 die(){ echo "claude-peer: $*" >&2; exit 2; }
 
