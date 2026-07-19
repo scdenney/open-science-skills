@@ -13,7 +13,7 @@ The native `advisor()` tool sometimes reports itself unavailable ("The advisor t
 
 The two seats are deliberately asymmetric. **The advisor seat is always Fable 5** — that is the point of the design, and the script guards it (no silent fallback to another model family). **The calling seat can be any model**: a Sonnet or Opus session invoking this skill gets Fable as its stronger second reviewer, and a Fable session gets a fresh, isolated Fable instance with no anchoring from the conversation. Only two things carry over from the caller: the working directory (`-C`) and the reasoning-effort level.
 
-<p align="center"><img src="assets/architecture.svg" alt="advisor: a working session on any Claude model composes one self-contained briefing, sends it to an isolated Fable 5 advisor at the caller's effort level, and receives one decisive read-only review in return" width="900"></p>
+<p align="center"><img src="assets/architecture.svg" alt="advisor: the caller (any Claude model) composes one self-contained briefing, sends it to an isolated Fable 5 advisor at the caller's effort level, and receives one decisive read-only review in return" width="900"></p>
 
 ## What this is not
 

@@ -1,12 +1,12 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" role="img">
-<title>Codex advisor architecture: a working GPT-5.6 session sends one self-contained briefing to a Sol xhigh advisor; it receives one decisive read-only review.</title>
+<title>Codex advisor architecture: the caller (any GPT-5.6 lead) sends one self-contained briefing to a Sol xhigh advisor; it receives one decisive read-only review.</title>
 <defs>
   <marker id="arrow" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="12" markerHeight="12" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L10,5 L0,10 z" fill="#C0562F"/></marker>
   <marker id="return" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="12" markerHeight="12" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L10,5 L0,10 z" fill="#C0562F"/></marker>
 </defs>
 <rect x="0" y="0" width="1600" height="900" fill="#F2EEE4"/>
 <rect x="210" y="305" width="430" height="290" rx="22" ry="22" fill="#C4674A" stroke="#2F2F2A" stroke-width="2.5" stroke-dasharray="7 5"/>
-<text x="425" y="406" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="40" fill="#1E1E1B" font-weight="bold" text-anchor="middle">Working session</text>
+<text x="425" y="406" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="40" fill="#1E1E1B" font-weight="bold" text-anchor="middle">Caller</text>
 <text x="425" y="456" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="27" fill="#F7EFE2" font-style="italic" text-anchor="middle">any GPT-5.6 lead</text>
 <text x="425" y="505" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="20" fill="#3B2A22" font-style="italic" text-anchor="middle">solves the task itself</text>
 <rect x="234" y="525" width="46" height="46" rx="8" ry="8" fill="none" stroke="#1E1E1B" stroke-width="2"/>
