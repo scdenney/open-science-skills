@@ -60,6 +60,10 @@ Then set the orchestrator up as intended: `/model` to Opus 4.8 and `/effort` to 
 
 ## Run (the orchestration loop)
 
+**First, verify the model — before showing a plan or touching a tool.** Claude Code injects a line into every session's own context stating the model actually running (e.g. "You are powered by the model named …"); read it and compare against the intended lead, **Claude Opus 4.8 at `/effort` xhigh (ultracode)**. The Setup step above tells the human to switch `/model` and `/effort` first, but nothing enforces that they did — this skill is markdown loaded into context, not code, so it cannot change its own model. If the switch was skipped, you run the entire orchestration as whatever model the session already was, with no error and no warning. Confirmed to happen in practice with this skill's sibling (`fable-orchestrate`): a benchmark run produced six full task-runs recorded as "Fable lead" that in fact ran on Sonnet 5 end to end, because nobody checked before or after — the same silent-inheritance mechanism applies here. If your detected model does not match, stop, tell the human which model you actually detected, and ask them to run `/model` (and `/effort xhigh`) before you continue — do not proceed and do not label the output as Opus's.
+
+If you do switch mid-session, note the cost before doing it casually: prompt caching is scoped to a specific model, so the first request after a switch sends the full accumulated conversation as fresh, uncached input tokens rather than hitting the cache. That's a one-time hit — cheap if the switch happens before other work has built up context (which is what the Setup step already assumes), expensive if it happens deep into an unrelated, long-running session.
+
 **Always show the plan first.** Before delegating or fanning out anything, state your decomposition, which piece routes where (per the rule below), and — when you will fan out — the shape of the Workflow (its phases, what each stage does, what verifies). Then execute.
 
 ### Routing rule — first match wins, top to bottom

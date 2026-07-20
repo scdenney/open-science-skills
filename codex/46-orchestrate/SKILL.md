@@ -7,6 +7,16 @@ description: Orchestrate complex work as the Codex lead on the GPT-5.6 family. D
 
 <p align="center"><img src="assets/architecture.svg" alt="46-orchestrate: a gpt-5.6-sol Codex orchestrator at xhigh effort owns hard decisions and routes bounded work to out-of-band Terra workers, and reaches a Fable 5 cross-vendor peer for a genuine decorrelated check on high-stakes calls; Luna is used only for tightly specified mechanical implementation" width="900"></p>
 
+## Preflight the lead runtime first
+
+Before reading the task brief, inspecting the workspace, planning, or delegating, resolve `SKILL_DIR` as the directory containing this `SKILL.md` and run:
+
+```bash
+"$SKILL_DIR/scripts/check-lead-runtime.sh"
+```
+
+This is a mandatory fail-closed check, not a setup reminder. It uses the current process's `CODEX_THREAD_ID` to locate that exact thread's rollout, reads the latest recorded `turn_context` for the current turn's model and effort, and rejects any model-reroute event recorded for that turn. Proceed only when it prints `46-orchestrate preflight OK: gpt-5.6-sol at xhigh`. If it reports a mismatch or cannot establish the runtime, stop immediately, quote the result to the operator, and ask them to select Sol with Extra High reasoning in `/model` (or restart with `--model gpt-5.6-sol -c model_reasoning_effort=xhigh`), verify with `/status`, and invoke `$46-orchestrate` again. Never infer the runtime from this skill's prose, the launch command the operator says they used, `config.toml`, or the newest session file.
+
 Act as the lead orchestrator for the GPT-5.6 family. Plan, decompose, delegate, integrate, and verify. Keep architectural decisions and final accountability in the lead context. The default lead is **`gpt-5.6-sol`** at effort **`xhigh`** (raised from `high`, 2026-07-19, after a same-brief benchmark rerun showed the xhigh lead paired with a genuine Fable cross-vendor peer reaching Distinction on 5 of 6 tiers — see Model and effort calibration below). Sol owns the hard decisions; it delegates bounded, independently checkable work *down* to `gpt-5.6-terra` through out-of-band `codex exec` one-shots. Use `gpt-5.6-luna` only for tightly specified mechanical work with objective acceptance checks. This hierarchy works **only in an interactive/escalated session**: `spawn_agent` cannot downgrade a child's model, so Terra/Luna work must go out-of-band, which is impossible headless. In a **headless** (`codex exec`, approval `never`) run, say that cross-tier delegation is unavailable; use the current lead directly, or start a separate Terra session if the user authorizes that fallback.
 
 The lead is the currently-running Codex session itself, and it has two delegation mechanisms that differ in one decisive way — the worker's model. **In-process** subagents use Codex's native multi-agent tool (`functions.collaboration.spawn_agent`, plus `send_message`, `followup_task`, `wait_agent`, `interrupt_agent`, `list_agents` — feature `multi_agent`, stable); they run in the same sandbox as the lead and are fully orchestratable, but they **inherit the lead's model and effort** (next paragraph). **Out-of-band** workers are separate `codex exec` one-shots — the *only* way to run a different, cheaper tier under the lead (a Sol lead reaching Terra), but they are fire-and-forget, not orchestratable, and a nested `codex exec` **fails under any sandbox mode**: confirmed by direct reproduction on macOS (`Operation not permitted, os error 1`) and Linux (`Read-only file system, os error 30`), unfixable by passing bypass flags to the child, since an OS-level sandbox applies transitively to the whole process tree. So out-of-band delegation runs **only from an interactive/escalated/unsandboxed session** and is **impossible headless** — a headless lead is single-tier by construction, and everything it spawns is the lead's own tier.
@@ -15,7 +25,7 @@ The lead is the currently-running Codex session itself, and it has two delegatio
 
 ## Model and effort calibration
 
-The lead's `--model` and `model_reasoning_effort` set the price of everything that inherits them (every `spawn_agent` child). Choose the lead tier **first**, gated on one question: **can this session make out-of-band `codex exec` calls?** Interactive / escalated / unsandboxed → yes; headless (`codex exec`, approval `never`) → no.
+The lead's `--model` and `model_reasoning_effort` set the price of everything that inherits them (every `spawn_agent` child). Choose the lead tier **first**, gated on one question: **can this session make out-of-band `codex exec` calls?** Interactive / escalated / unsandboxed → yes; headless (`codex exec`, approval `never`) → no. Set the model and effort before substantive work or start a fresh correctly configured session: a controlled Codex CLI continuation test on 2026-07-20 showed that switching either one mid-thread made the next request lose most session-specific prompt-cache reuse, although a shorter stable prefix could remain cached.
 
 | Choice | Setting | Why |
 |---|---|---|

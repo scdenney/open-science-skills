@@ -58,6 +58,10 @@ Then set the orchestrator up as intended: set `/model` to Fable 5 and `/effort` 
 
 ## Run (the orchestration loop)
 
+**First, verify the model — before showing a plan or touching a tool.** Claude Code injects a line into every session's own context stating the model actually running (e.g. "You are powered by the model named …"); read it and compare against the intended lead, **Fable 5**. The Setup step above tells the human to switch `/model` and `/effort` first, but nothing enforces that they did — this skill is markdown loaded into context, not code, so it cannot change its own model. If the switch was skipped, you run the entire orchestration as whatever model the session already was, with no error and no warning. This already happened in practice: a benchmark run of this skill produced six full task-runs recorded as "Fable lead" that in fact ran on Sonnet 5 end to end, because nobody checked before or after. If your detected model does not match, stop, tell the human which model you actually detected, and ask them to run `/model` (and `/effort max`) before you continue — do not proceed and do not label the output as Fable's.
+
+If you do switch mid-session, note the cost before doing it casually: prompt caching is scoped to a specific model, so the first request after a switch sends the full accumulated conversation as fresh, uncached input tokens rather than hitting the cache. That's a one-time hit — cheap if the switch happens before other work has built up context (which is what the Setup step already assumes), expensive if it happens deep into an unrelated, long-running session.
+
 **Always show the plan first.** Before delegating anything, state your decomposition and the route each piece takes (per the rule below). Then execute.
 
 ### Routing rule — first match wins, top to bottom
