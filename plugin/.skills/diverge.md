@@ -20,6 +20,8 @@ This is an original Open Science Skills workflow grounded in **Creative Preferen
 
 Use `diverge` for creative, architectural, or analytical work where more than one non-obvious solution exists. To delegate the brainstorm to a second model family, use the sibling `diverge-codex`.
 
+**Model.** This skill makes no external model call — it runs entirely in whatever model and reasoning effort your current session is already using (Opus, Sonnet, Fable, at whatever effort level is set), not a fixed pin. The sibling `diverge-codex` behaves differently depending on where it runs: invoked from Claude Code (`/oss:diverge-codex`), it shells out to a genuinely separate model, pinned to `gpt-5.6-sol` at `xhigh` effort. Invoked from the Codex CLI (`$diverge-codex`), it spawns a fresh same-family Codex subagent — a clean context, not a cross-model check — so it still runs at whatever model and effort that Codex session is already using, just like this skill.
+
 ## When to invoke
 
 Use `/diverge <task>` when:

@@ -5,11 +5,12 @@ MODEL="claude-opus-4-8"
 WORKDIR="$PWD"
 PROMPT_FILE=""
 OUT=""
+EFFORT=""
 TIMEOUT_SECONDS=900
 
 usage() {
   printf '%s\n' \
-    'Usage: claude-member.sh --prompt-file FILE --out FILE [-C DIR] [--model ID] [--timeout SEC]' \
+    'Usage: claude-member.sh --prompt-file FILE --out FILE [-C DIR] [--model ID] [--effort LEVEL] [--timeout SEC]' \
     '       claude-member.sh --check'
 }
 
@@ -27,6 +28,7 @@ while [[ $# -gt 0 ]]; do
     --out) OUT="${2:-}"; shift 2 ;;
     -C) WORKDIR="${2:-}"; shift 2 ;;
     --model) MODEL="${2:-}"; shift 2 ;;
+    --effort) EFFORT="${2:-}"; shift 2 ;;
     --timeout) TIMEOUT_SECONDS="${2:-}"; shift 2 ;;
     -h|--help) usage; exit 0 ;;
     *) die "unknown argument: $1" ;;
@@ -38,12 +40,17 @@ command -v claude >/dev/null || die 'Claude Code CLI not found'
 [[ -n "$OUT" ]] || die '--out is required'
 [[ -d "$WORKDIR" ]] || die "working directory not found: $WORKDIR"
 [[ "$TIMEOUT_SECONDS" =~ ^[1-9][0-9]*$ ]] || die '--timeout must be a positive integer'
+if [[ -n "$EFFORT" ]]; then
+  case "$EFFORT" in low|medium|high|xhigh|max) ;; *) die "bad --effort: $EFFORT (low|medium|high|xhigh|max)" ;; esac
+fi
 case "$PROMPT_FILE" in /*) ;; *) PROMPT_FILE="$PWD/$PROMPT_FILE" ;; esac
 case "$OUT" in /*) ;; *) OUT="$PWD/$OUT" ;; esac
 WORKDIR="$(cd "$WORKDIR" && pwd -P)"
 mkdir -p "$(dirname "$OUT")"
 
-cmd=(claude --safe-mode -p --model "$MODEL" --permission-mode plan --output-format text --no-session-persistence 'Follow the complete committee instructions supplied on stdin. Return only the requested structured response.')
+cmd=(claude --safe-mode -p --model "$MODEL" --permission-mode plan --output-format text --no-session-persistence)
+[[ -n "$EFFORT" ]] && cmd+=(--effort "$EFFORT")
+cmd+=('Follow the complete committee instructions supplied on stdin. Return only the requested structured response.')
 
 if command -v timeout >/dev/null; then
   (cd "$WORKDIR" && timeout "${TIMEOUT_SECONDS}s" "${cmd[@]}" < "$PROMPT_FILE" > "$OUT")

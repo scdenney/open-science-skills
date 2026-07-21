@@ -1,6 +1,6 @@
 ---
 name: diverge-codex
-description: Delegate creative divergence to Codex (GPT-5.5). Codex generates 3-5 conceptually distinct approaches before any implementation; Claude presents them for selection, then has Codex implement the chosen one. Cross-model brainstorm-then-select.
+description: Delegate creative divergence to Codex (GPT-5.6 "Sol" at xhigh effort). Codex generates 3-5 conceptually distinct approaches before any implementation; Claude presents them for selection, then has Codex implement the chosen one. Cross-model brainstorm-then-select.
 argument-hint: "[describe the task to delegate to Codex for divergent brainstorming]"
 allowed-tools:
   - Read
@@ -10,7 +10,7 @@ allowed-tools:
 
 # Diverge → Codex
 
-Delegate a task to Codex (GPT-5.5) with explicit creative divergence instructions. Claude structures the prompt; Codex brainstorms; Claude presents the options for selection; Codex implements the chosen approach. Running the brainstorm on a second model family widens the space of approaches beyond what one model proposes.
+Delegate a task to Codex (GPT-5.6 "Sol" at xhigh effort) with explicit creative divergence instructions. Claude structures the prompt; Codex brainstorms; Claude presents the options for selection; Codex implements the chosen approach. Running the brainstorm on a second model family widens the space of approaches beyond what one model proposes.
 
 ## Heritage and scope
 
@@ -20,6 +20,7 @@ Cross-model sibling of [`diverge`](../diverge/SKILL.md), grounded in **Creative 
 
 Plain Claude Code has no native `codex:codex-rescue` subagent. Every "ask Codex" step below means: use the `Bash` tool to call `codex exec` directly (the same mechanism `paper-review-lite-codex` uses). Requirements:
 
+- **`--model gpt-5.6-sol -c model_reasoning_effort=xhigh`** — pins Codex explicitly rather than relying on `codex exec`'s own implicit default, so it does not silently drift if that default changes upstream.
 - **`< /dev/null`** — closes stdin. Without it, `codex exec` hangs on "Reading additional input from stdin…" even when the prompt is passed as a CLI argument. This is the single most common failure mode.
 - **`--skip-git-repo-check`** so it runs regardless of git state, and **`--sandbox`** set per phase: `read-only` for brainstorming (no file writes), `workspace-write` for implementation.
 - **`timeout: 600000`** (10 min) on the Bash call as a backstop.
@@ -35,7 +36,7 @@ The result returns on stdout — read it directly from the Bash output. Treat a 
 3. **Brainstorm via Codex.** Run the brainstorm prompt through `codex exec` (read-only sandbox), substituting `TASK` with the user's request verbatim:
 
    ```bash
-   codex exec --sandbox read-only --skip-git-repo-check "$(cat <<'CODEXEOF'
+   codex exec --model gpt-5.6-sol -c model_reasoning_effort=xhigh --sandbox read-only --skip-git-repo-check "$(cat <<'CODEXEOF'
    <brainstorm prompt template below, with TASK substituted>
    CODEXEOF
    )" < /dev/null
@@ -46,7 +47,7 @@ The result returns on stdout — read it directly from the Bash output. Treat a 
 5. **Implement via Codex.** Run the implementation prompt through `codex exec` (workspace-write sandbox, `-C` set to the project directory), substituting `TASK` and `SELECTED_APPROACH`:
 
    ```bash
-   codex exec --sandbox workspace-write --skip-git-repo-check -C "<project dir>" "$(cat <<'CODEXEOF'
+   codex exec --model gpt-5.6-sol -c model_reasoning_effort=xhigh --sandbox workspace-write --skip-git-repo-check -C "<project dir>" "$(cat <<'CODEXEOF'
    <implementation prompt template below, with TASK and SELECTED_APPROACH substituted>
    CODEXEOF
    )" < /dev/null

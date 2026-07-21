@@ -12,7 +12,8 @@
 # succeed. See SKILL.md's "Sandbox constraint" section.
 set -euo pipefail
 
-MODEL="gpt-5.5"
+MODEL="gpt-5.6-sol"
+EFFORT="xhigh"
 WORKDIR="$PWD"
 PROMPT_FILE=""
 OUT=""
@@ -20,7 +21,7 @@ TIMEOUT_SECONDS=900
 
 usage() {
   printf '%s\n' \
-    'Usage: codex-member.sh --prompt-file FILE --out FILE [-C DIR] [--model ID] [--timeout SEC]' \
+    'Usage: codex-member.sh --prompt-file FILE --out FILE [-C DIR] [--model ID] [--effort LEVEL] [--timeout SEC]' \
     '       codex-member.sh --check'
 }
 
@@ -38,6 +39,7 @@ while [[ $# -gt 0 ]]; do
     --out) OUT="${2:-}"; shift 2 ;;
     -C) WORKDIR="${2:-}"; shift 2 ;;
     --model) MODEL="${2:-}"; shift 2 ;;
+    --effort) EFFORT="${2:-}"; shift 2 ;;
     --timeout) TIMEOUT_SECONDS="${2:-}"; shift 2 ;;
     -h|--help) usage; exit 0 ;;
     *) die "unknown argument: $1" ;;
@@ -54,7 +56,7 @@ case "$OUT" in /*) ;; *) OUT="$PWD/$OUT" ;; esac
 WORKDIR="$(cd "$WORKDIR" && pwd -P)"
 mkdir -p "$(dirname "$OUT")"
 
-cmd=(codex exec --ephemeral --model "$MODEL" --sandbox read-only --skip-git-repo-check -C "$WORKDIR" --output-last-message "$OUT" 'Follow the complete committee instructions supplied on stdin. Return only the requested structured response.')
+cmd=(codex exec --ephemeral --model "$MODEL" -c "model_reasoning_effort=$EFFORT" --sandbox read-only --skip-git-repo-check -C "$WORKDIR" --output-last-message "$OUT" 'Follow the complete committee instructions supplied on stdin. Return only the requested structured response.')
 
 if command -v timeout >/dev/null; then
   timeout "${TIMEOUT_SECONDS}s" "${cmd[@]}" < "$PROMPT_FILE" >/dev/null
