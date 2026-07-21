@@ -15,7 +15,7 @@ allowed-tools:
 
 This is the cross-model sibling of [`paper-review-lite`](../paper-review-lite/SKILL.md), itself the in-session, Claude-Code-native counterpart to [`presubmit`](https://github.com/scdenney/presubmit) (our port of the [reviewer2](https://github.com/isitcredible/reviewer2) adversarial peer-review pipeline). The heritage carries over wholesale. Sub-agents adopt a Critical-Reviewer posture, every finding is grounded in a verbatim quote, and a verification cascade filters hallucinations before they reach the final report.
 
-The new mechanic is cross-model adversarial verification. Two reviewers — Claude (the orchestrator) and Codex (GPT-5.5, invoked via Bash `codex exec` — see § Codex invocation mechanism) — independently apply the same `paper-review-lite` specification to the same paper. Each then plays Blue Team to the other's Red Team. Two different model families have different blind spots, so:
+The new mechanic is cross-model adversarial verification. Two reviewers — Claude (the orchestrator) and Codex (GPT-5.6 "Sol" at `xhigh` reasoning effort, invoked via Bash `codex exec` — see § Codex invocation mechanism) — independently apply the same `paper-review-lite` specification to the same paper. Each then plays Blue Team to the other's Red Team. Two different model families have different blind spots, so:
 
 - **Mutual catches** (both teams flag the issue, both cross-checks confirm) are high-confidence.
 - **Asymmetric catches** (one team flags, the other's cross-checker confirms against the paper) survive at standard confidence and often surface real but easy-to-miss problems.
@@ -24,7 +24,7 @@ The new mechanic is cross-model adversarial verification. Two reviewers — Clau
 
 This is the heavier sibling. Roughly 22 model calls total (9 Claude Red Team, 9 Codex Red Team, 4 cross-model Blue Team) plus orientation and synthesis by the orchestrator. Reach for it before submission when you want maximum adversarial pressure and a second model family's blind spots. For the heaviest standalone deliverable — Red Team personas (Breaker, Butcher, Shredder, Collector, Void), math audits, code-replication checks, resumable, cost-tracked — use [`presubmit`](https://github.com/scdenney/presubmit).
 
-**Orchestration lead.** The Claude orchestrator is whatever model you are running — Opus 4.8 or Fable 5. It runs orientation, launches both Red Teams, spawns the cross-checkers, and adjudicates; the Codex peer runs at **GPT-5.5** (the current `codex exec` default — Sol/GPT-5.6 is not the peer yet). **If you are on Opus, run it under ultracode** (xhigh reasoning + dynamic Workflow fan-out): drive the 18 Phase-2 calls and 4 Phase-3 cross-checks as a `Workflow` and reserve your xhigh reasoning for the Phase-4 cross-team adjudication and Editor's Note. On a lighter lead (Fable), drive the same phases with parallel `Agent`/`Bash` calls. See [`opus-orchestrate`](../opus-orchestrate/SKILL.md) / [`fable-orchestrate`](../fable-orchestrate/SKILL.md) for the routing and the decorrelated-peer rationale.
+**Orchestration lead.** The Claude orchestrator is whatever model you are running — Opus 4.8 or Fable 5. It runs orientation, launches both Red Teams, spawns the cross-checkers, and adjudicates; the Codex peer is pinned to **`gpt-5.6-sol` at `xhigh`** reasoning effort (via `-c model_reasoning_effort=xhigh` — see § Codex invocation mechanism — not the bare `codex exec` default, so it does not silently drift if that default changes upstream). **If you are on Opus, run it under ultracode** (xhigh reasoning + dynamic Workflow fan-out): drive the 18 Phase-2 calls and 4 Phase-3 cross-checks as a `Workflow` and reserve your xhigh reasoning for the Phase-4 cross-team adjudication and Editor's Note. On a lighter lead (Fable), drive the same phases with parallel `Agent`/`Bash` calls. See [`opus-orchestrate`](../opus-orchestrate/SKILL.md) / [`fable-orchestrate`](../fable-orchestrate/SKILL.md) for the routing and the decorrelated-peer rationale.
 
 ## Codex invocation mechanism
 
@@ -32,6 +32,8 @@ Claude Code has no native `codex:codex-rescue` subagent. Every "spawn Codex" ref
 
 ```bash
 codex exec \
+  --model gpt-5.6-sol \
+  -c model_reasoning_effort=xhigh \
   --sandbox workspace-write \
   --skip-git-repo-check \
   -C "$(dirname OUTPUT_PATH)" \
@@ -43,6 +45,7 @@ CODEXEOF
 
 **Required:**
 
+- **`--model gpt-5.6-sol -c model_reasoning_effort=xhigh`** — pins the peer explicitly rather than relying on `codex exec`'s own implicit default, so it does not silently drift if that default changes upstream.
 - **`< /dev/null`** — closes stdin. Without it, `codex exec` hangs indefinitely on "Reading additional input from stdin..." even when the prompt is passed as a CLI argument. This is the single most common failure mode.
 - **`run_in_background: true`** on every `Bash` call. Eleven parallel Codex calls per run (9 Phase 2 + 2 Phase 3) make foreground execution impractical.
 - **`timeout: 600000`** (10 minutes) as a harness backstop. If a call hangs for any reason, the harness kills it.
