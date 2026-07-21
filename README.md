@@ -76,7 +76,7 @@ Skills are grouped by where they fall in a project. Unless the Platform column s
 | Skill | Platform | Command | What it does |
 |---|---|---|---|
 | [diverge](plugin/skills/diverge/SKILL.md) | Both | `/oss:diverge` | Before implementing, generate three to five distinct approaches labeled by how they differ, then pause for you to choose, instead of defaulting to the first obvious solution. |
-| [diverge-codex](plugin/skills/diverge-codex/SKILL.md) | Both | `/oss:diverge-codex` | The same brainstorm-then-select, but Codex (GPT-5.5) generates the alternatives, so a second model family widens the range. |
+| [diverge-codex](plugin/skills/diverge-codex/SKILL.md) | Both | `/oss:diverge-codex` | The same brainstorm-then-select, but Codex (GPT-5.6 Sol at xhigh, from Claude Code) generates the alternatives, so a second model family widens the range. |
 
 ### Research Design
 
@@ -96,8 +96,8 @@ Skills are grouped by where they fall in a project. Unless the Platform column s
 | [topic-modeling](plugin/skills/topic-modeling/SKILL.md) | Both | `/oss:topic-modeling` | Fit structural topic models: specification with covariates, topic-count selection by coherence and exclusivity, and reporting. |
 | [text-classification](plugin/skills/text-classification/SKILL.md) | Both | `/oss:text-classification` | Classify text with LLMs: codebook design, human-in-the-loop workflows, validation, and agreement statistics. |
 | [model-council-voting](plugin/skills/model-council-voting/SKILL.md) | Both | `/oss:model-council-voting` | Use a panel of models as independent coders, with consensus rules, chance-corrected agreement (Cohen, Fleiss, Krippendorff), and correlated-error checks. |
-| [model-committee](plugin/skills/model-committee/SKILL.md) | Both | `/oss:model-committee` | Have GPT-5.5 and Claude Opus 4.8 deliberate toward one decision: independent proposals, mutual critique, revision, and a pre-committed rule. Opus 4.8 chairs the tally. |
-| [model-committee-sol](plugin/skills/model-committee-sol/SKILL.md) | Both | `/oss:model-committee-sol` | The same two-member committee, chaired by GPT-5.6 Sol rather than a member, so a model outside the vote runs the tally and synthesis. |
+| [model-committee](plugin/skills/model-committee/SKILL.md) | Both | `/oss:model-committee` | Have GPT-5.6 Sol and Claude Opus 4.8 deliberate toward one decision: independent proposals, mutual critique, revision, and a pre-committed rule. Opus 4.8 chairs the tally. |
+| [model-committee-sol](plugin/skills/model-committee-sol/SKILL.md) | Both | `/oss:model-committee-sol` | The same committee, but the GPT debater is Terra (not Sol) and the chair is GPT-5.6 Sol rather than a member, so a model outside the vote runs the tally and synthesis. |
 | [model-committee-fable](plugin/skills/model-committee-fable/SKILL.md) | Both | `/oss:model-committee-fable` | The same committee, chaired by Fable 5: a lighter, faster chair that is not one of the two voting members. |
 | [llm-calibration-logprobs](plugin/skills/llm-calibration-logprobs/SKILL.md) | Both | `/oss:llm-calibration-logprobs` | Turn token log-probabilities into per-decision confidence, then measure calibration (ECE, Brier, reliability diagrams) against human labels. |
 
@@ -142,7 +142,7 @@ Skills are grouped by where they fall in a project. Unless the Platform column s
 | Skill | Platform | Command | What it does |
 |---|---|---|---|
 | [paper-review-lite](plugin/skills/paper-review-lite/SKILL.md) | Both | `/oss:paper-review-lite` | Run a pre-submission self-audit of your own manuscript across argument, numbers, references, writing, figures, and replication. |
-| [paper-review-lite-codex](plugin/skills/paper-review-lite-codex/SKILL.md) | Both | `/oss:paper-review-lite-codex` | The same audit run across two model families: Claude and Codex (GPT-5.5) review independently, then cross-check, and each surviving issue is tagged by confidence. |
+| [paper-review-lite-codex](plugin/skills/paper-review-lite-codex/SKILL.md) | Both | `/oss:paper-review-lite-codex` | The same audit run across two model families: Claude and Codex (GPT-5.6 Sol at xhigh) review independently, then cross-check, and each surviving issue is tagged by confidence. |
 | [presubmit](plugin/skills/presubmit/SKILL.md) | Claude Code | `/oss:presubmit` | Set up and run the standalone [presubmit CLI](https://github.com/scdenney/presubmit), a heavier 30-plus-stage adversarial review pipeline driven by the Anthropic API. |
 | [journal-review](plugin/skills/journal-review/SKILL.md) | Both | `/oss:journal-review` | Draft a senior referee report on someone else's manuscript, using parallel finder agents and a chief-reviewer synthesis to produce a structured report. |
 

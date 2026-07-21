@@ -51,9 +51,9 @@ See the official [Codex skills documentation](https://developers.openai.com/code
 
 ## Variant notes
 
-**`$model-committee` and its chairs.** The committee runs the exact GPT-5.5 and Claude Opus 4.8 members through their read-only CLIs, after first checking that deliberation is the right instrument for the task. It is the **Opus-chaired** member of a three-variant family: `$model-committee-sol` and `$model-committee-fable` deliberate the same two members but hand the post-round-3 tally and compatible-component synthesis to a chair that is not a member, GPT-5.6 "Sol" or Fable 5. Under Codex, `$model-committee-sol` chairs natively with Sol, while `$model-committee-fable` delegates the chair step to Fable 5 through the bundled `claude-member.sh`.
+**`$model-committee` and its chairs.** The committee runs GPT-5.6 "Sol" (xhigh) and Claude Opus 4.8 (max) as members through their read-only CLIs, after first checking that deliberation is the right instrument for the task. It is the **Opus-chaired** member of a three-variant family: `$model-committee-fable` deliberates the same two members (Sol + Opus) but hands the post-round-3 tally and compatible-component synthesis to Fable 5. `$model-committee-sol` is the exception — since its own chair is Sol, its GPT debater is pinned to `gpt-5.6-terra` instead, so the chair is never grading its own family's twin. Under Codex, `$model-committee-sol` chairs natively with Sol, while `$model-committee-fable` delegates the chair step to Fable 5 through the bundled `claude-member.sh`.
 
-Sandbox constraint: all three variants' `codex-member.sh` (GPT-5.5) needs an unsandboxed or escalated call under a live Codex session, since a nested `codex exec` under sandbox fails structurally (see each `SKILL.md`). `claude-member.sh` was observed to hang under sandbox for the same reason (network access), less rigorously confirmed.
+Sandbox constraint: all three variants' `codex-member.sh` (GPT-5.6 Sol, or Terra for `model-committee-sol`'s debater) needs an unsandboxed or escalated call under a live Codex session, since a nested `codex exec` under sandbox fails structurally (see each `SKILL.md`). `claude-member.sh` was observed to hang under sandbox for the same reason (network access), less rigorously confirmed.
 
 **`$diverge-codex`** uses a fresh Codex subagent context. It does not claim a second model family.
 
