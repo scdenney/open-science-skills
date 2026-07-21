@@ -1,7 +1,7 @@
 ---
 name: model-committee
-description: Run a deliberative two-model committee between GPT-5.5 and Claude Opus 4.8. Use when the user needs one consequential decision from multiple defensible options and wants the two model families to propose independently, inspect each other's reasoning, revise, cross-rank, and converge under a predeclared rubric. Suitable for architecture, research design and interpretation, manuscript strategy, ambiguous diagnosis, evaluation design, and policy or standards tradeoffs. Not for factual lookups, independent-coder reliability, open-ended brainstorming, routine implementation, or final high-stakes professional judgment.
-argument-hint: "[decision or problem for GPT-5.5 and Opus 4.8 to deliberate]"
+description: Run a deliberative two-model committee between GPT-5.6 "Sol" and Claude Opus 4.8. Use when the user needs one consequential decision from multiple defensible options and wants the two model families to propose independently, inspect each other's reasoning, revise, cross-rank, and converge under a predeclared rubric. Suitable for architecture, research design and interpretation, manuscript strategy, ambiguous diagnosis, evaluation design, and policy or standards tradeoffs. Not for factual lookups, independent-coder reliability, open-ended brainstorming, routine implementation, or final high-stakes professional judgment.
+argument-hint: "[decision or problem for GPT-5.6 Sol and Opus 4.8 to deliberate]"
 allowed-tools:
   - Read
   - Write
@@ -12,15 +12,15 @@ allowed-tools:
 
 # Model Committee
 
-Run GPT-5.5 and Claude Opus 4.8 as a deliberating committee. Preserve a clear distinction from `model-council-voting`: a council measures independent disagreement; this committee deliberately exposes each member to the other's argument and produces one decision.
+Run GPT-5.6 "Sol" and Claude Opus 4.8 as a deliberating committee. Preserve a clear distinction from `model-council-voting`: a council measures independent disagreement; this committee deliberately exposes each member to the other's argument and produces one decision.
 
 Read [`reference/protocol.md`](reference/protocol.md) completely before running a committee.
 
-**Chair variant.** This is the **Opus-chaired** member of a three-variant family; all three deliberate the same two members (GPT-5.5 + Opus 4.8) and differ only in which model chairs the synthesis. The chair is not neutral machinery — its validation and compatible-component synthesis carry that model's judgment (the score aggregation and tie rule are mechanical, per the protocol), which is exactly why the variant matters. Siblings: [`model-committee-sol`](../model-committee-sol/SKILL.md) (GPT-5.6 "Sol" chairs) and [`model-committee-fable`](../model-committee-fable/SKILL.md) (Fable 5 chairs). Reach for a chair whose judgment you want on the synthesis, or for one that is neither deliberating member.
+**Chair variant.** This is the **Opus-chaired** member of a three-variant family; all three deliberate a GPT-5.6 tier + Opus 4.8 and differ in which model chairs the synthesis (and, in `model-committee-sol`, in which 5.6 tier deliberates — see that skill's pins note). The chair is not neutral machinery — its validation and compatible-component synthesis carry that model's judgment (the score aggregation and tie rule are mechanical, per the protocol), which is exactly why the variant matters. Siblings: [`model-committee-sol`](../model-committee-sol/SKILL.md) (GPT-5.6 "Sol" chairs) and [`model-committee-fable`](../model-committee-fable/SKILL.md) (Fable 5 chairs). Reach for a chair whose judgment you want on the synthesis, or for one that is neither deliberating member.
 
 ## Gate the workflow
 
-Run only when the user explicitly invokes `/model-committee` or requests GPT-5.5 and Opus 4.8 to deliberate. The workflow makes external model calls and uses more tokens than a single answer.
+Run only when the user explicitly invokes `/model-committee` or requests GPT-5.6 Sol and Opus 4.8 to deliberate. The workflow makes external model calls and uses more tokens than a single answer.
 
 Apply the use-case gate in the protocol first. If the task does not qualify, recommend the correct alternative and do not call either model.
 
@@ -42,8 +42,8 @@ Resolve `SKILL_DIR` as the directory containing this `SKILL.md`, then run:
 
 Default pins:
 
-- GPT member: `gpt-5.5`
-- Claude member: `claude-opus-4-8`
+- GPT member: `gpt-5.6-sol` (reasoning effort: `xhigh`)
+- Claude member: `claude-opus-4-8` (reasoning effort: `max`)
 
 These are deliberately exact pins, not moving aliases. Do not silently substitute another model. If a pin is unavailable, report it and ask whether to stop or use a named replacement.
 
@@ -66,17 +66,17 @@ Invoke each member through the bundled read-only driver:
 
 ```bash
 "$SKILL_DIR/scripts/codex-member.sh" \
-  --prompt-file <prompt.md> --out <output.md> -C <working-directory>
+  --prompt-file <prompt.md> --out <output.md> --effort xhigh -C <working-directory>
 
 "$SKILL_DIR/scripts/claude-member.sh" \
-  --prompt-file <prompt.md> --out <output.md> -C <working-directory>
+  --prompt-file <prompt.md> --out <output.md> --effort max -C <working-directory>
 ```
 
 Launch the two calls in each round concurrently when the runtime supports it. Sequential execution is acceptable only if the second prompt was frozen before the first result arrived. Do not show either member the other's output during round 1.
 
 ## Chair without becoming a third debater
 
-The chair for this variant is **Claude Opus 4.8** — normally the model you are already running in-session. When you are on Opus, chair directly and **run under ultracode** (xhigh reasoning + dynamic orchestration): the score aggregation and tie rule are mechanical, but the compatible-component synthesis and the escalate-or-synthesize call are where xhigh reasoning earns its cost. If the session is on a different model, delegate only the post-round-3 chair step to Opus via `"$SKILL_DIR/scripts/claude-member.sh" --model claude-opus-4-8 --prompt-file chair.prompt.md --out decision.md -C <working-directory>`, bundling the brief and all round outputs into `chair.prompt.md`.
+The chair for this variant is **Claude Opus 4.8** — normally the model you are already running in-session, but confirm that rather than assuming it. Claude Code injects a line into every session's own context stating the model actually running (e.g. "You are powered by the model named …"); read it before picking a branch below. Assuming you're on Opus without checking risks the exact failure a sibling orchestration skill (`fable-orchestrate`) hit in practice: a benchmark run silently executed a full task under the wrong model, recorded as the intended one, because nothing checked. When you are on Opus, chair directly and **run under ultracode** (xhigh reasoning + dynamic orchestration): the score aggregation and tie rule are mechanical, but the compatible-component synthesis and the escalate-or-synthesize call are where xhigh reasoning earns its cost. If the session is on a different model, delegate only the post-round-3 chair step to Opus via `"$SKILL_DIR/scripts/claude-member.sh" --model claude-opus-4-8 --effort xhigh --prompt-file chair.prompt.md --out decision.md -C <working-directory>`, bundling the brief and all round outputs into `chair.prompt.md`.
 
 Act as a procedural chair after round 3:
 

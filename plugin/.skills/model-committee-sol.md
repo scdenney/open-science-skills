@@ -1,7 +1,7 @@
 ---
 name: model-committee-sol
-description: Run a deliberative two-model committee between GPT-5.5 and Claude Opus 4.8, chaired by GPT-5.6 "Sol" (via Codex). Same two deliberating members as model-committee; the difference is the chair — Sol aggregates the scores, applies the tie rule, and synthesizes the decision; being neither deliberating member, its read on which components are compatible sits outside both. Use when the user needs one consequential decision from multiple defensible options and wants a Sol-chaired deliberation. Suitable for architecture, research design and interpretation, manuscript strategy, ambiguous diagnosis, evaluation design, and policy or standards tradeoffs. Not for factual lookups, independent-coder reliability, open-ended brainstorming, routine implementation, or final high-stakes professional judgment.
-argument-hint: "[decision or problem for GPT-5.5 and Opus 4.8 to deliberate, Sol to chair]"
+description: Run a deliberative two-model committee between GPT-5.6 "Terra" and Claude Opus 4.8, chaired by GPT-5.6 "Sol" (via Codex). Same two deliberating members as model-committee; the difference is the chair — Sol aggregates the scores, applies the tie rule, and synthesizes the decision; being neither deliberating member, its read on which components are compatible sits outside both. Use when the user needs one consequential decision from multiple defensible options and wants a Sol-chaired deliberation. Suitable for architecture, research design and interpretation, manuscript strategy, ambiguous diagnosis, evaluation design, and policy or standards tradeoffs. Not for factual lookups, independent-coder reliability, open-ended brainstorming, routine implementation, or final high-stakes professional judgment.
+argument-hint: "[decision or problem for GPT-5.6 Terra and Opus 4.8 to deliberate, Sol to chair]"
 allowed-tools:
   - Read
   - Write
@@ -12,15 +12,15 @@ allowed-tools:
 
 # Model Committee (Sol-chaired)
 
-Run GPT-5.5 and Claude Opus 4.8 as a deliberating committee, with **GPT-5.6 "Sol" as the chair**. Preserve a clear distinction from `model-council-voting`: a council measures independent disagreement; this committee deliberately exposes each member to the other's argument and produces one decision.
+Run GPT-5.6 "Terra" and Claude Opus 4.8 as a deliberating committee, with **GPT-5.6 "Sol" as the chair**. Preserve a clear distinction from `model-council-voting`: a council measures independent disagreement; this committee deliberately exposes each member to the other's argument and produces one decision.
 
 Read [`reference/protocol.md`](reference/protocol.md) completely before running a committee.
 
-**Chair variant.** This is the **Sol-chaired** member of a three-variant family; all three deliberate the same two members (GPT-5.5 + Opus 4.8) and differ only in which model chairs the synthesis. The chair is not neutral machinery — its validation and compatible-component synthesis carry that model's judgment (the score aggregation and tie rule are mechanical, per the protocol). Sol's value here is a chair that is **neither deliberating member** — cross-family to the Opus member, and a newer sibling of (not a clone of) the GPT-5.5 member — so of the three chairs it is the least entangled with the Claude-family member's reasoning. Note it is *not* independent of the GPT-family member. Siblings: [`model-committee`](../model-committee/SKILL.md) (Opus 4.8 chairs) and [`model-committee-fable`](../model-committee-fable/SKILL.md) (Fable 5 chairs).
+**Chair variant.** This is the **Sol-chaired** member of a three-variant family; all three deliberate the same two members (a GPT-5.6 tier + Opus 4.8) and differ only in which model chairs the synthesis. The chair is not neutral machinery — its validation and compatible-component synthesis carry that model's judgment (the score aggregation and tie rule are mechanical, per the protocol). Note that this variant's GPT member is pinned to **Terra**, not Sol: the sibling skills' member is the flagship `gpt-5.6-sol` tier, but here the chair is also Sol, so the member is deliberately the balanced `gpt-5.6-terra` tier instead — a chair identical to a member would defeat the point of this variant (see the pins note below). Sol's value here is a chair that is **neither deliberating member** — cross-family to the Opus member, and a distinct 5.6 tier from the Terra member — so of the three chairs it is the least entangled with the Claude-family member's reasoning. Note it is *not* independent of the GPT-family member. Siblings: [`model-committee`](../model-committee/SKILL.md) (Opus 4.8 chairs) and [`model-committee-fable`](../model-committee-fable/SKILL.md) (Fable 5 chairs).
 
 ## Gate the workflow
 
-Run only when the user explicitly invokes `/model-committee-sol` or requests a Sol-chaired GPT-5.5 / Opus 4.8 deliberation. The workflow makes external model calls and uses more tokens than a single answer.
+Run only when the user explicitly invokes `/model-committee-sol` or requests a Sol-chaired GPT-5.6 Terra / Opus 4.8 deliberation. The workflow makes external model calls and uses more tokens than a single answer.
 
 Apply the use-case gate in the protocol first. If the task does not qualify, recommend the correct alternative and do not call any model.
 
@@ -42,11 +42,11 @@ Resolve `SKILL_DIR` as the directory containing this `SKILL.md`, then run:
 
 Default pins:
 
-- GPT member: `gpt-5.5`
-- Claude member: `claude-opus-4-8`
-- **Chair: `gpt-5.6` (Sol)**
+- GPT member: `gpt-5.6-terra` (reasoning effort: `xhigh`) — deliberately the *balanced* 5.6 tier, not `gpt-5.6-sol`, because the chair below is Sol
+- Claude member: `claude-opus-4-8` (reasoning effort: `max`)
+- **Chair: `gpt-5.6-sol` (Sol), reasoning effort: `xhigh`**
 
-These are deliberately exact pins, not moving aliases. Do not silently substitute another model. The `--check` above only confirms the CLI is installed; whether a specific pin such as `gpt-5.6` is actually available surfaces on the first real call, not at preflight. If a pin is unavailable, report it and ask whether to stop or use a named replacement. In particular, if `gpt-5.6` is not yet available on this machine, stop and ask — do not fall back to `gpt-5.5` for the chair, because a chair identical to a member defeats the point of this variant.
+These are deliberately exact pins, not moving aliases. Do not silently substitute another model. The `--check` above only confirms the CLI is installed; whether a specific pin such as `gpt-5.6-sol` is actually available surfaces on the first real call, not at preflight. If a pin is unavailable, report it and ask whether to stop or use a named replacement. In particular, if `gpt-5.6-sol` is not yet available on this machine, stop and ask — do not fall back to `gpt-5.6-terra` for the chair, because a chair identical to a member defeats the point of this variant.
 
 ## Run the committee
 
@@ -67,10 +67,10 @@ Invoke each member through the bundled read-only driver:
 
 ```bash
 "$SKILL_DIR/scripts/codex-member.sh" \
-  --prompt-file <prompt.md> --out <output.md> -C <working-directory>
+  --prompt-file <prompt.md> --out <output.md> --effort xhigh -C <working-directory>
 
 "$SKILL_DIR/scripts/claude-member.sh" \
-  --prompt-file <prompt.md> --out <output.md> -C <working-directory>
+  --prompt-file <prompt.md> --out <output.md> --effort max -C <working-directory>
 ```
 
 Launch the two calls in each round concurrently when the runtime supports it. Sequential execution is acceptable only if the second prompt was frozen before the first result arrived. Do not show either member the other's output during round 1.
@@ -81,7 +81,7 @@ The chair for this variant is **GPT-5.6 "Sol."** If you are already running the 
 
 ```bash
 "$SKILL_DIR/scripts/codex-member.sh" \
-  --prompt-file chair.prompt.md --out decision.md --model gpt-5.6 -C <working-directory>
+  --prompt-file chair.prompt.md --out decision.md --model gpt-5.6-sol --effort xhigh -C <working-directory>
 ```
 
 The chair's job, whoever runs it:
