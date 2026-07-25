@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-MODEL="claude-opus-4-8"
+MODEL="claude-opus-5"
 WORKDIR="$PWD"
 PROMPT_FILE=""
 OUT=""

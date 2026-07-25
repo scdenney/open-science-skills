@@ -1,19 +1,19 @@
 ---
 name: model-committee
-description: Run a deliberative two-model committee between GPT-5.6 "Sol" and Claude Opus 4.8. Use when the user needs one consequential decision from multiple defensible options and wants the two model families to propose independently, inspect each other's reasoning, revise, cross-rank, and converge under a predeclared rubric. Suitable for architecture, research design and interpretation, manuscript strategy, ambiguous diagnosis, evaluation design, and policy or standards tradeoffs. Not for factual lookups, independent-coder reliability, open-ended brainstorming, routine implementation, or final high-stakes professional judgment.
+description: Run a deliberative two-model committee between GPT-5.6 "Sol" and Claude Opus 5. Use when the user needs one consequential decision from multiple defensible options and wants the two model families to propose independently, inspect each other's reasoning, revise, cross-rank, and converge under a predeclared rubric. Suitable for architecture, research design and interpretation, manuscript strategy, ambiguous diagnosis, evaluation design, and policy or standards tradeoffs. Not for factual lookups, independent-coder reliability, open-ended brainstorming, routine implementation, or final high-stakes professional judgment.
 ---
 
 # Model Committee
 
-Run GPT-5.6 "Sol" and Claude Opus 4.8 as a deliberating committee. Preserve a clear distinction from `$model-council-voting`: a council measures independent disagreement; this committee deliberately exposes each member to the other's argument and produces one decision.
+Run GPT-5.6 "Sol" and Claude Opus 5 as a deliberating committee. Preserve a clear distinction from `$model-council-voting`: a council measures independent disagreement; this committee deliberately exposes each member to the other's argument and produces one decision.
 
 Read [`references/protocol.md`](references/protocol.md) completely before running a committee.
 
-**Chair variant.** This is the **Opus-chaired** member of a three-variant family; all three deliberate a GPT-5.6 tier + Opus 4.8 and differ in which model chairs the synthesis (and, in `model-committee-sol`, in which 5.6 tier deliberates — see that skill's pins note). The chair is not neutral machinery — its validation and compatible-component synthesis carry that model's judgment (the score aggregation and tie rule are mechanical, per the protocol). Siblings: [`model-committee-sol`](../model-committee-sol/SKILL.md) (GPT-5.6 "Sol" chairs) and [`model-committee-fable`](../model-committee-fable/SKILL.md) (Fable 5 chairs).
+**Chair variant.** This is the **Opus-chaired** member of a three-variant family; all three deliberate a GPT-5.6 tier + Opus 5 and differ in which model chairs the synthesis (and, in `model-committee-sol`, in which 5.6 tier deliberates — see that skill's pins note). The chair is not neutral machinery — its validation and compatible-component synthesis carry that model's judgment (the score aggregation and tie rule are mechanical, per the protocol). Siblings: [`model-committee-sol`](../model-committee-sol/SKILL.md) (GPT-5.6 "Sol" chairs) and [`model-committee-fable`](../model-committee-fable/SKILL.md) (Fable 5 chairs).
 
 ## Gate the workflow
 
-Run only when the user explicitly invokes `$model-committee` or requests GPT-5.6 Sol and Opus 4.8 to deliberate. The workflow makes external model calls and uses more tokens than a single answer.
+Run only when the user explicitly invokes `$model-committee` or requests GPT-5.6 Sol and Opus 5 to deliberate. The workflow makes external model calls and uses more tokens than a single answer.
 
 Apply the use-case gate in the protocol first. If the task does not qualify, recommend the correct alternative and do not call either model.
 
@@ -42,7 +42,7 @@ Resolve `SKILL_DIR` as the directory containing this `SKILL.md`, then run:
 Default pins:
 
 - GPT member: `gpt-5.6-sol` (reasoning effort: `xhigh`)
-- Claude member: `claude-opus-4-8` (reasoning effort: `max`)
+- Claude member: `claude-opus-5` (reasoning effort: `high`)
 
 These are deliberately exact pins, not moving aliases. Do not silently substitute another model. If a pin is unavailable, report it and ask whether to stop or use a named replacement.
 
@@ -68,7 +68,7 @@ Invoke each member through the bundled read-only driver:
   --prompt-file <prompt.md> --out <output.md> --effort xhigh -C <working-directory>
 
 "$SKILL_DIR/scripts/claude-member.sh" \
-  --prompt-file <prompt.md> --out <output.md> --effort max -C <working-directory>
+  --prompt-file <prompt.md> --out <output.md> --effort high -C <working-directory>
 ```
 
 Launch the two calls in each round concurrently when the runtime supports it. Sequential execution is acceptable only if the second prompt was frozen before the first result arrived. Do not show either member the other's output during round 1.

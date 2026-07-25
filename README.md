@@ -18,7 +18,7 @@ Open Science Skills is a library of 39 agentic skills for Claude Code, with a pa
 
 The library follows the research lifecycle: survey design, list experiments, topic modeling, LLM text classification, VLM-based OCR pipelines, manuscript QA, multi-model orchestration, and transparent reporting under APSA, JARS, DA-RT, TOP, and FAIR expectations. Every skill is grounded in published methods sources and based on best practices for writing skills. See [SOURCES.md](SOURCES.md) for the bibliography of 150+ works consulted.
 
-This is the toolkit I use in my own research, and it grows as I add sources and skills. The authoring is mine, with editing help from Opus 4.8, Fable 5, and ChatGPT 5.5/6.
+This is the toolkit I use in my own research, and it grows as I add sources and skills. The authoring is mine, with editing help from Opus 5, Fable 5, and ChatGPT 5.5/6.
 
 | Platform | Skills | Invoke |
 |---|---|---|
@@ -67,7 +67,7 @@ Skills are grouped by where they fall in a project. Unless the Platform column s
 | Skill | Platform | Command | What it does |
 |---|---|---|---|
 | [fable-orchestrate](plugin/skills/fable-orchestrate/SKILL.md) | Claude Code | `/oss:fable-orchestrate` | Run a multi-model workflow with Fable 5 as lead: an Opus subagent takes heavy reasoning, a Sonnet subagent takes mechanical work, and a GPT-5.6 Codex peer gives a second opinion. |
-| [opus-orchestrate](plugin/skills/opus-orchestrate/SKILL.md) | Claude Code | `/oss:opus-orchestrate` | The same workflow with Opus 4.8 as lead via ultracode (xhigh reasoning, dynamic Workflow fan-out). Opus reasons on hard problems itself and delegates only to fan out; the Codex peer is gpt-5.6-sol. |
+| [opus-orchestrate](plugin/skills/opus-orchestrate/SKILL.md) | Claude Code | `/oss:opus-orchestrate` | The same workflow with Opus 5 as lead at medium reasoning effort by default (raise to high for a reasoning-heavy session), with dynamic Workflow fan-out available via the skill's own opt-in — no ultracode required. Opus reasons on hard problems itself and delegates only to fan out; the Codex peer is gpt-5.6-sol. |
 | [advisor](codex/advisor/SKILL.md) | Both | `/oss:advisor` / `$advisor` | Consult an independent second reviewer before committing to an interpretation or calling a task done. Fable 5 on Claude Code; this Codex library's GPT-5.6 advisor always runs Sol/xhigh. |
 | [46-orchestrate](codex/46-orchestrate/SKILL.md) | Codex | `$46-orchestrate` | Sol/high owns orchestration, integration, and sign-off; it routes bounded work to Terra workers and reserves Luna for tightly specified mechanical work. |
 
@@ -96,7 +96,7 @@ Skills are grouped by where they fall in a project. Unless the Platform column s
 | [topic-modeling](plugin/skills/topic-modeling/SKILL.md) | Both | `/oss:topic-modeling` | Fit structural topic models: specification with covariates, topic-count selection by coherence and exclusivity, and reporting. |
 | [text-classification](plugin/skills/text-classification/SKILL.md) | Both | `/oss:text-classification` | Classify text with LLMs: codebook design, human-in-the-loop workflows, validation, and agreement statistics. |
 | [model-council-voting](plugin/skills/model-council-voting/SKILL.md) | Both | `/oss:model-council-voting` | Use a panel of models as independent coders, with consensus rules, chance-corrected agreement (Cohen, Fleiss, Krippendorff), and correlated-error checks. |
-| [model-committee](plugin/skills/model-committee/SKILL.md) | Both | `/oss:model-committee` | Have GPT-5.6 Sol and Claude Opus 4.8 deliberate toward one decision: independent proposals, mutual critique, revision, and a pre-committed rule. Opus 4.8 chairs the tally. |
+| [model-committee](plugin/skills/model-committee/SKILL.md) | Both | `/oss:model-committee` | Have GPT-5.6 Sol and Claude Opus 5 deliberate toward one decision: independent proposals, mutual critique, revision, and a pre-committed rule. Opus 5 chairs the tally. |
 | [model-committee-sol](plugin/skills/model-committee-sol/SKILL.md) | Both | `/oss:model-committee-sol` | The same committee, but the GPT debater is Terra (not Sol) and the chair is GPT-5.6 Sol rather than a member, so a model outside the vote runs the tally and synthesis. |
 | [model-committee-fable](plugin/skills/model-committee-fable/SKILL.md) | Both | `/oss:model-committee-fable` | The same committee, chaired by Fable 5: a lighter, faster chair that is not one of the two voting members. |
 | [llm-calibration-logprobs](plugin/skills/llm-calibration-logprobs/SKILL.md) | Both | `/oss:llm-calibration-logprobs` | Turn token log-probabilities into per-decision confidence, then measure calibration (ECE, Brier, reliability diagrams) against human labels. |

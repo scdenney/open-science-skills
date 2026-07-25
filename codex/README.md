@@ -7,7 +7,7 @@
 This directory contains 37 Codex-native Open Science Skills. They mirror the Claude Code library with three intentional differences:
 
 - `presubmit` is omitted.
-- `opus-orchestrate` is omitted: it depends on Claude Code's ultracode Workflow orchestration, which has no Codex equivalent.
+- `opus-orchestrate` is omitted: it depends on Claude Code's `Workflow` tool for dynamic multi-agent orchestration, which has no Codex equivalent.
 - [`46-orchestrate`](46-orchestrate/SKILL.md) replaces `fable-orchestrate`: `gpt-5.6-sol` at high effort owns orchestration; it routes bounded work to Terra and reserves Luna for tightly specified mechanical work.
 
 Every skill is a self-contained directory with `SKILL.md`, `agents/openai.yaml`, and only the references, scripts, or assets it needs. Codex supports these skills in the CLI, IDE extension, and app.
@@ -51,7 +51,7 @@ See the official [Codex skills documentation](https://developers.openai.com/code
 
 ## Variant notes
 
-**`$model-committee` and its chairs.** The committee runs GPT-5.6 "Sol" (xhigh) and Claude Opus 4.8 (max) as members through their read-only CLIs, after first checking that deliberation is the right instrument for the task. It is the **Opus-chaired** member of a three-variant family: `$model-committee-fable` deliberates the same two members (Sol + Opus) but hands the post-round-3 tally and compatible-component synthesis to Fable 5. `$model-committee-sol` is the exception — since its own chair is Sol, its GPT debater is pinned to `gpt-5.6-terra` instead, so the chair is never grading its own family's twin. Under Codex, `$model-committee-sol` chairs natively with Sol, while `$model-committee-fable` delegates the chair step to Fable 5 through the bundled `claude-member.sh`.
+**`$model-committee` and its chairs.** The committee runs GPT-5.6 "Sol" (xhigh) and Claude Opus 5 (high) as members through their read-only CLIs, after first checking that deliberation is the right instrument for the task. It is the **Opus-chaired** member of a three-variant family: `$model-committee-fable` deliberates the same two members (Sol + Opus) but hands the post-round-3 tally and compatible-component synthesis to Fable 5. `$model-committee-sol` is the exception — since its own chair is Sol, its GPT debater is pinned to `gpt-5.6-terra` instead, so the chair is never grading its own family's twin. Under Codex, `$model-committee-sol` chairs natively with Sol, while `$model-committee-fable` delegates the chair step to Fable 5 through the bundled `claude-member.sh`.
 
 Sandbox constraint: all three variants' `codex-member.sh` (GPT-5.6 Sol, or Terra for `model-committee-sol`'s debater) needs an unsandboxed or escalated call under a live Codex session, since a nested `codex exec` under sandbox fails structurally (see each `SKILL.md`). `claude-member.sh` was observed to hang under sandbox for the same reason (network access), less rigorously confirmed.
 
