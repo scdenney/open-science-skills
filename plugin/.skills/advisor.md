@@ -1,6 +1,6 @@
 ---
 name: advisor
-description: Consult Fable 5 as an independent second reviewer, matched to your current reasoning-effort level. The calling session is the main model — Opus 5 or Sonnet 5 — and Fable holds the advisor seat. Use before committing to an interpretation or a substantial piece of writing/analysis, when stuck (recurring errors, a non-converging approach, results that do not fit), when considering a change of approach, or when you believe a task is complete and want a check before finalizing. Fallback for when the native advisor tool is unavailable. Not a co-implementer — read-only advisory only, does not edit files.
+description: Consult Fable 5 as an independent second reviewer, always at max reasoning effort. The calling session is the main model — Opus 5 or Sonnet 5 — and Fable holds the advisor seat. Use before committing to an interpretation or a substantial piece of writing/analysis, when stuck (recurring errors, a non-converging approach, results that do not fit), when considering a change of approach, or when you believe a task is complete and want a check before finalizing. Fallback for when the native advisor tool is unavailable. Not a co-implementer — read-only advisory only, does not edit files.
 allowed-tools:
   - Read
   - Write
@@ -11,7 +11,7 @@ allowed-tools:
 
 `fable-advisor.sh` spawns an isolated Fable 5 session that reviews one decision point and returns. This is the fallback for when the native `advisor()` tool reports itself unavailable mid-session ("The advisor tool is unavailable. Do not try to use it again.").
 
-<p align="center"><img src="assets/architecture.svg" alt="advisor: the main model (Opus 5 or Sonnet 5) composes one self-contained briefing, sends it to an isolated Fable 5 advisor at the caller's effort level, and receives one decisive read-only review in return" width="900"></p>
+<p align="center"><img src="assets/architecture.svg" alt="advisor: the main model (Opus 5 or Sonnet 5) composes one self-contained briefing, sends it to an isolated Fable 5 advisor running at max reasoning effort, and receives one decisive read-only review in return" width="900"></p>
 
 ## The two seats
 
@@ -20,7 +20,7 @@ allowed-tools:
 | Main | **Opus 5**, or Sonnet 5 for cheaper sustained work | Holds the task, the context, and the decision. Does the work. |
 | Advisor | **Fable 5**, always | Reads one briefing, returns one review. Never edits files. |
 
-The asymmetry is the design. The advisor seat is pinned to Fable and the script guards it — no silent fallback to another model family, since a same-family fallback would defeat the point of asking. The main seat is whichever model the session is already running; a Fable session gets a fresh, isolated Fable instance with no anchoring from the conversation. Only the working directory (`-C`) and the reasoning-effort level carry over from the caller.
+The asymmetry is the design. The advisor seat is pinned to Fable and the script guards it — no silent fallback to another model family, since a same-family fallback would defeat the point of asking. The main seat is whichever model the session is already running; a Fable session gets a fresh, isolated Fable instance with no anchoring from the conversation. Nothing carries over from the caller except the working directory (`-C`) — not the conversation, and not the effort level.
 
 When this skill is called from inside an orchestration (`fable-orchestrate`, `opus-orchestrate`), the orchestrating lead is the main seat and Fable's consult is one bounded advisory call — not a delegation.
 
@@ -41,11 +41,11 @@ On work longer than a few steps, consult once before the approach crystallizes a
 
 Weigh the advice as evidence, not authority: primary-source evidence and empirical failure outrank it. But if your evidence points one way and Fable points another, one more consult stating the conflict plainly ("I found X, you suggest Y, which constraint breaks the tie?") is cheaper than committing to the wrong branch.
 
-## Effort calibration
+## Effort
 
-Fable runs at the calling session's reasoning-effort level, not a fixed default — a cheap consult under a `max`-effort task wastes the point of asking, and a maximal consult under a quick `low`-effort task wastes time for no benefit.
+Fable always runs at `max`. This is an owned policy, not an inherited setting: the consult exists to get a stronger read than the main seat can produce on its own, and a cheap consult under a hard question wastes the reason for asking. A `low`-effort session still gets a `max`-effort advisor.
 
-Claude Code exposes the live effort level as `$CLAUDE_EFFORT`, which propagates into spawned subprocesses (verified empirically, not assumed from docs). The script defaults `--effort` to it, so omit the flag unless you want to override deliberately — a cheaper `medium` consult mid-task, say, under a `max`-effort session.
+The script pins it, so there is nothing to pass. `--effort <level>` overrides it only if you deliberately want a cheaper consult on something routine.
 
 ## Run a consult
 
@@ -60,9 +60,9 @@ Use `timeout: 900000` on the Bash call as a backstop; the script has its own int
 
 ## Notes
 
-- `fable-advisor.sh --check` verifies the `claude` CLI is on PATH and reports the live `$CLAUDE_EFFORT` — run it after install, or when a consult behaves unexpectedly. `${CLAUDE_PLUGIN_ROOT}` resolves to the installed plugin directory at runtime; a hand-installed copy under `~/.claude/skills/` shadows the plugin's own and silently drifts out of date.
+- `fable-advisor.sh --check` verifies the `claude` CLI is on PATH and reports the pinned effort — run it after install, or when a consult behaves unexpectedly. `${CLAUDE_PLUGIN_ROOT}` resolves to the installed plugin directory at runtime; a hand-installed copy under `~/.claude/skills/` shadows the plugin's own and silently drifts out of date.
 - The spawned session runs `--permission-mode plan` and `--no-session-persistence`: advisory only, not resumable.
 - The script clears `ANTHROPIC_API_KEY`, so the consult bills the subscription plan even if the calling shell exports a live key.
-- Effort enum: `low, medium, high, xhigh, max`, matching `/effort`. If `$CLAUDE_EFFORT` is unset the script falls back to `high` rather than guessing low.
+- Effort enum: `low, medium, high, xhigh, max`, matching `/effort`.
 - Model defaults to the `fable` alias. `--model <id>` pins a specific version. If the alias is ever unavailable, report it and ask — do not substitute another family.
-- Companion skill: `codex/advisor/` — same pattern for a Codex-native session, where the advisor seat is `gpt-5.6-sol` at a fixed `xhigh` because Codex exposes no inheritable effort variable.
+- Companion skill: `codex/advisor/` — the same pattern for a Codex-native session, with `gpt-5.6-sol` in the advisor seat at a fixed `xhigh`. Both libraries pin the advisor's effort rather than inheriting the caller's, for the same reason.

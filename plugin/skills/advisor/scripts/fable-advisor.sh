@@ -2,13 +2,13 @@
 # fable-advisor.sh — consult Fable 5 as an independent second reviewer.
 #
 # Read-only advisory consult, not implementation. Spawns a fresh, isolated
-# `claude` session (--permission-mode plan: no edits) at the SAME reasoning
-# effort as the calling session, via the $CLAUDE_EFFORT env var (confirmed
-# live and inherited by child processes — see advisor/SKILL.md for how it
-# was verified). This is the fallback for when the native advisor() tool is
-# unavailable; unlike that tool, this spawns an ISOLATED session with no
-# automatic access to the calling conversation, so the caller must compose
-# a self-contained briefing and pass it as --prompt-file. See SKILL.md.
+# `claude` session (--permission-mode plan: no edits) at `max` reasoning
+# effort — a fixed policy, not the caller's level: the point of the consult
+# is a stronger reviewer, and a cheap consult wastes the reason for asking.
+# This is the fallback for when the native advisor() tool is unavailable;
+# unlike that tool, this spawns an ISOLATED session with no automatic
+# access to the calling conversation, so the caller must compose a
+# self-contained briefing and pass it as --prompt-file. See SKILL.md.
 #
 # Usage:
 #   fable-advisor.sh --prompt-file FILE --out FILE [-C DIR] [--model ID]
@@ -19,8 +19,8 @@
 #   --out FILE          where Fable's advice is written
 #   -C DIR              working dir Fable sees (default: $PWD)
 #   --model ID          model alias or full name (default: fable)
-#   --effort LEVEL      low|medium|high|xhigh|max (default: $CLAUDE_EFFORT if
-#                        set, else "high" — never silently guess higher)
+#   --effort LEVEL      low|medium|high|xhigh|max (default: max — override
+#                        only to deliberately buy a cheaper consult)
 #   --timeout SEC        hard kill after SEC seconds (default: 900)
 set -euo pipefail
 
@@ -28,7 +28,7 @@ MODEL="fable"
 WORKDIR="$PWD"
 PROMPT_FILE=""
 OUT=""
-EFFORT="${CLAUDE_EFFORT:-high}"
+EFFORT="max"
 TIMEOUT_SECONDS=900
 
 usage() {
@@ -42,7 +42,7 @@ die() { printf 'fable-advisor: %s\n' "$*" >&2; exit 2; }
 if [[ "${1:-}" == "--check" ]]; then
   command -v claude >/dev/null || die 'Claude Code CLI not found'
   claude --version
-  printf 'CLAUDE_EFFORT=%s\n' "${CLAUDE_EFFORT:-<unset>}"
+  printf 'default effort: %s\n' "$EFFORT"
   exit 0
 fi
 
