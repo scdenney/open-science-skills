@@ -6,7 +6,7 @@
 
 [![Claude Code](https://img.shields.io/badge/Claude_Code-plugin-D97757?logo=anthropic&logoColor=white)](https://code.claude.com/docs/en/skills)
 [![OpenAI Codex](https://img.shields.io/badge/OpenAI_Codex-library-111111?logo=openai&logoColor=white)](codex/README.md)
-[![version](https://img.shields.io/badge/version-2.19.7-blue)](https://github.com/scdenney/open-science-skills/releases)
+[![version](https://img.shields.io/badge/version-2.20.0-blue)](https://github.com/scdenney/open-science-skills/releases)
 [![license](https://img.shields.io/badge/license-CC%20BY--NC%204.0-lightgrey)](LICENSE)
 [![Claude skills](https://img.shields.io/badge/Claude_skills-39-D97757?logo=anthropic&logoColor=white)](#skills)
 [![Codex skills](https://img.shields.io/badge/Codex_skills-37-111111?logo=openai&logoColor=white)](#skills)
@@ -66,9 +66,9 @@ Skills are grouped by where they fall in a project. Unless the Platform column s
 
 | Skill | Platform | Command | What it does |
 |---|---|---|---|
-| [fable-orchestrate](plugin/skills/fable-orchestrate/SKILL.md) | Claude Code | `/oss:fable-orchestrate` | Run a multi-model workflow with Fable 5 as lead: an Opus subagent takes heavy reasoning, a Sonnet subagent takes mechanical work, and a GPT-5.6 Codex peer gives a second opinion. |
+| [fable-orchestrate](plugin/skills/fable-orchestrate/SKILL.md) | Claude Code | `/oss:fable-orchestrate` | Run a multi-model workflow with Fable 5 as lead. As the strongest model on the team it keeps the hard reasoning itself, sending mechanical work to a Sonnet subagent, wide or parallel reasoning to Opus subagents, and high-stakes hard-to-verify calls to a GPT-5.6 Codex peer for a decorrelated cross-check. |
 | [opus-orchestrate](plugin/skills/opus-orchestrate/SKILL.md) | Claude Code | `/oss:opus-orchestrate` | The same workflow with Opus 5 as lead at medium reasoning effort by default (raise to high for a reasoning-heavy session), with dynamic Workflow fan-out available via the skill's own opt-in — no ultracode required. Opus reasons on hard problems itself and delegates only to fan out; the Codex peer is gpt-5.6-sol. |
-| [advisor](codex/advisor/SKILL.md) | Both | `/oss:advisor` / `$advisor` | Consult an independent second reviewer before committing to an interpretation or calling a task done. Fable 5 on Claude Code; this Codex library's GPT-5.6 advisor always runs Sol/xhigh. |
+| [advisor](plugin/skills/advisor/SKILL.md) | Both | `/oss:advisor` / `$advisor` | Consult an independent second reviewer before committing to an interpretation or calling a task done. Your session is the main seat (Opus 5, or Sonnet 5 for cheaper sustained work); the advisor seat is Fable 5 at your session's own effort level. The [Codex counterpart](codex/advisor/SKILL.md) always runs Sol/xhigh. |
 | [46-orchestrate](codex/46-orchestrate/SKILL.md) | Codex | `$46-orchestrate` | Sol/high owns orchestration, integration, and sign-off; it routes bounded work to Terra workers and reserves Luna for tightly specified mechanical work. |
 
 ### Ideation

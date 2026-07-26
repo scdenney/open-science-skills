@@ -5,7 +5,7 @@ description: Delegate creative divergence to a fresh Codex subagent before imple
 
 # Diverge with a fresh Codex context
 
-Use a fresh subagent to reduce anchoring from the lead agent's conversation history. Preserve the brainstorm-then-select discipline from `$diverge`; do not claim cross-model diversity because both contexts run Codex.
+Use a fresh subagent to reduce anchoring from the lead agent's conversation history. Same brainstorm-then-select discipline as `$diverge`; both contexts run Codex, so this buys a clean context rather than cross-model diversity — never describe it as an independent model family.
 
 Read [`../diverge/reference/creative-preference-optimization.md`](../diverge/reference/creative-preference-optimization.md) only when the user asks for the rationale or when refining the creativity criteria.
 
@@ -15,9 +15,7 @@ Delegate only when the user explicitly invokes `$diverge-codex` or asks for a su
 
 ## Phase 1: brief the brainstormer
 
-Extract the task, hard constraints, existing artifacts, and acceptance criteria. Do not add an implementation preference.
-
-Spawn one fresh Codex subagent with only the task-local context it needs. Give it this contract:
+Extract the task, hard constraints, existing artifacts, and acceptance criteria. Spawn one fresh Codex subagent with only the task-local context it needs, withholding your own preferred solution or likely implementation. Give it this contract:
 
 ```text
 Generate 3–5 conceptually distinct approaches to TASK. Do not implement.
@@ -31,8 +29,6 @@ Include at least one [Novel] and one [Surprising] approach. For each, provide:
 Do not restate one idea with different vocabulary. Return only the approaches.
 ```
 
-Do not reveal the lead agent's preferred solution or likely implementation. Consume the subagent's final answer, not its internal trace.
-
 ## Phase 2: present and pause
 
 Check that the response contains 3–5 mechanically distinct approaches and satisfies the required labels. If it does not, send one focused correction to the same subagent.
@@ -41,13 +37,7 @@ Present the approaches without silently ranking, filtering, or rewriting them. A
 
 ## Phase 3: implement after selection
 
-Send the selected approach, original task, constraints, and acceptance checks back to the same subagent when possible. Require it to:
-
-- inspect current workspace state before editing;
-- preserve unrelated user changes;
-- implement the selected mechanism rather than substituting another;
-- run proportionate checks; and
-- return changed files, verification evidence, and any residual risk.
+Send the selected approach, original task, constraints, and acceptance checks back to the same subagent when possible. Require it to implement the user's selected mechanism rather than substituting another, preserve unrelated user changes, run proportionate checks, and return changed files, verification evidence, and any residual risk.
 
 The lead agent owns integration. Inspect the resulting diff and verification output, fix integration defects, and report the final outcome.
 
@@ -56,10 +46,3 @@ The lead agent owns integration. Inspect the resulting diff and verification out
 - If subagents are unavailable, state that the independent-context path is unavailable and run `$diverge` locally.
 - If the brainstorm subagent fails or returns empty output, retry once with a shorter brief, then fall back locally.
 - If the selected approaches cannot be combined without changing the requested behavior, explain the incompatibility before proposing a hybrid.
-
-## Constraints
-
-- Never implement during the divergence phase.
-- Never describe same-model subagents as independent model families.
-- Never break a user selection by replacing it with the lead agent's preferred approach.
-- Never delegate without the explicit delegation gate above.

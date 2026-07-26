@@ -9,29 +9,22 @@ context: fork
 
 ## Heritage and scope
 
-This is the in-session, Claude-Code-native referee-drafting tool. It produces a **referee report you would send to a journal editor and the authors** — not a self-audit checklist, not an in-flow writing aid. Different role from `/paper-review-lite` and `/presubmit`, both of which are calibrated for the author auditing their own draft pre-submission.
+This is the in-session, Claude-Code-native referee-drafting tool. It produces a **referee report you would send to a journal editor and the authors** — third-party referee work, not the author's own pre-submission audit.
 
 The eight-agent design is adapted from the [`presubmit`](https://github.com/scdenney/presubmit) pipeline (itself a port of `reviewer2` / isitcredible.com, Apache-2.0). Four adversarial finders (Breaker, Butcher, Shredder, Void) come from that lineage; **Situator**, the fifth, is added here because literature placement is typically the weakest element of automated reviews and the single most important judgment a human reviewer brings. Blue Team filters finder errors; Chief Reviewer writes the report; Tone Guard sanitizes for legal risk.
 
 ## What this produces
 
-A markdown referee report with these sections:
+A markdown referee report: **Recommendation** (*Reject* / *Major Revision* / *Minor Revision* / *Accept with minor changes* / *Accept*), **Summary** (the claim and the design, not the critique), **Major Concerns** (3–6 numbered paragraphs, which determine the recommendation), **Additional Concerns** (3–8 shorter items that matter but do not drive the decision), and **Suggestions for Revision** (a coherent revision plan, not a punch list). Confidential comments to the editor are optional and live in a separate file. Full template and length budget in Phase 3.
 
-1. **Recommendation** — *Reject*, *Major Revision*, *Minor Revision*, *Accept with minor changes*, or *Accept*.
-2. **Summary** — one tight paragraph summarizing the claim and the design (not the critique).
-3. **Major Concerns** — 3–6 numbered concerns, each a short paragraph. These determine the recommendation.
-4. **Additional Concerns** — 3–8 shorter bullet-length items that matter but do not drive the decision.
-5. **Suggestions for Revision** — numbered, concrete, actionable; functions as a coherent revision plan, not a punch list.
-6. *(Optional)* **Confidential comments to the Editor** — kept in a separate file.
-
-Total length: 1,200–2,000 words. Shorter is better than longer if the critique is tight. Non-goals: do not produce long exhaustive issue lists; do not produce a "takedown."
+Not a long exhaustive issue list, and not a takedown.
 
 ## Setup (do this yourself before launching agents)
 
 1. Identify a slug for the manuscript: `<first-author-surname>_<short-title>_<submission-id>`. Example: `Kim_divided_views_JAS-26-0243`.
 2. Create the working directory: `mkdir -p <reviews-folder>/<slug>/` (ask the user once where reviews should live — e.g. `~/reviews/` — and reuse that convention thereafter).
 3. Copy the manuscript PDF into the slug folder as `manuscript.pdf`. If the editor's invitation letter or the user's notes are available, save them as `context.md` in the same folder.
-4. Read the manuscript yourself once before writing agent prompts. Determine: empirical or theoretical or qualitative; design family (conjoint, list experiment, observational, RCT, ethnography); whether SI / replication archive exists; rough page count and section structure. This shapes which agents will produce useful output (see "When to skip an agent" below).
+4. Read the manuscript yourself once before writing agent prompts. Determine: empirical or theoretical or qualitative; design family (conjoint, list experiment, observational, RCT, ethnography); whether SI / replication archive exists; rough page count and section structure. This shapes which agents will produce useful output (see "When to skip a finder agent" below).
 
 **Orchestration lead.** This referee draft is orchestrated by whatever model you are running — Claude Opus 5 or Fable 5. The orchestrator reads the manuscript, spawns the five finders, the Blue Team, the Chief Reviewer, and Tone Guard, then owns the last-mile checklist; the sub-agents do the finding and drafting. **If you are on Opus, run at medium reasoning effort by default** (raise to high for the recommendation call and for verifying every quoted passage against the PDF — a bounded judgment call, not the sustained orchestration role): express Phase 1 (five finders) → Phase 2 (Blue Team) → Phase 3 (Chief Reviewer) as a `Workflow` — invoking this skill already satisfies the `Workflow` tool's own opt-in, so Claude Code's `ultracode` session mode isn't required. On a lighter lead (Fable), drive the same phases with parallel `Agent` calls and pin the argument-level finders (Breaker, Situator) to Opus. See [`opus-orchestrate`](../opus-orchestrate/SKILL.md) / [`fable-orchestrate`](../fable-orchestrate/SKILL.md) for the routing.
 
@@ -264,7 +257,7 @@ Spawn on the Chief Reviewer's draft.
 >
 > Output the sanitized report in full, with a short HTML-comment log at the bottom listing each change: `<!-- Changed "X" → "Y" (imputed intent). -->`. If nothing changed, end with `<!-- No issues found. -->`.
 
-After reviewing the change log, **delete the HTML comments from `referee_report.md`** — that file goes to the editor and authors, and workflow artifacts must not leak into it.
+After reviewing the change log, **delete the HTML comments from `referee_report.md`** — that file goes to the editor and authors.
 
 ## Phase 5 — Run /sci-edit on the prose (if available)
 
@@ -274,7 +267,7 @@ After Tone Guard, the report is legally clean but may still read as AI-drafted. 
 /sci-edit <slug>/referee_report.md
 ```
 
-This applies the user's academic-prose linter (Kobak Tier-1 vocab blocklist, phrasal AI tells, voice overrides). Apply its suggestions to the Major Concerns paragraphs especially — these are what the author and editor actually read. If `/sci-edit` is not installed, skip this phase and mention it in the final summary so the user can install it for next time.
+This applies the user's academic-prose linter (Kobak Tier-1 vocab blocklist, phrasal AI tells, voice overrides). Apply its suggestions to the Major Concerns paragraphs especially — these are what the author and editor actually read. If it is not installed, skip this phase and say so in the final summary.
 
 ## Phase 6 — Optional confidential editor note
 
@@ -299,9 +292,6 @@ Save as `<slug>/editor_confidential.md`.
 - **No figure interpretation.** No issue, claim, or citation can be based on visually reading a figure or extracting a data point from inside one. Use only text, tables, and figure captions. (LLMs systematically misread plots.)
 - **The black-box rule for external sources.** You can only see what the manuscript says about a cited work. Do not assert specific factual attributes (years, geographic coverage, variables included/excluded, numerical values, frequencies, procedures) about an external source unless the manuscript itself states them. Phrase uncertainty openly.
 - **OCR awareness.** If something looks wildly inconsistent with the surrounding text (a coefficient with the wrong sign, garbled number, implausible year), treat as a possible OCR/PDF-extraction artifact. Note the uncertainty rather than building the critique on it.
-- **Steelman before striking.** Every finder opens each issue by stating the authors' position in its strongest form. A critique of a misreading is not a critique.
-- **No imputed intent, no personal attacks.** Tone Guard enforces; every agent should internalize.
-- **No invented citations.** Situator may suggest "potentially missing prior work," but only with a confidence note. Never fabricate.
 - **Human in the loop.** Chief Reviewer's output is a *draft*. The user reads, cross-checks every quoted passage against the PDF, edits freely before sending. Agents produce candidates; the user produces the report.
 
 ## Output checklist (last-mile, before the user sends)
@@ -333,12 +323,8 @@ Save as `<slug>/editor_confidential.md`.
 └── editor_confidential.md          (optional, never sent to authors)
 ```
 
-Slug convention: `<first-author-surname>_<short-title>_<submission-id>`. Example: `Kim_divided_views_JAS-26-0243`.
-
 ## When NOT to use this skill
 
-- **Self-audit of your own draft.** Use `/paper-review-lite` (in-session, free) or `/presubmit` (heavier, API-driven, ~$5–10/run). This skill is for third-party referee work and produces output appropriate to send to a journal editor.
-- **Papers outside your expertise.** The Situator cannot replace field knowledge. Decline the review.
-- **Theory-only papers.** Skip the Shredder; lean on Breaker and Situator. Adjust the report template to omit empirical-machinery concerns.
-- **Pure ethnography or interpretive qualitative work.** Use as scaffolding only; expect to write more of the report yourself.
+- **Self-audit of your own draft.** Use `/paper-review-lite` (in-session, free) or `/presubmit` (heavier, API-driven, ~$5–10/run).
+- **Papers outside your expertise, or paper types the finders do not fit.** See "When to skip a finder agent" above; for a literature you do not know, decline the review.
 - **Conflicts.** If you know the authors personally, sit on a committee with them, or have a citation/funding relationship, the workflow cannot sanitize that.

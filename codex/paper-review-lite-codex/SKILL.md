@@ -11,14 +11,14 @@ Read [`../paper-review-lite/SKILL.md`](../paper-review-lite/SKILL.md) completely
 
 ## Sandbox constraint — read before the first `claude -p` call
 
-`claude -p` is a different binary than `codex exec`, so it does not hit the identical `codex exec` in-process IPC failure that breaks nested `codex exec` calls under sandbox. But under `workspace-write` sandbox, an outbound `claude -p` network call was observed (July 2026) to hang rather than complete or fail cleanly — Codex's sandbox restricts network access, and `claude -p` needs it to reach Anthropic's API. This finding is less rigorously isolated than the nested-`codex exec` failure (it wasn't captured as a distinct error message, just an unresponsive process that had to be killed), so treat it as a strong warning rather than a certainty. If a `claude -p` call in this skill hangs rather than returning, do not assume it will eventually resolve — consider requesting escalation (`sandbox_permissions: require_escalated`) for that call, or running from an unsandboxed session, before retrying.
+`claude -p` is a different binary than `codex exec`, so it does not hit the in-process IPC failure that breaks nested `codex exec` calls under sandbox. But under `workspace-write` sandbox, an outbound `claude -p` network call was observed (July 2026) to hang rather than complete or fail cleanly — Codex's sandbox restricts network access, and `claude -p` needs it to reach Anthropic's API. That observation is less rigorously isolated than the nested-`codex exec` failure (no distinct error message, just an unresponsive process that had to be killed), so treat it as a strong warning rather than a certainty. If a `claude -p` call hangs rather than returning, do not assume it will eventually resolve — request escalation (`sandbox_permissions: require_escalated`) for that call, or run from an unsandboxed session, before retrying.
 
 ## Preflight
 
 1. Confirm that the user explicitly requested `$paper-review-lite-codex` or a cross-model audit. Otherwise use `$paper-review-lite`.
 2. Locate the manuscript, supplement, bibliography, figures, preregistration, and replication archive.
 3. Check `command -v claude` and run a harmless authentication/status check supported by the installed CLI. Do not print credentials.
-4. Explain that `claude -p` is an external model call that may consume separate credits. Obtain confirmation before the first call unless the user already explicitly authorized Claude or cross-model execution.
+4. Before the first call, confirm the user accepts an external model call that may consume separate credits — unless they already authorized Claude or cross-model execution.
 5. If Claude is unavailable or authorization is declined, offer the fallback in “Reduced-diversity mode.”
 
 Claude Code documents `claude -p` as its non-interactive interface. Use `--output-format text`, `--no-session-persistence`, and read-only tools for review calls. See [Run Claude Code programmatically](https://code.claude.com/docs/en/headless).
@@ -33,8 +33,6 @@ Follow `$paper-review-lite` Phase 1. Read the manuscript before spawning reviewe
 ├── claude/
 └── cross-check/
 ```
-
-Treat this directory as disposable workflow state. Preserve it only if the user asks.
 
 ## Phase 1: independent Red Teams
 
@@ -70,7 +68,7 @@ claude -p \
   > /absolute/path/to/.review-tmp/claude/review-N.md
 ```
 
-Do not use `--bare` unless API-key authentication is configured explicitly; bare mode skips normal OAuth and keychain discovery. Never pass secrets in the prompt or command line.
+Do not use `--bare` unless API-key authentication is configured explicitly; bare mode skips normal OAuth and keychain discovery.
 
 Validate every output file. A non-zero exit, empty file, or refusal is a failed reviewer, not evidence that the manuscript passed.
 
@@ -116,8 +114,7 @@ If the user declines, run ordinary `$paper-review-lite` or stop as requested.
 ## Completion checks
 
 - Every retained critical or recommended issue has a verified quote and location.
-- Both directions of cross-check completed, or reduced coverage is explicit.
-- Failed/empty reviewer outputs are disclosed.
+- Both directions of cross-check completed, or reduced coverage is stated explicitly alongside any failed or empty reviewer output.
 - No agent edited the manuscript.
 - The final report is self-contained and does not expose scratch prompts or agent chatter.
 - `.review-tmp/` is removed after delivery unless the user asked to keep it.

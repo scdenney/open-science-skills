@@ -5,30 +5,27 @@ description: Run a deliberative two-model committee between GPT-5.6 "Sol" and Cl
 
 # Model Committee (Fable-chaired)
 
-Run GPT-5.6 "Sol" and Claude Opus 5 as a deliberating committee, with **Fable 5 as the chair**. Preserve a clear distinction from `$model-council-voting`: a council measures independent disagreement; this committee deliberately exposes each member to the other's argument and produces one decision.
+Run GPT-5.6 "Sol" and Claude Opus 5 as a deliberating committee with **Fable 5 as the chair**. Keep the line to `$model-council-voting` sharp: a council measures independent disagreement, while this committee deliberately exposes each member to the other's argument and returns one decision.
 
-Read [`references/protocol.md`](references/protocol.md) completely before running a committee.
+Read [`references/protocol.md`](references/protocol.md) completely before running a committee. It carries the use-case gate, the brief template, the three round contracts, the decision rule, and the `decision.md` schema.
 
-**Chair variant.** This is the **Fable-chaired** member of a three-variant family; all three deliberate a GPT-5.6 tier + Opus 5 and differ in which model chairs the synthesis (and, in `model-committee-sol`, in which 5.6 tier deliberates — see that skill's pins note). Fable's value here is a **lightweight, fast, procedurally disciplined** chair: the heavy reasoning is already spent inside the two members' three rounds, and the chair's remaining job is mostly mechanical, so a lean chair is a deliberate cost choice — and, being neither member, it cannot vote its own prior a third time. Because Fable is a Claude-family model, running under Codex delegates the chair step to it via the bundled `claude-member.sh`. Siblings: [`model-committee`](../model-committee/SKILL.md) (Opus 5 chairs) and [`model-committee-sol`](../model-committee-sol/SKILL.md) (GPT-5.6 "Sol" chairs).
+Fable chairs here because the heavy reasoning is already spent inside the members' three rounds and what remains is mostly mechanical — a lean chair is a deliberate cost choice, and being neither member it cannot vote its own prior a third time. Fable being a Claude-family model, a Codex session reaches it through the bundled `claude-member.sh`. Siblings: [`model-committee`](../model-committee/SKILL.md) (Opus 5 chairs) and [`model-committee-sol`](../model-committee-sol/SKILL.md) (GPT-5.6 "Sol" chairs, with the GPT member dropped to `gpt-5.6-terra` so the chair is not also a member).
 
 ## Gate the workflow
 
-Run only when the user explicitly invokes `$model-committee-fable` or requests a Fable-chaired GPT-5.6 Sol / Opus 5 deliberation. The workflow makes external model calls and uses more tokens than a single answer.
-
-Apply the use-case gate in the protocol first. If the task does not qualify, recommend the correct alternative and do not call any model.
+Run only when the user invokes `$model-committee-fable` or asks for a Fable-chaired Sol / Opus deliberation. The external calls draw plan credits or API spend on both providers — surface that and get confirmation unless the user has already accepted it. Apply the protocol's use-case gate first; if the task does not qualify, name the right alternative and call no model.
 
 Before the first call:
 
-1. Confirm the task and the decision that must be returned.
-2. Confirm any sensitive material may be sent to both providers.
-3. Explain that both CLIs may consume separate plan credits or API spend; obtain confirmation unless already explicit.
-4. Precommit the evaluation criteria, weights, and tie rule.
+1. Confirm the decision that must be returned.
+2. Confirm the material may be sent to both providers.
+3. Precommit the evaluation criteria, weights, and tie rule.
 
 ## Sandbox constraint — read before the first call
 
-`scripts/codex-member.sh` shells out to a nested `codex exec` process. Confirmed by direct reproduction (July 2026, both hosts this repo runs on): a `codex exec` process running under **any** sandbox mode cannot spawn a working nested `codex exec` child — it fails immediately with `Error: failed to initialize in-process app-server client: Operation not permitted` (macOS) or `Read-only file system` (Linux). This is structural (the OS sandbox applies transitively to the whole process tree) and is not fixed by bypass flags on the nested call. If you are running non-interactively (`approval: never` in your own session banner), this call cannot succeed — report the failure rather than fabricating the GPT member's response yourself. If interactive, request escalation (`sandbox_permissions: require_escalated`) for that one call.
+`scripts/codex-member.sh` shells out to a nested `codex exec` process. Confirmed by direct reproduction (July 2026, both hosts this repo runs on): a `codex exec` process running under **any** sandbox mode cannot spawn a working nested `codex exec` child — it fails immediately with `Error: failed to initialize in-process app-server client: Operation not permitted` (macOS) or `Read-only file system` (Linux). This is structural, since the OS sandbox applies transitively to the whole process tree, and bypass flags on the nested call do not fix it. Running non-interactively (`approval: never` in your own session banner), this call cannot succeed — report the failure rather than fabricating the GPT member's response yourself. If interactive, request escalation (`sandbox_permissions: require_escalated`) for that one call.
 
-`scripts/claude-member.sh` shells out to `claude -p` instead (used for both the Opus member and the Fable chair here) — a different binary, so it does not hit the identical `codex exec` IPC failure, but under `workspace-write` sandbox its outbound network call was observed to hang rather than complete (network access is restricted by the sandbox) — less rigorously isolated than the `codex-member.sh` finding, but treat an unresponsive `claude-member.sh` call the same way: do not assume it will resolve on its own, and consider escalation or an unsandboxed session if it hangs.
+`scripts/claude-member.sh` shells out to `claude -p`, a different binary, so it does not hit the identical `codex exec` IPC failure — but under `workspace-write` sandbox its outbound network call was observed to hang rather than complete, network access being restricted by the sandbox. That observation is less rigorously isolated than the `codex-member.sh` one; treat a hanging `claude-member.sh` call the same way and escalate or move to an unsandboxed session. It carries both the Opus member and the Fable chair here, so a hang blocks two of the three seats.
 
 ## Preflight members and chair
 
@@ -45,7 +42,7 @@ Default pins:
 - Claude member: `claude-opus-5` (reasoning effort: `high`)
 - Chair: `claude-fable-5` (Fable 5), reached through `claude-member.sh`
 
-These are deliberately exact pins, not moving aliases. Do not silently substitute another model. If a pin is unavailable, report it and ask whether to stop or use a named replacement.
+These are exact pins, not moving aliases. If one is unavailable, report it and ask whether to stop or use a named replacement — never substitute silently.
 
 ## Run the committee
 
@@ -72,26 +69,20 @@ Invoke each member through the bundled read-only driver:
   --prompt-file <prompt.md> --out <output.md> --effort high -C <working-directory>
 ```
 
-Launch the two calls in each round concurrently when the runtime supports it. Sequential execution is acceptable only if the second prompt was frozen before the first result arrived. Do not show either member the other's output during round 1.
+Launch both calls in a round concurrently when the runtime supports it. Sequential execution is acceptable only if the second prompt was frozen before the first result arrived — otherwise round 1 stops being blind.
 
 ## Chair with Fable, without becoming a third debater
 
-The chair for this variant is **Fable 5.** Bundle the brief and all round outputs into `chair.prompt.md` (using the protocol's decision-rule and output contracts), then delegate the post-round-3 chair step:
+Bundle the brief and all round outputs into `chair.prompt.md` under the protocol's decision-rule and output contracts, then delegate the post-round-3 chair step:
 
 ```bash
 "$SKILL_DIR/scripts/claude-member.sh" \
   --prompt-file chair.prompt.md --out decision.md --model claude-fable-5 -C <working-directory>
 ```
 
-The chair's job:
+Chairing is procedural: validate the round outputs against the protocol's schemas, aggregate the predeclared weighted scores, apply the precommitted tie rule, and synthesize only components both revisions explicitly marked compatible. Never introduce a new substantive option, and never break a tie by confidence, eloquence, or model identity. If the evidence stays genuinely unresolved, return the exact fork to the user; a forced but unsupported answer is not committee consensus.
 
-- validate outputs against the required schemas;
-- aggregate the predeclared weighted scores mechanically;
-- apply the precommitted tie rule;
-- synthesize only components both revisions explicitly mark compatible; and
-- never introduce a new substantive option or break a tie by confidence, eloquence, or model identity.
-
-If the evidence remains genuinely unresolved, return the exact fork to the user. A forced but unsupported answer is not committee consensus. Verify the chair's arithmetic against the round-3 score tables and confirm the decision matches the precommitted rule before you deliver it — the mechanical steps are exactly where a lightweight chair must be checked.
+A lean chair is likelier to defer where it should synthesize, so check its arithmetic against the round-3 score tables and confirm the decision matches the precommitted rule before delivering — the mechanical steps are exactly where a lightweight chair needs verifying.
 
 ## Deliver
 
@@ -104,4 +95,4 @@ Return a compact decision record containing:
 5. surviving dissent or uncertainty;
 6. implementation or verification next step.
 
-Delete `.committee-tmp/` after delivery unless the user asks to preserve the full transcript. Never let any member or the chair edit the workspace during deliberation; implement only after the decision is accepted.
+Delete `.committee-tmp/` after delivery unless the user wants the full transcript kept. Implement only once the decision is accepted.

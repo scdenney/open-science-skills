@@ -15,16 +15,11 @@ allowed-tools:
 
 This is the cross-model sibling of [`paper-review-lite`](../paper-review-lite/SKILL.md), itself the in-session, Claude-Code-native counterpart to [`presubmit`](https://github.com/scdenney/presubmit) (our port of the [reviewer2](https://github.com/isitcredible/reviewer2) adversarial peer-review pipeline). The heritage carries over wholesale. Sub-agents adopt a Critical-Reviewer posture, every finding is grounded in a verbatim quote, and a verification cascade filters hallucinations before they reach the final report.
 
-The new mechanic is cross-model adversarial verification. Two reviewers — Claude (the orchestrator) and Codex (GPT-5.6 "Sol" at `xhigh` reasoning effort, invoked via Bash `codex exec` — see § Codex invocation mechanism) — independently apply the same `paper-review-lite` specification to the same paper. Each then plays Blue Team to the other's Red Team. Two different model families have different blind spots, so:
+The new mechanic is cross-model adversarial verification. Two reviewers — Claude (the orchestrator) and Codex (GPT-5.6 "Sol" at `xhigh` reasoning effort, invoked via Bash `codex exec`) — independently apply the same `paper-review-lite` specification to the same paper, then each plays Blue Team to the other's Red Team. Two model families have different blind spots, so both their agreements and their disagreements carry information. Phase 4 scores each combination.
 
-- **Mutual catches** (both teams flag the issue, both cross-checks confirm) are high-confidence.
-- **Asymmetric catches** (one team flags, the other's cross-checker confirms against the paper) survive at standard confidence and often surface real but easy-to-miss problems.
-- **Asymmetric refutations** (one team flags, the other's cross-checker refutes against the paper) are dropped by default. The orchestrator can override by re-reading the manuscript directly, but the burden is on the override.
-- **Quote-failed** findings (the cross-checker cannot find the cited verbatim span) are dropped as hallucinations.
+Roughly 22 model calls total (9 Claude Red Team, 9 Codex Red Team, 4 cross-model Blue Team) plus orientation and synthesis by the orchestrator. Reach for it before submission when you want maximum adversarial pressure and a second model family's blind spots.
 
-This is the heavier sibling. Roughly 22 model calls total (9 Claude Red Team, 9 Codex Red Team, 4 cross-model Blue Team) plus orientation and synthesis by the orchestrator. Reach for it before submission when you want maximum adversarial pressure and a second model family's blind spots. For the heaviest standalone deliverable — Red Team personas (Breaker, Butcher, Shredder, Collector, Void), math audits, code-replication checks, resumable, cost-tracked — use [`presubmit`](https://github.com/scdenney/presubmit).
-
-**Orchestration lead.** The Claude orchestrator is whatever model you are running — Opus 5 or Fable 5. It runs orientation, launches both Red Teams, spawns the cross-checkers, and adjudicates; the Codex peer is pinned to **`gpt-5.6-sol` at `xhigh`** reasoning effort (via `-c model_reasoning_effort=xhigh` — see § Codex invocation mechanism — not the bare `codex exec` default, so it does not silently drift if that default changes upstream). **If you are on Opus, run at medium reasoning effort by default** (raise to high for the Phase-4 cross-team adjudication and Editor's Note — a bounded judgment call, not the sustained orchestration role): drive the 18 Phase-2 calls and 4 Phase-3 cross-checks as a `Workflow` — invoking this skill already satisfies the `Workflow` tool's own opt-in, so Claude Code's `ultracode` session mode isn't required. On a lighter lead (Fable), drive the same phases with parallel `Agent`/`Bash` calls. See [`opus-orchestrate`](../opus-orchestrate/SKILL.md) / [`fable-orchestrate`](../fable-orchestrate/SKILL.md) for the routing and the decorrelated-peer rationale.
+The Claude orchestrator is whatever model you are running — Opus 5 or Fable 5. It runs orientation, launches both Red Teams, spawns the cross-checkers, and adjudicates. The Codex peer is pinned to `gpt-5.6-sol` at `xhigh` reasoning effort (§ Codex invocation mechanism). On Opus, run at medium reasoning effort by default, raising to high for the Phase-4 cross-team adjudication and Editor's Note — a bounded judgment call, not the sustained orchestration role — and drive the 18 Phase-2 calls and 4 Phase-3 cross-checks as a `Workflow`; invoking this skill already satisfies the `Workflow` tool's own opt-in, so Claude Code's `ultracode` session mode isn't required. On a lighter lead (Fable), drive the same phases with parallel `Agent`/`Bash` calls. See [`opus-orchestrate`](../opus-orchestrate/SKILL.md) / [`fable-orchestrate`](../fable-orchestrate/SKILL.md) for the routing and the decorrelated-peer rationale.
 
 ## Codex invocation mechanism
 
@@ -133,9 +128,7 @@ Build the consolidated Pre-Submit Report by adjudicating across teams.
 - **Asymmetric, cross-refuted.** One team flagged; the other team's cross-checker refuted against the paper. Default action is to drop. The orchestrator can override by re-reading the manuscript directly, in which case retain at one tier below original severity with the note "single-team finding, cross-refuted, retained after orchestrator re-read at <file:line>".
 - **Quote-failed.** The cross-checker could not find the cited verbatim span. Drop as hallucination on the finder's side.
 
-Apply the synthesis rules from `paper-review-lite` § 4 in order. Deduplicate within-team first (multiple agents on the same team flagging the same underlying issue). Then deduplicate across-team (a mutual catch is one entry, not two). Then demote self-conceded critiques (any finding whose own description includes language conceding the point). Then write a single-line Recommendation at the top of the report. Then write the Editor's Note (3–6 paragraph prose memo). Then the issue lists. Then the journal-readiness checklist. Then "What Still Needs Your Input".
-
-The Critical Issues and Recommended Changes tables get one extra column compared to the original `paper-review-lite` report.
+Apply the synthesis rules from `paper-review-lite` § 4 in order. Deduplicate within-team first (multiple agents on the same team flagging the same underlying issue), then across-team (a mutual catch is one entry, not two), then demote self-conceded critiques (any finding whose own description includes language conceding the point). The report format is `paper-review-lite` § 4 exactly — single-line Recommendation at the top, then the Editor's Note (3–6 paragraph prose memo), then Critical / Recommended / Minor lists, then Strengths, then the Journal-Readiness Checklist, then "What Still Needs Your Input" — with one extra column on the Critical Issues and Recommended Changes tables.
 
 ```
 | Severity | Confidence                                      | Location | Issue | Fix |
@@ -145,8 +138,6 @@ The Critical Issues and Recommended Changes tables get one extra column compared
 | CRITICAL | Asymmetric: Claude only, cross-refuted, retained after orchestrator re-read | … | … | … |
 ```
 
-Everything else in the report follows the `paper-review-lite` § 4 format exactly. Top-line Recommendation, then Editor's Note, then Critical / Recommended / Minor lists, then Strengths, then Journal-Readiness Checklist, then What Still Needs Your Input.
-
 ## Codex Phase 2 template (one per dimension, 9 total)
 
 Use the XML block below as the prompt body inside the Bash invocation from § Codex invocation mechanism. Substitute `DIMENSION_INSTRUCTIONS` with the verbatim text of the corresponding agent from `paper-review-lite` § 2 (the full text of Agent 1, Agent 2, …, Agent 9 — do not paraphrase). Substitute `PAPER_PATH` with the absolute manuscript path and `OUTPUT_PATH` with the absolute path to the Codex agent's output file under `.review-tmp/codex/`.
@@ -155,13 +146,13 @@ Use the XML block below as the prompt body inside the Bash invocation from § Co
 <task>
 You are a Critical Reviewer auditing the manuscript at PAPER_PATH for the dimension below.
 
-Posture (required): adversarial but fair. Find every place the argument is weaker than the paper presents it to be. Attack the argument or the data, not the authors. Framing like "fraudulent" or "incompetent" is out of scope. "The claim on line X is not supported by the evidence on line Y" is in scope.
+Posture (required): adversarial but fair. Find every place the argument is weaker than the paper presents it to be. Attack the argument and the evidence, not the authors — "the claim on line X is not supported by the evidence on line Y", never "the authors are incompetent".
 
 Dimension:
 
 DIMENSION_INSTRUCTIONS
 
-Write your findings to OUTPUT_PATH. Do not write to any other file.
+Write your findings to OUTPUT_PATH.
 
 A second model (Claude) is independently performing the same review on the same paper for the same dimension. You will not see its findings. After both passes complete, each model's findings will be verified by the other. Findings without a verbatim quote will be dropped as hallucinations during cross-check.
 </task>
@@ -181,7 +172,7 @@ Severity rubric (apply consistently):
 </output_format>
 
 <action_safety>
-Scope. Read PAPER_PATH and any files it references (bibliography, archive, SI). Write only to OUTPUT_PATH. Do not edit the manuscript or any other file.
+Read PAPER_PATH and any files it references (bibliography, archive, SI). Write only to OUTPUT_PATH; do not edit the manuscript or any other file.
 </action_safety>
 
 <default_follow_through_policy>
@@ -227,7 +218,7 @@ For each finding in the input files, one entry.
 </output_format>
 
 <action_safety>
-Read PAPER_PATH and the files listed in INPUT_FILES. Write only to OUTPUT_PATH. Do not edit the manuscript or the input files.
+Read PAPER_PATH and the files listed in INPUT_FILES. Write only to OUTPUT_PATH; do not edit the manuscript or the input files.
 </action_safety>
 
 <default_follow_through_policy>
@@ -237,24 +228,13 @@ Process every finding in the input files end-to-end. Do not ask clarifying quest
 
 ## Quality Checks
 
-- [ ] Orientation completed by the orchestrator before any review agent launches. Paper structure, SI location, archive location, and design family identified.
-- [ ] For experimental manuscripts, `methods-reporting` invoked in audit mode and its 45-item checklist made the baseline for Agents 1, 2, 6, 7, and 8 on both teams.
-- [ ] For domain-specific manuscripts (conjoint, list-experiment, topic-modeling, text-classification, VLM-OCR), the relevant sibling skill is invoked and its checklist folded into Agent 9 on both teams.
-- [ ] Three subdirectories created under `.review-tmp/`. `claude/`, `codex/`, `cross-check/`.
-- [ ] All 18 Phase 2 calls (9 Claude + 9 Codex) launched in a single parallel message.
-- [ ] Both teams use the same dimension prompts and severity rubric from `paper-review-lite` § 2. No model gets a different job.
+- [ ] For experimental manuscripts, `methods-reporting` invoked in audit mode and its 45-item checklist made the baseline for Agents 1, 2, 6, 7, and 8 on both teams. For conjoint, list-experiment, topic-modeling, text-classification, or VLM-OCR manuscripts, the sibling skill's checklist folded into Agent 9 on both teams.
 - [ ] Codex sub-agents called via `Bash` following § Codex invocation mechanism (`codex exec ... < /dev/null`, `run_in_background: true`, `timeout: 600000`). Absolute paths used for `PAPER_PATH` and `OUTPUT_PATH` in the prompt.
 - [ ] Agents 6 and 7 marked `NA` on both teams for non-experimental or non-preregistered manuscripts.
-- [ ] All 4 Phase 3 cross-check calls launched in a single parallel message after all 18 Phase 2 output files exist.
-- [ ] Phase 3 cross-checkers do not add new findings. Verify, refute, or downgrade only.
-- [ ] Adjudication produces one entry per underlying issue. Across-team deduplication done after within-team deduplication.
-- [ ] `.review-tmp/` (all three subdirectories) deleted after the final report was delivered, unless the user asked to keep it.
-- [ ] Quote-failed findings dropped as hallucinations on the finder's side.
-- [ ] Asymmetric, cross-refuted findings dropped by default. Retention requires an explicit orchestrator re-read of the manuscript and a note on the entry.
-- [ ] Final report annotates each retained Critical / Recommended issue with confidence. Mutual, Asymmetric-confirmed, or Asymmetric-after-adjudication.
-- [ ] Synthesis applies `paper-review-lite` § 4 rules. Single-line Recommendation at top, Editor's Note (3–6 paragraphs) before issue lists, Strengths section present, journal-readiness checklist filled, "What Still Needs Your Input" populated with author-knowledge items.
-- [ ] Every retained issue cites file path and line number, or section name.
-- [ ] Report distinguishes objective errors from subjective suggestions.
+- [ ] All 4 Phase 3 cross-checks launched only after all 18 Phase 2 output files exist. Any Codex agent failure logged in the report rather than silently reducing coverage.
+- [ ] Quote-failed findings dropped as hallucinations on the finder's side. Asymmetric, cross-refuted findings dropped unless the orchestrator re-read the manuscript and noted the override on the entry.
+- [ ] Adjudication produces one entry per underlying issue, each retained Critical / Recommended issue carrying a confidence label and a file path with line number, or a section name.
+- [ ] `.review-tmp/` deleted after the final report was delivered, unless the user asked to keep it.
 
 ## When to reach for this skill vs. siblings
 

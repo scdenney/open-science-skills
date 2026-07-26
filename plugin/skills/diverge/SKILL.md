@@ -16,20 +16,11 @@ Interrupt the default path of jumping to the most probable — and least creativ
 
 ## Heritage and scope
 
-This is an original Open Science Skills workflow grounded in **Creative Preference Optimization** (Ismayilzada et al., 2025; background in [`reference/creative-preference-optimization.md`](reference/creative-preference-optimization.md)). Standard preference alignment (RLHF/DPO) optimizes for the most human-expected output, which is by construction the least surprising one. The paper's most accessible remedy — its own "brainstorm-then-select" baseline — needs no fine-tuning: force divergence before convergence by generating several conceptually distinct approaches, requiring that at least one is surprising and one is novel, and deferring quality and implementation until after selection.
+An original Open Science Skills workflow grounded in **Creative Preference Optimization** (Ismayilzada et al., 2025; background in [`reference/creative-preference-optimization.md`](reference/creative-preference-optimization.md)). Standard preference alignment (RLHF/DPO) optimizes for the most human-expected output, which is by construction the least surprising one. The paper's most accessible remedy — its own "brainstorm-then-select" baseline — needs no fine-tuning: force divergence before convergence, require that at least one approach is surprising and one is novel, and defer quality and implementation until after selection.
 
-Use `diverge` for creative, architectural, or analytical work where more than one non-obvious solution exists. To delegate the brainstorm to a second model family, use the sibling `diverge-codex`.
+Use it wherever more than one non-obvious solution exists — creative, architectural, or analytical work — and not for rote tasks with one correct answer (fix this syntax error).
 
-**Model.** This skill makes no external model call — it runs entirely in whatever model and reasoning effort your current session is already using (Opus, Sonnet, Fable, at whatever effort level is set), not a fixed pin. The sibling `diverge-codex` behaves differently depending on where it runs: invoked from Claude Code (`/oss:diverge-codex`), it shells out to a genuinely separate model, pinned to `gpt-5.6-sol` at `xhigh` effort. Invoked from the Codex CLI (`$diverge-codex`), it spawns a fresh same-family Codex subagent — a clean context, not a cross-model check — so it still runs at whatever model and effort that Codex session is already using, just like this skill.
-
-## When to invoke
-
-Use `/diverge <task>` when:
-- multiple non-obvious implementations exist
-- you want to avoid the conventional approach
-- the task is creative, architectural, or analytical, not purely mechanical
-
-Do not use for rote tasks with one correct answer (e.g., fix this syntax error).
+**Model.** No external model call: this runs in whatever model and reasoning effort the session is already using, not a fixed pin. The sibling `diverge-codex` differs by host. From Claude Code (`/oss:diverge-codex`) it shells out to a genuinely separate model, pinned to `gpt-5.6-sol` at `xhigh` effort. From the Codex CLI (`$diverge-codex`) it spawns a fresh same-family Codex subagent — a clean context, not a cross-model check — so it too runs at the session's own model and effort.
 
 ## Behavior
 
@@ -37,13 +28,11 @@ Given `$ARGUMENTS`:
 
 ### Step 1 — Clarify if needed
 
-If the task is ambiguous about what "good" looks like, ask **one** focused question before proceeding. Skip this if the goal is clear. Do not ask about implementation details.
+If the task is ambiguous about what "good" looks like, ask **one** focused question about the goal, not about implementation. Skip this if the goal is clear.
 
 ### Step 2 — Generate approaches
 
-Produce **3–5 approaches** that are genuinely conceptually distinct. Differences must be in underlying mechanism, not surface vocabulary.
-
-Label each with its primary creativity dimension:
+Produce **3–5 approaches** that differ in underlying mechanism, not surface vocabulary. At least one must be **[Surprising]** and at least one **[Novel]**. Label each with its primary creativity dimension:
 
 - **[Novel]** — semantically far from the conventional solution; different conceptual basis
 - **[Surprising]** — violates the obvious assumption about how this should work; would not be the first answer
@@ -55,19 +44,13 @@ For each approach provide:
 2. How it works — two to three sentences on the mechanism and what makes it distinct
 3. Main tradeoff — one sentence
 
+No markdown header per approach — keep the list scannable.
+
 ### Step 3 — Hold
 
 Do not implement. Present all approaches, then ask:
 
 > "Which approach should I pursue? Or should I synthesize elements from multiple?"
-
-## Constraints
-
-- At least one approach must be **[Surprising]**
-- At least one must be **[Novel]**
-- Approaches must not merely restate each other with different vocabulary
-- Quality matters second in this phase — novelty and surprise come first
-- Do not use markdown headers per approach — keep the list scannable
 
 ## After selection
 

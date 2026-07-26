@@ -7,34 +7,15 @@ description: Scaffold or audit a social-science replication package at a target 
 
 ## Heritage and attribution
 
-The structural conventions in this skill (single-entry-point principle, compact vs. build/analyze layouts, figure/table crosswalk, paper-consistency check, correction workflow, pre-release checklist) come from **Yusaku Horiuchi**'s [replication-package-guide](https://github.com/yhoriuchi/replication-package-guide). Horiuchi's repository README explicitly authorizes AI consumption: it is "designed to be read by humans and by coding agents such as Codex or Claude Code before they prepare, audit, or repair a replication package."
+The structural conventions here — single entry point, compact vs. build/analyze layouts, the figure/table crosswalk, the paper-consistency check, the pre-release checklist — come from **Yusaku Horiuchi**'s [replication-package-guide](https://github.com/yhoriuchi/replication-package-guide), whose README explicitly authorizes agent consumption: it is "designed to be read by humans and by coding agents such as Codex or Claude Code before they prepare, audit, or repair a replication package."
 
-This skill is a **modification**, not a copy.
+This skill modifies rather than copies that guide. The FAIR principles are folded in (Findable, Accessible, Interoperable, Reusable; [Wilkinson et al. 2016](https://doi.org/10.1038/sdata.2016.18); [GO FAIR](https://www.go-fair.org/fair-principles/)) so the scaffolded package is platform-neutral, and platform-specific upload mechanics are dropped: build and audit the local package, generate no upload code. Uploading to Harvard Dataverse, OSF, Zenodo, a journal repository, or an institutional archive belongs to the user and the platform's own tools.
 
-- Repackaged as procedural guidance for Codex (frontmatter, step-by-step instructions, quality checks).
-- Folded in the FAIR principles (Findable, Accessible, Interoperable, Reusable; [Wilkinson et al. 2016](https://doi.org/10.1038/sdata.2016.18); [GO FAIR](https://www.go-fair.org/fair-principles/)) so the scaffolded package is platform-neutral.
-- Dropped platform-specific upload mechanics. This skill builds and audits the local package. Uploading to Harvard Dataverse, OSF, Zenodo, a journal repository, or an institutional archive is left to the user and the platform's tools.
-- Reorganized templates and checklists into a single self-contained skill.
-
-Horiuchi's own caveat applies: "AI is useful for checking, reorganizing, documenting, and catching inconsistencies, but it should not be treated as a substitute for the author's judgment about which files, scripts, data sources, and results are actually part of the replication record." Use this skill as an assistant, not as a substitute for the author's judgment about what belongs in the public package.
-
-If you publish a package built with this skill, cite Horiuchi's guide as the methodological source.
+Horiuchi's caveat carries over: "AI is useful for checking, reorganizing, documenting, and catching inconsistencies, but it should not be treated as a substitute for the author's judgment about which files, scripts, data sources, and results are actually part of the replication record." If the user publishes a package built with this skill, cite Horiuchi's guide as the methodological source.
 
 ## Standard
 
-A replication package is ready when a competent reader can download it, open the package root, run one documented command, and regenerate the published results without hidden manual steps.
-
-Minimum standard:
-
-- One public entry point (`master.R` by convention; `run_replication.R` acceptable when that is the project convention).
-- One authoritative `README.md`.
-- Relative paths only.
-- Public data inputs, or clear restricted-data instructions.
-- Codebook or data dictionary for every analysis-ready dataset.
-- Figure/table crosswalk in paper order.
-- Logs that record inputs, sample sizes, warnings, and session information.
-- Public scripts that are numbered or otherwise ordered.
-- No personal files, caches, credentials, or obsolete exploratory scripts in the public path.
+A replication package is ready when a competent reader can download it, open the package root, run one documented command, and regenerate the published results without hidden manual steps. `master.R` is the entry-point convention; `run_replication.R` is acceptable where that is already the project's convention. The **Pre-Release Checklist** below enumerates what "ready" requires.
 
 ## Instructions
 
@@ -102,7 +83,7 @@ When in doubt, choose compact. Build/analyze is justified only when the build st
     `-- logs/
 ```
 
-Create the directories first, then write the template files in Step 5. Leave `data/`, `code/`, `scripts/`, `figures/`, `tables/`, and `logs/` empty (the user fills them with project content).
+Leave `data/`, `code/`, `scripts/`, `figures/`, `tables/`, and `logs/` empty — the user fills them with project content.
 
 ### Step 5. Write template files
 
@@ -323,14 +304,15 @@ venv/
 Run this after scaffolding is done and the user has filled in placeholders, dropped in data, and written scripts.
 
 - [ ] The package runs in a clean temporary directory.
-- [ ] One public entry point (`master.R`) runs the full public path with one command.
+- [ ] One public entry point runs the full public path with one command.
+- [ ] Public scripts are numbered or otherwise ordered.
 - [ ] All paths are relative.
-- [ ] `README.md` is current and matches the files on disk.
-- [ ] Data dictionaries in `docs/codebook.md` match the public datasets.
+- [ ] One authoritative `README.md`, current and matching the files on disk.
+- [ ] `docs/codebook.md` has a data dictionary for every public analysis-ready dataset.
 - [ ] Figure/table crosswalk in `docs/crosswalk.md` is complete and in paper order.
-- [ ] Logs and `session_info.log` are produced by `master.R` on a successful run.
-- [ ] No credentials, tokens, personal paths, caches, or exploratory files in the public path.
-- [ ] Restricted data, if any, are documented in the README.
+- [ ] `master.R` produces `session_info.log` and per-script logs recording inputs, sample sizes, and warnings.
+- [ ] No credentials, tokens, personal paths, caches, or obsolete exploratory scripts in the public path.
+- [ ] Data inputs are public, or restricted inputs are documented in the README with access instructions and the files that depend on them.
 - [ ] `LICENSE` is filled in.
 - [ ] The final archive has been downloaded from the destination repository and re-run from a clean directory.
 
@@ -353,18 +335,3 @@ If paper source files cannot be included publicly, document whether they were us
 - `replication-package` (this) — scaffold or audit a replication package at a target directory before upload to any repository.
 - `fair-check` — audit a finished manuscript and its accompanying package against the FAIR principles end-to-end. Use after this skill, before submission.
 - `methods-reporting` — check that the manuscript's methods section reports what the package documents (CONSORT, JARS, DA-RT).
-
-## Quality Checks
-
-- [ ] Target directory resolved before any file is created.
-- [ ] Structure choice (compact vs. build/analyze) made explicitly with the user, not inferred silently.
-- [ ] Existing files in the target directory are never overwritten without explicit user confirmation.
-- [ ] All scaffolded files use relative paths.
-- [ ] `README.md` template includes every required section: paper title, authors, journal and DOI, data DOI, verification date, what the package reproduces, run instructions, software requirements, folder structure, data sources, file descriptions, crosswalk reference, citation, license, attribution.
-- [ ] `master.R` skeleton writes `session_info.log` and a runtime line on success.
-- [ ] `docs/crosswalk.md` template is in paper order with separate columns for number, type, short caption, generating script, and output path.
-- [ ] `docs/codebook.md` template includes one entry per analysis-ready dataset.
-- [ ] `.gitignore` excludes `.env`, `*.pem`, `*.key`, editor caches, R session artifacts, Python caches, and OS metadata files.
-- [ ] No Harvard Dataverse, OSF, or other platform-specific upload code is generated. This skill stops at the local package boundary.
-- [ ] Attribution to Horiuchi's replication-package-guide is preserved in the generated `README.md` and is visible in this skill's heritage section.
-- [ ] Final report lists placeholder fields the user must edit before publishing.

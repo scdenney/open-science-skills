@@ -10,30 +10,28 @@ allowed-tools:
 
 # Diverge → Codex
 
-Delegate a task to Codex (GPT-5.6 "Sol" at xhigh effort) with explicit creative divergence instructions. Claude structures the prompt; Codex brainstorms; Claude presents the options for selection; Codex implements the chosen approach. Running the brainstorm on a second model family widens the space of approaches beyond what one model proposes.
+Run the brainstorm on a second model family, which widens the space of approaches beyond what one model proposes. Claude structures the prompt; Codex (GPT-5.6 "Sol" at xhigh effort) brainstorms; Claude presents the options for selection; Codex implements the chosen approach.
 
 ## Heritage and scope
 
-Cross-model sibling of [`diverge`](../diverge/SKILL.md), grounded in **Creative Preference Optimization** (Ismayilzada et al., 2025; background in [`../diverge/reference/creative-preference-optimization.md`](../diverge/reference/creative-preference-optimization.md)). Same brainstorm-then-select discipline, run on a different model whose blind spots differ from Claude's.
+Cross-model sibling of [`diverge`](../diverge/SKILL.md), grounded in **Creative Preference Optimization** (Ismayilzada et al., 2025; background in [`../diverge/reference/creative-preference-optimization.md`](../diverge/reference/creative-preference-optimization.md)). Same brainstorm-then-select discipline, run on a model whose blind spots differ from Claude's.
 
 ## Codex invocation mechanism
 
-Plain Claude Code has no native `codex:codex-rescue` subagent. Every "ask Codex" step below means: use the `Bash` tool to call `codex exec` directly (the same mechanism `paper-review-lite-codex` uses). Requirements:
+Plain Claude Code has no native `codex:codex-rescue` subagent. Every "ask Codex" step below means calling `codex exec` through the `Bash` tool (the same mechanism `paper-review-lite-codex` uses):
 
-- **`--model gpt-5.6-sol -c model_reasoning_effort=xhigh`** — pins Codex explicitly rather than relying on `codex exec`'s own implicit default, so it does not silently drift if that default changes upstream.
+- **`--model gpt-5.6-sol -c model_reasoning_effort=xhigh`** — pins Codex explicitly rather than relying on `codex exec`'s own implicit default, which can drift upstream.
 - **`< /dev/null`** — closes stdin. Without it, `codex exec` hangs on "Reading additional input from stdin…" even when the prompt is passed as a CLI argument. This is the single most common failure mode.
-- **`--skip-git-repo-check`** so it runs regardless of git state, and **`--sandbox`** set per phase: `read-only` for brainstorming (no file writes), `workspace-write` for implementation.
+- **`--skip-git-repo-check`** so it runs regardless of git state, and **`--sandbox`** set per phase: `read-only` for brainstorming, `workspace-write` for implementation.
 - **`timeout: 600000`** (10 min) on the Bash call as a backstop.
 
 The result returns on stdout — read it directly from the Bash output. Treat a non-zero exit, or empty output, as a Codex failure: report it and offer to fall back to `/diverge` (Claude-only).
 
 ## Steps
 
-1. **Take the task.** Use `$ARGUMENTS`. If empty, ask the user what they want to solve.
+1. **Take the task** from `$ARGUMENTS`; if empty, ask the user what they want to solve. If the goal (not the implementation) is ambiguous, ask one focused question before delegating.
 
-2. **Clarify if needed.** If the task is ambiguous about the goal (not the implementation), ask one focused question before delegating. Skip if clear.
-
-3. **Brainstorm via Codex.** Run the brainstorm prompt through `codex exec` (read-only sandbox), substituting `TASK` with the user's request verbatim:
+2. **Brainstorm via Codex**, substituting `TASK` with the user's request verbatim and adding none of your own implementation preferences:
 
    ```bash
    codex exec --model gpt-5.6-sol -c model_reasoning_effort=xhigh --sandbox read-only --skip-git-repo-check "$(cat <<'CODEXEOF'
@@ -42,9 +40,9 @@ The result returns on stdout — read it directly from the Bash output. Treat a 
    )" < /dev/null
    ```
 
-4. **Present approaches** to the user verbatim — do not paraphrase or filter them. Ask which to pursue, or whether to synthesize.
+3. **Present the approaches** to the user verbatim — do not paraphrase, filter, or reorder them. Ask which to pursue, or whether to synthesize.
 
-5. **Implement via Codex.** Run the implementation prompt through `codex exec` (workspace-write sandbox, `-C` set to the project directory), substituting `TASK` and `SELECTED_APPROACH`:
+4. **Implement via Codex** only after selection, switching the sandbox to `workspace-write` and setting `-C` to the project directory:
 
    ```bash
    codex exec --model gpt-5.6-sol -c model_reasoning_effort=xhigh --sandbox workspace-write --skip-git-repo-check -C "<project dir>" "$(cat <<'CODEXEOF'
@@ -71,8 +69,6 @@ For each approach provide:
 - Core mechanism (1 sentence)
 - How it works and what makes it distinct (2–3 sentences)
 - Main tradeoff (1 sentence)
-
-Do not implement. Present all approaches and stop.
 </task>
 
 <constraints>
@@ -80,12 +76,12 @@ At least one approach must be [Surprising].
 At least one must be [Novel].
 Approaches must differ in underlying mechanism, not just vocabulary.
 Prioritize novelty and surprise over immediate quality.
-Do not write any implementation code.
 </constraints>
 
 <structured_output_contract>
-Numbered list only. No preamble. No implementation code.
+Numbered list only. No preamble, no implementation code.
 Format each: number, label, mechanism line, explanation, tradeoff line.
+Present all approaches and stop.
 </structured_output_contract>
 ```
 
@@ -100,10 +96,3 @@ Selected approach: SELECTED_APPROACH
 Implement it fully. Edit files in place where applicable.
 </task>
 ```
-
-## Notes
-
-- Always brainstorm first — never ask Codex to implement on the first delegation.
-- Do not inject your own implementation preferences — let Codex generate the approaches.
-- Present Codex's approaches verbatim; do not paraphrase or filter them.
-- If Codex is unavailable or errors, fall back to `/diverge` (Claude-only).

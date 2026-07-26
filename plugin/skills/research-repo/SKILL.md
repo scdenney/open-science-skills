@@ -15,19 +15,9 @@ allowed-tools:
 
 This skill sets up a new research repository, or audits an existing one, around a single organizing principle: **the source library is the spine of the project, and everything else grows from it.**
 
-A research repo is not a pile of folders. It is a knowledge base (`sources/`) with work built around it. The papers you read become a tracked, LLM-readable corpus; that corpus is keyed to a bibliography; the bibliography is what your manuscript cites; the analysis and writing folders consume the corpus and produce the outputs. Get the spine right and the rest of the repo has an obvious place to live. Get it wrong — PDFs scattered, no Markdown, a bib that does not match what you actually read — and every downstream skill (`literature-review`, `citation-check`, `fact-check`, `paper-tex`) is working on sand.
+`sources/og/` holds the original PDFs and documents — archival, **gitignored** (size + copyright), rarely read directly. `sources/md/` holds their Markdown conversions, **tracked in git**: this is the LLM-readable knowledge base, and *sources are always read from here, not from the PDFs*. `sources/unprocessed/` is the drop zone where new PDFs land until they are named, converted, and filed. `sources/references.bib` keys the corpus to the manuscript — one entry per source, author+year resolvable to its `md/` file, so a `\cite` key maps to a document actually read. A conversion script (`scripts/convert-sources.sh`, OpenDataLoader PDF) and a `process-source` intake command keep the three in sync. Get that spine wrong — PDFs scattered, no Markdown, a bib that does not match what was read — and every downstream skill (`literature-review`, `citation-check`, `fact-check`, `paper-tex`) is working on sand.
 
-The spine has five parts:
-
-1. **`sources/og/`** — original PDFs/documents. Archival, **gitignored** (size + copyright). You rarely read these directly.
-2. **`sources/md/`** — Markdown conversions, **tracked in git**. This is the LLM-readable knowledge base — *always read sources from here, not from the PDFs*.
-3. **`sources/unprocessed/`** — drop zone. New PDFs land here until they are named, converted, and filed.
-4. **`sources/references.bib`** — the bibliography. One entry per source, author+year resolvable to its `md/` file, so the manuscript's `\cite` keys map to documents you have actually read.
-5. **A conversion script + an intake command** — `scripts/convert-sources.sh` (OpenDataLoader PDF) turns `og/*.pdf` into `md/*.md`; a `process-source` command runs the per-PDF intake (identify → rename → convert → add to bib).
-
-Everything else — `data/`, analysis `scripts/`, `manuscript/` or `paper/`, `review/` + `codebook/`, `figures/`, `tables/`, `replication/` — is built outward from that spine, conditioned on what kind of project this is.
-
-**This skill does the architecture.** It does not process individual PDFs (that is `process-source`) and it does not build the public replication package (that is `replication-package`). It creates or audits the structure those skills operate inside.
+Everything else — `data/`, analysis `scripts/`, `manuscript/` or `paper/`, `review/` + `codebook/`, `figures/`, `tables/`, `replication/` — grows outward from that spine, conditioned on what kind of project this is.
 
 ## Instructions
 
@@ -42,7 +32,7 @@ If a repo is half-built (e.g. PDFs exist but no `md/`, or an `og/` with no conve
 
 ### Step 2. Identify the project archetype
 
-The bibliography is the spine of every project; the **outward** folders — and whether a PDF corpus is even appropriate — depend on what the project is. Detect the archetype from concrete signals in the directory (or ask one question if it is genuinely ambiguous). Do not force a paper-centric layout onto a literature review, or a PDF corpus onto a theory paper.
+The bibliography is the spine of every project; the **outward** folders — and whether a PDF corpus is even appropriate — depend on what the project is. Detect the archetype from concrete signals in the directory, or ask one question if it is genuinely ambiguous.
 
 | Archetype | Concrete signals | Outward folders to scaffold |
 |-----------|------------------|------------------------------|
@@ -52,9 +42,7 @@ The bibliography is the spine of every project; the **outward** folders — and 
 | **Lightweight / theory paper** | a manuscript and a `.bib` but no archived PDFs and no large dataset | a `paper/` or `manuscript/` folder and its `.bib`; **no `sources/` PDF corpus** unless the user asks for one |
 | **Mixed** | several of the above | scaffold the union; keep one shared bibliography |
 
-Most projects have a literature corpus **and** head to a paper. When in doubt, scaffold the spine plus `data/`, `scripts/`, and the manuscript folder, and let the project grow the rest.
-
-**Some repos legitimately keep no PDF corpus** — a theory paper, or a short empirical paper with a hand-maintained `.bib`. There the spine is the bibliography alone: do **not** force a `sources/og`/`sources/md` tree. Audit the `.bib` wherever it lives (often `paper/references.bib`) and *offer* — never impose — a source library if the user wants one.
+Most projects have a literature corpus **and** head to a paper; when in doubt, scaffold the spine plus `data/`, `scripts/`, and the manuscript folder, and let the project grow the rest. But some repos legitimately keep no PDF corpus — a theory paper, or a short empirical paper with a hand-maintained `.bib`. There the spine is the bibliography alone: audit the `.bib` wherever it lives (often `paper/references.bib`) and *offer* — never impose — a `sources/og`/`sources/md` tree.
 
 ### Step 3. Scaffold the sources spine
 
@@ -94,13 +82,13 @@ python3 -m venv .venv
 .venv/bin/pip install --upgrade pip opendataloader-pdf
 ```
 
-Create the `AGENTS.md` symlink so a second agent family (e.g. Codex) reads the same root instructions:
+Link `AGENTS.md` to `CLAUDE.md` so a second agent family (e.g. Codex) reads the same root instructions:
 
 ```bash
-ln -s CLAUDE.md AGENTS.md
+test -e AGENTS.md || ln -s CLAUDE.md AGENTS.md
 ```
 
-Finally, smoke-test the pipeline so you hand off something that works, not just something that exists — on an empty `og/` it should print `Nothing new to convert.`:
+Finally, smoke-test the pipeline — on an empty `og/` it should print `Nothing new to convert.`:
 
 ```bash
 ./scripts/convert-sources.sh
@@ -130,7 +118,7 @@ drop in sources/unprocessed/  →  identify (title/authors/year/venue)
   →  (review projects: add inventory row + annotation)
 ```
 
-The per-PDF mechanics are the `process-source` skill's job — the scaffolded `process-source.md` command points at it. Do not reimplement that logic here; this skill guarantees the pipeline *exists and is wired*, `process-source` *runs* it.
+The per-PDF mechanics belong to `process-source`, which the scaffolded `process-source.md` command points at. This skill guarantees the pipeline *exists and is wired*; `process-source` *runs* it.
 
 ### Step 6. The BibTeX contract
 
@@ -138,12 +126,11 @@ The bibliography — `sources/references.bib`, or wherever the project keeps it 
 
 - **One entry per source**, added at intake (Step 5), never in a batch at the end.
 - **Citekey** follows the project's own key style (e.g. `hainmueller_hopkins_yamamoto_2014` or `hainmueller-etal-2014-conjoint`). Do not impose a scheme on an existing project — but keep every key **author+year resolvable to its `md/` filename**, because `citation-check` and `fact-check` map keys to source files by author and year. The filename uses `author-year-slug`; the bib key can differ in punctuation but must point at the same work.
-- **`sources/missing.bib`** (optional, recommended) — a second bib for works that are cited but have **no PDF in `og/`**: paywalled articles with no preprint mirror, books, dissertations, and authoritative web resources (a standard, a DOI registry). Record why each is missing and how to acquire it. This keeps "cited but unread/unfiled" visible instead of silently absent. Some projects track the same information in a `needs_updates.md`-style flag file instead; either works, as long as cited-but-unfiled sources stay visible.
-- The bib is the single source of truth for citations across the repo — `paper-tex`, `citation-check`, and `fact-check` all read it.
+- **`sources/missing.bib`** (optional, recommended) — a second bib for works that are cited but have **no PDF in `og/`**: paywalled articles with no preprint mirror, books, dissertations, authoritative web resources (a standard, a DOI registry). Record why each is missing and how to acquire it, so "cited but unfiled" stays visible instead of silently absent. A `needs_updates.md`-style flag file serves the same purpose if the project already keeps one.
 
 ### Step 7. Audit checklist (audit mode)
 
-Read the existing repo and report each item as **present / partial / missing**. Offer to fix only the gaps; never overwrite without confirmation. If the repo keeps no PDF corpus by design (the lightweight/theory archetype), mark the PDF-corpus items **n/a for this archetype**, not *missing*, and audit the bibliography wherever it actually lives — discover it with `find . -name '*.bib' -not -path './.venv/*' -not -path './.git/*'`.
+Read the existing repo and report each item as **present / partial / missing**. If the repo keeps no PDF corpus by design (the lightweight/theory archetype), mark the PDF-corpus items **n/a for this archetype**, not *missing*, and audit the bibliography wherever it actually lives — discover it with `find . -name '*.bib' -not -path './.venv/*' -not -path './.git/*'`.
 
 **Spine**
 - [ ] `sources/og/`, `sources/md/`, `sources/unprocessed/` all exist.
@@ -161,14 +148,14 @@ Read the existing repo and report each item as **present / partial / missing**. 
 comm -23 <(cd sources/og && ls *.pdf 2>/dev/null | sed 's/\.pdf$//' | sort) \
          <(cd sources/md && ls *.md  2>/dev/null | sed 's/\.md$//'  | sort)
 
-# Bib keys present in the bibliography
+# Bib keys — compare against md/ stems by author+year to catch drift in either
+# direction (a source with no entry, an entry with no source). Keys may use
+# underscores where filenames use hyphens.
 grep -oE '^@[a-zA-Z]+\{[^,]+' sources/references.bib | sed 's/^@[a-zA-Z]*{//' | sort
 
 # Filenames that violate author-year-slug (lowercase-hyphen, four-digit year, slug)
 ls sources/og | grep -vE '^[a-z0-9]+(-[a-z0-9]+)*-(19|20)[0-9]{2}-[a-z0-9-]+\.(pdf|docx)$'
 ```
-
-Compare `md/` stems against the bib keys by author+year (keys may use underscores where filenames use hyphens) to surface drift in either direction — a source with no bib entry, or a bib entry with no source.
 
 **Pipeline**
 - [ ] `scripts/convert-sources.sh` exists and points at this repo's `sources/og` → `sources/md`.
@@ -394,16 +381,5 @@ logs/
 
 - **`research-repo`** (this) — create or audit the *working* repository's structure, anchored on `sources/`. Use at project start, or when a repo has grown messy.
 - **`process-source`** (a global skill, not part of this plugin) — run the per-PDF intake into the structure this skill creates. Use every time a new paper arrives.
-- **`replication-package`** — scaffold or audit the *public* reproducibility package built from the finished paper. Use near submission. (This skill creates the working repo; that one creates the archive.)
+- **`replication-package`** — scaffold or audit the *public* reproducibility package built from the finished paper, near submission. This skill creates the working repo; that one creates the archive.
 - **`literature-review` / `citation-check` / `fact-check`** — consumers of the `sources/md/` + `references.bib` knowledge base this skill establishes.
-
-## Quality checks
-
-- [ ] Mode (scaffold / audit) and archetype decided **before** any file is written; nothing overwritten without confirmation.
-- [ ] Outward folders fit the archetype; no `sources/` PDF corpus forced onto a repo that does not want one.
-- [ ] Scaffold mode initialized git (if needed), verified the toolchain (python3 + Java 11+), and smoke-tested `convert-sources.sh`.
-- [ ] The spine is wired: bibliography present and author+year resolvable to `md/` filenames; `sources/og/` gitignored, `sources/md/` tracked; convert script points at this repo and uses OpenDataLoader PDF (+ pandoc).
-- [ ] `CLAUDE.md` exists and `AGENTS.md` links to it.
-- [ ] Audit mode reported present / partial / n-a / missing and ran the detection recipes for orphan PDFs, bib drift, and naming.
-- [ ] Architecture only: per-PDF intake deferred to `process-source`, the public package to `replication-package`.
-- [ ] Final report lists the next three concrete actions.
