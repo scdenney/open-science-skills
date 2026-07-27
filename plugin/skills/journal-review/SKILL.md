@@ -26,13 +26,26 @@ Not a long exhaustive issue list, and not a takedown.
 3. Copy the manuscript PDF into the slug folder as `manuscript.pdf`. If the editor's invitation letter or the user's notes are available, save them as `context.md` in the same folder.
 4. Read the manuscript yourself once before writing agent prompts. Determine: empirical or theoretical or qualitative; design family (conjoint, list experiment, observational, RCT, ethnography); whether SI / replication archive exists; rough page count and section structure. This shapes which agents will produce useful output (see "When to skip a finder agent" below).
 
-**Orchestration lead.** This referee draft is orchestrated by whatever model you are running — Claude Opus 5 or Fable 5. The orchestrator reads the manuscript, spawns the five finders, the Blue Team, the Chief Reviewer, and Tone Guard, then owns the last-mile checklist; the sub-agents do the finding and drafting. **If you are on Opus, run at medium reasoning effort by default** (raise to high for the recommendation call and for verifying every quoted passage against the PDF — a bounded judgment call, not the sustained orchestration role): express Phase 1 (five finders) → Phase 2 (Blue Team) → Phase 3 (Chief Reviewer) as a `Workflow` — invoking this skill already satisfies the `Workflow` tool's own opt-in, so Claude Code's `ultracode` session mode isn't required. On a lighter lead (Fable), drive the same phases with parallel `Agent` calls and pin the argument-level finders (Breaker, Situator) to Opus. See [`opus-orchestrate`](../opus-orchestrate/SKILL.md) / [`fable-orchestrate`](../fable-orchestrate/SKILL.md) for the routing.
+**Orchestration lead.** This referee draft is orchestrated by whatever model you are running — Claude Opus 5 or Fable 5 — at medium reasoning effort by default (raise to high for the recommendation call and for verifying every quoted passage against the PDF — a bounded judgment call, not the sustained orchestration role). The orchestrator reads the manuscript, spawns the five finders, the Blue Team, the Chief Reviewer, and Tone Guard, then owns the last-mile checklist; the sub-agents do the finding and drafting. Express Phase 1 (five finders) → Phase 2 (Blue Team) → Phase 3 (Chief Reviewer) → Phase 4 (Tone Guard) as a `Workflow` — invoking this skill already satisfies the `Workflow` tool's own opt-in, so Claude Code's `ultracode` session mode isn't required.
+
+**Sub-agent model routing.** Unlike a single-model pipeline, each role below is pinned to the model tier its difficulty warrants — Opus for open-ended argument-level judgment, Fable for the two roles that most reward broad reasoning at lower cost than Opus, Sonnet for mechanical or checklist-bound verification. Each finder's heading states its `Model:` / `Effort:`; use these as the `opts.model` / `opts.effort` passed to `agent()` in the Workflow (or the `model` param on a plain `Agent` call, noting the standalone `Agent` tool has no effort field — fold the effort instruction into the prompt text itself in that case). If a given model tier is unavailable in your environment, fall back one tier down rather than skipping the role. See [`opus-orchestrate`](../opus-orchestrate/SKILL.md) / [`fable-orchestrate`](../fable-orchestrate/SKILL.md) for the general routing patterns this borrows from.
+
+| Role | Model | Effort | Why |
+|---|---|---|---|
+| Breaker | Opus | high | foundational/argument validity — the hardest open-ended judgment call |
+| Situator | Opus | high | literature placement — "the most important assessment for a disciplinary journal" |
+| Butcher | Sonnet | high | table-tracing and empirical-machinery checks — detail-heavy but bounded |
+| Shredder | Sonnet | medium | procedural/documentation cross-checking against the PDF — mechanical |
+| Void | Fable | medium | absence detection benefits from broad reasoning without Opus cost |
+| Blue Team | Sonnet | medium | classification against a fixed A–G taxonomy, not novel judgment |
+| Chief Reviewer | Fable | high | the actual decision-making synthesis — worth the strongest model |
+| Tone Guard | Sonnet | low–medium | pattern-matching against a fixed phrase list |
 
 ## Phase 1 — Five parallel finder agents
 
 Spawn agents 1–5 in a **single message with five Agent tool calls** so they execute concurrently. Each agent's prompt is the role block below, with `{{MANUSCRIPT}}` replaced by the manuscript path and `{{CONTEXT}}` replaced by the target-journal name plus any editor's-letter excerpts and reviewer notes. Each agent writes its raw findings to `<slug>/agent_<n>_<name>.md`.
 
-### Agent 1 — The Breaker
+### Agent 1 — The Breaker (Opus, high effort)
 
 > You are **The Breaker**. You interrogate the fundamental validity of the attached manuscript: its theoretical basis and research design. Other reviewers scrutinize evidence and execution; your role is deeper — examine the intellectual foundations (premises, frameworks, questions chosen) and ask whether the entire argumentative structure is sound.
 >
@@ -58,7 +71,7 @@ Spawn agents 1–5 in a **single message with five Agent tool calls** so they ex
 > ```
 > Quality over quantity. **Guards:** No figure interpretation. Critique the work, not the author. Do not use "fabricated", "deceptive", "deliberately", "lied".
 
-### Agent 2 — The Butcher
+### Agent 2 — The Butcher (Sonnet, high effort)
 
 > You are **The Butcher**. You dissect the empirical machinery of the attached manuscript: the design choices, the measures, the analytical decisions. You ask not just whether it was executed cleanly, but whether it was capable of answering the question posed.
 >
@@ -77,7 +90,7 @@ Spawn agents 1–5 in a **single message with five Agent tool calls** so they ex
 >
 > Output 5–10 issues in the same format as The Breaker. **Guards:** No figure interpretation. Verify table readings coordinate-style: list the exact column headers, trace each datapoint row → column, and check for narrative inversion (text says "A high, B low" but table shows reverse).
 
-### Agent 3 — The Shredder
+### Agent 3 — The Shredder (Sonnet, medium effort)
 
 > You are **The Shredder**. Forensic procedural auditor. You verify what was claimed to have been done is actually documented. You work only with what's in the PDF — no external lookups. If it's not documented, that itself is a finding.
 >
@@ -96,7 +109,7 @@ Spawn agents 1–5 in a **single message with five Agent tool calls** so they ex
 >
 > Output 5–10 issues in the same format. **Guards:** "Not documented" ≠ "did not happen" — be precise.
 
-### Agent 4 — The Void
+### Agent 4 — The Void (Fable, medium effort)
 
 > You are **The Void**. You analyze what isn't in the attached manuscript and ask why. Other reviewers critique what is written; you identify standard or decisive evidence that is conspicuously absent.
 >
@@ -111,7 +124,7 @@ Spawn agents 1–5 in a **single message with five Agent tool calls** so they ex
 >
 > Output 5–10 issues in the same format. **Guards:** Absence ≠ falsity.
 
-### Agent 5 — The Situator
+### Agent 5 — The Situator (Opus, high effort)
 
 > You are **The Situator**. Other agents scrutinize methods and logic. Your job is different: does this manuscript actually advance on existing work, or is it re-stating what the literature already shows?
 >
@@ -153,7 +166,7 @@ Spawn agents 1–5 in a **single message with five Agent tool calls** so they ex
 - **Pure ethnography or interpretive qualitative work** — Butcher and Void checklists assume quantitative social science. Use as scaffolding only; expect to write more of the report yourself.
 - **Outside your expertise** — the Situator cannot replace field knowledge. If you do not know the literature, decline the review rather than running this skill.
 
-## Phase 2 — Blue Team filter
+## Phase 2 — Blue Team filter (Sonnet, medium effort)
 
 Spawn after all five finders have written their files.
 
@@ -174,7 +187,7 @@ Spawn after all five finders have written their files.
 >
 > Output for each issue: `ISSUE n: <title>; TYPE: <A–G>; DEFENSE: <with quote if A/B/F>; KEEP / DROP: <keep if G or strong D; drop if A, E, F, or cleanly acknowledged B>`. **Rules:** Don't introduce anything factually incorrect. Justify "standard" claims (sometimes a low standard *is* the problem). Explain "conservative" logic. Any technical or factual error in a finder's description is Type A and the issue drops.
 
-## Phase 3 — Chief Reviewer synthesis
+## Phase 3 — Chief Reviewer synthesis (Fable, high effort)
 
 Spawn after Blue Team has written its file.
 
@@ -239,7 +252,7 @@ Spawn after Blue Team has written its file.
 > - Do not impute intent. Never write "fabricated," "lied," "fraud," "deceptive," "dishonest," "deliberately."
 > - Total length: 1,200–2,000 words. Shorter is better than longer if the critique is tight.
 
-## Phase 4 — Tone Guard sanitization
+## Phase 4 — Tone Guard sanitization (Sonnet, low–medium effort)
 
 Spawn on the Chief Reviewer's draft.
 
