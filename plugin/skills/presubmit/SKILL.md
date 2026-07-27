@@ -99,8 +99,10 @@ Derive a default slug from the input filename: extension and path stripped, lowe
 Ask which run mode (`AskUserQuestion`):
 
 - **Smoke** — `--stop-stage 2.0`. Metadata extraction + Red Team + numbers auditor. ~15–25 min on a 70-page paper, ~$1–2. Useful for verifying setup or catching show-stoppers fast.
-- **Standard** — full pipeline. ~30–90 min, ~$5–10. The default for a real audit.
+- **Standard** — full pipeline. ~30–90 min, ~$2–4 on a 70–80-page paper (a short article of a few thousand words runs well under $2). The default for a real audit.
 - **Custom** — ask for additional flags (`--code-dir`, `--math`, `--supp`, `--no-copyedit`, `--no-editor-note`, `--start-stage`, `--stop-stage`, `--skip-size-check`).
+
+Cost depends on which of four model tiers (mechanical/forensic/adversarial/synthesis, mapped to Haiku/Sonnet/Opus/Fable) each stage routes to — see the upstream repo's README "Model tier mapping" section for the full breakdown. These are estimates, not a guarantee. The end-of-run cost report has the real total.
 
 ### Step 3 — Construct paths and run
 
