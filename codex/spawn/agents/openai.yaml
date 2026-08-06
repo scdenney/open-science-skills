@@ -1,0 +1,6 @@
+interface:
+  display_name: "Spawn"
+  short_description: "Spawn full peer agent sessions in worktree panes"
+  default_prompt: "Use $spawn to run tasks in full peer sessions, each in its own git worktree and terminal pane."
+policy:
+  allow_implicit_invocation: false

@@ -20,6 +20,8 @@ An original Open Science Skills workflow grounded in **Creative Preference Optim
 
 Use it wherever more than one non-obvious solution exists — creative, architectural, or analytical work — and not for rote tasks with one correct answer (fix this syntax error).
 
+When the task itself is still underspecified (goal, constraints, success criteria unsettled), interview before diverging. Matt Pocock's `grill-me` (see [`RECOMMENDED.md`](../../../RECOMMENDED.md)) resolves the decision tree the approaches must answer to. Grilling settles the question, and diverge generates genuinely distinct answers to a settled one.
+
 **Model.** No external model call: this runs in whatever model and reasoning effort the session is already using, not a fixed pin. The sibling `diverge-codex` differs by host. From Claude Code (`/oss:diverge-codex`) it shells out to a genuinely separate model, pinned to `gpt-5.6-sol` at `xhigh` effort. From the Codex CLI (`$diverge-codex`) it spawns a fresh same-family Codex subagent — a clean context, not a cross-model check — so it too runs at the session's own model and effort.
 
 ## Behavior
@@ -28,7 +30,7 @@ Given `$ARGUMENTS`:
 
 ### Step 1 — Clarify if needed
 
-If the task is ambiguous about what "good" looks like, ask **one** focused question about the goal, not about implementation. Skip this if the goal is clear.
+If the task is ambiguous about what "good" looks like, ask **one round** of goal questions — the frontier of what blocks generation now, numbered, each with your recommended answer; questions about the goal, never the implementation. One round, then generate: a task that needs a second round needs the full interview (`grill-me`, see Heritage), not this skill. Skip this entirely if the goal is clear.
 
 ### Step 2 — Generate approaches
 

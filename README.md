@@ -6,15 +6,15 @@
 
 [![Claude Code](https://img.shields.io/badge/Claude_Code-plugin-D97757?logo=anthropic&logoColor=white)](https://code.claude.com/docs/en/skills)
 [![OpenAI Codex](https://img.shields.io/badge/OpenAI_Codex-library-111111?logo=openai&logoColor=white)](codex/README.md)
-[![version](https://img.shields.io/badge/version-2.20.1-blue)](https://github.com/scdenney/open-science-skills/releases)
+[![version](https://img.shields.io/badge/version-2.21.0-blue)](https://github.com/scdenney/open-science-skills/releases)
 [![license](https://img.shields.io/badge/license-CC%20BY--NC%204.0-lightgrey)](LICENSE)
-[![Claude skills](https://img.shields.io/badge/Claude_skills-39-D97757?logo=anthropic&logoColor=white)](#skills)
-[![Codex skills](https://img.shields.io/badge/Codex_skills-37-111111?logo=openai&logoColor=white)](#skills)
-[![updated](https://img.shields.io/badge/updated-July%202026-green)](https://github.com/scdenney/open-science-skills/commits/main)
+[![Claude skills](https://img.shields.io/badge/Claude_skills-41-D97757?logo=anthropic&logoColor=white)](#skills)
+[![Codex skills](https://img.shields.io/badge/Codex_skills-39-111111?logo=openai&logoColor=white)](#skills)
+[![updated](https://img.shields.io/badge/updated-August%202026-green)](https://github.com/scdenney/open-science-skills/commits/main)
 [![sources](https://img.shields.io/badge/sources-150%2B-purple)](SOURCES.md)
 [![PRs welcome](https://img.shields.io/badge/PRs-welcome-brightgreen)](#contributing)
 
-Open Science Skills is a library of 39 agentic skills for Claude Code, with a parallel 37-skill library for OpenAI Codex, written for computational social scientists and digital humanists. Each skill is meant to work the way the field expects. Identify the data-generating process before proposing an estimator, and design experiments and instruments to a standard. Drafts are held to established reporting norms.
+Open Science Skills is a library of 41 agentic skills for Claude Code, with a parallel 39-skill library for OpenAI Codex, written for computational social scientists and digital humanists. Each skill is meant to work the way the field expects. Identify the data-generating process before proposing an estimator, and design experiments and instruments to a standard. Drafts are held to established reporting norms.
 
 The library follows the research lifecycle. It covers survey design, list experiments, topic modeling, LLM text classification, VLM-based OCR pipelines, manuscript QA, multi-model orchestration, and transparent reporting under APSA, JARS, DA-RT, TOP, and FAIR expectations. Every skill is grounded in published methods sources and based on best practices for writing skills. See [SOURCES.md](SOURCES.md) for the bibliography of 150+ works consulted.
 
@@ -22,12 +22,12 @@ This is the toolkit I use in my own research, and it grows as I add sources and 
 
 | Platform | Skills | Invoke |
 |---|---|---|
-| [Claude Code](https://code.claude.com/docs/en/skills) | 39, as the [`oss` plugin](plugin/skills) | `/oss:skill-name` |
-| [OpenAI Codex](https://developers.openai.com/codex/skills) | 37, as the [`codex/` library](codex/README.md) | `$skill-name` |
+| [Claude Code](https://code.claude.com/docs/en/skills) | 41, as the [`oss` plugin](plugin/skills) | `/oss:skill-name` |
+| [OpenAI Codex](https://developers.openai.com/codex/skills) | 39, as the [`codex/` library](codex/README.md) | `$skill-name` |
 
 The two libraries differ only in invocation and tooling. The Codex side omits `presubmit`, `fable-orchestrate`, and `opus-orchestrate`, and adds `46-orchestrate`. See [`codex/README.md`](codex/README.md).
 
-[Quick start](#quick-start) · [Skills](#skills) · [How skills trigger](#how-skills-trigger) · [Installation](#installation) · [Sources](#knowledge-base-and-sources) · [Contributing](#contributing) · [License](#license)
+[Quick start](#quick-start) · [Skills](#skills) · [Recommended](#recommended-companion-skills) · [How skills trigger](#how-skills-trigger) · [Installation](#installation) · [Sources](#knowledge-base-and-sources) · [Contributing](#contributing) · [License](#license)
 
 ---
 
@@ -54,7 +54,7 @@ On Codex there is no plugin. Install the skills library instead (see [Codex](#co
 
 ## Skills
 
-Skills are grouped by where they fall in a project. Unless the Platform column says otherwise, a skill runs on both Claude Code (`/oss:name`) and Codex (`$name`). One row, `46-orchestrate`, belongs to the Codex library only and is not part of the 39-skill plugin.
+Skills are grouped by where they fall in a project. Unless the Platform column says otherwise, a skill runs on both Claude Code (`/oss:name`) and Codex (`$name`). One row, `46-orchestrate`, belongs to the Codex library only and is not part of the 41-skill plugin.
 
 ### Project Setup
 
@@ -68,6 +68,7 @@ Skills are grouped by where they fall in a project. Unless the Platform column s
 |---|---|---|---|
 | [fable-orchestrate](plugin/skills/fable-orchestrate/SKILL.md) | Claude Code | `/oss:fable-orchestrate` | Run a multi-model workflow with Fable 5 as lead. As the strongest model on the team it keeps the hard reasoning itself. Mechanical work goes to a Sonnet subagent and wide or parallel reasoning to Opus subagents. Calls with a high blast radius that it cannot cheaply verify go to a GPT-5.6 Codex peer for a decorrelated cross-check. |
 | [opus-orchestrate](plugin/skills/opus-orchestrate/SKILL.md) | Claude Code | `/oss:opus-orchestrate` | The same workflow with Opus 5 as lead, at medium reasoning effort by default (raise to high for a reasoning-heavy session). Workflow fan-out comes with the skill's own opt-in, so ultracode is not required. Opus reasons on hard problems itself and delegates only to fan out. The Codex peer is gpt-5.6-sol. |
+| [spawn](plugin/skills/spawn/SKILL.md) | Both | `/oss:spawn` | Spawn full peer sessions in new terminal panes — real sessions, not subagents — each in its own git worktree on a directed task with a contract brief. Detects herdr, tmux, or a plain terminal and takes the strongest path; the lead monitors without babysitting and merges each branch back. |
 | [advisor](plugin/skills/advisor/SKILL.md) | Both | `/oss:advisor` / `$advisor` | Consult an independent second reviewer before committing to an interpretation or calling a task done. Your session is the main seat, on Opus 5 or on Sonnet 5 for cheaper sustained work. The advisor seat is Fable 5, pinned to max reasoning effort. The [Codex counterpart](codex/advisor/SKILL.md) always runs Sol/xhigh. |
 | [46-orchestrate](codex/46-orchestrate/SKILL.md) | Codex | `$46-orchestrate` | Sol at high effort owns orchestration and sign-off. It routes bounded work to Terra workers and reserves Luna for tightly specified mechanical work. |
 
@@ -82,6 +83,7 @@ Skills are grouped by where they fall in a project. Unless the Platform column s
 
 | Skill | Platform | Command | What it does |
 |---|---|---|---|
+| [research-wayfinder](plugin/skills/research-wayfinder/SKILL.md) | Both | `/oss:research-wayfinder` | Plan a study as a decision map that outlives any single session — typed tickets for estimand, identification, power, and measurement, resolved one per session until the design is pre-registerable. Adapted from Matt Pocock's wayfinder. |
 | [conjoint-design](plugin/skills/conjoint-design/SKILL.md) | Both | `/oss:conjoint-design` | Design conjoint experiments, including the attribute architecture and the statistical power that architecture implies. Covers AMCE and AMIE estimation. |
 | [conjoint-diagnostics](plugin/skills/conjoint-diagnostics/SKILL.md) | Both | `/oss:conjoint-diagnostics` | Check a conjoint design and its analysis for integrity, measurement error, external validity, and sound interpretation. |
 | [conjoint-cleaning](plugin/skills/conjoint-cleaning/SKILL.md) | Both | `/oss:conjoint-cleaning` | Reshape a Qualtrics conjoint export into analysis-ready long format, with choice mapping, translation, pilot detection, and validation. |
@@ -148,11 +150,17 @@ Skills are grouped by where they fall in a project. Unless the Platform column s
 
 ---
 
+## Recommended companion skills
+
+Third-party skills this library recommends and builds on — credited, not claimed, and not counted in the badges. From [Matt Pocock's skills](https://github.com/mattpocock/skills) (MIT): **grill-me** (a frontier-rounds design interview; pairs with `diverge`, settling the question before the approaches diverge), **wayfinder** (decision-map planning for software work; the source concept for `research-wayfinder`), and **handoff / claude-handoff** (handoff documents for a successor session; the seed of `spawn`). See [RECOMMENDED.md](RECOMMENDED.md) for the full write-up and [`third-party/mattpocock/`](third-party/mattpocock) for pinned, unmodified reference copies.
+
+---
+
 ## How skills trigger
 
 Most skills load on their own. When your prompt matches a skill's description, Claude Code or Codex reads that skill into context and follows it, so you usually don't need to name anything. You can also invoke any skill explicitly, with `/oss:skill-name` in Claude Code or `$skill-name` in Codex.
 
-The orchestration and delegated-review skills (`fable-orchestrate`, `opus-orchestrate`, `46-orchestrate`, `advisor`, the `model-committee` family, `diverge-codex`, and `paper-review-lite-codex`) run only when invoked explicitly, because they start subagents or call an external model.
+The orchestration and delegated-review skills (`fable-orchestrate`, `opus-orchestrate`, `46-orchestrate`, `spawn`, `advisor`, the `model-committee` family, `diverge-codex`, and `paper-review-lite-codex`) run only when invoked explicitly, because they start subagents, full peer sessions, or an external model.
 
 ---
 
@@ -160,7 +168,7 @@ The orchestration and delegated-review skills (`fable-orchestrate`, `opus-orches
 
 ### Claude Code
 
-The recommended install is the plugin, shown in [Quick start](#quick-start). It registers the marketplace and installs all 39 skills and their slash commands. The command prefix is `oss:`, for open science skills. The marketplace and the repository are both named `open-science-skills`.
+The recommended install is the plugin, shown in [Quick start](#quick-start). It registers the marketplace and installs all 41 skills and their slash commands. The command prefix is `oss:`, for open science skills. The marketplace and the repository are both named `open-science-skills`.
 
 To try the plugin for one session without installing:
 
@@ -222,7 +230,7 @@ Manual copy gives auto-trigger only. Slash commands require the plugin.
 
 ### Codex
 
-Codex discovers skills under `.agents/skills` (repository) and `~/.agents/skills` (user-wide). From the repository root, install all 37 skills user-wide:
+Codex discovers skills under `.agents/skills` (repository) and `~/.agents/skills` (user-wide). From the repository root, install all 39 skills user-wide:
 
 ```bash
 mkdir -p "$HOME/.agents/skills"
@@ -259,3 +267,5 @@ This project is licensed under [Creative Commons Attribution-NonCommercial 4.0 I
 The `citation-check`, `literature-review`, `figures`, `tables`, and `figure-table-audit` skills remix workflow ideas from [Cheng-I Wu's Academic Research Skills for Claude Code](https://github.com/Imbad0202/academic-research-skills), also licensed CC BY-NC 4.0. The instructions here are rewritten for this repository's open-science and experimental-social-science scope.
 
 The `replication-package` skill adapts the structural conventions in [Yusaku Horiuchi's replication-package-guide](https://github.com/yhoriuchi/replication-package-guide) (the source for single-entry-point, compact vs. build/analyze layouts, figure/table crosswalk, paper-consistency check, correction workflow, and pre-release checklist). FAIR-principle integration and Claude Code/Codex skill packaging are added on top. Harvard Dataverse and other platform-specific upload mechanics are not included. Cite Horiuchi's guide if you publish a package built with this skill.
+
+The `spawn` and `research-wayfinder` skills adapt concepts from [Matt Pocock's skills](https://github.com/mattpocock/skills) (MIT): `spawn` generalizes his `claude-handoff` from one background successor to managed multi-session peers, and `research-wayfinder` reworks his `wayfinder` decision map from software specs to experimental design. Unmodified reference copies of the originals are vendored under [`third-party/mattpocock/`](third-party/mattpocock) with his MIT license; see [RECOMMENDED.md](RECOMMENDED.md).

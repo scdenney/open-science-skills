@@ -18,10 +18,11 @@ You are the **orchestrator** — Claude Opus 5, reasoning `/effort` at **medium*
 
 The `Workflow` tool is what compensates for not being Fable: for substantive work with structure, author and run a Workflow script — deterministic fan-out to subagents — rather than a hand-driven delegation loop. Invoking this skill already satisfies that tool's own opt-in requirement (a skill whose instructions call for it), so Workflow fan-out is available at any effort level, with no `ultracode` session mode and no forced `xhigh` as the price of admission.
 
-Three handles do the driving:
+Four handles do the driving:
 - **Workflow** — the `Workflow` tool: a script that fans out `agent()` calls (parallel, pipeline, loop-until-dry) with deterministic control flow. The default for anything with structure.
 - **Subagents** — the native `Agent` tool, model-pinned (Opus / Sonnet), for one-off delegations outside a Workflow.
 - **Codex peer** — `${CLAUDE_PLUGIN_ROOT}/skills/opus-orchestrate/codex-peer.sh`, a verified wrapper around `codex exec` (a different-vendor GPT-5.6 engineer, `gpt-5.6-sol` by default).
+- **Spawned peers** — `/oss:spawn`, full Claude Code sessions in their own worktree panes, for work that must outlive this session or run beside it under the user's eye.
 
 ## The team
 
@@ -77,7 +78,8 @@ Switch before context accumulates: prompt caching is scoped to a specific model,
 | 5 | mechanical **and** fully specified (no design decision left; success is objectively checkable) | **fast-worker** (Sonnet), or a Workflow of fast-workers if it fans out |
 | 6 | reasoning-heavy but **wide** — decomposes into many independent hard units, or would bloat your context, or wins from parallel fan-out | **author a Workflow** — parallel/pipeline `deep-reasoner` (Opus) + `fast-worker` (Sonnet) stages |
 | 7 | a genuinely different prior is the point (novel problem, suspected blind spot, "am I framing this wrong?"), or you're looping | **Codex** (instead of, or after, deep-reasoner) |
-| 8 | anything left over | **do it yourself** |
+| 8 | a full peer session is the point — the work must **survive this session**, run long beside it, stay **user-steerable in its own pane**, or needs **its own worktree** or permission surface | **`/oss:spawn`** — a full Claude Code peer; brief it with the same contract, monitor it, merge its branch back |
+| 9 | anything left over | **do it yourself** |
 
 Row 3 is the pivotal difference from the Fable variant: you are the same model as the `deep-reasoner`, so hard thinking only leaves your own head when row 6's signals (width, context hygiene, parallelism) or row 4's (blind independence) actually fire.
 
@@ -106,6 +108,10 @@ Two equivalent forms — both verified in this environment:
 - **No setup needed:** `Agent(subagent_type: "general-purpose", model: "opus", …)` for reasoning, `model: "sonnet"` for mechanical work.
 
 Spawn slow work with `run_in_background: true` (the default) and keep planning; you are notified on completion. Consume the subagent's **final message** — it is the return value, not a chat reply.
+
+### Spawn a full peer session (cross-session delegation)
+
+When row 8 fires, delegate to a **full Claude Code session**, not a subagent. `/oss:spawn` creates a git worktree on `spawn/<slug>`, starts a peer in a new pane (herdr, then tmux, then `claude --bg`), and sends one kickoff prompt pointing at a `.spawn/brief.md` written with the same delegation contract you give any delegate. Monitor with one backgrounded `herdr agent wait` and never babysit. Keep integration ownership: the peer commits to its branch and stops, and you review and merge it yourself. A subagent stays cheaper for anything bounded that dies happily with your turn, and Workflow's `{isolation: "worktree"}` already covers in-session write isolation. Spawn is for lifetime and steerability, not just isolation.
 
 ### Mixing fast-worker (Sonnet) and deep-reasoner (Opus)
 

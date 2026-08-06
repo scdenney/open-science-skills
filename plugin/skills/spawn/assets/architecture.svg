@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" role="img">
+<title>spawn architecture: a lead session detects its environment (herdr, tmux, or plain terminal), creates a git worktree per task, starts full peer Claude Code sessions in new panes, briefs each by contract, monitors without babysitting, and merges each branch back.</title>
+<defs><marker id="sp-o" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="12" markerHeight="12" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L10,5 L0,10 z" fill="#C0562F"/></marker></defs>
+<rect x="0" y="0" width="1600" height="900" fill="#F2EEE4"/>
+<rect x="170" y="320" width="400" height="260" rx="22" ry="22" fill="#C4674A" stroke="#2F2F2A" stroke-width="2.5" stroke-dasharray="7 5"/>
+<text x="370" y="395" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="38" fill="#1E1E1B" font-weight="bold" text-anchor="middle">Lead</text>
+<text x="370" y="433" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="22" fill="#F7EFE2" font-style="italic" text-anchor="middle">your session</text>
+<text x="370" y="460" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="22" fill="#F7EFE2" font-style="italic" text-anchor="middle">briefs, monitors, merges</text>
+<text x="370" y="510" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="20" fill="#3B2A22" font-style="italic" text-anchor="middle">herdr &#8594; tmux &#8594; claude --bg</text>
+<rect x="1010" y="120" width="420" height="180" rx="16" ry="16" fill="#FEFDFB" stroke="#2F2F2A" stroke-width="2"/>
+<text x="1220" y="178" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="28" fill="#1E1E1B" font-weight="bold" text-anchor="middle">Peer session</text>
+<text x="1220" y="210" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="20" fill="#4A4A45" font-style="italic" text-anchor="middle">full Claude Code &#183; own pane</text>
+<path d="M 1074,238 A 26 7 0 0 0 1126,238 L 1126,266 A 26 7 0 0 1 1074,266 Z" fill="#FEFDFB" stroke="#2F2F2A" stroke-width="2"/><ellipse cx="1100" cy="238" rx="26" ry="7" fill="#FEFDFB" stroke="#2F2F2A" stroke-width="2"/>
+<text x="1150" y="260" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="18" fill="#4A4A45" font-style="italic" text-anchor="start">worktree &#183; spawn/task-a</text>
+<rect x="1010" y="360" width="420" height="180" rx="16" ry="16" fill="#FEFDFB" stroke="#2F2F2A" stroke-width="2"/>
+<text x="1220" y="418" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="28" fill="#1E1E1B" font-weight="bold" text-anchor="middle">Peer session</text>
+<text x="1220" y="450" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="20" fill="#4A4A45" font-style="italic" text-anchor="middle">full Claude Code &#183; own pane</text>
+<path d="M 1074,478 A 26 7 0 0 0 1126,478 L 1126,506 A 26 7 0 0 1 1074,506 Z" fill="#FEFDFB" stroke="#2F2F2A" stroke-width="2"/><ellipse cx="1100" cy="478" rx="26" ry="7" fill="#FEFDFB" stroke="#2F2F2A" stroke-width="2"/>
+<text x="1150" y="500" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="18" fill="#4A4A45" font-style="italic" text-anchor="start">worktree &#183; spawn/task-b</text>
+<rect x="1010" y="600" width="420" height="180" rx="16" ry="16" fill="#FEFDFB" stroke="#2F2F2A" stroke-width="2"/>
+<text x="1220" y="658" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="28" fill="#1E1E1B" font-weight="bold" text-anchor="middle">Peer session</text>
+<text x="1220" y="690" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="20" fill="#4A4A45" font-style="italic" text-anchor="middle">Claude Code or Codex &#183; own pane</text>
+<path d="M 1074,718 A 26 7 0 0 0 1126,718 L 1126,746 A 26 7 0 0 1 1074,746 Z" fill="#FEFDFB" stroke="#2F2F2A" stroke-width="2"/><ellipse cx="1100" cy="718" rx="26" ry="7" fill="#FEFDFB" stroke="#2F2F2A" stroke-width="2"/>
+<text x="1150" y="740" font-family="Georgia, &#39;Times New Roman&#39;, serif" font-size="18" fill="#4A4A45" font-style="italic" text-anchor="start">worktree &#183; spawn/task-c</text>
+<line x1="570" y1="380" x2="1010" y2="210" stroke="#C0562F" stroke-width="3" marker-end="url(#sp-o)"/>
+<line x1="570" y1="450" x2="1010" y2="450" stroke="#C0562F" stroke-width="3" marker-end="url(#sp-o)"/>
+<line x1="570" y1="520" x2="1010" y2="690" stroke="#C0562F" stroke-width="3" marker-end="url(#sp-o)"/>
+<text x="790" y="425" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="22" fill="#C0562F" font-style="italic" text-anchor="middle">contract brief &#183; .spawn/brief.md</text>
+<path d="M 1010,760 C 860,830 700,790 575,565" fill="none" stroke="#C0562F" stroke-width="3" stroke-dasharray="7 5" marker-end="url(#sp-o)"/>
+<text x="800" y="822" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="22" fill="#C0562F" font-style="italic" text-anchor="middle">branch merged back by the lead</text>
+<line x1="541" y1="861" x2="716" y2="861" stroke="#B9B2A0" stroke-width="1"/>
+<line x1="884" y1="861" x2="1059" y2="861" stroke="#B9B2A0" stroke-width="1"/>
+<text x="800" y="870" font-family="Georgia, &apos;Times New Roman&apos;, serif" font-size="28" fill="#C0562F" font-style="italic" text-anchor="middle">spawn</text>
+</svg>

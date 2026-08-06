@@ -1,0 +1,4 @@
+interface:
+  display_name: "Research Wayfinder"
+  short_description: "Plan research as a decision map that outlives sessions"
+  default_prompt: "Use $research-wayfinder to chart or work the project's design decision map."

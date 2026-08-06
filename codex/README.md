@@ -1,10 +1,10 @@
 <p align="center">
-  <img src="https://img.shields.io/badge/OpenAI_Codex-37_open--science_skills-111111?style=for-the-badge&logo=openai&logoColor=white" alt="OpenAI Codex — 37 open-science skills">
+  <img src="https://img.shields.io/badge/OpenAI_Codex-39_open--science_skills-111111?style=for-the-badge&logo=openai&logoColor=white" alt="OpenAI Codex — 39 open-science skills">
 </p>
 
 # Codex skills
 
-This directory contains 37 Codex-native Open Science Skills. They mirror the Claude Code library with three intentional differences:
+This directory contains 39 Codex-native Open Science Skills. They mirror the Claude Code library with three intentional differences:
 
 - `presubmit` is omitted.
 - `opus-orchestrate` is omitted because it depends on Claude Code's `Workflow` tool for dynamic multi-agent orchestration, which has no Codex equivalent.
@@ -39,9 +39,9 @@ See the official [Codex skills documentation](https://developers.openai.com/code
 | Area | Skills |
 |---|---|
 | Project setup | [`research-repo`](research-repo/SKILL.md) |
-| Orchestration | [`46-orchestrate`](46-orchestrate/SKILL.md), [`advisor`](advisor/SKILL.md) |
+| Orchestration | [`46-orchestrate`](46-orchestrate/SKILL.md), [`advisor`](advisor/SKILL.md), [`spawn`](spawn/SKILL.md) |
 | Ideation | [`diverge`](diverge/SKILL.md), [`diverge-codex`](diverge-codex/SKILL.md) |
-| Research design | [`conjoint-cleaning`](conjoint-cleaning/SKILL.md), [`conjoint-design`](conjoint-design/SKILL.md), [`conjoint-diagnostics`](conjoint-diagnostics/SKILL.md), [`cross-national-design`](cross-national-design/SKILL.md), [`list-experiment`](list-experiment/SKILL.md), [`survey-design`](survey-design/SKILL.md) |
+| Research design | [`conjoint-cleaning`](conjoint-cleaning/SKILL.md), [`conjoint-design`](conjoint-design/SKILL.md), [`conjoint-diagnostics`](conjoint-diagnostics/SKILL.md), [`cross-national-design`](cross-national-design/SKILL.md), [`list-experiment`](list-experiment/SKILL.md), [`research-wayfinder`](research-wayfinder/SKILL.md), [`survey-design`](survey-design/SKILL.md) |
 | Analysis | [`llm-calibration-logprobs`](llm-calibration-logprobs/SKILL.md), [`model-committee`](model-committee/SKILL.md), [`model-committee-fable`](model-committee-fable/SKILL.md), [`model-committee-sol`](model-committee-sol/SKILL.md), [`model-council-voting`](model-council-voting/SKILL.md), [`text-classification`](text-classification/SKILL.md), [`topic-modeling`](topic-modeling/SKILL.md) |
 | Corpus processing | [`post-ocr-cleanup`](post-ocr-cleanup/SKILL.md), [`vlm-ocr-evaluation`](vlm-ocr-evaluation/SKILL.md), [`vlm-ocr-pipeline`](vlm-ocr-pipeline/SKILL.md) |
 | Writing and reporting | [`hypothesis-building`](hypothesis-building/SKILL.md), [`literature-review`](literature-review/SKILL.md), [`methods-reporting`](methods-reporting/SKILL.md), [`narrative-building`](narrative-building/SKILL.md), [`paper-tex`](paper-tex/SKILL.md), [`pre-registration-writing`](pre-registration-writing/SKILL.md) |
@@ -60,5 +60,7 @@ One sandbox constraint applies to all three variants. Their `codex-member.sh` (G
 **`$paper-review-lite-codex`** keeps cross-model review by using Codex as lead and Claude Code's `claude -p` interface as the independent peer. It discloses and confirms external-credit use before running. Under sandbox, a `claude -p` call was observed to hang rather than complete, because network access is restricted. Read the `SKILL.md` before assuming a stalled call will resolve on its own.
 
 **`$46-orchestrate`** is explicit-invocation only. Its default is a `gpt-5.6-sol` lead at `high` effort. The lead owns decomposition, hard decisions, integration, and final verification. It delegates bounded, independently checkable work down to `gpt-5.6-terra` through explicit out-of-band one-shots. `gpt-5.6-luna` is reserved for fully specified mechanical work with objective checks. Do not use `xhigh`/Ultra. Native in-process `spawn_agent` children inherit the lead's model and effort and cannot be assigned Terra or Luna, so they are useful only for live coordination or context isolation — not cost-tier routing. Nested cross-tier calls need an interactive or escalated parent session, and in headless mode the skill must not promise them.
+
+**`$spawn`** drives full peer sessions through the herdr socket (`~/.config/herdr/herdr.sock`), which lives outside the workspace. Verified 2026-08-06 on the Codex CLI (gpt-5.6-sol): under `workspace-write` the socket connect fails with `PermissionDenied: Operation not permitted`. Under `danger-full-access`, `herdr status` connects and reports the server. A Codex lead therefore needs an explicitly authorized full-access session to spawn, or it prints the exact command sequence for the user to run in a normal shell. The skill's preflight gate encodes this, fail-closed. Explicit-invocation only.
 
 **`$advisor`** is this library's single-turn, independent, read-only GPT-5.6 advisor. It always runs `gpt-5.6-sol` at `xhigh` (Extra high) effort, the flagship tier at its strongest routine setting, because the point of the consult is a stronger reviewer rather than a cheap one. It does not inherit the caller's effort and never uses Max/Ultra. The consult needs an unsandboxed or escalated live Codex session because it launches a nested `codex exec`. A headless session must report that the independent review is unavailable rather than silently self-reviewing.
