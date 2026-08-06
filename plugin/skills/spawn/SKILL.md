@@ -54,7 +54,7 @@ herdr agent prompt "$slug" "Read .spawn/brief.md and begin. Reply here when the 
 
 `--base <ref>` on `worktree create` pins the baseline when main is moving under you.
 
-Permissions default to interactive at normal levels: the visible pane is the safety mechanism, and herdr surfaces `blocked` the moment the peer asks. Pass `-- --permission-mode acceptEdits` when the brief confines writes to the worktree — the worst it can do stays confined to its own working copy, which you review before merging. Skip-permissions mode only on the user's explicit request: the worktree only confines file edits, and shell commands the peer runs can still touch anything on the machine.
+Permissions match yours, not a hardcoded default. Before starting the peer, read your own pane to see your live mode: `herdr agent read "$HERDR_PANE_ID" --lines 3`. The status line names it directly (for example, "accept edits on" or "bypass permissions on"). Pass the matching flag after `--`, `--permission-mode <mode>`, one of `acceptEdits | auto | bypassPermissions | manual | dontAsk | plan`. Skip this and the peer falls back to Claude Code's own configured default (`~/.claude/settings.json`'s `permissions.defaultMode`), which can silently diverge from what you're actually running. This very session, for instance, is configured to `auto` but its live status line currently reads `bypassPermissions`, because the mode was cycled mid-session — only the self-read catches that gap. The visible pane is still the safety net either way, since herdr surfaces `blocked` the moment the peer asks for something its mode doesn't cover. If your own mode already grants broad access, the peer inherits that same exposure: worktree isolation confines its *file* edits, never its shell commands.
 
 ## Write the brief first
 
@@ -126,7 +126,8 @@ Manage with `claude agents` — coarser steering, same brief, same merge-back.
 - `agent prompt --wait` from an idle agent demands an observed state change within 5000 ms or returns `agent_prompt_stalled` — and it matches *states*, not turns, so an already-working agent's current turn can satisfy it. Use the two-step wait idiom instead.
 - `agent wait` (and `agent prompt --wait`) are **indefinite without `--timeout`**. Always bound them.
 - **A worktree sees only committed state.** Uncommitted lead-side edits are invisible to the peer — commit first, or copy the file into the worktree, and name the baseline commit in the brief.
-- A fresh peer at normal permissions sits `blocked` at its first permission prompt until someone answers. Attend its first minute, or start with `-- --permission-mode acceptEdits` when writes are confined to the worktree.
+- A peer whose mode still prompts (e.g. `manual`, `dontAsk`, plain `auto`) sits `blocked` at its first permission prompt until someone answers. Attend its first minute, or pass the lead's own live mode (see Permissions above) so the peer starts already matched to what you're running.
+- Forgot to pass a mode? The peer used Claude Code's configured default, not yours — check with `herdr agent read <name> --lines 3` and restart it with the right `--permission-mode` if the two diverge.
 - `agent prompt` submits a *turn*; TUI dialogs need `agent send-keys`.
 - A peer starts on the **user's** default model and effort, not yours — pin with `-- --model … --effort …` when the tier matters (observed 2026-08-06: a Fable lead spawned a Sonnet-default peer).
 - Lost an id → `herdr worktree list`, `herdr agent list`, `herdr api snapshot`.
