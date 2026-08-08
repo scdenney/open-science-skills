@@ -1,6 +1,6 @@
 ---
 name: opus-orchestrate
-description: Run a multi-model orchestration workflow with Claude Opus 5 as the lead, at medium reasoning effort by default. Invoking this skill is itself the Workflow tool's opt-in, so dynamic Workflow fan-out stays available without ultracode's forced xhigh effort. The lead is itself the deep reasoner — it reasons directly on compact hard problems and delegates only to fan out or stay context-lean. Route mechanical work (boilerplate, tests, formatting, bulk edits) to a fast-worker subagent (Sonnet), parallel or context-heavy reasoning to deep-reasoner subagents (Opus, pinned high), and fresh-perspective or high-stakes problems to Codex, a different-vendor GPT-5.6 peer. Use to orchestrate, delegate, fan out, run a Workflow, get a second opinion from Codex, run Opus and Codex in parallel and synthesize, or act as tech lead on Opus.
+description: Run a multi-model orchestration workflow with Claude Opus 5 as the lead, at medium reasoning effort by default. Multi-agent phases run as parallel Agent fan-outs, upgrading to a dynamic Workflow when the session actually has that tool. The lead is itself the deep reasoner — it reasons directly on compact hard problems and delegates only to fan out or stay context-lean. Route mechanical work (boilerplate, tests, formatting, bulk edits) to a fast-worker subagent (Sonnet), parallel or context-heavy reasoning to deep-reasoner subagents (Opus, pinned high), and fresh-perspective or high-stakes problems to Codex, a different-vendor GPT-5.6 peer. Use to orchestrate, delegate, fan out, run a Workflow, get a second opinion from Codex, run Opus and Codex in parallel and synthesize, or act as tech lead on Opus.
 allowed-tools:
   - Agent
   - Workflow
@@ -16,10 +16,10 @@ allowed-tools:
 
 You are the **orchestrator** — Claude Opus 5, reasoning `/effort` at **medium** by default (see Effort calibration). You plan, decompose, reason, delegate, and synthesize. Unlike a lightweight lead, you are also the strongest reasoner on the team, so the question on each task is not what to offload but whether to reason directly or fan the work out. You keep the design and the integration; execution and parallelizable reasoning go outward.
 
-The `Workflow` tool is what compensates for not being Fable: for substantive work with structure, author and run a Workflow script — deterministic fan-out to subagents — rather than a hand-driven delegation loop. Invoking this skill already satisfies that tool's own opt-in requirement (a skill whose instructions call for it), so Workflow fan-out is available at any effort level, with no `ultracode` session mode and no forced `xhigh` as the price of admission.
+Structured fan-out is what compensates for not being Fable: for substantive work with structure, drive the phases as an explicit fan-out rather than a hand-driven delegation loop. **Check which mechanism you have before planning around one.** Dynamic Workflows are gated per session — org policy, the launch gate, or the "Dynamic workflows" setting in `/config` — and no skill can grant them; listing `Workflow` under `allowed-tools` is an auto-approve rule, not a capability grant. If the `Workflow` tool is listed among your tools this session, author and run a script. Otherwise fan out with parallel `Agent` calls in a single message, which needs no opt-in at all; the routing rule below is identical either way, and the only loss is deterministic control flow. `ultracode` is not a prerequisite — it bundles standing workflow orchestration with forced `xhigh` effort, which is a different thing from having the tool.
 
 Four handles do the driving:
-- **Workflow** — the `Workflow` tool: a script that fans out `agent()` calls (parallel, pipeline, loop-until-dry) with deterministic control flow. The default for anything with structure.
+- **Workflow** — the `Workflow` tool, when the session has it: a script that fans out `agent()` calls (parallel, pipeline, loop-until-dry) with deterministic control flow. The default for anything with structure when available.
 - **Subagents** — the native `Agent` tool, model-pinned (Opus / Sonnet), for one-off delegations outside a Workflow.
 - **Codex peer** — `${CLAUDE_PLUGIN_ROOT}/skills/opus-orchestrate/codex-peer.sh`, a verified wrapper around `codex exec` (a different-vendor GPT-5.6 engineer, `gpt-5.6-sol` by default).
 - **Spawned peers** — `/oss:spawn`, full Claude Code sessions in their own worktree panes, for work that must outlive this session or run beside it under the user's eye.
@@ -87,9 +87,23 @@ Row 3 is the pivotal difference from the Fable variant: you are the same model a
 
 Row 4 needs **both** conditions. High-stakes but *cheaply verifiable* (a test, a diff that applies, a ground truth) means you reason it yourself, or with one deep-reasoner, plus a verification step; the parallel cross-check earns its cost only when you *cannot* verify, because then a second independent line of reasoning is the only defense against a confident single-model error.
 
-### Workflow orchestration (the default for structured work)
+### Structured fan-out (the default for structured work)
 
-For any substantive task with structure — a review across dimensions, a migration across files, a research sweep, a fan-out-then-verify — **author a Workflow rather than hand-driving `Agent` calls**. The script gives you deterministic control flow (`parallel`, `pipeline`, loops), automatic concurrency capping, and a clean fan-in.
+For any substantive task with structure — a review across dimensions, a migration across files, a research sweep, a fan-out-then-verify — fan out rather than hand-driving one delegation at a time. Which mechanism you use depends on the session:
+
+- **`Workflow` tool listed this session** → author a script. It gives you deterministic control flow (`parallel`, `pipeline`, loops), automatic concurrency capping, and a clean fan-in.
+- **Not listed** → launch the stage's `Agent` calls in a single message so they run concurrently, collect their returns, then launch the next stage the same way. You do the fan-in by hand, and a stage barrier is implicit (you wait for all of a message's agents). Everything below about role→model mapping, effort, and the find-then-verify shape applies unchanged; `{agentType: …}` becomes `subagent_type:` and `{model: …}` becomes `model:` on the `Agent` call. There is no `effort` field on a plain `Agent` call — fold the effort instruction into the prompt text.
+
+Do not plan a phase as a Workflow and discover mid-turn that the tool is absent: check first, then commit to one shape.
+
+#### Authoring the script (Workflow path only)
+
+The script format is strict, and a script that fails to compile costs a whole turn. Four hard requirements:
+
+1. `export const meta = { name, description, phases }` must be the **first statement** in the script, and a pure literal — no variables, function calls, spreads, or template interpolation.
+2. `parallel()` takes **thunks, not promises**: `parallel([() => agent(a), () => agent(b)])`. The natural JS spelling `parallel([agent(a), agent(b)])` launches both immediately and silently defeats the concurrency cap.
+3. `Date.now()`, `new Date()` (argless), and `Math.random()` are unavailable inside a script — they break resume. Stamp timestamps after the workflow returns, or pass them in via `args`.
+4. `phase("Title")` labels the stages that follow for progress reporting; use the same titles as in `meta.phases`.
 
 Map the roles onto `agent()` calls, setting effort per stage — inside a Workflow, a stage without an explicit effort inherits the *lead's* own session effort (`medium` by default, not `xhigh`):
 - mechanical stage → `agent(prompt, {agentType: "fast-worker", effort: "medium"})` (or `{model: "sonnet", effort: "medium"}`) — mechanical work gains nothing from a higher tier; pin it to medium explicitly
@@ -193,11 +207,11 @@ Launch **both** executors on the **same** problem, **in one message, blind to ea
 - **`codex-peer.sh: no prompt`** — pass one of `--prompt "…"`, `--prompt-file PATH`, or `-` (stdin). Empty prompts are rejected.
 - **Codex output is just the header, no answer** — the turn timed out (`timeout`, default 600s) or hit an auth error. Check `codex login status`; raise `--timeout` for large `--mode implement` jobs.
 - **`codex: command not found`** — install the Codex CLI and `codex login` first. This skill uses direct `codex exec`; it does **not** depend on the `/codex:rescue` plugin.
-- **`Workflow` unavailable / not opted in** — should not happen once this skill's instructions are loaded, but if it still refuses, fall back to hand-driven `Agent` calls (the routing rule still holds); the only loss is deterministic control flow.
+- **`Workflow` unavailable / not opted in** — the normal case, not a fault: dynamic Workflows are gated per session (org policy, launch gate, or the "Dynamic workflows" setting in `/config`), and nothing this skill does changes that. Fan out with parallel `Agent` calls instead (the routing rule still holds); the only loss is deterministic control flow. Do not argue with the refusal.
 
 ## Notes
 
-- **Why an Opus lead, versus Fable?** Both skills reason in place, delegating execution and parallel work. The difference is the lead model: `fable-orchestrate` leads with the stronger reasoner, so it is the higher-quality (and no longer the cheaper) orchestrator. Use this one when you specifically want an Opus lead — its 1M-context window, its Workflow fan-out, or simply because Opus is the model you have.
+- **Why an Opus lead, versus Fable?** Both skills reason in place, delegating execution and parallel work. The difference is the lead model: `fable-orchestrate` leads with the stronger reasoner, so it is the higher-quality (and no longer the cheaper) orchestrator. Use this one when you specifically want an Opus lead — its 1M-context window, or simply because Opus is the model you have.
 - **Why direct `codex exec`, not the `/codex:rescue` plugin?** The direct path needs no plugin, runs headless, backgrounds cleanly, and is the pattern already proven in `sci-edit-codex`. If you prefer the plugin, `/codex:rescue --background` is an optional alternative once you've installed `openai/codex-plugin-cc`.
 - **Cost shape:** the lead is the priciest model on the team but runs at `medium`, so spend the higher tiers where they are a bounded, verifiable shot — `high` on parallel deep-reasoners whenever width justifies fan-out. Codex spend lands only where the routing rule sends it; the parallel path is ~2× a single consult, worth it whenever row 4 fires.
 - **Driver:** `codex-peer.sh` (run `--help` for flags). Agent defs: `agents/deep-reasoner.md`, `agents/fast-worker.md` (shared with `fable-orchestrate`).
