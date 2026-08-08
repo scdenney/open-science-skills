@@ -1,14 +1,14 @@
 <p align="center">
-  <img src="https://img.shields.io/badge/OpenAI_Codex-39_open--science_skills-111111?style=for-the-badge&logo=openai&logoColor=white" alt="OpenAI Codex — 39 open-science skills">
+  <img src="https://img.shields.io/badge/OpenAI_Codex-37_open--science_skills-111111?style=for-the-badge&logo=openai&logoColor=white" alt="OpenAI Codex — 37 open-science skills">
 </p>
 
 # Codex skills
 
-This directory contains 39 Codex-native Open Science Skills. They mirror the Claude Code library with three intentional differences:
+This directory contains 37 Codex-native Open Science Skills. They mirror the Claude Code library with three intentional differences:
 
 - `presubmit` is omitted.
 - `opus-orchestrate` is omitted because it depends on Claude Code's `Workflow` tool for dynamic multi-agent orchestration, which has no Codex equivalent.
-- [`46-orchestrate`](46-orchestrate/SKILL.md) replaces `fable-orchestrate`. `gpt-5.6-sol` at high effort owns orchestration, routing bounded work to Terra and reserving Luna for tightly specified mechanical work.
+- [`46-orchestrate`](46-orchestrate/SKILL.md) replaces `fable-orchestrate`. `gpt-5.6-sol` at xhigh effort owns orchestration, routing bounded work to Terra and reserving Luna for tightly specified mechanical work.
 
 Every skill is a self-contained directory with `SKILL.md`, `agents/openai.yaml`, and only the references, scripts, or assets it needs. Codex supports these skills in the CLI, IDE extension, and app.
 
@@ -59,7 +59,7 @@ One sandbox constraint applies to every chair. `codex-member.sh` (GPT-5.6 Sol, o
 
 **`$paper-review-lite-codex`** keeps cross-model review by using Codex as lead and Claude Code's `claude -p` interface as the independent peer. It discloses and confirms external-credit use before running. Under sandbox, a `claude -p` call was observed to hang rather than complete, because network access is restricted. Read the `SKILL.md` before assuming a stalled call will resolve on its own.
 
-**`$46-orchestrate`** is explicit-invocation only. Its default is a `gpt-5.6-sol` lead at `high` effort. The lead owns decomposition, hard decisions, integration, and final verification. It delegates bounded, independently checkable work down to `gpt-5.6-terra` through explicit out-of-band one-shots. `gpt-5.6-luna` is reserved for fully specified mechanical work with objective checks. Do not use `xhigh`/Ultra. Native in-process `spawn_agent` children inherit the lead's model and effort and cannot be assigned Terra or Luna, so they are useful only for live coordination or context isolation — not cost-tier routing. Nested cross-tier calls need an interactive or escalated parent session, and in headless mode the skill must not promise them.
+**`$46-orchestrate`** is explicit-invocation only. Its default is a `gpt-5.6-sol` lead at `xhigh` effort, which its fail-closed preflight enforces. The lead owns decomposition, hard decisions, integration, and final verification. It delegates bounded, independently checkable work down to `gpt-5.6-terra` through explicit out-of-band one-shots. `gpt-5.6-luna` is reserved for fully specified mechanical work with objective checks. Do not use Ultra. Native in-process `spawn_agent` children inherit the lead's model and effort and cannot be assigned Terra or Luna, so they are useful only for live coordination or context isolation — not cost-tier routing. Nested cross-tier calls need an interactive or escalated parent session, and in headless mode the skill must not promise them.
 
 **`$spawn`** drives full peer sessions through the herdr socket (`~/.config/herdr/herdr.sock`), which lives outside the workspace. Verified 2026-08-06 on the Codex CLI (gpt-5.6-sol): under `workspace-write` the socket connect fails with `PermissionDenied: Operation not permitted`. Under `danger-full-access`, `herdr status` connects and reports the server. A Codex lead therefore needs an explicitly authorized full-access session to spawn, or it prints the exact command sequence for the user to run in a normal shell. The skill's preflight gate encodes this, fail-closed. Explicit-invocation only.
 
