@@ -18,7 +18,7 @@ Read [`reference/protocol.md`](reference/protocol.md) completely before running 
 
 ## Pick the chair
 
-The chair is a parameter, not a separate workflow. Three slash commands select it; the protocol, the drivers, and all three rounds are identical whichever chair runs.
+The chair is a parameter, not a separate workflow. Three slash commands select it; the protocol, the drivers, and all three rounds are identical whichever chair runs, with exactly one exception the table below states — under a Sol chair the GPT member drops to Terra.
 
 | Chair | Invoked by | Chair pin | Chair effort | GPT member | Chair invocation |
 | --- | --- | --- | --- | --- | --- |
