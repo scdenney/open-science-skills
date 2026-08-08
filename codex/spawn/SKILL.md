@@ -46,7 +46,13 @@ herdr agent prompt "$slug" "Read .spawn/brief.md and begin. Reply here when the 
 
 `--base <ref>` on `worktree create` pins the baseline when main is moving under you.
 
-Permissions match yours, not a hardcoded default. Before starting the peer, read your own pane to see your live approval setting: `herdr agent read "$HERDR_PANE_ID" --lines 3`. A Claude peer takes `-- --permission-mode <mode>` with the matching value (`acceptEdits | auto | bypassPermissions | manual | dontAsk | plan`); a Codex peer takes its own equivalent sandbox or approval flags after `--`. Skip this and the peer falls back to its own tool's configured default, which can silently diverge from what you're actually running — check, don't assume. The visible pane is still the safety net either way, since herdr surfaces `blocked` the moment a peer asks for something its mode doesn't cover. If your own mode already grants broad access, the peer inherits that same exposure: worktree isolation confines its *file* edits, never its shell commands.
+Permissions match yours, not a hardcoded default. Before starting the peer, read your own pane to see your live approval setting, and read wide enough to actually find it:
+
+```bash
+herdr agent read "$HERDR_PANE_ID" --lines 30 | grep -iE "bypass permissions|accept edits|plan mode|auto|manual|don.t ask"
+```
+
+The status line names the mode directly (for example, `⏵⏵ bypass permissions on (shift+tab to cycle)`; verified live on herdr 0.7.5). Match whichever mode phrase the status line shows — the modes render as distinct phrases and the exact strings beyond the verified ones may differ by version, one more reason never to guess. A tight read such as `--lines 3` is unreliable here: it works only when the status line is the last thing rendered, and this skill is routed to from leads with background work running — exactly the state whose task list pushes the status line out of the last few rows. If the grep returns nothing, widen it with `--source visible` before concluding anything. **Do not pass a mode you did not actually read** — guessing reintroduces the default-fallback bug this self-read exists to prevent. A Claude peer takes `-- --permission-mode <mode>` with the matching value (`acceptEdits | auto | bypassPermissions | manual | dontAsk | plan`); a Codex peer takes its own equivalent sandbox or approval flags after `--`. Skip this and the peer falls back to its own tool's configured default, which can silently diverge from what you're actually running — check, don't assume. The visible pane is still the safety net either way, since herdr surfaces `blocked` the moment a peer asks for something its mode doesn't cover. If your own mode already grants broad access, the peer inherits that same exposure: worktree isolation confines its *file* edits, never its shell commands.
 
 ## Write the brief first
 
@@ -95,7 +101,7 @@ Under a restricted sandbox, both fallbacks are user-run too. The tmux socket and
 - `agent wait` is **indefinite without `--timeout`**. Always bound it.
 - **A worktree sees only committed state.** Uncommitted lead-side edits are invisible to the peer — commit first, and name the baseline commit in the brief.
 - A peer with an interactive approval policy sits `blocked` at an approval or question UI until someone answers; a peer running with approvals disabled rejects disallowed actions instead. Attend its first minute, or pass the lead's own live mode (see Permissions above) so the peer starts already matched to what you're running.
-- Forgot to pass a mode? The peer used its own tool's configured default, not yours — check with `herdr agent read <name> --lines 3` and restart it with the right flag if the two diverge.
+- Forgot to pass a mode? The peer used its own tool's configured default, not yours — check with `herdr agent read <name> --lines 30` (grep for the mode string as above) and restart it with the right flag if the two diverge.
 - `agent prompt` submits a *turn*; TUI dialogs need `agent send-keys`.
 - A peer starts on the **user's** default model and effort, not yours — pin with agent flags after `--` when the tier matters (observed 2026-08-06: a Fable lead spawned a Sonnet-default peer).
 - `HERDR_*` variables exist only inside herdr — and spawned tabs inherit them, so peers can themselves spawn.

@@ -11,7 +11,7 @@ Read [`references/protocol.md`](references/protocol.md) completely before runnin
 
 ## Pick the chair
 
-One skill, three chairs. The chair is a parameter, not a separate skill — the former `$model-committee-fable` and `$model-committee-sol` are now the `fable` and `sol` rows below. Ask the user which chair they want if they did not say; default to `opus`.
+One skill, three chairs. The chair is a parameter, not a separate skill — the former `$model-committee-fable` and `$model-committee-sol` are now the `fable` and `sol` rows below. The protocol, the drivers, and all three rounds are identical whichever chair runs, with exactly one exception the table states: under a Sol chair the GPT member drops to Terra. Ask the user which chair they want if they did not say; default to `opus`.
 
 | chair | GPT member | Claude member | Chair pin | Why this chair |
 |---|---|---|---|---|
