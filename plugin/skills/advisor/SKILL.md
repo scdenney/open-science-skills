@@ -20,13 +20,15 @@ allowed-tools:
 | Main | **Opus 5**, or Sonnet 5 for cheaper sustained work | Holds the task, the context, and the decision. Does the work. |
 | Advisor | **Fable 5**, always | Reads one briefing, returns one review. Never edits files. |
 
-The asymmetry is the design. The advisor seat is pinned to Fable and the script guards it — no silent fallback to another model family, since a same-family fallback would defeat the point of asking. The main seat is whichever model the session is already running; a Fable session gets a fresh, isolated Fable instance with no anchoring from the conversation. Nothing carries over from the caller except the working directory (`-C`) — not the conversation, and not the effort level.
+The asymmetry is the design. The advisor seat is pinned to Fable and the script guards it — no silent fallback to another model family, since a same-family fallback would defeat the point of asking. The main seat is whichever model the session is already running; a Fable session gets a fresh, isolated Fable instance with no anchoring from the conversation. Nothing carries over from the caller except the working directory (`-C`) — not the conversation, and not the effort level. The consult also runs `--safe-mode`, which starts the advisor with **all customizations disabled**: no `CLAUDE.md`, no skills, no plugins, no hooks, no MCP servers, no custom commands or agents. It sees the files in that directory and nothing else — not a normal session scoped to the directory, which would load `CLAUDE.md`.
 
 When this skill is called from inside an orchestration (`fable-orchestrate`, `opus-orchestrate`), the orchestrating lead is the main seat and Fable's consult is one bounded advisory call — not a delegation.
 
 ## Compose the briefing yourself
 
 The native tool forwards your whole transcript automatically. This script cannot: it starts a brand-new `claude` process with no memory of this conversation. Everything the advisor needs has to be in the briefing — the task, what you have done, the current approach or the specific claim, and the precise question. File paths and line numbers, the actual claim, not "does this look right?"
+
+- **Inline the standards the advice depends on.** Because of `--safe-mode` the advisor never reads the repository's `CLAUDE.md` or any installed skill, so a project convention, a methodological requirement, or a house style the answer turns on has to be quoted into the briefing. Asking "does this meet our reporting standard?" without stating the standard gets you a generic answer that looks confident.
 
 That is the only real difference from the native tool. Independent judgment, read-only scope, and the timing of the call are all meant to match.
 
