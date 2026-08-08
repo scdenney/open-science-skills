@@ -47,6 +47,8 @@ Do not consult for simple orientation or routine, cheaply verifiable work. On lo
 
 4. Read the output, verify factual claims where possible, and record why you follow or decline any material recommendation.
 
+Codex-plugin result-handling guidance (stop after presenting review findings) applies to code-review handoffs, not here: this skill's contract is that the caller reads the advice, weighs it against primary evidence, and acts — presenting the advisor's text and stopping is not a completed consult.
+
 The spawned session is `--sandbox read-only` and `--ephemeral`; it must not edit files. `scripts/sol-advisor.sh --check` verifies that the Codex CLI is available.
 
 ## Decision rules

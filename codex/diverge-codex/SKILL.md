@@ -41,6 +41,8 @@ Send the selected approach, original task, constraints, and acceptance checks ba
 
 The lead agent owns integration. Inspect the resulting diff and verification output, fix integration defects, and report the final outcome.
 
+Codex-plugin result-handling guidance (stop after presenting review findings) applies to code-review handoffs, not here: Phase 3 begins only after the user has selected an approach, and the selected approach is meant to be implemented and integrated, not merely reported.
+
 ## Fallbacks
 
 - If subagents are unavailable, state that the independent-context path is unavailable and run `$diverge` locally.

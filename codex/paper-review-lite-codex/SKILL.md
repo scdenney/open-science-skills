@@ -98,6 +98,8 @@ Apply these rules in order:
 - **Quote failed:** drop.
 - **Reviewer failed:** record reduced coverage; never convert missing output into a pass.
 
+Codex-plugin result-handling guidance (stop after presenting review findings) applies to code-review handoffs, not here: the adjudication rules above are instructions to merge the two cohorts into one report, so stopping at the raw cohort findings leaves the skill unfinished.
+
 Deduplicate by underlying issue, not wording. Then follow `$paper-review-lite` Phase 4 to write the recommendation, editor's note, severity-ranked issues, strengths, readiness checklist, and “What Still Needs Your Input.” Add a `Confidence` column to critical and recommended findings.
 
 ## Reduced-diversity mode
