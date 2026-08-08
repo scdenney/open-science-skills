@@ -9,7 +9,7 @@ description: "Draft or audit scientific introductions. Use for argument logic, f
 
 ## Workflow
 
-Author or audit an introduction by walking these five steps in order. Each step has a specific output; do not proceed until the prior step's output exists in the draft. See `reference/example-funnel.md` for a worked example.
+Author or audit an introduction by walking these five steps in order. Each step has a specific output; do not proceed until the prior step's output exists in the draft. See `references/example-funnel.md` for a worked example.
 
 ### Step 1 — Why: establish the substantive motivation
 Output: one or two paragraphs naming the real-world social/political tension the study addresses, the specific "invisible" the design will reveal, and the analytical joint where existing theory is silent or conflicted. Do not frame the motivation as a gap-in-literature; frame it as a stake in the world.

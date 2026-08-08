@@ -7,7 +7,7 @@ description: Delegate creative divergence to a fresh Codex subagent before imple
 
 Use a fresh subagent to reduce anchoring from the lead agent's conversation history. Same brainstorm-then-select discipline as `$diverge`; both contexts run Codex, so this buys a clean context rather than cross-model diversity — never describe it as an independent model family.
 
-Read [`../diverge/reference/creative-preference-optimization.md`](../diverge/reference/creative-preference-optimization.md) only when the user asks for the rationale or when refining the creativity criteria.
+Read [`../diverge/references/creative-preference-optimization.md`](../diverge/references/creative-preference-optimization.md) only when the user asks for the rationale or when refining the creativity criteria.
 
 ## Gate delegation
 

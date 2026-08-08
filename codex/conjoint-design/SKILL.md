@@ -7,7 +7,7 @@ description: "Design conjoint experiments covering attributes, power, and AMCE/A
 
 ## Instructions
 
-> Worked example (attribute table → power calculation → PAP tier assignment): see `reference/example.md`.
+> Worked example (attribute table → power calculation → PAP tier assignment): see `references/example.md`.
 
 ### 1. Attribute Architecture
 - **Orthogonality:** Ensure every attribute is independent of every other attribute to allow for the estimation of causal effects for each component.

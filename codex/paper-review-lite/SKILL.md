@@ -145,7 +145,7 @@ A 3–6 paragraph prose memo, in your own voice, summarizing the path to a revis
 
 "What Still Needs Your Input" lists items the review cannot resolve because they require author knowledge: ethics approval numbers, funding grant details, journal-specific formatting requirements, embargo status of data, or factual claims only the author can verify.
 
-Every issue in the report carries a file path and line number (or section name), and objective errors (wrong numbers, broken references) are distinguished from subjective suggestions (writing style, framing). `reference/example-report.md` is a filled example of the whole report.
+Every issue in the report carries a file path and line number (or section name), and objective errors (wrong numbers, broken references) are distinguished from subjective suggestions (writing style, framing). `references/example-report.md` is a filled example of the whole report.
 
 ## When to reach for `presubmit` instead
 

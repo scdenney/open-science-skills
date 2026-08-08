@@ -7,7 +7,7 @@ description: "Design VLM-based OCR pipelines. Use for model selection, prompting
 
 ## Instructions
 
-For a worked language-specific transcription prompt (pre-reform Cyrillic) and a per-page JSON output schema with `uncertain_spans`, `layout_markers`, and `flags`, see `reference/prompt-and-schema.md`.
+For a worked language-specific transcription prompt (pre-reform Cyrillic) and a per-page JSON output schema with `uncertain_spans`, `layout_markers`, and `flags`, see `references/prompt-and-schema.md`.
 
 ### 1. Model Selection
 

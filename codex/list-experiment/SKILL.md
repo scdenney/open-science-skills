@@ -92,4 +92,4 @@ description: Design and diagnose list experiments (item count technique).
 
 ## Example
 
-For a worked illustration — a four-item control list for a clientelism / vote-buying sensitive item, with expected prevalences, floor/ceiling tail calculations, a pre-field NFC simulation, and the specific `ict.test()` / `ict.hausman.test()` diagnostic calls — see `reference/example-clientelism.md`.
+For a worked illustration — a four-item control list for a clientelism / vote-buying sensitive item, with expected prevalences, floor/ceiling tail calculations, a pre-field NFC simulation, and the specific `ict.test()` / `ict.hausman.test()` diagnostic calls — see `references/example-clientelism.md`.

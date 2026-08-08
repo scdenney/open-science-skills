@@ -68,7 +68,7 @@ This section covers upstream documentation that makes transparent reporting poss
 ### 6. Conjoint-Specific Reporting
 When the experiment uses a conjoint or factorial vignette design, report the complete attribute table (with levels and reference categories), any randomization constraints and their justification, the task structure (number of tasks, forced choice vs. rating, attribute and profile randomization), clearly distinguished primary and secondary DVs with exact wording, all post-block items, and the effective sample size (Respondents × Tasks × Profiles). For factorial vignettes, also report the assembly template and worked examples. The primary methodological references are Hainmueller, Hopkins, and Yamamoto (2014) and Bansak, Hainmueller, Hopkins, and Yamamoto (2021, *Advances in Experimental Political Science*).
 
-> **Conjoint-specific reporting:** see [reference/conjoint-reporting.md](reference/conjoint-reporting.md).
+> **Conjoint-specific reporting:** see [references/conjoint-reporting.md](references/conjoint-reporting.md).
 
 ### 7. Validity Framework
 - **Four Validity Types:** Evaluate the design against Druckman's (2022) four validity types: (1) *construct validity* (do measures capture the intended concepts?), (2) *statistical conclusion validity* (are the statistical inferences correct?), (3) *internal validity* (is the causal claim warranted?), and (4) *external validity* (does the finding generalize?). Random assignment provides internal validity; representative sampling provides generalizability -- these are independent contributions (Mutz 2011).
@@ -85,6 +85,6 @@ When the experiment uses a conjoint or factorial vignette design, report the com
 
 The full 45-item reporting checklist synthesizes the 19-item APSA Experimental Section rubric (Gerber et al. 2014), JARS-Quant (Appelbaum et al. 2018; APA 2020) as condensed by Lakens (2025), DA-RT principles (Lupia and Elman 2014; Nosek et al. 2015), conjoint best practice (Hainmueller, Hopkins, and Yamamoto 2014; Bansak et al. 2021), and survey-quality recommendations (Stantcheva 2023). Items are grouped into four blocks: Core Reporting (1--19), Conjoint-Specific Reporting (20--28), Design Transparency (29--40), and Survey Design Quality (41--45). No single authority mandates all 45 as a unit; treat the list as a *recommended* reporting ceiling, not a minimum-mandatory floor.
 
-For a paragraph-level worked example illustrating how items 1--19 can be compactly reported in ~650 words of prose plus named supplementary materials, see [reference/example-methods-paragraph.md](reference/example-methods-paragraph.md).
+For a paragraph-level worked example illustrating how items 1--19 can be compactly reported in ~650 words of prose plus named supplementary materials, see [references/example-methods-paragraph.md](references/example-methods-paragraph.md).
 
-> **Full checklist:** see [reference/checklist.md](reference/checklist.md).
+> **Full checklist:** see [references/checklist.md](references/checklist.md).

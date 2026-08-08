@@ -21,7 +21,7 @@ description: "Design and validate LLM-based text classification. Use for codeboo
 - Allow multi-label assignment when responses may reflect more than one construct. Specify this explicitly in the prompt — models default to single-label output unless instructed otherwise.
 - Include a residual category (e.g., `none_of_above` or `uncodeable`) for responses that are too vague, too short, or off-topic. Define this category as precisely as the substantive codes (Halterman & Keith 2025).
 - Iterate the codebook through pilot testing. Examine disagreements between LLM output and hand-coding to identify ambiguous definitions, then revise. Most codebook problems are definition problems, not model problems (Halterman & Keith 2025).
-- For a fully-worked example of a codebook with all five components filled in for a realistic three-category classification task, plus a matching system prompt that operationalizes it, see `reference/example-codebook-and-prompt.md`.
+- For a fully-worked example of a codebook with all five components filled in for a realistic three-category classification task, plus a matching system prompt that operationalizes it, see `references/example-codebook-and-prompt.md`.
 
 ### 2. Choosing a Learning Regime
 
