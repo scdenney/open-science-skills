@@ -109,6 +109,8 @@ Delegation covers **only** the post-round-3 chair step — the members stay at t
 #                --prompt-file chair.prompt.md --out decision.md --model gpt-5.6-sol --effort xhigh -C <working-directory>
 ```
 
+The Codex plugin's result-handling guidance (stop after presenting review findings, change nothing) applies to code-review handoffs, not to the Codex member or the Sol chair here: the chair step below is instructed to aggregate and synthesize per the protocol, and its output is a decision record, not an applied change.
+
 Chairing is procedural: validate the round outputs against the protocol's schemas, aggregate the predeclared weighted scores, apply the precommitted tie rule, and synthesize only components both revisions explicitly marked compatible. Never introduce a new substantive option, and never break a tie by confidence, eloquence, or model identity — under the default chair, the chair being the same model as the Claude member is precisely why it must not vote a third time. If the evidence stays genuinely unresolved, return the exact fork to the user; a forced but unsupported answer is not committee consensus.
 
 Delegating the chair does not delegate the process. Check the chair's arithmetic against the round-3 score tables and confirm the decision matches the precommitted rule before delivering — with a lean chair such as Fable, this check is the backstop, since the mechanical steps are exactly where a lightweight chair needs verifying.

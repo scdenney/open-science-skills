@@ -121,6 +121,8 @@ Use the Codex Phase 3 template below. Same verification protocol.
 
 ### 5. Phase 4 — Adjudication and synthesis (orchestrator, direct)
 
+The Codex plugin's result-handling guidance — stop after presenting review findings and change nothing — governs code-review handoffs, not this skill: here the adjudication step below *is* the instructed work, and it produces a report, not a code change.
+
 Build the consolidated Pre-Submit Report by adjudicating across teams.
 
 - **Mutual.** Both teams flagged it; both cross-checkers confirmed. Mark `[CRITICAL ✓✓]` or `[RECOMMENDED ✓✓]`. Highest-confidence findings.

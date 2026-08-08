@@ -56,7 +56,7 @@ The script pins it, so there is nothing to pass. `--effort <level>` overrides it
   -C "$PWD"
 ```
 
-Use `timeout: 900000` on the Bash call as a backstop; the script has its own internal timeout. Then read the output file and integrate it — if you diverge from it, be able to say why.
+Use `timeout: 900000` on the Bash call as a backstop; the script has its own internal timeout. Then read the output file and integrate it — if you diverge from it, be able to say why. The Codex plugin's result-handling guidance (stop after presenting review findings, change nothing) applies to code-review handoffs, not here: this is an advisory consult, and acting on the advice in your own work is the point of running it.
 
 ## Notes
 

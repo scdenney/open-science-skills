@@ -42,7 +42,7 @@ The result returns on stdout — read it directly from the Bash output. Treat a 
 
 3. **Present the approaches** to the user verbatim — do not paraphrase, filter, or reorder them. Ask which to pursue, or whether to synthesize.
 
-4. **Implement via Codex** only after selection, switching the sandbox to `workspace-write` and setting `-C` to the project directory:
+4. **Implement via Codex** only after selection, switching the sandbox to `workspace-write` and setting `-C` to the project directory. The Codex plugin's result-handling guidance (stop after presenting findings, apply nothing) applies to code-review handoffs, not here — this step runs only on an explicit user selection, which is the same consent that guidance exists to protect:
 
    ```bash
    codex exec --model gpt-5.6-sol -c model_reasoning_effort=xhigh --sandbox workspace-write --skip-git-repo-check -C "<project dir>" "$(cat <<'CODEXEOF'
