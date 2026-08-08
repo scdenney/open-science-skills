@@ -1,6 +1,6 @@
 ---
 name: 46-orchestrate
-description: Orchestrate complex work as the Codex lead on the GPT-5.6 family. A gpt-5.6-sol lead at xhigh effort owns decomposition, integration, and verification; it routes bounded work down to gpt-5.6-terra through out-of-band codex exec one-shots when the session permits them, uses gpt-5.6-luna only for tightly specified mechanical work with objective checks, and reaches a genuine cross-vendor peer (Claude Fable 5, via claude-peer.sh) for a decorrelated check on high-stakes calls — the mirror image of the Codex peer that fable-orchestrate and opus-orchestrate call. Native spawn_agent children inherit the lead's model and effort, so they are not Terra/Luna delegation. Use when the user explicitly asks to orchestrate, delegate, fan out, parallelize, assign subagents, obtain independent checks, or have Codex act as tech lead.
+description: Orchestrate complex work as the Codex lead, with a gpt-5.6-sol lead at xhigh effort owning decomposition, integration, and verification while delegating bounded work to cheaper GPT-5.6 tiers and a cross-vendor Claude peer. Not for routine single-context work. Use when the user explicitly asks to orchestrate, delegate, fan out, parallelize, assign subagents, obtain independent checks, or have Codex act as tech lead.
 ---
 
 # 4.6 Orchestrate

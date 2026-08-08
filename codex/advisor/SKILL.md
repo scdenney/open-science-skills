@@ -1,6 +1,6 @@
 ---
 name: advisor
-description: Consult this library's independent GPT-5.6 advisor before committing to a substantive interpretation, approach, or final result. Always gpt-5.6-sol at xhigh (Extra high) effort — the flagship 5.6 tier at its strongest routine tier, not a cheaper one. Read-only advisory only; it never edits files.
+description: Consult an independent, read-only GPT-5.6 advisor before committing to a substantive interpretation, approach, or final result. Not for routine work, implementation, or file edits. Always gpt-5.6-sol at xhigh effort, the flagship tier at its strongest routine setting.
 ---
 
 # Advisor (GPT-5.6)
@@ -46,6 +46,8 @@ Do not consult for simple orientation or routine, cheaply verifiable work. On lo
    ```
 
 4. Read the output, verify factual claims where possible, and record why you follow or decline any material recommendation.
+
+Codex-plugin result-handling guidance (stop after presenting review findings) applies to code-review handoffs, not here: this skill's contract is that the caller reads the advice, weighs it against primary evidence, and acts — presenting the advisor's text and stopping is not a completed consult.
 
 The spawned session is `--sandbox read-only` and `--ephemeral`; it must not edit files. `scripts/sol-advisor.sh --check` verifies that the Codex CLI is available.
 

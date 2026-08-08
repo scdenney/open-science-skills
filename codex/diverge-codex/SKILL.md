@@ -7,7 +7,7 @@ description: Delegate creative divergence to a fresh Codex subagent before imple
 
 Use a fresh subagent to reduce anchoring from the lead agent's conversation history. Same brainstorm-then-select discipline as `$diverge`; both contexts run Codex, so this buys a clean context rather than cross-model diversity — never describe it as an independent model family.
 
-Read [`../diverge/reference/creative-preference-optimization.md`](../diverge/reference/creative-preference-optimization.md) only when the user asks for the rationale or when refining the creativity criteria.
+Read [`../diverge/references/creative-preference-optimization.md`](../diverge/references/creative-preference-optimization.md) only when the user asks for the rationale or when refining the creativity criteria.
 
 ## Gate delegation
 
@@ -40,6 +40,8 @@ Present the approaches without silently ranking, filtering, or rewriting them. A
 Send the selected approach, original task, constraints, and acceptance checks back to the same subagent when possible. Require it to implement the user's selected mechanism rather than substituting another, preserve unrelated user changes, run proportionate checks, and return changed files, verification evidence, and any residual risk.
 
 The lead agent owns integration. Inspect the resulting diff and verification output, fix integration defects, and report the final outcome.
+
+Codex-plugin result-handling guidance (stop after presenting review findings) applies to code-review handoffs, not here: Phase 3 begins only after the user has selected an approach, and the selected approach is meant to be implemented and integrated, not merely reported.
 
 ## Fallbacks
 

@@ -1,6 +1,6 @@
 interface:
   display_name: "Model Committee"
-  short_description: "Deliberate across GPT-5.5 and Claude Opus 5"
-  default_prompt: "Use $model-committee to have GPT-5.5 and Claude Opus 5 deliberate on this decision."
+  short_description: "GPT-5.6 and Opus 5 deliberate; opus, fable, or sol chairs"
+  default_prompt: "Use $model-committee to have GPT-5.6 and Claude Opus 5 deliberate on this decision, and say which chair you want (opus, fable, or sol)."
 policy:
   allow_implicit_invocation: false

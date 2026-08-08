@@ -84,4 +84,4 @@ description: "Build falsifiable causal hypotheses. Use for DAGs, FPCI, equivalen
 
 ## Example
 
-> **Worked example:** see [reference/example.md](reference/example.md).
+> **Worked example:** see [references/example.md](references/example.md).

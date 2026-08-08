@@ -86,7 +86,7 @@ For neighboring concerns, invoke sibling skills: `conjoint-design` (design choic
 
 Worry about measurement error whenever the study draws subgroup comparisons, reports small-to-moderate AMCEs/MMs near zero, or forgoes any IRR estimate. Conjoint responses carry **swapping error** (not classical noise): average Intra-Respondent Reliability is ~77% across Clayton et al.'s eight replications, biasing MMs toward 0.5 and AMCEs toward 0. For subgroup diff-in-AMCEs, the correction *increases* the estimated difference ~82% of the time, decreases it ~12%, and flips its sign ~5% -- uncorrected subgroup contrasts are usually understated, not overstated. Audit the study for (a) an IRR estimate or justified borrow (≈0.75 default), (b) bias correction via the `projoint` R package (Clayton et al.), and (c) sensitivity analysis across plausible IRR values if uncorrected.
 
-> **Detailed measurement-error workflow:** see [reference/measurement-error.md](reference/measurement-error.md).
+> **Detailed measurement-error workflow:** see [references/measurement-error.md](references/measurement-error.md).
 
 ---
 

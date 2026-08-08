@@ -28,9 +28,16 @@ Not a long exhaustive issue list, and not a takedown.
 3. Copy the manuscript PDF into the slug folder as `manuscript.pdf`. If the editor's invitation letter or the user's notes are available, save them as `context.md` in the same folder.
 4. Read the manuscript yourself once before writing agent prompts. Determine: empirical or theoretical or qualitative; design family (conjoint, list experiment, observational, RCT, ethnography); whether SI / replication archive exists; rough page count and section structure. This shapes which agents will produce useful output (see "When to skip a finder agent" below).
 
-## Phase 1 — Five parallel finder agents
+## Phase 1 — Five finder agents in two waves
 
-Spawn agents 1–5 concurrently with the available Codex subagent tool. Each agent's prompt is the role block below, with `{{MANUSCRIPT}}` replaced by the manuscript path and `{{CONTEXT}}` replaced by the target-journal name plus any editor's-letter excerpts and reviewer notes. Each agent writes its raw findings to `<slug>/agent_<n>_<name>.md`.
+**Runtime constraint.** Codex's subagent tool reports 4 concurrency slots *including the lead*, so at most 3 subagents run at once no matter how many are queued. Five finders therefore cannot be one parallel batch. Run them in two waves:
+
+- **Wave A (3 slots):** Breaker, Butcher, Shredder — the three that read the manuscript's own machinery and do not depend on each other.
+- **Wave B (2 slots):** Void, Situator — launched once Wave A's agents have written their files and released their slots. Both are absence-and-placement judgments, so nothing is lost by their running second; do not pass them Wave A's findings, since blind finders are the point.
+
+Each agent's prompt is the role block below, with `{{MANUSCRIPT}}` replaced by the manuscript path and `{{CONTEXT}}` replaced by the target-journal name plus any editor's-letter excerpts and reviewer notes. Each agent writes its raw findings to `<slug>/agent_<n>_<name>.md`.
+
+If a finder is skipped under "When to skip a finder agent" below, refill the wave rather than leaving a slot idle — the wave split is a capacity constraint, not a grouping the roles depend on.
 
 ### Agent 1 — The Breaker
 
@@ -155,7 +162,7 @@ Spawn agents 1–5 concurrently with the available Codex subagent tool. Each age
 
 ## Phase 2 — Blue Team filter
 
-Spawn after all five finders have written their files.
+Spawn after both waves have finished and all five finder files exist. Blue Team runs alone — it needs every finder's output, so it cannot share a wave with any of them.
 
 > You are the **Blue Team**. Your role is an honest defense of the attached manuscript against the issues raised by the five finder agents. You are not a cheerleader — you identify where the finders made mistakes, misread the text, or overreached.
 >
