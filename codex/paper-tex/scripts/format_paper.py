@@ -139,13 +139,27 @@ def build(out: Path, stem: str, engine: str) -> bool:
         run(["latexmk", pdf_engine, "-bibtex", "-interaction=nonstopmode",
              "-halt-on-error", f"{stem}.tex"], cwd=out)
     except subprocess.CalledProcessError:
-        log = (out / f"{stem}.log")
-        tail = ""
+        log = out / f"{stem}.log"
+        blg = out / f"{stem}.blg"
+        errs = []
         if log.exists():
-            errs = [ln for ln in log.read_text(errors="ignore").splitlines()
-                    if ln.startswith("! ") or "Error" in ln or "not found" in ln]
-            tail = "\n".join(errs[:8])
-        print(f"BUILD FAILED for {stem}.tex:\n{tail or '(see ' + str(log) + ')'}", file=sys.stderr)
+            errs += [ln for ln in log.read_text(errors="ignore").splitlines()
+                     if ln.startswith("! ") or "Error" in ln or "not found" in ln]
+        # bibtex-class failures (missing .bib, bad entry) report in .blg, not .log,
+        # so a log-only scan prints an empty diagnostic for the commonest failure.
+        if blg.exists():
+            errs += [ln for ln in blg.read_text(errors="ignore").splitlines()
+                     if ln.lstrip().startswith(("I couldn't", "I found no", "Warning--",
+                                                "Repeated entry", "Sorry---you've"))
+                     or "error message" in ln]
+        tail = "\n".join(errs[:8])
+        if not tail:
+            tail = f"(no error lines matched; see {log} and {blg})"
+        pdf = out / f"{stem}.pdf"
+        if pdf.is_file():
+            tail += (f"\nNote: {pdf} was still produced. The build failed after "
+                     f"generating a PDF, so inspect it before assuming it is unusable.")
+        print(f"BUILD FAILED for {stem}.tex:\n{tail}", file=sys.stderr)
         return False
     pdf = out / f"{stem}.pdf"
     pages = "?"
@@ -248,8 +262,13 @@ def main() -> None:
     if args.build:
         # SI first: main's \externaldocument{si} reads si.aux, so SI cross-refs
         # resolve on main's first build instead of printing ??.
+        # si -> main -> si, the order SKILL.md documents. Pass 1 gives main's
+        # \externaldocument{si} an si.aux to read; pass 3 gives the SI's
+        # \externaldocument{main} a main.aux, so refs resolve in both directions.
         ok = build(out, "si", args.engine) if args.si else True
         ok = build(out, "main", args.engine) and ok
+        if args.si and ok:
+            ok = build(out, "si", args.engine)
         if not ok:
             sys.exit(1)   # keep the .log files for diagnosis
         if not args.keep_aux:
