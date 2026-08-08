@@ -1,6 +1,6 @@
 ---
 name: research-repo
-description: Scaffold or audit an entire research project repository organized around its source library. Use whenever the user is starting, structuring, organizing, or reviewing a whole project — "set up a research repo", "how should I structure/organize this project", "initialize my sources folder", "new paper or literature-review project", "audit my repo structure", "is my sources folder set up right", "check my project layout". Builds the full tree from the sources spine outward — sources/{og,md,unprocessed}, references.bib, a PDF→Markdown convert script (OpenDataLoader PDF), a process-source intake command, CLAUDE.md/AGENTS.md, .gitignore, .venv — plus the analysis, manuscript, and review folders; or audits an existing repo and reports what is present, partial, or missing. NOT for intaking or converting a single PDF (use process-source) or building a publication replication package (use replication-package).
+description: Scaffold or audit an entire research project repository organized around its source library. Use whenever the user is starting, structuring, organizing, or reviewing a whole project — "set up a research repo", "how should I structure/organize this project", "initialize my sources folder", "new paper or literature-review project", "audit my repo structure", "is my sources folder set up right", "check my project layout". Builds the sources spine (original PDFs, tracked Markdown conversions, a drop zone, and the bibliography), the conversion and intake pipeline, and the archetype-appropriate analysis, manuscript, and review folders; or audits an existing repo and reports what is present, partial, or missing. NOT for intaking or converting a single PDF (use process-source) or building a publication replication package (use replication-package).
 argument-hint: "[path to the research repo; defaults to the current directory]"
 allowed-tools:
   - Read
@@ -73,7 +73,13 @@ For any project that reads and archives a literature, this is the core. (For a c
 git rev-parse --git-dir >/dev/null 2>&1 || git init
 ```
 
-Write the templates from the **Templates** section below. Then set up the conversion environment — but verify the toolchain first, because `convert-sources.sh` runs under `set -euo pipefail` and will abort opaquely if the Java backend is missing:
+Write the templates from the **Templates** section below. A file written by the `Write` tool is mode 0644, so **make the conversion script executable immediately after writing it** — otherwise `./scripts/convert-sources.sh` fails with "permission denied", both in the smoke test below and in the two places the generated scaffold tells the user to run it (`sources/README.md` step 2 and `.claude/commands/process-source.md` step 3):
+
+```bash
+chmod +x scripts/convert-sources.sh
+```
+
+Then set up the conversion environment — but verify the toolchain first, because `convert-sources.sh` runs under `set -euo pipefail` and will abort opaquely if the Java backend is missing:
 
 ```bash
 command -v python3 && python3 --version

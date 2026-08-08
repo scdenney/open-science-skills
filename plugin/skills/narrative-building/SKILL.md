@@ -1,6 +1,6 @@
 ---
 name: narrative-building
-description: Draft or audit scientific introductions. Argument logic, framing, multi-experiment coherence.
+description: Drafts or audits the introduction and framing of a scientific paper — the motivating real-world "why", the evidence audit, the funnel from theory to a falsifiable if-then with a named estimand, bridges between multiple experiments, and a contribution list that matches what the design can deliver. Use when the user asks to write, restructure, or critique an introduction, motivate or frame a paper, fix a gap-in-the-literature opening, sharpen or calibrate a contribution claim, or connect several experiments into one argument. For sentence-level flow and wording, use prose-revision instead.
 argument-hint: "[describe your paper topic or introduction challenge]"
 ---
 

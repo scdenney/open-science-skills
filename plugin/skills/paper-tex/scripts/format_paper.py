@@ -139,13 +139,26 @@ def build(out: Path, stem: str, engine: str) -> bool:
         run(["latexmk", pdf_engine, "-bibtex", "-interaction=nonstopmode",
              "-halt-on-error", f"{stem}.tex"], cwd=out)
     except subprocess.CalledProcessError:
-        log = (out / f"{stem}.log")
-        tail = ""
-        if log.exists():
-            errs = [ln for ln in log.read_text(errors="ignore").splitlines()
-                    if ln.startswith("! ") or "Error" in ln or "not found" in ln]
-            tail = "\n".join(errs[:8])
-        print(f"BUILD FAILED for {stem}.tex:\n{tail or '(see ' + str(log) + ')'}", file=sys.stderr)
+        # bibtex-class failures (a missing .bib, an unresolvable entry) report in
+        # {stem}.blg, not {stem}.log — scanning only the .log printed an empty
+        # diagnostic on the single most common real failure.
+        errs: list[str] = []
+        sources = [out / f"{stem}.log", out / f"{stem}.blg"]
+        for src in sources:
+            if not src.exists():
+                continue
+            errs += [f"{src.name}: {ln}" for ln in src.read_text(errors="ignore").splitlines()
+                     if ln.startswith("! ") or "Error" in ln or "not found" in ln
+                     or "couldn't open" in ln or "I found no" in ln]
+        tail = "\n".join(errs[:8])
+        seen = ", ".join(str(s) for s in sources if s.exists()) or "no log files"
+        pdf = out / f"{stem}.pdf"
+        if pdf.exists():
+            # latexmk exited nonzero but produced a PDF — warn, do not fail the run.
+            print(f"BUILD WARNING for {stem}.tex (PDF was still produced at {pdf}):\n"
+                  f"{tail or '(see ' + seen + ')'}", file=sys.stderr)
+            return True
+        print(f"BUILD FAILED for {stem}.tex:\n{tail or '(see ' + seen + ')'}", file=sys.stderr)
         return False
     pdf = out / f"{stem}.pdf"
     pages = "?"
