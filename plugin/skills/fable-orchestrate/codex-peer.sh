@@ -80,7 +80,7 @@ run(){
   # /dev/null gives codex an immediate EOF on stdin so it does not block.
   local cmd=(codex exec --model "$MODEL" -c "model_reasoning_effort=$EFFORT" --sandbox "$SANDBOX" --skip-git-repo-check -C "$DIR" "$PROMPT")
   # `timeout` is not preinstalled on macOS (only via GNU coreutils) — guard
-  # rather than assume, matching model-committee-sol's claude-member.sh /
+  # rather than assume, matching model-committee's claude-member.sh /
   # codex-member.sh, which already learned this the hard way.
   if command -v timeout >/dev/null; then
     timeout "${TIMEOUT}s" "${cmd[@]}" < /dev/null

@@ -1,6 +1,6 @@
 ---
 name: fact-check
-description: Fact-check a manuscript's claims against the cited sources themselves. Locate each source's knowledge-base Markdown file and verify the in-text claim is actually supported. Runs a pre-flight gate that refuses unless a per-source Markdown knowledge base exists and is clean (PDFs converted via process-source); then runs citation-check; then audits claim support, overclaiming, direction, scope, and misattribution.
+description: Fact-check a manuscript's claims against the cited sources themselves. Locate each source's knowledge-base Markdown file and verify the in-text claim is actually supported. Runs a pre-flight gate that refuses unless a per-source Markdown knowledge base exists and is clean, one file per cited source, with every raw PDF already converted; then runs citation-check; then audits claim support, overclaiming, direction, scope, and misattribution.
 argument-hint: "[path to manuscript + bibliography; point to the project's sources/ or knowledge_base/ directory if non-standard]"
 ---
 
@@ -8,7 +8,7 @@ argument-hint: "[path to manuscript + bibliography; point to the project's sourc
 
 ## Heritage and scope
 
-This is an original Open Science Skills workflow. It extends `citation-check` (which verifies a citation *exists*, resolves, and is formatted) to the next question: does the cited *source* actually support the *claim* it is attached to? It checks claims against the project's **per-source Markdown knowledge base** — the files produced by `process-source`, where each source is converted or summarized to `sources/md/<author>-<year>-<slug>.md`. This is local-source verification, not open-web fact-checking: it audits whether a manuscript's sentences are backed by the documents the author has actually read and filed. Run once a draft has citations and a populated knowledge base.
+This is an original Open Science Skills workflow. It extends `citation-check` (which verifies a citation *exists*, resolves, and is formatted) to the next question: does the cited *source* actually support the *claim* it is attached to? It checks claims against the project's **per-source Markdown knowledge base** — one Markdown file per cited source, each converted or summarized to `sources/md/<author>-<year>-<slug>.md` by whatever intake workflow the project uses. This is local-source verification, not open-web fact-checking: it audits whether a manuscript's sentences are backed by the documents the author has actually read and filed. Run once a draft has citations and a populated knowledge base.
 
 ## Instructions
 
@@ -31,10 +31,10 @@ Do not partially fact-check around the gap, and do not fall back to memory or we
 
 **Remediation to print on refusal:**
 
-- Convert each raw source to Markdown with the `process-source` skill (`/oss:process-source`, or the project's own `/process-source` command). It turns each PDF into `sources/md/<author>-<year>-<slug>.md`, summarizing long sources.
-- Populate any cited work that has no file yet: locate the PDF, then run `process-source`.
+- Build a per-source Markdown knowledge base — one file per cited source, e.g. produced by `scripts/convert-sources.sh` in a repo laid out by [`research-repo`](../research-repo/SKILL.md), or by your own source-intake workflow. Each raw source becomes `sources/md/<author>-<year>-<slug>.md`, summarized if long.
+- Populate any cited work that has no file yet: locate the PDF, then run it through the same intake step.
 - Re-run `fact-check` once `sources/md/` covers the cited set and no raw files remain unconverted.
-- Best practices: the per-source Markdown knowledge base and intake conventions are documented in the Open Science Skills repo (`github.com/scdenney/open-science-skills`) and the `process-source` skill; Anthropic's skill-authoring guidance is linked from that README.
+- Best practices: the per-source Markdown knowledge base and its intake conventions are documented in the Open Science Skills repo (`github.com/scdenney/open-science-skills`) and in `research-repo`; Anthropic's skill-authoring guidance is linked from that README.
 
 Only when the gate passes — knowledge base present, clean, and covering the cited set in scope — continue to step 2.
 
@@ -90,7 +90,7 @@ Actively watch for:
 - A faithful summary that simply omits a detail is `SOURCE INSUFFICIENT`, not `UNSUPPORTED`.
 - Background and framing citations are not evidentiary claims; do not demand data from them.
 - Theory/position citations are supported when the source advances that position, even with no data.
-- A missing source Markdown is an **infrastructure gap** (`NOT IN KB` → run `process-source`), not evidence of fabrication. Keep "the source doesn't support the claim" strictly separate from "I couldn't find the source."
+- A missing source Markdown is an **infrastructure gap** (`NOT IN KB` → convert and file the source), not evidence of fabrication. Keep "the source doesn't support the claim" strictly separate from "I couldn't find the source."
 
 ## Output
 
@@ -105,10 +105,10 @@ Cited works with no Markdown file: <cite keys / author-year>
 Raw files needing conversion: <paths>
 
 ## To proceed
-1. Run `process-source` on the raw files / missing sources listed above
+1. Convert and file the raw files / missing sources listed above into the Markdown knowledge base
 2. Confirm each cited work has sources/md/<author>-<year>-<slug>.md
 3. Re-run /fact-check
-Best practices: github.com/scdenney/open-science-skills · the process-source skill
+Best practices: github.com/scdenney/open-science-skills · the research-repo skill
 ```
 
 Otherwise, produce a `Fact-Check Report`:
@@ -128,7 +128,7 @@ Summary: <N contradicted, N unsupported, N partial, N supported, N not-in-KB, N 
 | Location | Claim | Cite key | Gap | Source passage | Suggested rewording |
 
 ## Source not in knowledge base
-| Cite key | Author-year | Why unresolved | Action (process-source / locate file) |
+| Cite key | Author-year | Why unresolved | Action (convert and file / locate file) |
 
 ## Supported (spot-check log)
 | Location | Claim | Cite key | Source passage |

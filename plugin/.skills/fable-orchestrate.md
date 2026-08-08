@@ -1,6 +1,6 @@
 ---
 name: fable-orchestrate
-description: Run a multi-model orchestration workflow led by Fable 5, the strongest model on the team. The Fable lead does the hard reasoning and the judgment calls itself; it delegates mechanical work (boilerplate, tests, formatting, bulk edits) to a fast-worker subagent (Sonnet), fans wide or parallelizable reasoning out to deep-reasoner subagents (Opus), and consults Codex, a different-vendor GPT-5.6 (Sol by default) peer, as a decorrelated cross-check on high-stakes, hard-to-verify calls. Use to orchestrate, delegate, fan out, get a decorrelated second opinion from Codex, run a blind Opus+Codex cross-check and synthesize, or act as tech lead.
+description: Run a multi-model orchestration workflow led by Fable 5, the strongest model on the team. Use when the session is already running on Fable 5 — its sibling opus-orchestrate is the one to use when the session is on Opus 5. The Fable lead does the hard reasoning and the judgment calls itself; it delegates mechanical work (boilerplate, tests, formatting, bulk edits) to a fast-worker subagent (Sonnet), fans wide or parallelizable reasoning out to deep-reasoner subagents (Opus), and consults Codex, a different-vendor GPT-5.6 (Sol by default) peer, as a decorrelated cross-check on high-stakes, hard-to-verify calls. Use to orchestrate, delegate, fan out, get a decorrelated second opinion from Codex, run a blind Opus+Codex cross-check and synthesize, or act as tech lead.
 allowed-tools:
   - Agent
   - Bash

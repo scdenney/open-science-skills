@@ -19,7 +19,7 @@ The new mechanic is cross-model adversarial verification. Two reviewers — Clau
 
 Roughly 22 model calls total (9 Claude Red Team, 9 Codex Red Team, 4 cross-model Blue Team) plus orientation and synthesis by the orchestrator. Reach for it before submission when you want maximum adversarial pressure and a second model family's blind spots.
 
-The Claude orchestrator is whatever model you are running — Opus 5 or Fable 5. It runs orientation, launches both Red Teams, spawns the cross-checkers, and adjudicates. The Codex peer is pinned to `gpt-5.6-sol` at `xhigh` reasoning effort (§ Codex invocation mechanism). On Opus, run at medium reasoning effort by default, raising to high for the Phase-4 cross-team adjudication and Editor's Note — a bounded judgment call, not the sustained orchestration role — and drive the 18 Phase-2 calls and 4 Phase-3 cross-checks as a `Workflow`; invoking this skill already satisfies the `Workflow` tool's own opt-in, so Claude Code's `ultracode` session mode isn't required. On a lighter lead (Fable), drive the same phases with parallel `Agent`/`Bash` calls. See [`opus-orchestrate`](../opus-orchestrate/SKILL.md) / [`fable-orchestrate`](../fable-orchestrate/SKILL.md) for the routing and the decorrelated-peer rationale.
+The Claude orchestrator is whatever model you are running — Opus 5 or Fable 5. It runs orientation, launches both Red Teams, spawns the cross-checkers, and adjudicates. The Codex peer is pinned to `gpt-5.6-sol` at `xhigh` reasoning effort (§ Codex invocation mechanism). On Opus, run at medium reasoning effort by default, raising to high for the Phase-4 cross-team adjudication and Editor's Note — a bounded judgment call, not the sustained orchestration role — and fan the 18 Phase-2 calls and 4 Phase-3 cross-checks out. If the `Workflow` tool is listed among your tools this session, express those calls as a `Workflow`; otherwise — the common case, since dynamic Workflows are gated per session by org policy, the launch gate, or the "Dynamic workflows" setting in `/config`, and invoking a skill does not grant them — launch each phase's agents with parallel `Agent` calls in a single message and start the next phase once their outputs land. The fallback is the default, not a degraded mode; branch on tool availability, not on which model is leading. The Codex-side calls are `Bash` invocations either way. See [`opus-orchestrate`](../opus-orchestrate/SKILL.md) / [`fable-orchestrate`](../fable-orchestrate/SKILL.md) for the routing and the decorrelated-peer rationale.
 
 ## Codex invocation mechanism
 
@@ -92,7 +92,7 @@ Both teams write independently to their own subdirectory. Cross-checkers read th
 
 Launch all 18 review calls in a single message.
 
-- **9 Claude sub-agents** via the `Agent` tool (default `subagent_type`). Use the agent prompts from `paper-review-lite` § 2 (Agents 1–9) verbatim, but redirect output to `.review-tmp/claude/agent-N-*.md` instead of the original `.review-tmp/agent-N-*.md`. Also carry over that skill's per-agent model/effort pins rather than defaulting all nine to one model: Opus `high` for the argument-level dimensions (1, 2, 6, 7), Sonnet `medium` for the mechanical ones (3, 4, 5, 8, 9). See `paper-review-lite` § "Sub-agent model and effort assignment" for the full table and rationale.
+- **9 Claude sub-agents** via the `Agent` tool (default `subagent_type`). Use the agent prompts from `paper-review-lite` § 2 (Agents 1–9) verbatim, but redirect output to `.review-tmp/claude/agent-N-*.md` instead of the original `.review-tmp/agent-N-*.md`. Also carry over that skill's per-agent model/effort pins rather than defaulting all nine to one model: Opus `high` for the argument-level dimensions (1, 2, 6, 7), Sonnet `medium` for the mechanical ones (3, 4, 5, 8, 9). The standalone `Agent` tool has no effort field — fold the effort instruction into the prompt text itself; only `agent()` inside a `Workflow` accepts `opts.effort`. See `paper-review-lite` § "Sub-agent model and effort assignment" for the full table and rationale.
 - **9 Codex sub-agents** via the `Bash` tool, following the pattern in § Codex invocation mechanism. Use the Codex Phase 2 template below as the prompt body, one call per dimension. Output to `.review-tmp/codex/agent-N-*.md`.
 
 Both teams apply the same dimension definitions, the same Critical-Reviewer posture, and the same severity rubric (`[CRITICAL]`, `[RECOMMENDED]`, `[MINOR]`) from `paper-review-lite` § 2. The point of running two model families on one specification is to compare independent applications of one standard, not to give them different jobs. Neither team sees the other's findings during Phase 2.
@@ -120,6 +120,8 @@ For each Codex `[CRITICAL]` or `[RECOMMENDED]` finding, the cross-checker verifi
 Use the Codex Phase 3 template below. Same verification protocol.
 
 ### 5. Phase 4 — Adjudication and synthesis (orchestrator, direct)
+
+The Codex plugin's result-handling guidance — stop after presenting review findings and change nothing — governs code-review handoffs, not this skill: here the adjudication step below *is* the instructed work, and it produces a report, not a code change.
 
 Build the consolidated Pre-Submit Report by adjudicating across teams.
 

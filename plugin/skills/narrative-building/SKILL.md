@@ -1,6 +1,6 @@
 ---
 name: narrative-building
-description: Draft or audit scientific introductions. Argument logic, framing, multi-experiment coherence.
+description: Drafts or audits the introduction and framing of a scientific paper — the motivating real-world "why", the evidence audit, the funnel from theory to a falsifiable if-then with a named estimand, bridges between multiple experiments, and a contribution list that matches what the design can deliver. Use when the user asks to write, restructure, or critique an introduction, motivate or frame a paper, fix a gap-in-the-literature opening, sharpen or calibrate a contribution claim, or connect several experiments into one argument. For sentence-level flow and wording, use prose-revision instead.
 argument-hint: "[describe your paper topic or introduction challenge]"
 ---
 
@@ -10,7 +10,7 @@ argument-hint: "[describe your paper topic or introduction challenge]"
 
 ## Workflow
 
-Author or audit an introduction by walking these five steps in order. Each step has a specific output; do not proceed until the prior step's output exists in the draft. See `reference/example-funnel.md` for a worked example.
+When drafting, walk the five steps in order — each step's output is the next step's input, so do not draft ahead of a missing output. When auditing an existing introduction, enter at the step the user is asking about and check upstream dependencies only where the answer turns on them. See `reference/example-funnel.md` for a worked example.
 
 ### Step 1 — Why: establish the substantive motivation
 Output: one or two paragraphs naming the real-world social/political tension the study addresses, the specific "invisible" the design will reveal, and the analytical joint where existing theory is silent or conflicted. Do not frame the motivation as a gap-in-literature; frame it as a stake in the world.

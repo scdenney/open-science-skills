@@ -1,6 +1,6 @@
 ---
 name: figures
-description: Design and format publication-quality figures. Chart choice, color, scales, legends, captions, reproducibility.
+description: Designs and formats publication-quality figures for social-science manuscripts — chart type, scales, color, legend order, self-contained captions, and script-based reproducibility. Use when the user is making, revising, or critiquing a figure for a paper — a coefficient plot, small multiples, a distribution or trend plot, a map, a network — or asks about axis labels, a colorblind-safe palette, legend ordering, direct labeling, or figure captions. Prefer this over general data-visualization guidance whenever the destination is a manuscript, working paper, or journal submission. Hand the finished figure set to figure-table-audit for end-stage QA.
 argument-hint: "[describe the figure you are building, the data, the claim it supports, and the target venue]"
 ---
 
