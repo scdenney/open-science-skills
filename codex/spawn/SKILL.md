@@ -1,6 +1,6 @@
 ---
 name: spawn
-description: Spawn full peer agent sessions in their own terminal panes and git worktrees — real sessions, not subagents — each on a directed task with a contract brief, monitored and merged back by the spawning lead. Herdr drives it; from a Codex lead the herdr socket needs an unsandboxed session, or the user runs the printed commands. Use when work must outlive or run beside the current session, needs its own worktree, or should stay steerable by the user in a visible pane. Spawns Codex or Claude Code peers alike.
+description: Spawn full peer Codex or Claude sessions in their own panes and git worktrees — real sessions, not subagents — briefed by the lead and merged back. Not for bounded consults a subagent covers. Use when work must outlive or run beside this session, needs its own worktree, or must stay user-steerable.
 ---
 
 # Spawn
