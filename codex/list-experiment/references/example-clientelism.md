@@ -4,7 +4,7 @@ A concrete illustration of §2–§3 and §6 of the parent `SKILL.md`. Numbers a
 
 ## Context
 
-Estimate the prevalence of election-related vote-buying in a developing-democracy survey. Direct questions are expected to underreport by ~5–15pp (Blair, Coppock & Moor 2020 domain benchmark). The sensitive behavior carries legal and social stigma, justifying the ~10× power cost of a list experiment.
+Estimate the prevalence of election-related vote-buying in a developing-democracy survey. Direct questions are expected to underreport by ~5–15pp (Blair, Coppock & Moor 2020 domain benchmark). The sensitive behavior carries legal and social stigma, justifying the ~14× power cost of a list experiment.
 
 **Estimand (π):** population share of voting-age adults who accepted money, gifts, or favors from a candidate or party in exchange for their vote during the most recent national election.
 
