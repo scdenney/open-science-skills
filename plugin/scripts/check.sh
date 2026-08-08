@@ -23,9 +23,25 @@ find plugin/skills -mindepth 2 -maxdepth 2 -name SKILL.md \
   | sed 's#plugin/skills/##; s#/SKILL.md$##' \
   | sort > "$tmpdir/skills"
 
+# Alias commands are thin wrappers that invoke an existing skill with a parameter
+# (e.g. model-committee's chair). They have no skill directory of their own by design.
+cat > "$tmpdir/aliases" <<'ALIASES'
+model-committee-fable
+model-committee-sol
+ALIASES
+
 find plugin/commands -maxdepth 1 -name '*.md' \
   | sed 's#plugin/commands/##; s#.md$##' \
-  | sort > "$tmpdir/commands"
+  | sort > "$tmpdir/commands-all"
+
+comm -23 "$tmpdir/commands-all" "$tmpdir/aliases" > "$tmpdir/commands"
+
+# Every declared alias must exist as a command file.
+missing_aliases="$(comm -13 "$tmpdir/commands-all" "$tmpdir/aliases")"
+if [ -n "$missing_aliases" ]; then
+  echo "alias command declared but missing from plugin/commands: $missing_aliases" >&2
+  exit 1
+fi
 
 find plugin/.skills -maxdepth 1 -name '*.md' \
   | sed 's#plugin/.skills/##; s#.md$##' \

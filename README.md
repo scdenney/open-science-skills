@@ -8,13 +8,13 @@
 [![OpenAI Codex](https://img.shields.io/badge/OpenAI_Codex-library-111111?logo=openai&logoColor=white)](codex/README.md)
 [![version](https://img.shields.io/badge/version-2.21.0-blue)](https://github.com/scdenney/open-science-skills/releases)
 [![license](https://img.shields.io/badge/license-CC%20BY--NC%204.0-lightgrey)](LICENSE)
-[![Claude skills](https://img.shields.io/badge/Claude_skills-41-D97757?logo=anthropic&logoColor=white)](#skills)
+[![Claude skills](https://img.shields.io/badge/Claude_skills-39-D97757?logo=anthropic&logoColor=white)](#skills)
 [![Codex skills](https://img.shields.io/badge/Codex_skills-39-111111?logo=openai&logoColor=white)](#skills)
 [![updated](https://img.shields.io/badge/updated-August%202026-green)](https://github.com/scdenney/open-science-skills/commits/main)
 [![sources](https://img.shields.io/badge/sources-150%2B-purple)](SOURCES.md)
 [![PRs welcome](https://img.shields.io/badge/PRs-welcome-brightgreen)](#contributing)
 
-Open Science Skills is a library of 41 agentic skills for Claude Code, with a parallel 39-skill library for OpenAI Codex, written for computational social scientists and digital humanists. Each skill is meant to work the way the field expects. Identify the data-generating process before proposing an estimator, and design experiments and instruments to a standard. Drafts are held to established reporting norms.
+Open Science Skills is a library of 39 agentic skills for Claude Code, with a parallel 39-skill library for OpenAI Codex, written for computational social scientists and digital humanists. Each skill is meant to work the way the field expects. Identify the data-generating process before proposing an estimator, and design experiments and instruments to a standard. Drafts are held to established reporting norms.
 
 The library follows the research lifecycle. It covers survey design, list experiments, topic modeling, LLM text classification, VLM-based OCR pipelines, manuscript QA, multi-model orchestration, and transparent reporting under APSA, JARS, DA-RT, TOP, and FAIR expectations. Every skill is grounded in published methods sources and based on best practices for writing skills. See [SOURCES.md](SOURCES.md) for the bibliography of 150+ works consulted.
 
@@ -98,9 +98,7 @@ Skills are grouped by where they fall in a project. Unless the Platform column s
 | [topic-modeling](plugin/skills/topic-modeling/SKILL.md) | Both | `/oss:topic-modeling` | Fit structural topic models, choosing the topic count by coherence and exclusivity rather than by eye. Covers covariate specification and what to report. |
 | [text-classification](plugin/skills/text-classification/SKILL.md) | Both | `/oss:text-classification` | Classify text with LLMs. Covers codebook design, human-in-the-loop workflows, validation, and agreement statistics. |
 | [model-council-voting](plugin/skills/model-council-voting/SKILL.md) | Both | `/oss:model-council-voting` | Use a panel of models as independent coders under a consensus rule stated in advance, then read their disagreement with chance-corrected agreement statistics (the kappa and alpha families). Includes checks for correlated errors across jurors. |
-| [model-committee](plugin/skills/model-committee/SKILL.md) | Both | `/oss:model-committee` | Have GPT-5.6 Sol and Claude Opus 5 deliberate toward one decision. They propose independently, critique each other, revise, and converge under a rule fixed before they start. Opus 5 chairs the tally. |
-| [model-committee-sol](plugin/skills/model-committee-sol/SKILL.md) | Both | `/oss:model-committee-sol` | The same committee, but the GPT debater is Terra (not Sol) and the chair is GPT-5.6 Sol rather than a member, so a model outside the vote runs the tally and synthesis. |
-| [model-committee-fable](plugin/skills/model-committee-fable/SKILL.md) | Both | `/oss:model-committee-fable` | The same committee, but Fable 5 chairs it. A lighter and faster chair, and not one of the two models doing the voting. |
+| [model-committee](plugin/skills/model-committee/SKILL.md) | Both | `/oss:model-committee`, `/oss:model-committee-fable`, `/oss:model-committee-sol` | Have GPT-5.6 and Claude Opus 5 deliberate toward one decision. They propose independently, critique each other, revise, and converge under a rule fixed before they start. The chair is a parameter: Opus 5 by default, Fable 5 for a lighter chair outside the vote, or GPT-5.6 Sol, which also drops the GPT member to Terra so the chair is not also a member. |
 | [llm-calibration-logprobs](plugin/skills/llm-calibration-logprobs/SKILL.md) | Both | `/oss:llm-calibration-logprobs` | Turn token log-probabilities into per-decision confidence, then measure calibration against human labels (ECE and Brier scores, plus reliability diagrams). |
 
 ### Corpus Processing
@@ -160,7 +158,7 @@ Third-party skills this library recommends and builds on — credited, not claim
 
 Most skills load on their own. When your prompt matches a skill's description, Claude Code or Codex reads that skill into context and follows it, so you usually don't need to name anything. You can also invoke any skill explicitly, with `/oss:skill-name` in Claude Code or `$skill-name` in Codex.
 
-The orchestration and delegated-review skills (`fable-orchestrate`, `opus-orchestrate`, `46-orchestrate`, `spawn`, `advisor`, the `model-committee` family, `diverge-codex`, and `paper-review-lite-codex`) run only when invoked explicitly, because they start subagents, full peer sessions, or an external model.
+The orchestration and delegated-review skills (`fable-orchestrate`, `opus-orchestrate`, `46-orchestrate`, `spawn`, `advisor`, `model-committee` and its chair variants, `diverge-codex`, and `paper-review-lite-codex`) run only when invoked explicitly, because they start subagents, full peer sessions, or an external model.
 
 ---
 
@@ -168,7 +166,7 @@ The orchestration and delegated-review skills (`fable-orchestrate`, `opus-orches
 
 ### Claude Code
 
-The recommended install is the plugin, shown in [Quick start](#quick-start). It registers the marketplace and installs all 41 skills and their slash commands. The command prefix is `oss:`, for open science skills. The marketplace and the repository are both named `open-science-skills`.
+The recommended install is the plugin, shown in [Quick start](#quick-start). It registers the marketplace and installs all 39 skills and their slash commands. The command prefix is `oss:`, for open science skills. The marketplace and the repository are both named `open-science-skills`.
 
 To try the plugin for one session without installing:
 
