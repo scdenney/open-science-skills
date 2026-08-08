@@ -52,7 +52,8 @@ The script pins it, so there is nothing to pass. `--effort <level>` overrides it
 ## Run a consult
 
 ```bash
-"${CLAUDE_PLUGIN_ROOT}/skills/advisor/scripts/fable-advisor.sh" \
+OSS_ROOT=$(ls -d ~/.claude/plugins/cache/open-science-skills/oss/*/ 2>/dev/null | sort -V | tail -1)
+"${OSS_ROOT}skills/advisor/scripts/fable-advisor.sh" \
   --prompt-file <briefing-path> \
   --out <output-path> \
   -C "$PWD"
@@ -62,7 +63,7 @@ Use `timeout: 900000` on the Bash call as a backstop; the script has its own int
 
 ## Notes
 
-- `fable-advisor.sh --check` verifies the `claude` CLI is on PATH and reports the pinned effort — run it after install, or when a consult behaves unexpectedly. `${CLAUDE_PLUGIN_ROOT}` resolves to the installed plugin directory at runtime; a hand-installed copy under `~/.claude/skills/` shadows the plugin's own and silently drifts out of date.
+- `fable-advisor.sh --check` verifies the `claude` CLI is on PATH and reports the pinned effort — run it after install, or when a consult behaves unexpectedly. the resolved plugin root (`$OSS_ROOT`) resolves to the installed plugin directory at runtime; a hand-installed copy under `~/.claude/skills/` shadows the plugin's own and silently drifts out of date.
 - The spawned session runs `--permission-mode plan` and `--no-session-persistence`: advisory only, not resumable.
 - The script clears `ANTHROPIC_API_KEY`, so the consult bills the subscription plan even if the calling shell exports a live key.
 - Effort enum: `low, medium, high, xhigh, max`, matching `/effort`.

@@ -21,7 +21,7 @@ Structured fan-out is what compensates for not being Fable: for substantive work
 Four handles do the driving:
 - **Workflow** — the `Workflow` tool, when the session has it: a script that fans out `agent()` calls (parallel, pipeline, loop-until-dry) with deterministic control flow. The default for anything with structure when available.
 - **Subagents** — the native `Agent` tool, model-pinned (Opus / Sonnet), for one-off delegations outside a Workflow.
-- **Codex peer** — `${CLAUDE_PLUGIN_ROOT}/skills/opus-orchestrate/codex-peer.sh`, a verified wrapper around `codex exec` (a different-vendor GPT-5.6 engineer, `gpt-5.6-sol` by default).
+- **Codex peer** — `"${OSS_ROOT}"skills/opus-orchestrate/codex-peer.sh`, a verified wrapper around `codex exec` (a different-vendor GPT-5.6 engineer, `gpt-5.6-sol` by default). Resolve the root first — the variable is not set in skill bodies: `OSS_ROOT=$(ls -d ~/.claude/plugins/cache/open-science-skills/oss/*/ 2>/dev/null | sort -V | tail -1)`.
 - **Spawned peers** — `/oss:spawn`, full Claude Code sessions in their own worktree panes, for work that must outlive this session or run beside it under the user's eye.
 
 ## The team
@@ -46,12 +46,13 @@ Delegating a reasoning task to a `deep-reasoner` buys one of three things: **par
 
 ## Setup (one-time)
 
-Install the two agent definitions so `deep-reasoner` / `fast-worker` resolve as named subagents everywhere, and confirm Codex is ready. Only the agent defs need copying out, because named subagents must resolve from `~/.claude/agents/`; `codex-peer.sh` is always invoked through `${CLAUDE_PLUGIN_ROOT}` and must never be hand-installed (see Gotchas).
+Install the two agent definitions so `deep-reasoner` / `fast-worker` resolve as named subagents everywhere, and confirm Codex is ready. Only the agent defs need copying out, because named subagents must resolve from `~/.claude/agents/`; `codex-peer.sh` is always invoked through the resolved plugin root (`$OSS_ROOT`) and must never be hand-installed (see Gotchas).
 
 ```bash
+OSS_ROOT=$(ls -d ~/.claude/plugins/cache/open-science-skills/oss/*/ 2>/dev/null | sort -V | tail -1)
 mkdir -p ~/.claude/agents
-cp "${CLAUDE_PLUGIN_ROOT}/skills/opus-orchestrate/agents"/*.md ~/.claude/agents/
-chmod +x "${CLAUDE_PLUGIN_ROOT}/skills/opus-orchestrate/codex-peer.sh"
+cp "${OSS_ROOT}skills/opus-orchestrate/agents"/*.md ~/.claude/agents/
+chmod +x "${OSS_ROOT}skills/opus-orchestrate/codex-peer.sh"
 codex login status        # must say "Logged in" — otherwise: codex login
 ```
 
@@ -142,8 +143,9 @@ Sonnet and Opus often take turns on the *same* task, whether hand-driven or as W
 ### Consult Codex (the peer)
 
 ```bash
+OSS_ROOT=$(ls -d ~/.claude/plugins/cache/open-science-skills/oss/*/ 2>/dev/null | sort -V | tail -1)
 # read-only consult — ask a question / get a second approach; prints the answer
-"${CLAUDE_PLUGIN_ROOT}/skills/opus-orchestrate/codex-peer.sh" --mode consult -C "$PWD" \
+"${OSS_ROOT}skills/opus-orchestrate/codex-peer.sh" --mode consult -C "$PWD" \
   --prompt "Reply with exactly one word and nothing else: PONG"
 ```
 
@@ -168,8 +170,9 @@ Skip Codex when the work is cheaply verifiable — verify instead, decorrelation
 Launch **both** executors on the **same** problem, **in one message, blind to each other** — then you synthesize. On an Opus lead the two blind halves are a **deep-reasoner (Opus)** and **Codex (GPT-5.6, `gpt-5.6-sol` by default)**, deliberately different vendors. The two calls:
 
 ```bash
+OSS_ROOT=$(ls -d ~/.claude/plugins/cache/open-science-skills/oss/*/ 2>/dev/null | sort -V | tail -1)
 # Codex half — backgrounded, output teed to a file:
-"${CLAUDE_PLUGIN_ROOT}/skills/opus-orchestrate/codex-peer.sh" --mode consult -C "$PWD" \
+"${OSS_ROOT}skills/opus-orchestrate/codex-peer.sh" --mode consult -C "$PWD" \
   --out codex_out.txt --prompt "$(cat routing_q.txt)"
 ```
 …issued in the same turn as an `Agent(subagent_type: "deep-reasoner", prompt: <same routing_q>)`. Neither sees the other's answer. They return complementary lines of reasoning; you merge them.
@@ -199,7 +202,7 @@ Launch **both** executors on the **same** problem, **in one message, blind to ea
 - **A named subagent only resolves after its def is installed AND a session reload.** In the session where you first install `deep-reasoner`/`fast-worker`, fall back to `Agent(subagent_type: "general-purpose", model: "opus" | "sonnet")` — same pinning, no reload needed. Inside a Workflow, `agent(..., {model: "opus" | "sonnet"})` needs no installed def at all.
 - **Model pins are real.** The Sonnet spawn reports `Sonnet 5`; the Opus spawn reports `Opus (claude-opus-5)`; Codex reports `model: gpt-5.6-sol`. **`gpt-5.6` alone is not a valid slug** — there are three distinct GPT-5.6 tiers (`gpt-5.6-sol` flagship, `gpt-5.6-terra` balanced, `gpt-5.6-luna` fast); the bare `gpt-5.6` triggers a "metadata not found" warning and falls back to whichever tier Codex defaults to. `gpt-5.6-sol` is the default here because it's the strongest peer for a decorrelated cross-check — pass `--model gpt-5.6-terra` explicitly for a cheaper peer on routine consults.
 - **Keep your own context lean.** Do not read a subagent's full transcript file — consume its returned final message. Long/slow executors go to the background. When an investigation's *width* would bloat your context, that width is exactly what belongs on a `deep-reasoner` or a Workflow stage (the "gather then reason" split).
-- **A stray global `codex-peer.sh` shadows the plugin's own and can silently drop the model pin.** Earlier docs told you to hand-install it at `~/.claude/skills/opus-orchestrate/`; that copy never updates on plugin upgrade. If it predates the `--model` pin, it calls bare `codex exec` with no `--model` flag and Codex falls back to whatever tier it defaults to (observed: `gpt-5.4-mini`, not `gpt-5.6-sol`) — with no error, so the drift is invisible until you read the `model:` line in Codex's own header. Delete any `~/.claude/skills/opus-orchestrate/codex-peer.sh` you may have installed, and always invoke `"${CLAUDE_PLUGIN_ROOT}/skills/opus-orchestrate/codex-peer.sh"`. Trust the CLI's printed `model:` header over anything Codex says about itself when asked directly — models cannot reliably self-report their own version.
+- **A stray global `codex-peer.sh` shadows the plugin's own and can silently drop the model pin.** Earlier docs told you to hand-install it at `~/.claude/skills/opus-orchestrate/`; that copy never updates on plugin upgrade. If it predates the `--model` pin, it calls bare `codex exec` with no `--model` flag and Codex falls back to whatever tier it defaults to (observed: `gpt-5.4-mini`, not `gpt-5.6-sol`) — with no error, so the drift is invisible until you read the `model:` line in Codex's own header. Delete any `~/.claude/skills/opus-orchestrate/codex-peer.sh` you may have installed, and always invoke `"${OSS_ROOT}skills/opus-orchestrate/codex-peer.sh"`. Trust the CLI's printed `model:` header over anything Codex says about itself when asked directly — models cannot reliably self-report their own version.
 - **Don't fan out for its own sake.** Workflows are cheap to reach for, but a barrier (`parallel()`) wastes wall-clock when one stage lags, and a compact reasoning task (row 3) is faster in your own head than briefed to a peer-strength subagent. Fan out for width, hygiene, parallelism, or independence — not activity.
 
 ## Troubleshooting

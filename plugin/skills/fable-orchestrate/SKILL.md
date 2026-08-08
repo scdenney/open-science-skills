@@ -17,7 +17,7 @@ You are the **orchestrator** (intended: Fable 5, reasoning `/effort` max). Fable
 
 Three handles do the driving:
 - **Subagents** — the native `Agent` tool, model-pinned (Opus / Sonnet).
-- **Codex peer** — `${CLAUDE_PLUGIN_ROOT}/skills/fable-orchestrate/codex-peer.sh`, a verified wrapper around `codex exec` (a different-vendor GPT-5.6 engineer, `gpt-5.6-sol` by default).
+- **Codex peer** — `"${OSS_ROOT}"skills/fable-orchestrate/codex-peer.sh`, a verified wrapper around `codex exec` (a different-vendor GPT-5.6 engineer, `gpt-5.6-sol` by default). Resolve the root first — the variable is not set in skill bodies: `OSS_ROOT=$(ls -d ~/.claude/plugins/cache/open-science-skills/oss/*/ 2>/dev/null | sort -V | tail -1)`.
 - **Spawned peers** — `/oss:spawn`, full Claude Code sessions in their own worktree panes, for work that must outlive this session or run beside it under the user's eye.
 
 ## The team
@@ -44,12 +44,13 @@ After editing an agent def, re-run the Setup `cp` so the `~/.claude/agents/` cop
 
 ## Setup (one-time)
 
-Install the two agent definitions so `deep-reasoner` / `fast-worker` resolve as named subagents everywhere, and confirm Codex is ready. Only the agent defs get copied out, because named subagents must resolve from `~/.claude/agents/`; `codex-peer.sh` always runs from `${CLAUDE_PLUGIN_ROOT}`, never a hand-installed copy (see Gotchas).
+Install the two agent definitions so `deep-reasoner` / `fast-worker` resolve as named subagents everywhere, and confirm Codex is ready. Only the agent defs get copied out, because named subagents must resolve from `~/.claude/agents/`; `codex-peer.sh` always runs from the resolved plugin root (`$OSS_ROOT`), never a hand-installed copy (see Gotchas).
 
 ```bash
+OSS_ROOT=$(ls -d ~/.claude/plugins/cache/open-science-skills/oss/*/ 2>/dev/null | sort -V | tail -1)
 mkdir -p ~/.claude/agents
-cp "${CLAUDE_PLUGIN_ROOT}/skills/fable-orchestrate/agents"/*.md ~/.claude/agents/
-chmod +x "${CLAUDE_PLUGIN_ROOT}/skills/fable-orchestrate/codex-peer.sh"
+cp "${OSS_ROOT}skills/fable-orchestrate/agents"/*.md ~/.claude/agents/
+chmod +x "${OSS_ROOT}skills/fable-orchestrate/codex-peer.sh"
 codex login status        # must say "Logged in" — otherwise: codex login
 ```
 
@@ -110,8 +111,9 @@ You are the reasoner; Sonnet is the executor. They take turns on the *same* task
 ### Consult Codex (the peer)
 
 ```bash
+OSS_ROOT=$(ls -d ~/.claude/plugins/cache/open-science-skills/oss/*/ 2>/dev/null | sort -V | tail -1)
 # read-only consult — prints the answer
-"${CLAUDE_PLUGIN_ROOT}/skills/fable-orchestrate/codex-peer.sh" --mode consult -C "$PWD" \
+"${OSS_ROOT}skills/fable-orchestrate/codex-peer.sh" --mode consult -C "$PWD" \
   --prompt "Reply with exactly one word and nothing else: PONG"
 ```
 
@@ -157,7 +159,7 @@ Two names for the same trap. **Fragmentation** is the integration view: delegate
 - **A named subagent only resolves after its def is installed AND a session reload.** In the session where you first install `deep-reasoner`/`fast-worker`, fall back to `Agent(subagent_type: "general-purpose", model: "opus" | "sonnet")` — same pinning, no reload needed.
 - **Model pins are real.** Verified this session: the Sonnet spawn reported `model-check: Sonnet 5`; the Opus spawn reported `Running as: Opus (claude-opus-5)`; Codex is pinned to `gpt-5.6-sol` and reports `model: gpt-5.6-sol` in its header. **`gpt-5.6` alone is not a valid slug** — there are three distinct GPT-5.6 tiers (`gpt-5.6-sol` flagship, `gpt-5.6-terra` balanced, `gpt-5.6-luna` fast); the bare `gpt-5.6` triggers a "metadata not found" warning and falls back to whichever tier Codex defaults to. `gpt-5.6-sol` is the default here because it's the strongest peer for a decorrelated cross-check — confirmed working (as of July 2026) on ChatGPT-account-authenticated Codex CLI (an earlier "rejected outright" finding no longer reproduces; if it ever errors, check `codex --version` before assuming a gate, since an outdated CLI rejects sol/luna too, with a different error). Pass `--model gpt-5.6-terra` explicitly for a cheaper peer on routine consults.
 - **Keep your own context lean.** Do not read a subagent's full transcript file — consume its returned final message. Long/slow executors go to the background so they never stall the loop.
-- **A stray global `codex-peer.sh` shadows the plugin's own and can silently drop the model pin.** Earlier docs told you to hand-install `codex-peer.sh` at `~/.claude/skills/fable-orchestrate/`; that copy never updates on plugin upgrade. If it's older than the `--model` pin, it calls bare `codex exec` with no `--model` flag, and Codex falls back to whatever tier it defaults to (observed: `gpt-5.4-mini`, not `gpt-5.6-sol`) — with no error, so the drift is invisible until you read the `model:` line in Codex's own header. Delete any `~/.claude/skills/fable-orchestrate/codex-peer.sh` you may have installed under the old instructions; always invoke `"${CLAUDE_PLUGIN_ROOT}/skills/fable-orchestrate/codex-peer.sh"`. Trust the CLI's printed `model:` header over anything Codex says about itself when asked directly — models cannot reliably self-report their own version.
+- **A stray global `codex-peer.sh` shadows the plugin's own and can silently drop the model pin.** Earlier docs told you to hand-install `codex-peer.sh` at `~/.claude/skills/fable-orchestrate/`; that copy never updates on plugin upgrade. If it's older than the `--model` pin, it calls bare `codex exec` with no `--model` flag, and Codex falls back to whatever tier it defaults to (observed: `gpt-5.4-mini`, not `gpt-5.6-sol`) — with no error, so the drift is invisible until you read the `model:` line in Codex's own header. Delete any `~/.claude/skills/fable-orchestrate/codex-peer.sh` you may have installed under the old instructions; always invoke `"${OSS_ROOT}skills/fable-orchestrate/codex-peer.sh"`. Trust the CLI's printed `model:` header over anything Codex says about itself when asked directly — models cannot reliably self-report their own version.
 
 ## Troubleshooting
 
