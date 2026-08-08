@@ -68,7 +68,13 @@ For any project that reads and archives a literature, this is the core. (For a c
 git rev-parse --git-dir >/dev/null 2>&1 || git init
 ```
 
-Write the templates from the **Templates** section below. Then set up the conversion environment — but verify the toolchain first, because `convert-sources.sh` runs under `set -euo pipefail` and will abort opaquely if the Java backend is missing:
+Write the templates from the **Templates** section below. A newly written file is mode 0644, so **make the conversion script executable immediately after writing it** — otherwise `./scripts/convert-sources.sh` fails with "permission denied", both in the smoke test below and in the two places the generated scaffold tells the user to run it (`sources/README.md` step 2 and the repo-local `process-source` skill's step 3):
+
+```bash
+chmod +x scripts/convert-sources.sh
+```
+
+Then set up the conversion environment — but verify the toolchain first, because `convert-sources.sh` runs under `set -euo pipefail` and will abort opaquely if the Java backend is missing:
 
 ```bash
 command -v python3 && python3 --version
