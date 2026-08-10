@@ -1,0 +1,4 @@
+interface:
+  display_name: "Qualtrics Live-Survey Operations"
+  short_description: "Operate a live Qualtrics survey without breaking fielding"
+  default_prompt: "Use $qualtrics-ops to make this change to the live survey safely."

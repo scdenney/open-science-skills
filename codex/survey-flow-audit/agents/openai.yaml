@@ -1,0 +1,4 @@
+interface:
+  display_name: "Survey Flow Audit"
+  short_description: "Pre-fielding audit of a live survey's flow"
+  default_prompt: "Use $survey-flow-audit to audit this live survey before fielding."

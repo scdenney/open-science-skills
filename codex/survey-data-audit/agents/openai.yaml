@@ -1,0 +1,4 @@
+interface:
+  display_name: "Survey Data Audit"
+  short_description: "Audit fielded survey data for quality and automation"
+  default_prompt: "Use $survey-data-audit to audit this response export for data quality."
