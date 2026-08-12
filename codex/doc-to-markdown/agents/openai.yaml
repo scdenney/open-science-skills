@@ -1,0 +1,4 @@
+interface:
+  display_name: "Document to Markdown"
+  short_description: "Read or convert PDFs and office documents"
+  default_prompt: "Use $doc-to-markdown to read or convert this document."
