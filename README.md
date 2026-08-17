@@ -6,15 +6,15 @@
 
 [![Claude Code](https://img.shields.io/badge/Claude_Code-plugin-D97757?logo=anthropic&logoColor=white)](https://code.claude.com/docs/en/skills)
 [![OpenAI Codex](https://img.shields.io/badge/OpenAI_Codex-library-111111?logo=openai&logoColor=white)](codex/README.md)
-[![version](https://img.shields.io/badge/version-2.22.0-blue)](https://github.com/scdenney/open-science-skills/releases)
+[![version](https://img.shields.io/badge/version-2.24.0-blue)](https://github.com/scdenney/open-science-skills/releases)
 [![license](https://img.shields.io/badge/license-CC%20BY--NC%204.0-lightgrey)](LICENSE)
-[![Claude skills](https://img.shields.io/badge/Claude_skills-39-D97757?logo=anthropic&logoColor=white)](#skills)
-[![Codex skills](https://img.shields.io/badge/Codex_skills-37-111111?logo=openai&logoColor=white)](#skills)
+[![Claude skills](https://img.shields.io/badge/Claude_skills-43-D97757?logo=anthropic&logoColor=white)](#skills)
+[![Codex skills](https://img.shields.io/badge/Codex_skills-41-111111?logo=openai&logoColor=white)](#skills)
 [![updated](https://img.shields.io/badge/updated-August%202026-green)](https://github.com/scdenney/open-science-skills/commits/main)
 [![sources](https://img.shields.io/badge/sources-150%2B-purple)](SOURCES.md)
 [![PRs welcome](https://img.shields.io/badge/PRs-welcome-brightgreen)](#contributing)
 
-Open Science Skills is a library of 39 agentic skills for Claude Code, with a parallel 37-skill library for OpenAI Codex, written for computational social scientists and digital humanists. Each skill is meant to work the way the field expects. Identify the data-generating process before proposing an estimator, and design experiments and instruments to a standard. Drafts are held to established reporting norms.
+Open Science Skills is a library of 43 agentic skills for Claude Code, with a parallel 41-skill library for OpenAI Codex, written for computational social scientists and digital humanists. Each skill is meant to work the way the field expects. Identify the data-generating process before proposing an estimator, and design experiments and instruments to a standard. Drafts are held to established reporting norms.
 
 The library follows the research lifecycle. It covers survey design, list experiments, topic modeling, LLM text classification, VLM-based OCR pipelines, manuscript QA, multi-model orchestration, and transparent reporting under APSA, JARS, DA-RT, TOP, and FAIR expectations. Every skill is grounded in published methods sources and based on best practices for writing skills. See [SOURCES.md](SOURCES.md) for the bibliography of 150+ works consulted.
 
@@ -22,8 +22,8 @@ This is the toolkit I use in my own research, and it grows as I add sources and 
 
 | Platform | Skills | Invoke |
 |---|---|---|
-| [Claude Code](https://code.claude.com/docs/en/skills) | 41, as the [`oss` plugin](plugin/skills) | `/oss:skill-name` |
-| [OpenAI Codex](https://developers.openai.com/codex/skills) | 39, as the [`codex/` library](codex/README.md) | `$skill-name` |
+| [Claude Code](https://code.claude.com/docs/en/skills) | 45, as the [`oss` plugin](plugin/skills) | `/oss:skill-name` |
+| [OpenAI Codex](https://developers.openai.com/codex/skills) | 43, as the [`codex/` library](codex/README.md) | `$skill-name` |
 
 The two libraries differ only in invocation and tooling. The Codex side omits `presubmit`, `fable-orchestrate`, and `opus-orchestrate`, and adds `46-orchestrate`. See [`codex/README.md`](codex/README.md).
 
@@ -54,7 +54,7 @@ On Codex there is no plugin. Install the skills library instead (see [Codex](#co
 
 ## Skills
 
-Skills are grouped by where they fall in a project. Unless the Platform column says otherwise, a skill runs on both Claude Code (`/oss:name`) and Codex (`$name`). One row, `46-orchestrate`, belongs to the Codex library only and is not part of the 41-skill plugin.
+Skills are grouped by where they fall in a project. Unless the Platform column says otherwise, a skill runs on both Claude Code (`/oss:name`) and Codex (`$name`). One row, `46-orchestrate`, belongs to the Codex library only and is not part of the 45-skill plugin.
 
 ### Project Setup
 
@@ -88,6 +88,9 @@ Skills are grouped by where they fall in a project. Unless the Platform column s
 | [conjoint-diagnostics](plugin/skills/conjoint-diagnostics/SKILL.md) | Both | `/oss:conjoint-diagnostics` | Check a conjoint design and its analysis for integrity, measurement error, external validity, and sound interpretation. |
 | [conjoint-cleaning](plugin/skills/conjoint-cleaning/SKILL.md) | Both | `/oss:conjoint-cleaning` | Reshape a Qualtrics conjoint export into analysis-ready long format, with choice mapping, translation, pilot detection, and validation. |
 | [survey-design](plugin/skills/survey-design/SKILL.md) | Both | `/oss:survey-design` | Write survey instruments. Covers question wording, scales, flow, pretesting, respondent burden, and social-desirability mitigation. |
+| [qualtrics-ops](plugin/skills/qualtrics-ops/SKILL.md) | Both | `/oss:qualtrics-ops` | Operate a live Qualtrics survey via the v3 APIs without breaking fielding. Covers publish gating, quotas, flow routing, embedded data, panel-vendor redirects, and read-back verification. |
+| [survey-flow-audit](plugin/skills/survey-flow-audit/SKILL.md) | Both | `/oss:survey-flow-audit` | Pre-fielding audit of a live survey over the platform API, with an optional browser walk. Covers consent-before-anything gates, publish state, force-response completeness, quotas, vendor redirects, anti-bot instrumentation, and language-arm symmetry. |
+| [survey-data-audit](plugin/skills/survey-data-audit/SKILL.md) | Both | `/oss:survey-data-audit` | Audit fielded survey response data for registered elements, data quality, bot and AI-automation screening, and sample integrity. Emits an appendix-ready quality report. |
 | [cross-national-design](plugin/skills/cross-national-design/SKILL.md) | Both | `/oss:cross-national-design` | Design survey experiments that run across countries, with per-country power and measurement equivalence checks. Includes instrument localization. |
 | [list-experiment](plugin/skills/list-experiment/SKILL.md) | Both | `/oss:list-experiment` | Design and diagnose list experiments (the item count technique), from sensitivity assessment through estimation and placebo checks. |
 
@@ -105,6 +108,7 @@ Skills are grouped by where they fall in a project. Unless the Platform column s
 
 | Skill | Platform | Command | What it does |
 |---|---|---|---|
+| [doc-to-markdown](plugin/skills/doc-to-markdown/SKILL.md) | Both | `/oss:doc-to-markdown` | Read or convert any document a research workflow hands you. Decides whether to read the file directly or convert it, routes to the right converter for the document's actual structure, and decides whether the Markdown is a tracked artifact or a scratch file. |
 | [vlm-ocr-pipeline](plugin/skills/vlm-ocr-pipeline/SKILL.md) | Both | `/oss:vlm-ocr-pipeline` | Build an OCR pipeline on vision-language models. Covers model choice, image handling, prompts, batching, evaluation, and reproducibility. |
 | [post-ocr-cleanup](plugin/skills/post-ocr-cleanup/SKILL.md) | Both | `/oss:post-ocr-cleanup` | Clean OCR output with LLM and rule-based correction, quality diagnostics, multilingual handling, and provenance tracking. |
 | [vlm-ocr-evaluation](plugin/skills/vlm-ocr-evaluation/SKILL.md) | Both | `/oss:vlm-ocr-evaluation` | Compare OCR systems before a bulk run, using stratified ground truth and CER/WER reported per language and per stratum. |
@@ -166,7 +170,7 @@ The orchestration and delegated-review skills (`fable-orchestrate`, `opus-orches
 
 ### Claude Code
 
-The recommended install is the plugin, shown in [Quick start](#quick-start). It registers the marketplace and installs all 39 skills and their slash commands. The command prefix is `oss:`, for open science skills. The marketplace and the repository are both named `open-science-skills`.
+The recommended install is the plugin, shown in [Quick start](#quick-start). It registers the marketplace and installs all 42 skills and their slash commands. The command prefix is `oss:`, for open science skills. The marketplace and the repository are both named `open-science-skills`.
 
 To try the plugin for one session without installing:
 
@@ -228,7 +232,7 @@ Manual copy gives auto-trigger only. Slash commands require the plugin.
 
 ### Codex
 
-Codex discovers skills under `.agents/skills` (repository) and `~/.agents/skills` (user-wide). From the repository root, install all 39 skills user-wide:
+Codex discovers skills under `.agents/skills` (repository) and `~/.agents/skills` (user-wide). From the repository root, install all 40 skills user-wide:
 
 ```bash
 mkdir -p "$HOME/.agents/skills"

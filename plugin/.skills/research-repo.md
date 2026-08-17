@@ -57,7 +57,7 @@ For any project that reads and archives a literature, this is the core. (For a c
 │   ├── references.bib      # bibliography (one entry per source)
 │   └── README.md           # the convention, written down
 ├── scripts/
-│   └── convert-sources.sh  # PDF/docx → Markdown (OpenDataLoader PDF + pandoc)
+│   └── convert-sources.sh  # PDF/docx → Markdown (OpenDataLoader PDF + anydoc)
 ├── .claude/
 │   └── commands/
 │       └── process-source.md   # per-PDF intake command
@@ -224,7 +224,8 @@ The PDF in `og/` carries this name through to `md/`.
 ## Requirements
 
 - Python venv at `.venv/` with `opendataloader-pdf` installed
-- `pandoc` (for `.docx`) · Java 11+ (OpenDataLoader PDF backend)
+- Java 11+ (OpenDataLoader PDF backend) · `poppler-utils` for `pdfinfo`/`pdftotext` (the image-only guard)
+- Node (for `npx @firecrawl/anydoc`, which handles `.docx`/`.pptx`/`.xlsx`/`.odt`/`.rtf`/`.epub`), or `pandoc` as the fallback
 
 ```bash
 python3 -m venv .venv
@@ -260,6 +261,25 @@ mkdir -p "$OUTPUT"
 source "$VENV/bin/activate"
 
 converted=0
+needs_ocr=0
+
+# Expand typographic ligatures. OpenDataLoader PDF leaves them raw, which makes the
+# Markdown un-greppable ("signiﬁcant" never matches "significant"). Deliberately not
+# full NFKC, which would also flatten superscript footnote markers into body digits.
+fix_ligatures() {
+    sed -i'' -e 's/ﬀ/ff/g; s/ﬁ/fi/g; s/ﬂ/fl/g; s/ﬃ/ffi/g; s/ﬄ/ffl/g; s/ﬅ/ft/g; s/ﬆ/st/g' "$1"
+}
+
+# Image-only PDFs need OCR. Without this guard opendataloader-pdf exits 0 and writes
+# a few KB of noise, which then reads downstream as a successful conversion.
+is_image_only() {
+    command -v pdftotext >/dev/null 2>&1 && command -v pdfinfo >/dev/null 2>&1 || return 1
+    local pages chars
+    pages="$(pdfinfo "$1" 2>/dev/null | awk '/^Pages:/{print $2}')"
+    [[ -n "$pages" && "$pages" -gt 0 ]] || return 1
+    chars="$(pdftotext -q "$1" - 2>/dev/null | wc -c)"
+    [[ $((chars / pages)) -lt 300 ]]
+}
 
 # PDFs via OpenDataLoader PDF
 for pdf in "$SOURCES"/*.pdf; do
@@ -268,31 +288,42 @@ for pdf in "$SOURCES"/*.pdf; do
     if [[ "$FORCE" == false && -f "$OUTPUT/$base.md" ]]; then
         continue
     fi
+    if is_image_only "$pdf"; then
+        echo "  NEEDS OCR (image-only): $base.pdf"
+        needs_ocr=$((needs_ocr + 1))
+        continue
+    fi
     echo "Converting $base.pdf..."
     opendataloader-pdf "$pdf" --format markdown --output-dir "$OUTPUT/"
+    [ -f "$OUTPUT/$base.md" ] && fix_ligatures "$OUTPUT/$base.md"
     converted=$((converted + 1))
 done
 
-# .docx via pandoc
-for docx in "$SOURCES"/*.docx; do
-    [ -f "$docx" ] || continue
-    base="$(basename "$docx" .docx)"
+# Office and e-book formats via anydoc, falling back to pandoc without Node
+for doc in "$SOURCES"/*.docx "$SOURCES"/*.doc "$SOURCES"/*.odt "$SOURCES"/*.rtf \
+           "$SOURCES"/*.pptx "$SOURCES"/*.xlsx "$SOURCES"/*.epub; do
+    [ -f "$doc" ] || continue
+    base="${doc##*/}"; base="${base%.*}"
     if [[ "$FORCE" == false && -f "$OUTPUT/$base.md" ]]; then
         continue
     fi
-    echo "Converting $base.docx..."
-    pandoc "$docx" -t markdown -o "$OUTPUT/$base.md"
+    echo "Converting $(basename "$doc")..."
+    if command -v npx >/dev/null 2>&1; then
+        npx -y @firecrawl/anydoc "$doc" -o "$OUTPUT/$base.md"
+    else
+        pandoc "$doc" -t markdown -o "$OUTPUT/$base.md"
+    fi
     converted=$((converted + 1))
 done
 
-if [[ $converted -eq 0 ]]; then
+if [[ $converted -eq 0 && $needs_ocr -eq 0 ]]; then
     echo "Nothing new to convert."
 else
-    echo "Converted $converted file(s). Markdown sources in $OUTPUT/"
+    echo "Converted $converted file(s), $needs_ocr need OCR. Markdown in $OUTPUT/"
 fi
 ```
 
-For large corpora, a parallel variant (`xargs -P N` over `opendataloader-pdf`) speeds bulk conversion; the incremental script above is the default and is safe to re-run.
+Files reported as `NEEDS OCR` are image-only scans; route them through `vlm-ocr-pipeline` rather than re-running this script. For large corpora, a parallel variant (`xargs -P N` over `opendataloader-pdf`) speeds bulk conversion; the incremental script above is the default and is safe to re-run.
 
 ### `.claude/commands/process-source.md`
 
