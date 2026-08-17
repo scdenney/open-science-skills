@@ -71,30 +71,76 @@ launch fielding as a side effect.
 
 ### 4. Quota API
 
-- **Compound quota logic silently never fires — the single costliest trap in
-  this whole skill.** Qualtrics's quota evaluation engine does not reliably
-  evaluate "Simple" quota logic once it has more than one condition: an age
-  range (`>=` AND `<=`), a multi-choice OR group (several regions collapsed
-  into one cell, or the same demographic asked as two separate questions in a
-  bilingual EN/ZH-style build), anything needing 2+ clauses. The quota reads
-  back as well-formed JSON, the survey fields it right, and it still matches
-  nobody, forever, with no error at write time or at runtime — confirmed
-  live 2026-08 on production fielding surveys (Germany, then independently
-  reconfirmed on Korea and Singapore), where single-condition quotas on the
-  exact same live survey counted correctly the whole time while every
-  multi-condition one sat at zero. **Never ship a quota condition with more
-  than one clause.** If a cell genuinely needs one (an age band, a
-  multi-region rollup, a value that only exists split across two forked
-  questions), precompute it: a **Branch** (which evaluates AND/OR compound
-  logic correctly — it's the general-purpose skip-logic engine, not the
-  quota-specific one) that writes a single flat value to an embedded-data
-  field, then quota on a single equality check against that field. Before
-  trusting ANY quota with more than a trivial condition, prove the engine
-  actually fires it: create it, then either drive one real or preview
+- **The actual root cause of "compound quota logic never fires" is a
+  hand-authoring dialect mismatch, not a platform limit on condition count —
+  and getting this wrong once already cost a full day of live-fielding churn
+  across two surveys, so read this one carefully.** Qualtrics's own
+  internally-generated quota JSON uses `"Conjuction"` (not `"Conjunction"` —
+  a legacy misspelling baked permanently into the schema) as the key joining
+  multiple conditions, and `"q://{QID}/ChoiceTextEntryValue"` (not
+  `"q://{QID}/TextEntry"`) as the operand/locator for a numeric comparison
+  against a text-entry question, with `ChoiceLocator` duplicating the same
+  string. Hand-write either one with the "obviously correct" English
+  spelling or the intuitive-looking locator and the quota accepts the write
+  (200 OK), reads back exactly as sent, renders correctly in the builder UI's
+  condition editor, and then matches nobody, ever, with no error anywhere —
+  because the engine simply doesn't recognize the key/locator and silently
+  drops that half of the condition. This produced the exact symptom pattern
+  that looks like "compound conditions never fire": single-condition quotas
+  (no `Conjuction` needed) counted correctly the whole time; every
+  age-range and multi-choice-OR quota sat at zero, on multiple live
+  production surveys, for over a week, undetected. **The fix, once
+  diagnosed, is to write compound conditions in the correct dialect, not to
+  avoid them.** A same-day rebuild using the verified dialect — including
+  three- and four-condition flat AND groups spanning multiple different
+  QuestionIDs (age range AND gender-selected AND region-selected in one
+  group) — fired correctly and counted real respondents within the hour.
+  **Do not hand-guess this dialect from documentation or from what "looks
+  right."** Find a real, platform-exported QSF from the same account (or ask
+  the user for one — even an unrelated old survey works) and diff your
+  generated `Logic` block against its quota objects byte-for-byte before
+  trusting anything with more than one condition; this is the single highest-
+  leverage check available and takes minutes. Absent a reference file, the
+  fallback is the advisor-consult pattern: hand a second, independent model
+  the full evidence trail (what fired, what didn't, exact JSON of both) and
+  ask it to reason from first principles rather than guessing again yourself
+  — that is what actually surfaced this dialect mismatch after multiple
+  failed self-directed attempts.
+- **`LogicType: "EmbeddedField"` quota conditions have no confirmed-working
+  example anywhere and should be avoided.** The natural-looking workaround
+  for a value that only exists split across two questions (a bilingual
+  EN/ZH fork, or a value you'd rather precompute via Branch into one flat
+  field and quota on equality) is to write the compound/merge logic in a
+  Branch, store the result in an embedded-data field, and quota on
+  `e://Field/...` equality. This was tried at scale (~130 quota objects
+  across two surveys) with the field verified correctly populated in the
+  response export for real respondents — and every single one of those
+  quotas still read `count: 0`. No root cause was confirmed (declaration
+  location, field `Type` "Custom" vs "Recipient", timing — none of those
+  explained it either), only that the mechanism doesn't work, reliably,
+  across a large sample. Prefer native `Question`-type logic even when it
+  means building one quota per language arm (each self-contained, single-
+  language QuestionIDs, no merge) rather than routing through a computed
+  embedded field.
+- **For a bilingual/multi-arm instrument, don't reflexively split every
+  marginal quota by arm.** If one arm carries the overwhelming majority of
+  traffic (check the actual split from the response export, don't assume),
+  splitting age/gender/etc. into one quota per arm doubles the object count
+  and produces a nonsensical-looking result on screen (a demographic quota
+  that appears to depend on survey language). Fold the minority arm into the
+  majority arm's quota instead — check only the majority-language question,
+  size it to the full combined remaining target — and accept that the
+  minority arm isn't independently capped by that specific quota. Disclose
+  the tradeoff; don't build the split by default.
+- Before trusting ANY quota with more than a trivial condition, prove the
+  engine actually fires it: create it, then either drive one real or preview
   response through the matching path and confirm `count` increments, or —
   cheaper — diff its `Logic` shape against a quota on the same live survey
   that is *already* demonstrably counting; identical shape, live proof either
-  way.
+  way. Note preview/import responses are not reliable for this: a response
+  created via `POST .../responses` (import) does not trigger quota
+  evaluation at all — that's expected, uninformative behavior, not a signal
+  either way.
 - **A quota's `count` never back-counts responses collected before the quota
   existed.** It only increments on new submissions from creation forward.
   On a survey that has been fielding for a while, a freshly created or
@@ -107,9 +153,26 @@ launch fielding as a side effect.
   that's the only number that reflects who has actually been collected, and
   it's required reading before reporting "verified" on any quota fix applied
   mid-field.
-- Quota creation auto-assigns to the survey's existing quota group; there is
-  no field to target a specific group on write. Regrouping is a UI-only
-  operation (the "Move to…" row menu) — plan for it, don't fight the API.
+- **Quota creation's group auto-assignment is flaky, not just
+  "always goes to the first group" — confirmed empirically across two
+  surveys built with near-identical scripts.** There is no field to target a
+  specific group on write. In one run, three sequential `create_quota_group`
+  calls (Age, Gender, Region) resulted in Gender's quotas silently landing in
+  the Age group while Region correctly got its own; in another run on a
+  different survey, all three groups' quotas landed in the very first group
+  regardless of creation order. Do not assume any particular assignment
+  pattern, and do not rely on the UI's "Move to…" menu for anything beyond a
+  handful of objects — it does not scale. Instead: create every quota first
+  (accept whatever group it lands in), THEN read back the actual membership
+  and fix it programmatically via the group PUT below. **Order matters when
+  fixing it**: a quota already listed in group A's membership cannot be added
+  to group B's membership directly — the API returns `ESDEF44` ("already
+  exists in Quota Group X"). PUT the *source* group first with a shrunk
+  membership list (removing the quotas you're about to move), THEN PUT the
+  destination group with them added. Verify final state by reading back every
+  group's membership and matching quota names against your intended
+  structure — the group's own `Name` field is not proof its `Quotas` array
+  is what you think it is.
 - The quota-group update endpoint is a **full replace**: omit the quotas array
   and the group's membership is silently wiped. Always resend the complete
   membership plus any fields the API requires on write but omits from its own
@@ -214,6 +277,22 @@ downstream logic easier to read.
 (Panel vendors vary — a generic panel-vendor redirect endpoint is the concept
 that matters here, not any particular vendor's API shape.)
 
+**Before enabling ANY quota's hard-terminate action (`EndCurrentSurvey`) on a
+survey running through a panel vendor, check prior vendor correspondence for
+an explicit statement of which real-time termination paths are in use.**
+Vendors are sometimes told directly — in an email, not just implied by
+default config — that a given exit status (a quota-full redirect code,
+say) is deliberately *not* used, with real-time termination limited to a
+named, narrower set of conditions (duplicate device, geo-ineligibility,
+automation detection). Flipping a quota to hard-terminate is, from inside
+Qualtrics, a purely internal config change with a green checkmark and no
+warning — but it silently starts exercising a redirect path the vendor's
+system was told to expect never to see. This is a compliance question, not
+a technical one, and the fix isn't a Qualtrics setting: read the actual
+correspondence (search for the vendor's redirect status codes by name, not
+just "quota") before assuming a hard quota is safe to activate on a live
+vendor-sourced field.
+
 ### 8. Security options
 
 Treat the survey's security/options block as read-modify-write: fetch the
@@ -224,6 +303,15 @@ as the quota-group endpoint above, and a security setting silently reset to a
 default (e.g. a fraud-detection threshold, a ballot-box-stuffing prevention
 flag) is the kind of regression that goes unnoticed until an incident, not at
 write time.
+
+**After any live toggling of quota actions or repeated publishes on a
+fielding survey, verify no real respondent was actually affected — don't
+just reason about it.** Pull the response export, filter to sessions with
+`StartDate` inside the affected window, and check `Progress`/`Finished`
+across all of them. A clean 100/`Finished=True` for every session is
+checkable proof nobody was cut off mid-survey by a config change in flight;
+don't rely on "the targets never should have hit zero" reasoning alone when
+the actual data is one export call away.
 
 ## Quality Checks
 
@@ -238,14 +326,25 @@ write time.
       byte-identical to the backup
 - [ ] Quota-group and options writes sent as complete objects (full
       membership / full key set), never partial
-- [ ] Every quota's `Logic` has exactly one condition — any cell that
-      conceptually needs more (a range, an OR-group, a value split across
-      forked questions) is built from a Branch-computed single flat field
-      instead, and its shape is diffed against an already-proven-counting
-      quota on the same survey before being trusted
+- [ ] Any quota with more than one condition is diffed byte-for-byte against
+      a real, platform-exported QSF's quota `Logic` shape (`Conjuction`
+      spelling, `ChoiceTextEntryValue` locator) before being trusted —
+      never hand-authored from the "obviously correct" spelling
+- [ ] No quota condition relies on `LogicType: "EmbeddedField"` without a
+      confirmed-working reference example; bilingual/multi-arm merges use
+      one quota per arm (or fold the minority arm in) rather than a
+      Branch-precomputed field
 - [ ] Fill verified against a real response export, never against `count`
       alone, on any survey that was already fielding before the quota was
       created or fixed
+- [ ] Quota-group membership read back post-write and matched by quota name
+      against intended structure, not assumed from creation-time order
+- [ ] Prior vendor correspondence checked for any stated real-time
+      termination agreement before enabling a quota's `EndCurrentSurvey`
+      action on a vendor-sourced field
+- [ ] After any live quota-action toggling, response export checked for
+      `Progress`/`Finished` across the affected window — not just reasoned
+      about
 - [ ] Choice-based conditions carry both the evaluation operand and the
       UI locator
 - [ ] Routing gates anchored to stable block descriptions, not data-capture
