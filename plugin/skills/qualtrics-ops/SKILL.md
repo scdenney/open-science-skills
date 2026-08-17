@@ -71,6 +71,60 @@ launch fielding as a side effect.
 
 ### 4. Quota API
 
+- **START HERE IF A QUOTA COUNTS BUT NEVER BLOCKS: check `ActionInfo`.**
+  `QuotaAction: "EndCurrentSurvey"` only NAMES the action. The nested
+  `ActionInfo` object is what actually FIRES it. A quota written with an
+  empty stub —
+
+      "ActionInfo": {"Type": "BooleanExpression"}
+
+  — counts every matching respondent flawlessly, forever, and acts on none
+  of them: no termination, no screen-out, no error at write time, at publish
+  time, or at runtime, and the builder UI renders the quota as normal. The
+  platform's own serialization is:
+
+      "ActionInfo": {"0": {"0": {"ActionType": "EndCurrentSurvey",
+                                  "Type": "Expression",
+                                  "LogicType": "QuotaAction"},
+                            "Type": "If"},
+                      "Type": "BooleanExpression"}
+
+  `ActionType` must repeat the `QuotaAction` value. This was shipped as an
+  empty stub in a homegrown API client and made **every quota it ever created
+  inert** across multiple live fielding surveys — the true reason quotas
+  "didn't work", after days of chasing logic-dialect theories that were all
+  downstream of it. If a quota's `count` is incrementing, its matching logic
+  is already correct and the problem is not the logic; go straight to
+  `ActionInfo`.
+- **Proven by controlled before/after, and this is the method to reuse.**
+  Do NOT try to diagnose quota enforcement on a clone of the real
+  instrument — geo gates, duplicate-device gates, anti-automation paradata
+  and session-resume cookies will each eject or short-circuit the walk, and
+  stripping them piecemeal corrupts the flow (all of this was tried, and
+  burned hours). Instead build a **minimal disposable survey from scratch**:
+  three quota-bearing questions on page 1, one marker question on page 2
+  (reaching page 2 is the "not blocked" signal — a single-page survey cannot
+  demonstrate blocking at all, because the respondent has already answered
+  everything by the time the quota evaluates), plus TWO quotas: one the walk
+  matches and one differing in a single condition as a negative control.
+  Walk it once to fill the match quota, then walk again and observe. The
+  control must stay at 0 — that is what proves the multi-condition AND is
+  sound rather than collapsing. Change ONE variable per walk. In the
+  reference case the immediately-preceding walk already had the group's
+  `Selected` flag, canonical dialect and `EndSurveyOptions` all in place and
+  still reached page 2; populating `ActionInfo` alone flipped the identical
+  walk to terminating at page 1.
+- **Ruled out along the way — do not re-chase these** (each was a plausible
+  theory that cost real time): the quota group's `Selected` flag (setting it
+  `True` to match a working reference changed nothing on its own); the
+  presence or absence of `EndSurveyOptions` (worth having for the `QuotaMet`
+  flag, but not what makes a quota fire); and `Occurrences: 0` as a way to
+  express "already full" — that IS wrong and no platform-authored quota uses
+  it (minimum observed across 49 reference quotas was 16), but with a broken
+  `ActionInfo` no limit value of any kind would have blocked anyone. Use
+  `Occurrences: 1` when a cell is already over target and you want it shut:
+  the first matching respondent tips it to full and every subsequent one is
+  blocked.
 - **The actual root cause of "compound quota logic never fires" is a
   hand-authoring dialect mismatch, not a platform limit on condition count —
   and getting this wrong once already cost a full day of live-fielding churn
@@ -397,6 +451,15 @@ the actual data is one export call away.
 - [ ] Fill verified against a real response export, never against `count`
       alone, on any survey that was already fielding before the quota was
       created or fixed
+- [ ] Every hard quota's `ActionInfo` is POPULATED with the nested
+      `{"0":{"0":{"ActionType":<same as QuotaAction>,"Type":"Expression",
+      "LogicType":"QuotaAction"},"Type":"If"},"Type":"BooleanExpression"}`
+      shape -- an empty `{"Type":"BooleanExpression"}` stub yields a quota
+      that counts every match and blocks nobody, silently
+- [ ] Enforcement demonstrated on a minimal disposable survey (quota-bearing
+      questions on page 1, marker question on page 2, plus a one-condition-
+      different negative control that must stay at 0) before enforcement is
+      claimed -- never inferred from config review or from `count` moving
 - [ ] Quota-group membership read back post-write and matched by quota name
       against intended structure, not assumed from creation-time order
 - [ ] Every hard quota built with its own `EndSurveyOptions`
