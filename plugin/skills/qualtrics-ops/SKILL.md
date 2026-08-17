@@ -106,22 +106,50 @@ launch fielding as a side effect.
   ask it to reason from first principles rather than guessing again yourself
   — that is what actually surfaced this dialect mismatch after multiple
   failed self-directed attempts.
-- **`LogicType: "EmbeddedField"` quota conditions have no confirmed-working
-  example anywhere and should be avoided.** The natural-looking workaround
-  for a value that only exists split across two questions (a bilingual
-  EN/ZH fork, or a value you'd rather precompute via Branch into one flat
-  field and quota on equality) is to write the compound/merge logic in a
-  Branch, store the result in an embedded-data field, and quota on
-  `e://Field/...` equality. This was tried at scale (~130 quota objects
-  across two surveys) with the field verified correctly populated in the
-  response export for real respondents — and every single one of those
-  quotas still read `count: 0`. No root cause was confirmed (declaration
-  location, field `Type` "Custom" vs "Recipient", timing — none of those
-  explained it either), only that the mechanism doesn't work, reliably,
-  across a large sample. Prefer native `Question`-type logic even when it
-  means building one quota per language arm (each self-contained, single-
-  language QuestionIDs, no merge) rather than routing through a computed
-  embedded field.
+- **`LogicType: "EmbeddedField"` quota conditions take the BARE field name as
+  `LeftOperand`, not the `e://Field/...` piped reference** — and getting this
+  wrong is silent, like every other quota-dialect error. A platform-authored
+  Cross quota carries `{"LogicType": "EmbeddedField", "LeftOperand": "gc",
+  "Operator": "EqualTo", "RightOperand": "1"}` — just `"gc"`. Writing
+  `"e://Field/gc"` (the form that is correct everywhere else in Qualtrics:
+  Branch logic, display logic, piped text, redirect URLs) produces a quota
+  that accepts the write, reads back intact, and matches nobody. This was
+  learned expensively: a Branch-precompute design (merge a value into one
+  flat embedded field, then quota on equality) was built at ~130 quota
+  objects across two live surveys, with the field VERIFIED correctly
+  populated in the response export for real respondents, and every one of
+  those quotas read `count: 0` — because all of them used the `e://Field/`
+  prefix. Do not conclude from a failure like that that embedded-field quota
+  logic is unsupported; check the operand format against a platform-authored
+  example first. Note also that when the goal is an interlock, `LogicType:
+  "Cross"` (below) is the native mechanism and usually beats precomputing a
+  merged field at all.
+- **`LogicType: "Cross"` is Qualtrics's native interlock quota, and it is a
+  different object shape from `Simple` — know which one you are reading.**
+  A Simple quota is one cell: `Logic` is a single expression tree (a dict)
+  and `Occurrences` is that cell's absolute target. A Cross quota is a whole
+  grid: `Logic` is an ARRAY of logic sets, the engine crosses the sets to
+  generate cells, and `Occurrences` is the TOTAL across the grid. In a Cross
+  quota the `Conjuction` key does not hold `"And"`/`"Or"` — it holds that
+  condition's **percentage allocation** (`"27%"`, `"29%"`), and each cell's
+  effective target is `Occurrences x` the product of its shares. So the same
+  misspelled key means two completely different things depending on quota
+  type; do not pattern-match one onto the other. Choosing between them:
+  Cross expresses an age x gender x region interlock as ONE object instead
+  of hundreds, which is decisive when building a grid up front. But because
+  Cross targets are percentages of a total, it is poorly suited to rebasing
+  a partially-collected field — "this cell has 33 slots left of 473" is
+  trivial as a Simple quota's absolute `Occurrences: 33` and awkward as a
+  share of a total that is already half filled. Build with Cross; repair
+  mid-field with Simple.
+- **Sidestep the whole range-comparison problem at design time by asking age
+  as a categorical band question rather than a numeric text entry.** A
+  platform-authored reference survey that quotas cleanly on age does it with
+  a multiple-choice item (18-29 / 30-39 / 40-49 / 50-59 / 60+) and plain
+  `Selected` conditions — no `ChoiceTextEntryValue` locator, no
+  `>=`/`<=` pair, no compound condition, nothing to get wrong. If the
+  instrument is not yet fielded and the analysis does not need exact age,
+  this is strictly the safer design.
 - **For a bilingual/multi-arm instrument, don't reflexively split every
   marginal quota by arm.** If one arm carries the overwhelming majority of
   traffic (check the actual split from the response export, don't assume),
@@ -330,10 +358,13 @@ the actual data is one export call away.
       a real, platform-exported QSF's quota `Logic` shape (`Conjuction`
       spelling, `ChoiceTextEntryValue` locator) before being trusted —
       never hand-authored from the "obviously correct" spelling
-- [ ] No quota condition relies on `LogicType: "EmbeddedField"` without a
-      confirmed-working reference example; bilingual/multi-arm merges use
-      one quota per arm (or fold the minority arm in) rather than a
-      Branch-precomputed field
+- [ ] Any `LogicType: "EmbeddedField"` quota condition uses the BARE field
+      name as `LeftOperand` (`"gc"`), never the `e://Field/` piped form that
+      is correct everywhere else in Qualtrics
+- [ ] Quota type identified before reading or writing `Logic`: `Simple` =
+      one cell, dict-shaped logic, absolute `Occurrences`; `Cross` = a grid,
+      array-of-logic-sets, `Occurrences` is the total and `Conjuction` holds
+      a percentage share, not And/Or
 - [ ] Fill verified against a real response export, never against `count`
       alone, on any survey that was already fielding before the quota was
       created or fixed
