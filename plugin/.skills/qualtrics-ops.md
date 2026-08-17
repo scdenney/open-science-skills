@@ -213,12 +213,41 @@ launch fielding as a side effect.
   can overwrite live quota logic with nothing.
 - Confirm the exact operator enum the API expects (vendors sometimes reject a
   plausible-looking synonym) rather than assuming from REST convention.
-- Via the API write path, the quota end-survey action accepted no per-quota
-  redirect in our testing (the builder UI may offer a custom end-of-survey per
-  quota — verify on your account). The pattern that works everywhere: bracket
-  the quota-bearing block with before/after embedded-data nodes carrying the
-  quota-full vs screen-out exit URLs, and let the end-of-survey redirect read
-  the field.
+- **Give every hard quota its own `EndSurveyOptions` at build time.** A quota
+  created without one inherits the survey-level termination settings, which
+  works — the respondent still exits and still hits whatever redirect the
+  survey-level `EOSRedirectURL` resolves to — but the resulting response row
+  carries **no `QuotaMet` flag**, so afterwards you cannot tell a
+  quota-terminated respondent from any other early exit except by inferring
+  it from their answer pattern. On an instrument that also produces
+  consent-refusal and screen-out rows of the same shape (demographics
+  answered, no outcome data), that inference gets genuinely fiddly. The
+  platform's own serialization for a hard quota looks like:
+
+      "EndSurveyOptions": {"EndingType": "Advanced",
+                            "ResponseFlag": "QuotaMet",
+                            "Screenout": "Yes", "IgnoreResponse": "Yes",
+                            "AnonymizeResponse": "Yes", "CountQuotas": "No",
+                            "SurveyTermination": "Redirect",
+                            "EOSRedirectURL": "<vendor quota-full URL>"}
+
+  Note this **supersedes an earlier claim in this skill that the API accepts
+  no per-quota redirect** — a platform-exported reference survey carries
+  `EOSRedirectURL` inside `EndSurveyOptions` on its quota objects, so the
+  quota-full URL can live on the quota itself rather than being bracketed in
+  the flow. Treat the old claim as untested rather than true; it dates from
+  the same period as the compound-logic misdiagnosis above.
+- **The flow-bracket pattern remains the right retrofit** when quotas are
+  already live without `EndSurveyOptions`: set an embedded field to the
+  quota-full exit URL immediately BEFORE the block holding the quota-bearing
+  questions, reset it to the screen-out URL immediately AFTER, and have the
+  survey-level end-of-survey redirect read that field. Verify by mapping flow
+  indices — the setter must precede the block, the reset must follow it. This
+  gets the vendor disposition right (which is the billing-relevant half) even
+  though the response row stays unflagged. Retrofitting `EndSurveyOptions`
+  onto many live quota objects is a mass mutation on a fielding survey; if the
+  bracket is already correct, the remaining benefit is forensic tidiness only,
+  and is usually not worth the write.
 - Quota counts can retain stale values after response deletion even when the
   deletion call requests a decrement. Before a FIRST fielding wave, zero the
   counters explicitly rather than trusting the decrement flag; mid-study,
@@ -370,6 +399,11 @@ the actual data is one export call away.
       created or fixed
 - [ ] Quota-group membership read back post-write and matched by quota name
       against intended structure, not assumed from creation-time order
+- [ ] Every hard quota built with its own `EndSurveyOptions`
+      (`ResponseFlag: "QuotaMet"`) so terminations are identifiable in the
+      response data; if quotas are already live without it, the flow-bracket
+      pattern is verified instead by mapping flow indices around the
+      quota-bearing block
 - [ ] Prior vendor correspondence checked for any stated real-time
       termination agreement before enabling a quota's `EndCurrentSurvey`
       action on a vendor-sourced field
