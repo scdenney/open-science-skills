@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# fable-advisor.sh — consult Fable 5 as an independent second reviewer.
+# fable-advisor.sh — consult Fable 5.1 as an independent second reviewer.
 #
 # Read-only advisory consult, not implementation. Spawns a fresh, isolated
 # `claude` session (--permission-mode plan: no edits) at `max` reasoning

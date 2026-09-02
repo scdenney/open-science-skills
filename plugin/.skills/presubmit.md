@@ -1,6 +1,6 @@
 ---
 name: presubmit
-description: Run the standalone presubmit CLI. Adversarial 30+ stage peer-review pipeline.
+description: Launcher and setup wizard for the standalone presubmit CLI, an API-driven adversarial peer-review pipeline of 30-plus stages (Red Team finders, Blue Team defence, verification cascade, legal pass, copyedit) that writes one consolidated review report to disk. Verifies the install and the API key, settles where output lands, picks smoke, standard, or custom mode, launches the run, and reports where the report ended up. Use when the user asks to run presubmit, wants a deep unattended audit of a draft before submission, or needs a math or replication-code audit. The everyday in-session self-audit is paper-review-lite, and refereeing someone else's manuscript is journal-review.
 argument-hint: "[path to your draft to review, or describe the setup task]"
 ---
 

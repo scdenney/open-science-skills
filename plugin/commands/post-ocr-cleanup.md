@@ -1,5 +1,7 @@
 # Post-OCR Cleanup
 
-Apply post-OCR text cleanup expertise to the task below. Cover cleanup strategy selection, LLM-based and rule-based correction, quality diagnostics, multilingual considerations, corpus-level QA, and provenance tracking as relevant.
+Run the `vlm-ocr` skill in its `clean` phase: LLM and rule-based correction of raw OCR text, quality diagnostics, multilingual handling, corpus-level QA, and span-level provenance.
+
+clean
 
 $ARGUMENTS

@@ -7,7 +7,7 @@ description: "Design and format publication-quality tables. Use for column order
 
 ## Heritage and scope
 
-This is an original Open Science Skills workflow for table production in social-science manuscripts. It is general — apply to descriptive tables, regression tables, balance tables, and summary tables across any method. For tables whose interpretation depends on method-specific standards, also consult the relevant sibling skill (`conjoint-design`, `conjoint-diagnostics`, `list-experiment`, `topic-modeling`, `text-classification`, `vlm-ocr-pipeline`). For end-stage QA on a finished table set, hand off to `figure-table-audit`.
+This is an original Open Science Skills workflow for table production in social-science manuscripts. It is general — apply to descriptive tables, regression tables, balance tables, and summary tables across any method. For tables whose interpretation depends on method-specific standards, also consult the relevant sibling skill (`conjoint-design`, `conjoint-diagnostics`, `list-experiment`, `topic-modeling`, `text-classification`, `vlm-ocr`). For end-stage QA on a finished table set, hand off to `figure-table-audit`.
 
 Tables are for precise reading. A good table is one where the relevant comparison can be made without arithmetic, and where every number that appears in the manuscript text can be traced back to a specific cell. If readers have to do mental subtraction to recover the substantive quantity, the table is the wrong shape.
 

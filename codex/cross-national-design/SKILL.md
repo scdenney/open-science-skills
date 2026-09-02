@@ -1,6 +1,6 @@
 ---
 name: cross-national-design
-description: "Design cross-national survey experiments covering power, equivalence, and localization. Use for multi-country sampling, measurement comparability, and instrument adaptation."
+description: "Designs multi-country survey experiments — case selection with a stated comparative logic, instrument localization and TRAPD translation, origin-country and composition choices for stimuli, per-country power and error management, and a pooled-versus-per-country analytical strategy with measurement-equivalence checks. Use when the user is fielding the same experiment in several countries, asks which countries to include and why, asks how to translate or adapt an instrument without breaking comparability, asks whether to pool or estimate per country, or asks how large each country sample must be. Question wording goes to survey-design, per-country CONSORT and DA-RT reporting to methods-reporting, and the study-level plan to pre-registration-writing."
 ---
 
 # Cross-National Comparative Designer

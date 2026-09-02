@@ -323,7 +323,7 @@ else
 fi
 ```
 
-Files reported as `NEEDS OCR` are image-only scans; route them through `vlm-ocr-pipeline` rather than re-running this script. For large corpora, a parallel variant (`xargs -P N` over `opendataloader-pdf`) speeds bulk conversion; the incremental script above is the default and is safe to re-run.
+Files reported as `NEEDS OCR` are image-only scans; route them through `vlm-ocr` rather than re-running this script. For large corpora, a parallel variant (`xargs -P N` over `opendataloader-pdf`) speeds bulk conversion; the incremental script above is the default and is safe to re-run.
 
 ### `.claude/commands/process-source.md`
 

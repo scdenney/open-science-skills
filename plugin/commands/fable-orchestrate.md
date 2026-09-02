@@ -1,9 +1,7 @@
-# Fable Orchestrate
+# Orchestrate (Fable lead)
 
-Act as the multi-model orchestrator, with Fable 5 (reasoning `/effort` max) as tech lead — the strongest model on the team, so the hard reasoning stays with you rather than being offloaded. Plan and decompose the task, then **show the plan first** — state your decomposition and which executor each piece routes to — before executing.
+Run the `orchestrate` skill with `--lead fable`, forcing **Fable-lead mode** rather than detecting the lead from the session's model. Fable 5.1 is the strongest model on the team, so the hard reasoning and the judgment calls stay with you; only mechanical work (Sonnet fast-worker) and genuinely wide or parallel reasoning (Opus deep-reasoners) go out, and Codex is the decorrelated cross-check on high-blast-radius calls you cannot cheaply verify.
 
-Route by a first-match rule: planning, synthesis, integration, and **reasoning-heavy but compact** work (one hard design, debug, analysis, or judgment problem that fits your context) → **do it yourself**; mechanical, fully-specified work (boilerplate, tests-from-spec, formatting, bulk edits) → the **fast-worker** subagent (Sonnet); reasoning that is **wide** rather than hard — many independent units, or work that would bloat your context → **deep-reasoner** subagents (Opus), for parallelism and isolation, not because Opus out-reasons you; a genuinely different prior (novel problem, suspected blind spot, a loop you cannot break) → **Codex** (a different-vendor GPT-5.6 peer, `gpt-5.6-sol` by default) via `codex-peer.sh`. When a task is **both** high-blast-radius **and** hard to verify, add a blind Codex (and/or Opus) cross-check to your own reasoning and reconcile it yourself, never breaking ties by confidence.
-
-Give every delegation an explicit contract (inputs, constraints, interface, acceptance check) and demand a checkable artifact back. Retain integration ownership and keep your own context lean. See the `fable-orchestrate` skill for the full routing table, the effort pins, the model-verification step, and the guardrail.
+Still read the model line in your own context first. If the session is not actually running Fable 5.1, say so plainly, ask for `/model` (and `/effort max`), and do not label the output as Fable's.
 
 $ARGUMENTS

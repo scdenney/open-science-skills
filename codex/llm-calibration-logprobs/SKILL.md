@@ -1,6 +1,6 @@
 ---
 name: llm-calibration-logprobs
-description: "Analyze LLM token logprobs and calibration. Use for per-decision confidence, ECE, Brier scores, reliability diagrams, and low-confidence triage."
+description: "Reads a model's own uncertainty off its token log-probabilities — collecting logprobs and aggregating multi-token labels, confidence tiers and margins for triage, calibration assessment with ECE, Brier scores, and reliability diagrams, using confidence downstream without laundering it into evidence, and what to archive for reproducibility. Use when the user asks how confident a classifier was on each item, asks about logprobs, top-k tokens, calibration, ECE, Brier, or reliability diagrams, or wants low-confidence cases routed to human review. This is within-model confidence — agreement across several independent model coders goes to model-council-voting, and codebook and validation design to text-classification."
 ---
 
 # Reading a Model's Own Uncertainty from Token Log-Probabilities

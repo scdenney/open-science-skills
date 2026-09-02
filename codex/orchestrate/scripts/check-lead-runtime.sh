@@ -8,7 +8,7 @@ CODEX_STATE_ROOT="${CODEX_HOME:-$HOME/.codex}"
 THREAD_ID="${CODEX_THREAD_ID:-}"
 
 die() {
-  printf '46-orchestrate preflight: %s\n' "$*" >&2
+  printf 'orchestrate preflight: %s\n' "$*" >&2
   exit 2
 }
 
@@ -36,7 +36,7 @@ try:
                 event = json.loads(line)
             except json.JSONDecodeError as exc:
                 raise SystemExit(
-                    f"46-orchestrate preflight: invalid JSON in current rollout at line {line_number}: {exc}"
+                    f"orchestrate preflight: invalid JSON in current rollout at line {line_number}: {exc}"
                 )
             if event.get("type") == "turn_context":
                 latest = event.get("payload") or {}
@@ -50,16 +50,16 @@ try:
             ):
                 reroute = event.get("payload") or event
 except OSError as exc:
-    raise SystemExit(f"46-orchestrate preflight: cannot read current rollout: {exc}")
+    raise SystemExit(f"orchestrate preflight: cannot read current rollout: {exc}")
 
 if latest is None:
     raise SystemExit(
-        "46-orchestrate preflight: current rollout has no turn_context; stop rather than guessing"
+        "orchestrate preflight: current rollout has no turn_context; stop rather than guessing"
     )
 
 if reroute is not None:
     raise SystemExit(
-        "46-orchestrate preflight: Codex recorded a model reroute for the current turn; "
+        "orchestrate preflight: Codex recorded a model reroute for the current turn; "
         f"details={json.dumps(reroute, sort_keys=True)}. Do not proceed as if Sol were the lead."
     )
 
@@ -67,19 +67,19 @@ model = latest.get("model")
 effort = latest.get("effort")
 if not model or not effort:
     raise SystemExit(
-        "46-orchestrate preflight: current turn_context does not expose both model and effort; "
+        "orchestrate preflight: current turn_context does not expose both model and effort; "
         "stop rather than guessing"
     )
 
 if model != expected_model or effort != expected_effort:
     raise SystemExit(
-        "46-orchestrate preflight mismatch: "
+        "orchestrate preflight mismatch: "
         f"current runtime is {model} at {effort}; required lead is "
         f"{expected_model} at {expected_effort}. Do not proceed. Ask the operator to select "
         "Sol with Extra High reasoning in /model (or restart Codex with "
         "--model gpt-5.6-sol -c model_reasoning_effort=xhigh), verify with /status, "
-        "and invoke $46-orchestrate again."
+        "and invoke $orchestrate again."
     )
 
-print(f"46-orchestrate preflight OK: {model} at {effort}")
+print(f"orchestrate preflight OK: {model} at {effort}")
 PY

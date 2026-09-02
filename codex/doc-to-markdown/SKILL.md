@@ -33,7 +33,7 @@ echo "$((chars / pages)) chars/page"   # < 300 means image-only, needs OCR
 | Born-digital PDF, prose-dominant (articles, books, reports) | `opendataloader-pdf -f markdown` | Keeps paragraph boundaries and does not invent tables |
 | PDF whose payload is tables (questionnaires, appendices, statistical tables) | `npx -y @firecrawl/anydoc` | Real tables come out as real columns |
 | Office and e-book formats (.docx, .pptx, .xlsx, .odt, .ods, .odp, .rtf, .epub, .csv) | `npx -y @firecrawl/anydoc` | One local MIT Rust binary covers all 14 formats, sub-second, no model weights |
-| Scanned or image-only PDF (< 300 chars/page) | Stop and hand off to `$vlm-ocr-pipeline` | Neither text extractor can do OCR |
+| Scanned or image-only PDF (< 300 chars/page) | Stop and hand off to `$vlm-ocr` | Neither text extractor can do OCR |
 | One value or one passage out of a clean PDF | `pdftotext -layout` | 30 ms, no dependencies |
 
 Fall back to `pandoc` for .docx only when Node is unavailable; it escapes apostrophes, hard-wraps lines, and emits Pandoc-flavored rather than GitHub-flavored Markdown.
@@ -77,7 +77,7 @@ When in doubt, persist inside the project and tell the user, since a stray Markd
 
 A converted document is derived data, and a reader six months on cannot tell a clean extraction from a mangled one. For anything persisted, note the converter and version — in the file's front matter, in `sources/README.md`, or in the conversion log the repo already keeps. When a document needed OCR, that fact travels with it; downstream text analysis has to know it is working from OCR output.
 
-Bulk intake of many sources at once is `$research-repo`'s job, not this skill's. Cleaning OCR output is `$post-ocr-cleanup`'s.
+Bulk intake of many sources at once is `$research-repo`'s job, not this skill's. Cleaning OCR output is `$vlm-ocr` (clean phase)'s.
 
 ## Quality Checks
 

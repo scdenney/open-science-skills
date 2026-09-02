@@ -1,14 +1,13 @@
 #!/usr/bin/env bash
-# claude-peer.sh — invoke Claude Code (Anthropic) as a cross-vendor peer for /46-orchestrate.
+# claude-peer.sh — invoke Claude Code (Anthropic) as a cross-vendor peer for /orchestrate.
 #
-# This is the mechanism 46-orchestrate's SKILL.md previously only described in prose
+# This is the mechanism the orchestrate SKILL.md previously only described in prose
 # ("step outside to a cross-vendor check that brings Claude in as the decorrelated
 # vendor") without ever giving a way to do it. Without this script, the only
 # "decorrelated" check a Sol lead had was a same-vendor, weaker-tier Terra one-shot —
-# not a real cross-vendor line, unlike fable-orchestrate's Codex peer or
-# opus-orchestrate's Codex peer. This script closes that gap in the other direction:
-# it is codex-peer.sh's mirror image, a Codex lead calling out to Claude instead of
-# a Claude lead calling out to Codex.
+# not a real cross-vendor line, unlike the Claude-side orchestrate skill's Codex peer.
+# This script closes that gap in the other direction: it is codex-peer.sh's mirror
+# image, a Codex lead calling out to Claude instead of a Claude lead calling out to Codex.
 #
 # VERIFIED pattern (this is the whole reason the wrapper exists):
 #   claude -p "<prompt>" --output-format json < /dev/null
@@ -22,7 +21,7 @@
 # path — launch this AND a Terra out-of-band one-shot on the SAME prompt in one
 # round, blind to each other, then reconcile. That is a genuine cross-vendor,
 # cross-tier check: Claude's model family is fully decorrelated from anything in the
-# GPT-5.6 family, the same value fable-/opus-orchestrate get from their Codex peer,
+# GPT-5.6 family, the same value the Claude-side orchestrate skill gets from its Codex peer,
 # now available in the other direction.
 #
 # Usage:

@@ -1,4 +1,4 @@
 interface:
   display_name: "Replication Package"
-  short_description: "Scaffold or audit a replication archive"
-  default_prompt: "Use $replication-package to scaffold or audit this replication package."
+  short_description: "Scaffold or audit a replication archive, with FAIR audit"
+  default_prompt: "Use $replication-package to scaffold or audit this replication package, and to audit it against FAIR principles."

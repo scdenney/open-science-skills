@@ -1,5 +1,7 @@
 # VLM OCR Pipeline
 
-Apply VLM-based OCR pipeline expertise to the task below. Cover model selection, image handling, prompt engineering, pipeline architecture, batch strategy, accuracy evaluation, and reproducibility as relevant.
+Run the `vlm-ocr` skill in its `run` phase: build the production VLM-OCR pipeline — model selection, image handling, prompt engineering, architecture, batch strategy, accuracy evaluation, and reproducibility.
+
+run
 
 $ARGUMENTS

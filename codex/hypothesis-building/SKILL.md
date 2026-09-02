@@ -1,6 +1,6 @@
 ---
 name: hypothesis-building
-description: "Build falsifiable causal hypotheses. Use for DAGs, FPCI, equivalence testing, mechanism specification, and deriving testable predictions from theory."
+description: "Turns a theory into falsifiable, pre-registerable hypotheses — DAGs and backdoor closure, how the design resolves the FPCI, SATE versus PATE, counterfactual and directional framing, a named theoretical and empirical estimand, a justified SESOI, the choice among NHST, interval, equivalence (TOST), and minimum-effect tests, scope conditions, and primary, secondary, and exploratory tiers across multi-experiment designs. Use when the user has a research question or theory and asks to turn it into hypotheses, asks whether a prediction is falsifiable or testable, asks what the estimand is, or asks how to predict a null. Framing the paper around it goes to narrative-building, the plan to pre-registration-writing."
 ---
 
 # Causal Hypothesis Architect

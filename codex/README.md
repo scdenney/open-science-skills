@@ -1,14 +1,15 @@
 <p align="center">
-  <img src="https://img.shields.io/badge/OpenAI_Codex-41_open--science_skills-111111?style=for-the-badge&logo=openai&logoColor=white" alt="OpenAI Codex — 41 open-science skills">
+  <img src="https://img.shields.io/badge/OpenAI_Codex-37_open--science_skills-111111?style=for-the-badge&logo=openai&logoColor=white" alt="OpenAI Codex — 37 open-science skills">
 </p>
 
 # Codex skills
 
-This directory contains 41 Codex-native Open Science Skills. They mirror the Claude Code library with three intentional differences:
+This directory contains 37 Codex-native Open Science Skills. They mirror the Claude Code library with two intentional differences:
 
 - `presubmit` is omitted.
-- `opus-orchestrate` is omitted because it depends on Claude Code's `Workflow` tool for dynamic multi-agent orchestration, which has no Codex equivalent.
-- [`46-orchestrate`](46-orchestrate/SKILL.md) replaces `fable-orchestrate`. `gpt-5.6-sol` at xhigh effort owns orchestration, routing bounded work to Terra and reserving Luna for tightly specified mechanical work.
+- [`orchestrate`](orchestrate/SKILL.md) is the Codex-native version of the plugin's lead-detecting `orchestrate`: `gpt-5.6-sol` at xhigh effort owns orchestration, routing bounded work to Terra and reserving Luna for tightly specified mechanical work. It was named `46-orchestrate` before v2.25.0.
+
+The Claude Code aliases for retired names (`diverge-codex`, `paper-review-lite-codex`, `survey-flow-audit`, `fair-check`, the three OCR names, the two orchestrate leads) have no Codex counterpart; use the merged skill and name the mode (`$diverge --codex`, `$qualtrics-ops audit`, `$vlm-ocr clean`, and so on).
 
 Every skill is a self-contained directory with `SKILL.md`, `agents/openai.yaml`, and only the references, scripts, or assets it needs. Codex supports these skills in the CLI, IDE extension, and app.
 
@@ -39,27 +40,27 @@ See the official [Codex skills documentation](https://developers.openai.com/code
 | Area | Skills |
 |---|---|
 | Project setup | [`research-repo`](research-repo/SKILL.md) |
-| Orchestration | [`46-orchestrate`](46-orchestrate/SKILL.md), [`advisor`](advisor/SKILL.md), [`spawn`](spawn/SKILL.md) |
-| Ideation | [`diverge`](diverge/SKILL.md), [`diverge-codex`](diverge-codex/SKILL.md) |
-| Research design | [`conjoint-cleaning`](conjoint-cleaning/SKILL.md), [`conjoint-design`](conjoint-design/SKILL.md), [`conjoint-diagnostics`](conjoint-diagnostics/SKILL.md), [`cross-national-design`](cross-national-design/SKILL.md), [`list-experiment`](list-experiment/SKILL.md), [`qualtrics-ops`](qualtrics-ops/SKILL.md), [`research-wayfinder`](research-wayfinder/SKILL.md), [`survey-data-audit`](survey-data-audit/SKILL.md), [`survey-design`](survey-design/SKILL.md), [`survey-flow-audit`](survey-flow-audit/SKILL.md) |
+| Orchestration | [`orchestrate`](orchestrate/SKILL.md), [`advisor`](advisor/SKILL.md), [`spawn`](spawn/SKILL.md) |
+| Ideation | [`diverge`](diverge/SKILL.md), [`research-grill`](research-grill/SKILL.md) |
+| Research design | [`conjoint-cleaning`](conjoint-cleaning/SKILL.md), [`conjoint-design`](conjoint-design/SKILL.md), [`conjoint-diagnostics`](conjoint-diagnostics/SKILL.md), [`cross-national-design`](cross-national-design/SKILL.md), [`list-experiment`](list-experiment/SKILL.md), [`qualtrics-ops`](qualtrics-ops/SKILL.md), [`research-wayfinder`](research-wayfinder/SKILL.md), [`survey-data-audit`](survey-data-audit/SKILL.md), [`survey-design`](survey-design/SKILL.md) |
 | Analysis | [`llm-calibration-logprobs`](llm-calibration-logprobs/SKILL.md), [`model-committee`](model-committee/SKILL.md), [`model-council-voting`](model-council-voting/SKILL.md), [`text-classification`](text-classification/SKILL.md), [`topic-modeling`](topic-modeling/SKILL.md) |
-| Corpus processing | [`doc-to-markdown`](doc-to-markdown/SKILL.md), [`post-ocr-cleanup`](post-ocr-cleanup/SKILL.md), [`vlm-ocr-evaluation`](vlm-ocr-evaluation/SKILL.md), [`vlm-ocr-pipeline`](vlm-ocr-pipeline/SKILL.md) |
+| Corpus processing | [`doc-to-markdown`](doc-to-markdown/SKILL.md), [`vlm-ocr`](vlm-ocr/SKILL.md) |
 | Writing and reporting | [`hypothesis-building`](hypothesis-building/SKILL.md), [`literature-review`](literature-review/SKILL.md), [`methods-reporting`](methods-reporting/SKILL.md), [`narrative-building`](narrative-building/SKILL.md), [`paper-tex`](paper-tex/SKILL.md), [`pre-registration-writing`](pre-registration-writing/SKILL.md) |
 | Figures and tables | [`figure-table-audit`](figure-table-audit/SKILL.md), [`figures`](figures/SKILL.md), [`tables`](tables/SKILL.md) |
-| Manuscript QA | [`citation-check`](citation-check/SKILL.md), [`fact-check`](fact-check/SKILL.md), [`fair-check`](fair-check/SKILL.md), [`replication-package`](replication-package/SKILL.md) |
-| Review and submission | [`journal-review`](journal-review/SKILL.md), [`paper-review-lite`](paper-review-lite/SKILL.md), [`paper-review-lite-codex`](paper-review-lite-codex/SKILL.md) |
+| Manuscript QA | [`citation-check`](citation-check/SKILL.md), [`fact-check`](fact-check/SKILL.md), [`replication-package`](replication-package/SKILL.md) |
+| Review and submission | [`journal-review`](journal-review/SKILL.md), [`paper-review-lite`](paper-review-lite/SKILL.md), [`referee-response`](referee-response/SKILL.md) |
 
 ## Variant notes
 
-**`$model-committee` and its chairs.** The committee runs a GPT-5.6 member and Claude Opus 5 (high) as members through their read-only CLIs, after first checking that deliberation is the right instrument for the task. One skill carries all three chairs as a parameter — `opus` (default), `fable`, or `sol` — replacing the former `$model-committee-fable` and `$model-committee-sol`. Under `opus` and `fable` the GPT member is `gpt-5.6-sol` at xhigh; `fable` hands the post-round-3 tally and compatible-component synthesis to Fable 5 at `max` through the bundled `claude-member.sh`. The `sol` chair is the exception — since the chair is Sol, the GPT debater drops to `gpt-5.6-terra`, so the chair is never grading its own family's twin, and under a Codex/Sol session it chairs natively.
+**`$model-committee` and its chairs.** The committee runs a GPT-5.6 member and Claude Opus 5 (high) as members through their read-only CLIs, after first checking that deliberation is the right instrument for the task. One skill carries all three chairs as a parameter — `opus` (default), `fable`, or `sol` — replacing the former `$model-committee-fable` and `$model-committee-sol`. Under `opus` and `fable` the GPT member is `gpt-5.6-sol` at xhigh; `fable` hands the post-round-3 tally and compatible-component synthesis to Fable 5.1 at `max` through the bundled `claude-member.sh`. The `sol` chair is the exception — since the chair is Sol, the GPT debater drops to `gpt-5.6-terra`, so the chair is never grading its own family's twin, and under a Codex/Sol session it chairs natively.
 
 One sandbox constraint applies to every chair. `codex-member.sh` (GPT-5.6 Sol, or Terra under `chair: sol`) needs an unsandboxed or escalated call under a live Codex session, since a nested `codex exec` under sandbox fails structurally (see the `SKILL.md`). `claude-member.sh` was observed to hang under sandbox for the same reason (network access), less rigorously confirmed.
 
-**`$diverge-codex`** uses a fresh Codex subagent context. It does not claim a second model family.
+**`$diverge --codex`** uses a fresh Codex subagent context. It does not claim a second model family.
 
-**`$paper-review-lite-codex`** keeps cross-model review by using Codex as lead and Claude Code's `claude -p` interface as the independent peer. It discloses and confirms external-credit use before running. Under sandbox, a `claude -p` call was observed to hang rather than complete, because network access is restricted. Read the `SKILL.md` before assuming a stalled call will resolve on its own.
+**`$paper-review-lite --codex`** keeps cross-model review by using Codex as lead and Claude Code's `claude -p` interface as the independent peer. It discloses and confirms external-credit use before running. Under sandbox, a `claude -p` call was observed to hang rather than complete, because network access is restricted. Read the `SKILL.md` before assuming a stalled call will resolve on its own.
 
-**`$46-orchestrate`** is explicit-invocation only. Its default is a `gpt-5.6-sol` lead at `xhigh` effort, which its fail-closed preflight enforces. The lead owns decomposition, hard decisions, integration, and final verification. It delegates bounded, independently checkable work down to `gpt-5.6-terra` through explicit out-of-band one-shots. `gpt-5.6-luna` is reserved for fully specified mechanical work with objective checks. Do not use Ultra. Native in-process `spawn_agent` children inherit the lead's model and effort and cannot be assigned Terra or Luna, so they are useful only for live coordination or context isolation — not cost-tier routing. Nested cross-tier calls need an interactive or escalated parent session, and in headless mode the skill must not promise them.
+**`$orchestrate`** is explicit-invocation only. Its default is a `gpt-5.6-sol` lead at `xhigh` effort, which its fail-closed preflight enforces. The lead owns decomposition, hard decisions, integration, and final verification. It delegates bounded, independently checkable work down to `gpt-5.6-terra` through explicit out-of-band one-shots. `gpt-5.6-luna` is reserved for fully specified mechanical work with objective checks. Do not use Ultra. Native in-process `spawn_agent` children inherit the lead's model and effort and cannot be assigned Terra or Luna, so they are useful only for live coordination or context isolation — not cost-tier routing. Nested cross-tier calls need an interactive or escalated parent session, and in headless mode the skill must not promise them.
 
 **`$spawn`** drives full peer sessions through the herdr socket (`~/.config/herdr/herdr.sock`), which lives outside the workspace. Verified 2026-08-06 on the Codex CLI (gpt-5.6-sol): under `workspace-write` the socket connect fails with `PermissionDenied: Operation not permitted`. Under `danger-full-access`, `herdr status` connects and reports the server. A Codex lead therefore needs an explicitly authorized full-access session to spawn, or it prints the exact command sequence for the user to run in a normal shell. The skill's preflight gate encodes this, fail-closed. Explicit-invocation only.
 

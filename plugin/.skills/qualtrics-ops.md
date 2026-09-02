@@ -1,7 +1,7 @@
 ---
 name: qualtrics-ops
-description: Operate a live Qualtrics survey via the v3 APIs without breaking fielding. Publish gating, quotas, flow routing, embedded data, panel-vendor redirects, and read-back verification.
-argument-hint: "[describe the live survey and the change you need to make]"
+description: Operate or audit a live Qualtrics survey via the v3 APIs without breaking fielding — publish gating, quotas, flow routing, embedded data, panel-vendor redirects, read-back verification, and a read-only pre-fielding audit. Use when publishing or patching a fielding instrument, when a quota counts but never blocks, when wiring panel-vendor redirects or flow gates, or when auditing a survey before launch (consent-before-anything gates, force-response completeness, quota and redirect checks, anti-bot instrumentation, and language-arm symmetry).
+argument-hint: "[audit | describe the live survey and the change you need to make]"
 ---
 
 # Qualtrics Live-Survey Operations
@@ -16,6 +16,14 @@ integration, security options — on an instrument that is or will be fielding
 real respondents. It is not survey design or QSF construction; assume the
 survey definition already exists and the question is how to change it without
 breaking what respondents currently see.
+
+Two modes. The default is **operations**: sections 2-8 below govern any write
+to a live instrument. **Audit mode** (`audit` as the first argument) is the
+read-only pre-fielding assessment in the section at the end — it produces
+ranked findings and makes no changes, and any repair it surfaces comes back
+through the operations sections as a separate, authorized change. The
+write-safety rules in section 2 are the shared frame for both: audit mode
+never writes at all, and operations never publish or activate by accident.
 
 ### 2. Non-negotiables
 
@@ -424,6 +432,197 @@ checkable proof nobody was cut off mid-survey by a config change in flight;
 don't rely on "the targets never should have hit zero" reasoning alone when
 the actual data is one export call away.
 
+## Audit mode (audit)
+
+Run this mode when the task is to *assess* a survey rather than change it —
+`audit` as the first argument, or via the `survey-flow-audit` alias. It reads
+the live instrument the way it will actually run, not the way its build files
+say it should, and it produces findings, never fixes.
+
+**Audit mode is read-only on the survey definition.** `GET` everything;
+`PUT`/`POST` nothing. If the platform offers a no-op write check for token
+scope, that is the only write. Every repair the audit surfaces goes back
+through the operations sections above as a separate, explicitly authorized
+change — with its own backup, read-back, and publish-with-proof — rather than
+being folded into the audit. The single exception is the optional browser walk
+(Phase H), which generates test *responses*: data-plane writes with their own
+cleanup obligations, and possibly test hits on a vendor dashboard, so it is
+opt-in and announced, never silent.
+
+The API mechanics the audit reads through are documented above and not
+repeated here: what proves a change is actually live (§3), quota object shapes,
+logic dialect, and list pagination (§4), flow anchoring and capture-before-gate
+order (§5), the vendor redirect pattern and query-parameter resolution (§7),
+and options read semantics (§8). The audit checks the live objects against
+those standards; it does not restate how to write them.
+
+### When to run an audit
+
+Immediately before a soft launch or full launch; after any live patch to a
+fielding instrument; when a vendor reports a broken redirect or "different
+content"; when handed an unfamiliar survey to take over. Inputs: API
+credentials and the survey id; ideally also the pre-registration or PAP (for
+the report-only-vs-terminating posture), the vendor's integration sheet
+(redirect URLs, ID parameter name), and the quota targets. A browser MCP
+(claude-in-chrome or Playwright) enables Phase H; without it, run A–G and say
+so in the report.
+
+Fielding now happens in an environment where AI agents complete surveys at
+scale and pass conventional attention checks (documented since 2025 in
+peer-reviewed and platform validations), panel vendors bill on redirect
+passbacks, and platforms silently stage rather than publish edits. Each of
+those failure classes is invisible in a casual preview and cheap to catch here.
+
+### Audit posture
+
+- Evidence or it didn't happen: every PASS cites the object read back (flow
+  element, option key, quota logic), never the absence of an error.
+- The registered design wins. Where a PAP declares an item report-only, a live
+  branch that terminates on it is a **blocking** finding even if well-built.
+
+### Phase A — identity and publish state
+
+- Confirm the survey id, name, and active/inactive state match intent. An
+  inactive instrument scheduled for launch is fine; an active one nobody meant
+  to open is a finding.
+- Apply the §3 standard: the working definition and the published version must
+  match, proven by the version list rather than an `in_sync` flag.
+  Staged-but-unpublished edits to a fielding survey are a **blocking** finding.
+- Response settings that shape the data: partial-response window, multiple-
+  submission prevention, anonymization/IP recording, link type, expiration —
+  and whether in-progress respondents stay pinned to the version they started.
+
+### Phase B — consent before anything
+
+- The first substantive screen a respondent reaches is consent (or a language
+  selector whose every arm leads first to consent).
+- Nothing evaluates or acts before affirmative consent: no terminating gates,
+  no quality branches, no telemetry collectors on or before the consent page.
+  (If the approved protocol places a minimal eligibility screener before
+  consent, audit that instead for authorization, minimization, and whether
+  pre-consent data are retained.)
+  Location/device capture nodes may *write* earlier (platforms populate them at
+  session start), but every branch that *reads* them must sit after consent.
+- Decline path: declining consent must route to the vendor's screen-out (or the
+  study's stated exit), not dead-end or count as a complete.
+- Consent text ↔ configuration consistency, both directions: if invisible
+  scoring or fingerprinting is enabled (reCAPTCHA, device checks), the text
+  discloses it; if the text promises skippable questions, optional questions
+  actually exist. A consent page describing a survey that isn't this one is a
+  finding whichever direction the drift runs.
+
+### Phase C — question integrity
+
+- Force-response completeness: enumerate every question; classify descriptive
+  (no answer possible), forced, requested, and unvalidated. The check is
+  consistency, not a universal forced-by-default norm (optional is often the
+  right call for sensitive items): every unvalidated answerable item must be
+  one the design *names* optional, and if any exist, Phase B's
+  consent-consistency check must see them.
+- Attention and manipulation checks: present where the design says, and their
+  *consequence* (terminate vs record-only) matches the registration. In the
+  current environment, terminating on an attention check screens out humans
+  while catching almost no agents — flag it as a design smell even when it
+  matches the PAP.
+- Multilingual instruments: first identify which architecture you have (§5).
+  Under the native translation layer, audit the translations for coverage;
+  under a branch-per-language build, every item, choice set, validation
+  setting, and embedded JS must exist symmetrically in each arm. A check
+  present in one arm only, or logic testing "correct option NOT selected" on a
+  twin build, is a **blocking** finding.
+
+### Phase D — flow structure
+
+Walk the full flow tree, at every nesting depth:
+
+- Block order matches the intended instrument; randomizers present with the
+  intended settings (even presentation, subset size).
+- Capture-before-gate holds for every embedded-data field (§5). A guarded
+  condition on a never-yet-written field is silently dead — it fails safe,
+  which is exactly why nobody notices.
+- Terminating branches: condition logic decodes to the intended trigger; inner
+  flow sets the exit redirect *before* the End-of-Survey element; unique flow
+  IDs throughout; the terminal "completion" redirect node is the last element.
+- On branched (language/arm) instruments, structural checks run per arm, not
+  once globally.
+
+### Phase E — vendor integration
+
+- Redirect pattern (§7): a pre-consent default carrying the screen-out URL, a
+  terminal overwrite carrying the complete URL, end-of-survey set to redirect
+  to the piped field. Early leavers must exit as screen-outs, completers as
+  completes, quota-fulls (if hard quotas exist) as quota-fulls — each URL
+  byte-exact against the vendor's sheet.
+- The vendor's respondent-ID parameter is captured as embedded data and echoed
+  back on every exit path, including declines. Because query parameters resolve
+  regardless of declaration (§7), treat a missing declaration as a minor
+  finding and a wrong parameter name as fatal.
+- Enumerate which vendor endpoints can receive traffic and which are dead by
+  design, and check that against what the vendor was told in writing (§7). A
+  quality or quota-full endpoint the vendor expects to fire, wired to nothing,
+  is a relationship problem waiting for fieldwork.
+
+### Phase F — quotas
+
+- Decode every quota's logic against the live question's choices and audit it
+  against the RATIFIED grid, not an assumed one: marginal-family designs
+  should partition each frame exactly once with per-family targets summing to
+  the commissioned N; interlocked or deliberately overlapping designs have
+  their own intended structure (check the multiple-match setting, and identify
+  `Simple` vs `Cross` before reading `Logic` at all — §4). Screening
+  categories ("I don't live here") belong to no quota either way.
+- Hard vs soft actions match the ratified design; group labels say which is
+  which truthfully. For any quota whose action is `EndCurrentSurvey`, read
+  `ActionInfo` and confirm it is populated with the nested firing shape (§4) —
+  an empty stub counts every match and blocks nobody, and no other symptom
+  ever surfaces.
+- Verify each quota's condition dialect against §4 (`Conjuction`,
+  `ChoiceTextEntryValue`, bare field names for `EmbeddedField` operands, both
+  the evaluation operand and the UI `ChoiceLocator`). A quota reading `count: 0`
+  on a fielding survey is a dialect finding until proven otherwise, and
+  pagination must be followed or the audit silently covers page one only.
+- All counts are zero before fielding (test responses leave phantom counts even
+  after deletion-with-decrement — read the actual counters). On an instrument
+  that has already been fielding, `count` cannot tell you composition at all;
+  recompute fill from the response export (§4).
+
+### Phase G — anti-automation layer
+
+- Platform toggles (bot-detection scoring, device fingerprinting, geo capture)
+  are on if the design says so — and disclosed per Phase B.
+- Behavioral instrumentation (interaction paradata, honeypots, page timers) is
+  present on the pages the design instruments, in every language arm.
+- The live-terminating set is restricted to signals that cannot plausibly be a
+  real person: ineligibility, duplicate device, machine signature. Anything
+  scored or graded (bot-score thresholds, fraud scores, speed cutoffs,
+  attention items) belongs to analysis, not to a live gate (§5) — a scored live
+  gate is a finding.
+
+### Phase H — browser walk (optional, needs a browser MCP)
+
+- Use the LIVE distribution link, never the preview (preview banners change
+  rendering and skip embedded-data population). Append a test value for the
+  vendor ID parameter.
+- Walk at minimum: one decline (assert the screen-out redirect fires with the
+  ID echoed), one complete per language arm (assert the complete redirect), one
+  mobile-viewport pass (conjoint tables and stacked layouts render; nothing
+  clips). Where feasible add: the quota-full path, one pass per experimental
+  arm, a missing-vendor-ID entry, and validation/back-button behavior on one
+  forced item.
+- Confirm no screen precedes consent, and that the consent page renders in the
+  right language for each arm.
+- Clean up: delete the test responses with quota decrement, then re-read quota
+  counts (Phase F) — and note that in-progress partials usually cannot be
+  deleted via API and must expire or be cleared in the UI.
+
+### Audit report
+
+Rank findings **blocking / major / minor**, each with the evidence read back
+and the phase that produced it. State explicitly: live version vs working
+version; which phases ran (and that H was skipped, if it was); which findings
+the registered design forces you to leave alone. End with the test-response
+cleanup confirmation if Phase H ran.
+
 ## Quality Checks
 
 - [ ] Pre-change backup saved (survey definition + flow + options as separate
@@ -484,3 +683,21 @@ the actual data is one export call away.
       "not selected"
 - [ ] Anything the build pipeline doesn't emit re-applied after any rebuild +
       repush
+
+Audit mode only:
+
+- [ ] Nothing written to the survey definition; every PASS cites an object read
+      back, not the absence of an error
+- [ ] Consent confirmed as the first substantive screen, with no gate, quality
+      branch, or telemetry read before it in any language arm
+- [ ] Every answerable question classified forced / requested / unvalidated,
+      and every unvalidated one named optional by the design
+- [ ] Each vendor exit URL (screen-out, complete, quota-full) checked
+      byte-exact against the vendor sheet, with the respondent-ID parameter
+      echoed on every path including declines
+- [ ] Quota counts read as zero pre-fielding, and `ActionInfo` confirmed
+      populated on every quota whose action is `EndCurrentSurvey`
+- [ ] Findings ranked blocking / major / minor, with the phases that ran (and
+      whether the browser walk was skipped) stated in the report
+- [ ] Browser-walk test responses deleted with quota decrement and counters
+      re-read, if Phase H ran

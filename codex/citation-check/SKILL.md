@@ -1,6 +1,6 @@
 ---
 name: citation-check
-description: Audit citation existence and fabrication risk, in-text/reference parity, DOIs, claim support, and style.
+description: Audits the citation layer of a manuscript — in-text and reference-list parity, fabricated or nonexistent sources, DOIs that resolve to a different work, style and completeness against APA 7 or a named journal style, and whether each cited work actually supports the claim attached to it. Verifies against Crossref, OpenAlex, DataCite, and Semantic Scholar, drives LaTeX audits off the keys actually cited, and marks anything it cannot check as NOT CHECKED rather than guessing. Use when the user asks to check citations or references, suspects an AI-invented source, wants a .bib checked against the text, or asks whether the DOIs are right. Figures and tables go to figure-table-audit.
 ---
 
 # Citation Integrity Auditor

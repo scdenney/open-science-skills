@@ -233,7 +233,7 @@ Sources specific to post-OCR text correction, quality diagnostics, multilingual 
 
 ## Creative Divergence
 
-Source for the brainstorm-then-select discipline behind the `diverge` and `diverge-codex` skills:
+Source for the brainstorm-then-select discipline behind the `diverge` skill (default and `--codex` modes):
 
 * **Ismayilzada, M., Laverghetta Jr., A., Luchini, S. A., Patel, R., Bosselut, A., van der Plas, L., & Beaty, R. E.** (2025). "Creative Preference Optimization." *Findings of the Association for Computational Linguistics: EMNLP 2025*, 9580–9609. arXiv:2505.14442.
 

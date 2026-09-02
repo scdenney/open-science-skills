@@ -1,7 +1,7 @@
 {
   "name": "oss",
-  "version": "2.24.0",
-  "description": "Open Science Skills (oss). 43 Claude Code skills for experimental social science and computational text analysis (including fable-orchestrate and opus-orchestrate, general multi-model orchestration workflows led by Fable 5 or by Opus 5; advisor, a single independent-second-reviewer consult in which the calling session holds the main seat on Opus 5 or Sonnet 5 while Fable 5 holds the advisor seat at max reasoning effort; and spawn, full peer Claude Code sessions in their own git worktrees and terminal panes — herdr, tmux, or claude background agents — briefed by contract, monitored, and merged back by the spawning lead). Research-repository scaffolding and auditing organized around a sources/ knowledge base (research-repo); conjoint design, diagnostics, and data cleaning; survey design; list experiments; cross-national design; topic modeling; LLM text classification; document reading and conversion routing for PDFs and office formats (doc-to-markdown); VLM-based OCR pipelines and OCR system comparison/evaluation (CER/WER); post-OCR cleanup; independent model-council voting and inter-rater agreement; a deliberative GPT-5.6 (Sol/Terra) and Claude Opus 5 model committee at pinned reasoning effort, with a selectable chair — Opus 5 by default, or Fable 5, or GPT-5.6 Sol (model-committee, invoked by /model-committee, /model-committee-fable, or /model-committee-sol); LLM calibration via token log-probabilities; FAIR manuscript checks; citation checking; source-claim fact-checking; literature review evidence mapping; figure design; table design; house-style LaTeX paper formatting from any draft, with a tested convert-and-build driver (paper-tex); figure/table auditing; replication-package scaffolding (FAIR + Horiuchi conventions); paper pre-submission review (single-model and cross-model Claude+Codex variants); hypothesis building; narrative building; research-wayfinder decision-map study planning that outlives single sessions (adapted from Matt Pocock's wayfinder); pre-registration; methods reporting; presubmit activation; third-party journal review; and creative-divergence brainstorming in single-model and cross-model Claude+Codex variants (diverge, diverge-codex). Invoke as /oss:skill-name (or just /skill-name when there is no ambiguity) or let Claude auto-trigger based on context.",
+  "version": "2.25.0",
+  "description": "Open Science Skills (oss). 38 Claude Code skills for experimental social science and computational text analysis. Orchestration and delegation: orchestrate (a multi-model workflow that detects whether the session runs Fable 5.1 or Opus 5 and takes the matching lead role; /fable-orchestrate and /opus-orchestrate force it), advisor (an independent-second-reviewer consult with Fable 5.1 at max reasoning effort), spawn (full peer Claude Code sessions in their own git worktrees and terminal panes via herdr, tmux, or claude background agents, briefed by contract and merged back), model-committee (a deliberative GPT-5.6 and Claude Opus 5 committee with a selectable chair via /model-committee, /model-committee-fable, /model-committee-sol), model-council-voting, and diverge (brainstorm-then-select, with --codex delegating to GPT-5.6). Research design: research-grill (a rounds-based interview that takes an idea to a falsifiable question, a question to a full design, or a draft to its reviewer objections; student-safe, credited to Matt Pocock's grill-me), research-wayfinder (decision-map planning across sessions, adapted from Pocock's wayfinder), hypothesis-building, survey-design, conjoint-design, conjoint-cleaning, conjoint-diagnostics, list-experiment, cross-national-design, pre-registration-writing, qualtrics-ops (live Qualtrics v3 operations plus a read-only pre-fielding audit mode; /survey-flow-audit is the alias), survey-data-audit. Text and documents: text-classification (including resumable batch pipelines and rule-based baselines), llm-calibration-logprobs, topic-modeling, doc-to-markdown, vlm-ocr (evaluate, run, clean; /vlm-ocr-evaluation, /vlm-ocr-pipeline, /post-ocr-cleanup are aliases), research-repo. Manuscript QA and reporting: citation-check, fact-check, literature-review, narrative-building, figures, tables, figure-table-audit, methods-reporting, paper-tex, replication-package (scaffold plus FAIR audit; /fair-check is the alias), paper-review-lite (with --codex cross-model mode; /paper-review-lite-codex is the alias), presubmit, journal-review (reviewer side), referee-response (author side: extract, order, and format the response to reviewers without writing the science). Invoke as /oss:skill-name (or /skill-name when unambiguous) or let Claude auto-trigger from context.",
   "author": {
     "name": "Steven Denney",
     "url": "https://github.com/scdenney"
@@ -48,7 +48,6 @@
     "hypothesis-building",
     "pre-analysis-plan",
     "paper-review-lite",
-    "paper-review-lite-codex",
     "cross-model-review",
     "pre-submission",
     "presubmit",
@@ -62,7 +61,6 @@
     "pdf-to-markdown",
     "document-conversion",
     "vlm-ocr",
-    "post-ocr-cleanup",
     "document-digitization",
     "model-council-voting",
     "model-committee",
@@ -74,7 +72,6 @@
     "llm-calibration",
     "logprobs",
     "calibration",
-    "vlm-ocr-evaluation",
     "cer-wer",
     "orchestration",
     "multi-model",
@@ -91,7 +88,15 @@
     "research-wayfinder",
     "research-planning",
     "decision-map",
-    "wayfinder"
+    "wayfinder",
+    "orchestrate",
+    "research-grill",
+    "referee-response",
+    "qualtrics-ops",
+    "fable-5.1",
+    "response-to-reviewers",
+    "revise-and-resubmit",
+    "research-interview"
   ],
   "skills": "./skills/"
 }

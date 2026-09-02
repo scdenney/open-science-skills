@@ -6,7 +6,7 @@ Worked examples of a language-specific transcription prompt and a per-page JSON 
 
 ## (a) Language-Specific Transcription Prompt — Cyrillic (Pre-Reform Russian, 18th–19th c.)
 
-The following prompt is designed for pre-reform Russian (before the 1918 orthographic reform), where the letters ѣ (yat), і (decimal i), ѳ (fita), and ѵ (izhitsa) appear alongside the modern Cyrillic alphabet. It enforces orthographic fidelity to the source, blocks modernization, and forces the model to mark uncertainty rather than guess. Levchenko (2025) documents that GPT-4o-class models insert archaic characters in ~59% of 18th-century Russian files *even when not prompted to do so*; this prompt does not eliminate that failure mode, but combined with stratified ground-truth validation (see SKILL.md §6) it at least prevents the opposite failure (silent modernization).
+The following prompt is designed for pre-reform Russian (before the 1918 orthographic reform), where the letters ѣ (yat), і (decimal i), ѳ (fita), and ѵ (izhitsa) appear alongside the modern Cyrillic alphabet. It enforces orthographic fidelity to the source, blocks modernization, and forces the model to mark uncertainty rather than guess. Levchenko (2025) documents that GPT-4o-class models insert archaic characters in ~59% of 18th-century Russian files *even when not prompted to do so*; this prompt does not eliminate that failure mode, but combined with stratified ground-truth validation (see SKILL.md, `run` phase §6) it at least prevents the opposite failure (silent modernization).
 
 ```
 You are transcribing a scanned page from a pre-reform Russian printed
@@ -67,7 +67,7 @@ Adaptations for other scripts follow the same structure: enumerate the expected 
 
 ## (b) Per-Page JSON Output Schema
 
-The VLM returns the transcription as a string. A thin post-processing wrapper parses the inline layout and uncertainty markers into the structured record below. Store one record per page; aggregate into per-document and per-corpus reports as described in SKILL.md §7.
+The VLM returns the transcription as a string. A thin post-processing wrapper parses the inline layout and uncertainty markers into the structured record below. Store one record per page; aggregate into per-document and per-corpus reports as described in SKILL.md, `run` phase §7.
 
 ```json
 {
@@ -117,8 +117,8 @@ Field notes:
 - `confidence` is a model-reported or heuristic per-page score on [0, 1]; document the source in the pipeline record (self-reported log-probabilities, dictionary hit rate, or a learned classifier).
 - `uncertain_spans` is the parsed form of `[UNCERTAIN: ...]` tags; always populated (empty array if none). `reason` is optional but encouraged (`faded_ink`, `torn`, `bleed_through`, `ambiguous_character`, `damaged_scan`).
 - `layout_markers` is the parsed form of layout tags; downstream diagnostics consume this to distinguish body text from tables, footnotes, and figures.
-- `flags` is a closed set of page-type indicators used by the diagnostic stage (SKILL.md §4) to route pages (OK / rule-fixable / LLM-fixable / manual review).
-- `pipeline` carries every parameter needed to re-run the exact page through the same model; it is the minimal unit of machine-readable reproducibility metadata (SKILL.md §7).
+- `flags` is a closed set of page-type indicators used by the diagnostic stage (SKILL.md, `run` phase §4) to route pages (OK / rule-fixable / LLM-fixable / manual review).
+- `pipeline` carries every parameter needed to re-run the exact page through the same model; it is the minimal unit of machine-readable reproducibility metadata (SKILL.md, `run` phase §7).
 
 ---
 
@@ -128,8 +128,8 @@ The Data Access and Research Transparency (DA-RT) framework treats reproducibili
 
 1. **Machine-readable provenance.** Every page carries the exact model revision, quantization, DPI, prompt identifier, and generation parameters used to produce it. Barrie, Palmer and Spirling (2025) show that LM-based pipelines in political science often fail the most basic replication tests because this metadata is not captured; pinning revisions and recording generation parameters is their explicit recommendation. The schema embeds it per page.
 
-2. **Separable quality signal.** `uncertain_spans`, `flags`, and `confidence` are first-class fields, not prose annotations. A downstream auditor can compute corpus-level statistics (fraction of pages flagged `low_resolution`, mean span-level uncertainty density, share of pages with tables) without re-parsing the transcription. This is what allows the corpus-level batch summary in SKILL.md §7 to be produced mechanically, and what lets van Strien et al. (2020) style downstream-task impact assessments proceed without rerunning OCR.
+2. **Separable quality signal.** `uncertain_spans`, `flags`, and `confidence` are first-class fields, not prose annotations. A downstream auditor can compute corpus-level statistics (fraction of pages flagged `low_resolution`, mean span-level uncertainty density, share of pages with tables) without re-parsing the transcription. This is what allows the corpus-level batch summary in SKILL.md, `run` phase §7 to be produced mechanically, and what lets van Strien et al. (2020) style downstream-task impact assessments proceed without rerunning OCR.
 
-3. **Cleanly composable with downstream skills.** The `post-ocr-cleanup` skill consumes `text`, `uncertain_spans`, and `flags` to route pages to the appropriate correction strategy (rule-based, constrained LLM decoding, or manual review) and records its own provenance in a parallel structure. The `methods-reporting` skill consumes the `pipeline` record directly into the methods section and replication archive. Without a structured schema, each downstream skill would need to re-parse free-text output and reconstruct provenance by hand, which is both error-prone and a barrier to pre-publication audit.
+3. **Cleanly composable with the next phase.** The `clean` phase consumes `text`, `uncertain_spans`, and `flags` to route pages to the appropriate correction strategy (rule-based, constrained LLM decoding, or manual review) and records its own provenance in a parallel structure. The `methods-reporting` skill consumes the `pipeline` record directly into the methods section and replication archive. Without a structured schema, each downstream stage would need to re-parse free-text output and reconstruct provenance by hand, which is both error-prone and a barrier to pre-publication audit.
 
 The schema itself is not a standard — adapt field names and add domain-specific fields as needed — but the principle is: every piece of information a re-runner or auditor would need should be a named field, not a convention buried in a text file.

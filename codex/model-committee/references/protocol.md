@@ -18,7 +18,7 @@ Choose the instrument before calling a model.
 |---|---|
 | A fact, calculation, or behavior can be settled by an authoritative source, proof, test, or experiment | Verify directly with one agent |
 | Disagreement itself is the measurement and must remain interpretable | `$model-council-voting` with independent members |
-| The goal is several creative approaches for user selection | `$diverge` or `$diverge-codex` |
+| The goal is several creative approaches for user selection | `$diverge` or `$diverge --codex` |
 | The specification is fixed and work is primarily execution | One suitable implementation agent |
 | One consequential choice is required among defensible alternatives, with shared evidence and an explicit rubric | Model committee |
 | Legal, medical, financial, safety-critical, or similarly high-stakes judgment | Committee may advise, but a qualified human decides |

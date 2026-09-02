@@ -1,6 +1,6 @@
 ---
 name: advisor
-description: Consult Fable 5 as an independent second reviewer, always at max reasoning effort. The calling session is the main model — Opus 5 or Sonnet 5 — and Fable holds the advisor seat. Use before committing to an interpretation or a substantial piece of writing/analysis, when stuck (recurring errors, a non-converging approach, results that do not fit), when considering a change of approach, or when you believe a task is complete and want a check before finalizing. Fallback for when the native advisor tool is unavailable. Not a co-implementer — read-only advisory only, does not edit files.
+description: Consult Fable 5.1 as an independent second reviewer, always at max reasoning effort. The calling session is the main model — Opus 5 or Sonnet 5 — and Fable holds the advisor seat. Use before committing to an interpretation or a substantial piece of writing/analysis, when stuck (recurring errors, a non-converging approach, results that do not fit), when considering a change of approach, or when you believe a task is complete and want a check before finalizing. Fallback for when the native advisor tool is unavailable. Not a co-implementer — read-only advisory only, does not edit files.
 allowed-tools:
   - Read
   - Write
@@ -9,20 +9,20 @@ allowed-tools:
 
 # advisor — an independent second reviewer
 
-`fable-advisor.sh` spawns an isolated Fable 5 session that reviews one decision point and returns. This is the fallback for when the native `advisor()` tool reports itself unavailable mid-session ("The advisor tool is unavailable. Do not try to use it again.").
+`fable-advisor.sh` spawns an isolated Fable 5.1 session that reviews one decision point and returns. This is the fallback for when the native `advisor()` tool reports itself unavailable mid-session ("The advisor tool is unavailable. Do not try to use it again.").
 
-<p align="center"><img src="assets/architecture.svg" alt="advisor: the main model (Opus 5 or Sonnet 5) composes one self-contained briefing, sends it to an isolated Fable 5 advisor running at max reasoning effort, and receives one decisive read-only review in return" width="900"></p>
+<p align="center"><img src="assets/architecture.svg" alt="advisor: the main model (Opus 5 or Sonnet 5) composes one self-contained briefing, sends it to an isolated Fable 5.1 advisor running at max reasoning effort, and receives one decisive read-only review in return" width="900"></p>
 
 ## The two seats
 
 | Seat | Model | Role |
 |---|---|---|
 | Main | **Opus 5**, or Sonnet 5 for cheaper sustained work | Holds the task, the context, and the decision. Does the work. |
-| Advisor | **Fable 5**, always | Reads one briefing, returns one review. Never edits files. |
+| Advisor | **Fable 5.1**, always | Reads one briefing, returns one review. Never edits files. |
 
 The asymmetry is the design. The advisor seat is pinned to Fable and the script guards it — no silent fallback to another model family, since a same-family fallback would defeat the point of asking. The main seat is whichever model the session is already running; a Fable session gets a fresh, isolated Fable instance with no anchoring from the conversation. Nothing carries over from the caller except the working directory (`-C`) — not the conversation, and not the effort level. The consult also runs `--safe-mode`, which starts the advisor with **user and project customizations disabled**: no `CLAUDE.md`, no skills, no plugins, no user/project hooks, no MCP servers, no custom commands or agents. (Org-managed policy settings, where present, still apply — safe mode does not override managed configuration.) It sees the files in that directory and nothing else — not a normal session scoped to the directory, which would load `CLAUDE.md`.
 
-When this skill is called from inside an orchestration (`fable-orchestrate`, `opus-orchestrate`), the orchestrating lead is the main seat and Fable's consult is one bounded advisory call — not a delegation.
+When this skill is called from inside an orchestration (`orchestrate`), the orchestrating lead is the main seat and Fable's consult is one bounded advisory call — not a delegation.
 
 ## Compose the briefing yourself
 

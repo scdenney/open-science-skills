@@ -1,6 +1,6 @@
 ---
 name: model-committee
-description: Runs a deliberative two-model committee — GPT-5.6 Sol and Claude Opus 5 as members, under a selectable chair. Chair defaults to Claude Opus 5; `/model-committee-fable` chairs with Fable 5, and `/model-committee-sol` chairs with GPT-5.6 Sol via Codex, which also drops the GPT member to Terra so the chair is not also a member. Use when one consequential decision must come out of several defensible options and the two model families should propose independently, critique each other, revise, and cross-rank under a predeclared rubric before converging. Fits architecture, research design and interpretation, manuscript strategy, ambiguous diagnosis, evaluation design, plan reconciliation, and policy or standards tradeoffs. Not for factual lookups, independent-coder reliability (use model-council-voting), open-ended brainstorming, routine implementation, or final high-stakes professional judgment.
+description: Runs a deliberative two-model committee — GPT-5.6 Sol and Claude Opus 5 as members, under a selectable chair. Chair defaults to Claude Opus 5; `/model-committee-fable` chairs with Fable 5.1, and `/model-committee-sol` chairs with GPT-5.6 Sol via Codex, which also drops the GPT member to Terra so the chair is not also a member. Use when one consequential decision must come out of several defensible options and the two model families should propose independently, critique each other, revise, and cross-rank under a predeclared rubric before converging. Fits architecture, research design and interpretation, manuscript strategy, ambiguous diagnosis, evaluation design, plan reconciliation, and policy or standards tradeoffs. Not for factual lookups, independent-coder reliability (use model-council-voting), open-ended brainstorming, routine implementation, or final high-stakes professional judgment.
 argument-hint: "[decision or problem for the committee to deliberate; optionally name the chair]"
 allowed-tools:
   - Read
@@ -23,7 +23,7 @@ The chair is a parameter, not a separate workflow. Three slash commands select i
 | Chair | Invoked by | Chair pin | Chair effort | GPT member | Chair invocation |
 | --- | --- | --- | --- | --- | --- |
 | Opus 5 (default) | `/model-committee` | `claude-opus-5` | `high` | `gpt-5.6-sol` | `claude-member.sh --model claude-opus-5 --effort high` |
-| Fable 5 | `/model-committee-fable` | `claude-fable-5` | `high` | `gpt-5.6-sol` | `claude-member.sh --model claude-fable-5 --effort high` |
+| Fable 5.1 | `/model-committee-fable` | `claude-fable-5-1` | `high` | `gpt-5.6-sol` | `claude-member.sh --model claude-fable-5-1 --effort high` |
 | Sol | `/model-committee-sol` | `gpt-5.6-sol` | `xhigh` | `gpt-5.6-terra` | `codex-member.sh --model gpt-5.6-sol --effort xhigh` |
 
 If the user did not name a chair, use Opus 5.
@@ -31,7 +31,7 @@ If the user did not name a chair, use Opus 5.
 Score aggregation and the tie rule are mechanical whoever chairs; schema validation and compatible-component synthesis carry the chair's own judgment, which is what the choice of chair buys.
 
 - **Opus 5** is normally the model already running in-session, so the chair step usually costs no extra external call. Its cost is dependence: the chair is the *same model* as the Claude member, which is precisely why it must not vote a third time.
-- **Fable 5** is a deliberate cost choice. The heavy reasoning is already spent inside the members' three rounds and what remains is mostly mechanical, and being neither member it cannot vote its own prior a third time. A lean chair is likelier to defer where it should synthesize, so its arithmetic needs checking (below).
+- **Fable 5.1** is a deliberate cost choice. The heavy reasoning is already spent inside the members' three rounds and what remains is mostly mechanical, and being neither member it cannot vote its own prior a third time. A lean chair is likelier to defer where it should synthesize, so its arithmetic needs checking (below).
 - **Sol** is cross-family to the Opus member and a distinct 5.6 tier from the Terra member, so of the three chairs it is the least entangled with the Claude-family member's reasoning. It is *not* independent of the GPT-family member. Under a Sol chair the GPT member drops to `gpt-5.6-terra` — the *balanced* 5.6 tier — because a chair identical to a member would defeat the point. This is the one case where two things change at once: the chair and the GPT member's tier.
 
 ## Gate the workflow
@@ -58,7 +58,7 @@ Default member pins:
 - GPT member: `gpt-5.6-sol` (reasoning effort: `xhigh`) — `gpt-5.6-terra` under a Sol chair, per the table above
 - Claude member: `claude-opus-5` (reasoning effort: `high`)
 
-These are exact pins, not moving aliases. `--check` above only confirms the CLI is installed; whether a specific pin such as `gpt-5.6-sol` or `claude-fable-5` is actually available surfaces on the first real call, not at preflight — the chair pin in particular is untested until the chair step runs. If a pin is unavailable, report it and ask whether to stop or use a named replacement — never substitute silently. If `gpt-5.6-sol` is missing on this machine, stop and ask rather than falling back to `gpt-5.6-terra` for the chair.
+These are exact pins, not moving aliases. `--check` above only confirms the CLI is installed; whether a specific pin such as `gpt-5.6-sol` or `claude-fable-5-1` is actually available surfaces on the first real call, not at preflight — the chair pin in particular is untested until the chair step runs. If a pin is unavailable, report it and ask whether to stop or use a named replacement — never substitute silently. If `gpt-5.6-sol` is missing on this machine, stop and ask rather than falling back to `gpt-5.6-terra` for the chair.
 
 ## Run the committee
 
@@ -91,10 +91,10 @@ Launch both calls in a round concurrently when the runtime supports it. Sequenti
 
 ## Chair without becoming a third debater
 
-Chair in-session only when the session is verifiably running the chair model; otherwise delegate. Verify rather than assume: Claude Code injects a line into every session's context naming the model actually running (e.g. "You are powered by the model named …"); read it before picking a branch. This is fail-closed — if the running model is not the selected chair, or you cannot confirm it, take the delegate branch and do not label the output as chaired by that model. The failure is not hypothetical: a sibling orchestration skill (`fable-orchestrate`) recorded benchmark runs as one model that had silently executed under another, because nothing checked.
+Chair in-session only when the session is verifiably running the chair model; otherwise delegate. Verify rather than assume: Claude Code injects a line into every session's context naming the model actually running (e.g. "You are powered by the model named …"); read it before picking a branch. This is fail-closed — if the running model is not the selected chair, or you cannot confirm it, take the delegate branch and do not label the output as chaired by that model. The failure is not hypothetical: a sibling orchestration skill (`orchestrate`, then named `fable-orchestrate`) recorded benchmark runs as one model that had silently executed under another, because nothing checked.
 
 - Opus 5 chair, session verified as Opus 5: chair directly at `/effort` high. Aggregation and the tie rule are mechanical, but the compatible-component synthesis and the escalate-or-synthesize call are where the effort earns its cost.
-- Fable 5 chair, session verified as Fable 5: chair directly at `/effort` high.
+- Fable 5.1 chair, session verified as Fable 5.1: chair directly at `/effort` high.
 - Sol chair: always delegate. This SKILL.md loads inside Claude Code, so the session is never Sol.
 - Any other case: delegate.
 
@@ -104,7 +104,7 @@ Delegation covers **only** the post-round-3 chair step — the members stay at t
 "$SKILL_DIR/scripts/claude-member.sh" \
   --prompt-file chair.prompt.md --out decision.md --model claude-opus-5 --effort high -C <working-directory>
 
-# Fable chair: --model claude-fable-5 --effort high
+# Fable chair: --model claude-fable-5-1 --effort high
 # Sol chair:   "$SKILL_DIR/scripts/codex-member.sh" \
 #                --prompt-file chair.prompt.md --out decision.md --model gpt-5.6-sol --effort xhigh -C <working-directory>
 ```

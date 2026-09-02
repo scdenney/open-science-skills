@@ -1,9 +1,9 @@
 ---
 name: replication-package
-description: Scaffold or audit a social-science replication package at a target directory. Generates folder structure, README, master.R, figure/table crosswalk, codebook template, LICENSE placeholder, .gitignore, and pre-release checklist. Adapted from Yusaku Horiuchi's replication-package-guide with FAIR-principle integration; platform-neutral (Harvard Dataverse, OSF, Zenodo, GitHub releases, institutional archives).
+description: Scaffold or audit a social-science replication package, and audit the manuscript and its archived research objects against the FAIR principles. Scaffold mode writes the folder structure, README, master.R, figure/table crosswalk, codebook template, LICENSE placeholder, .gitignore, and pre-release checklist. Audit mode grades an existing package against that checklist and runs the FAIR block over data, code, materials, prompts, preregistrations, DOIs, metadata, licenses, access restrictions, and availability statements. Use when setting up or repairing a replication package, checking one before submission, auditing research objects against FAIR (Findable, Accessible, Interoperable, Reusable), or drafting and verifying data-, code-, and materials-availability statements. Adapted from Yusaku Horiuchi's replication-package-guide; platform-neutral (Harvard Dataverse, OSF, Zenodo, GitHub releases, institutional archives).
 ---
 
-# Replication Package Scaffold
+# Replication Package
 
 ## Heritage and attribution
 
@@ -17,6 +17,8 @@ Horiuchi's caveat carries over: "AI is useful for checking, reorganizing, docume
 
 A replication package is ready when a competent reader can download it, open the package root, run one documented command, and regenerate the published results without hidden manual steps. `master.R` is the entry-point convention; `run_replication.R` is acceptable where that is already the project's convention. The **Pre-Release Checklist** below enumerates what "ready" requires.
 
+The FAIR principles are the second standard, applied to every research object the manuscript depends on. FAIR does **not** mean everything must be openly downloadable. Sensitive or restricted data can be FAIR when metadata, access conditions, identifiers, and reuse terms are explicit. The practical standard is "as open as possible, as restricted as necessary." Core references for the FAIR block: Wilkinson et al. (2016) for the principles, GO FAIR for the F/A/I/R subprinciples, OSF documentation for repository metadata and data archiving, FORCE11 for data citation principles, and TOP/DA-RT for manuscript transparency expectations.
+
 ## Instructions
 
 ### Step 1. Resolve the target directory
@@ -25,7 +27,18 @@ Treat the path supplied with the invocation as the replication folder, whether r
 
 Normalize the path. Confirm whether the directory exists and whether it is empty.
 
-### Step 2. Decide on structure
+If the invocation also supplied a manuscript, a repository URL, or pasted availability statements, note them — the audit mode's FAIR block needs them.
+
+### Step 2. Choose scaffold or audit
+
+- Target directory is empty or does not exist → **scaffold mode**. Go to Step 3.
+- Target directory contains files, or the user asked for a FAIR check, a pre-submission audit, or a review of an existing package → **audit mode**. Go to Step 6.
+
+In audit mode, never overwrite an existing file without explicit user confirmation. Offer to fill in only the missing scaffolding — files that do not yet exist.
+
+## Scaffold mode
+
+### Step 3. Decide on structure
 
 Ask the user one question. Is data construction complex (restricted sources, scraping, API pulls, or expensive upstream work that produces analysis-ready data)?
 
@@ -33,11 +46,6 @@ Ask the user one question. Is data construction complex (restricted sources, scr
 - **Yes** → use **build/analyze**.
 
 When in doubt, choose compact. Build/analyze is justified only when the build stage creates real complexity for users.
-
-### Step 3. Decide between scaffold and audit
-
-- If the target directory is empty or does not exist → **scaffold mode**. Create the directory if needed, write the full skeleton.
-- If the target directory contains files → **audit mode**. Read everything, compare against the pre-release checklist, report what is present, partial, or missing. Offer to fill in only the missing scaffolding (files that do not yet exist). Never overwrite an existing file without explicit user confirmation.
 
 ### Step 4. Scaffold the tree
 
@@ -85,20 +93,164 @@ When in doubt, choose compact. Build/analyze is justified only when the build st
 
 Leave `data/`, `code/`, `scripts/`, `figures/`, `tables/`, and `logs/` empty — the user fills them with project content.
 
-### Step 5. Write template files
+### Step 5. Write template files and report
 
 Use the templates in the **Templates** section below. Fill in placeholder fields (`<paper title>`, `<authors>`, etc.) with values the user provides; if a placeholder cannot be resolved from context, leave it as written and flag it in the final report so the user knows what to edit.
 
 The templates are written for the **compact** layout. When scaffolding **build/analyze**, adapt the paths as you write them: `code/` → `build/scripts/` and `analyze/scripts/`, `outputs/` → `analyze/`, `docs/` → `analyze/docs/` — in the README's file descriptions and in every `source()` line of `master.R`.
 
-### Step 6. Report
+Then output a short report with:
 
-After scaffolding, output a short report with:
-
-1. The directory tree created (or the audit diff for audit mode).
+1. The directory tree created.
 2. A list of placeholder fields the user must fill in.
 3. The next three actions the user should take (typically: fill in README placeholders, drop data into `data/`, add scripts under `code/` or `build/scripts/` and `analyze/scripts/`).
 
+## Audit mode
+
+One audit, two blocks. The **package block** grades the local package against the Pre-Release Checklist and the Paper Consistency Check. The **FAIR block** grades the manuscript and every archived research object against Findable, Accessible, Interoperable, and Reusable. Run both when a manuscript is available; run the package block alone when only the directory was supplied.
+
+### Step 6. Package block
+
+Read everything in the target directory. Grade it against the **Pre-Release Checklist** and, when manuscript source or a final PDF is available, the **Paper Consistency Check** below. Report each item as present, partial, or missing, with the file or path that supports the verdict.
+
+### Step 7. FAIR block — inventory research objects
+
+Before judging FAIR compliance, list every research object the manuscript depends on, whether or not it is inside the package:
+
+- Raw data, cleaned data, derived data, and analysis-ready data.
+- Analysis code, simulation code, randomization scripts, package lockfiles, and notebooks.
+- Survey instruments, treatments, vignettes, questionnaires, prompts, codebooks, classification labels, OCR prompts, and annotation guidelines.
+- Figures, tables, model outputs, topic models, classifiers, trained weights, dictionaries, and corpora.
+- Preregistrations, PAPs, IRB/ethics protocols, consent language, and data-use agreements.
+- Third-party data or proprietary inputs that cannot be redistributed.
+
+If an object is not shareable, it still needs metadata and a clear access or non-availability explanation.
+
+### Step 8. FAIR block — Findable
+
+For each research object, verify:
+
+- Repository or landing page exists and is public or publicly discoverable.
+- Persistent identifier exists or is planned: DOI, ARK, Handle, OSF registration DOI, Zenodo DOI, Dataverse DOI, ICPSR study ID, or equivalent.
+- Metadata includes title, creators/contributors, description, date/version, resource type, keywords/tags, funder when relevant, related publication DOI, and related object links.
+- Data/code/materials are cited in the manuscript or reference list, not only mentioned in prose.
+- File names are interpretable and map to manuscript tables, figures, or analyses — the crosswalk checked in the package block is the evidence for this.
+
+Prompt the author if missing: repository URL, DOI/identifier, title, contributors, version/date, and how each object maps to manuscript claims.
+
+### Step 9. FAIR block — Accessible
+
+Verify:
+
+- Access route is clear: open download, embargoed release date, controlled access, data-use agreement, request email/form, or legal/ethical non-availability.
+- Protocol is standard and durable: repository landing page, HTTPS, institutional repository, OSF, Dataverse, Zenodo, ICPSR, Dryad, GitHub+Zenodo, or discipline repository.
+- Restricted data have public metadata and explicit criteria for access.
+- Sensitive data are not uploaded to unsuitable repositories; OSF should not be used for sensitive or personally identifiable health information.
+- Availability statements match actual repository state.
+- Embargoes and anonymous peer-review links are handled without breaking post-publication access.
+
+Prompt the author if missing: access restrictions, embargo date, contact process, data-use agreement, privacy constraints, and post-acceptance public URL.
+
+### Step 10. FAIR block — Interoperable
+
+Verify that others can read and combine the materials:
+
+- Data use non-proprietary or widely readable formats where possible: CSV/TSV, TXT, JSON, Parquet, RDS with fallback, Stata with codebook, PDF/A for documents.
+- Variables, labels, missing values, scales, treatment arms, weights, and derived variables are documented — `docs/codebook.md`, checked in the package block, is where this lives.
+- Code has an environment file or setup notes: `renv.lock`, `requirements.txt`, `environment.yml`, Dockerfile, session info, package versions, or OS notes. `session_info.log` from `master.R` satisfies the session-info half but not the lockfile.
+- Metadata follows a discipline-appropriate standard where available: DDI for social-science survey data, DataCite metadata, repository community schemas, or structured README.
+- Cross-links connect raw data, cleaned data, code, figures/tables, and manuscript claims.
+
+Prompt the author if missing: codebook, README, variable dictionary, software environment, data provenance, or mapping from files to outputs.
+
+### Step 11. FAIR block — Reusable
+
+Verify:
+
+- License is explicit for each shareable object: data, code, text/materials, and figures may need different licenses. The package block checks that `LICENSE` is filled in; this check asks whether one license covers objects that need several.
+- Reuse conditions are clear for third-party, proprietary, copyrighted, or restricted materials.
+- Provenance is documented: collection method, source, cleaning steps, transformations, exclusions, and version history.
+- Minimal replication path is documented: what script to run, in what order, and what output it produces — the single-entry-point requirement in the Pre-Release Checklist.
+- Ethics and consent allow the claimed sharing level.
+- Data/code/material citations give credit to creators and make reuse citable.
+
+Prompt the author if missing: license choices, consent/sharing compatibility, restrictions on reuse, provenance notes, and replication instructions.
+
+### Step 12. FAIR block — manuscript statements
+
+Check these sections, or draft them if absent:
+
+- Data Availability Statement.
+- Code Availability Statement.
+- Materials/Stimuli Availability Statement.
+- Preregistration/PAP Statement.
+- Ethics/IRB and consent language.
+- Funding and conflicts where tied to repository metadata.
+- Data/code/material citations in references.
+
+Statements must be specific enough for a reader to find and reuse objects. "Available upon request" is weak unless privacy, legal, or contractual constraints justify it and the access process is concrete.
+
+### Step 13. Audit report
+
+Produce a `Replication Package Audit`. Drop the FAIR sections when no manuscript or repository information was supplied, and say so in the scope line.
+
+```
+# Replication Package Audit
+
+Scope:
+Package path:
+Manuscript files:
+Repository/package links checked:
+Summary: <N blocking, N recommended, N minor, N author prompts>
+
+## Package Checklist
+| Item | PASS/FAIL/PARTIAL/NA | Evidence | Notes |
+
+## Paper Consistency
+| Figure/table | In crosswalk | Script | Output on disk | Notes |
+
+## Research Object Inventory
+| Object | Location in manuscript | Repository/identifier | Share status | Notes |
+
+## FAIR Checklist
+| Object | Findable | Accessible | Interoperable | Reusable | Main gap |
+
+## Blocking Issues
+| Location | Dimension | Issue | Fix |
+
+## Recommended Fixes
+| Location | Dimension | Issue | Fix |
+
+## Author Prompts
+1. <question the author must answer before the statement can be finalized>
+
+## Draft Availability Statements
+### Data
+### Code
+### Materials
+### Preregistration
+
+## Missing Scaffolding
+<files this skill can create on request; never overwrite existing files>
+```
+
+Severity:
+
+- **Blocking:** package does not run from a clean directory; no single entry point; no repository or access route for essential data/code/materials; missing or false availability statement; missing license for reusable data/code; restricted data without access conditions; repository link absent for a claimed open object; sensitive data or credentials exposed inappropriately.
+- **Recommended:** DOI pending, metadata thin, README incomplete, codebook missing details, crosswalk incomplete, proprietary format without fallback, no formal data/code citation.
+- **Minor:** inconsistent file names, weak tags, style problems in availability statements, minor README clarity issues.
+
+### Audit quality checks
+
+- [ ] The package was graded against the full Pre-Release Checklist, not a subset.
+- [ ] All research objects were inventoried before FAIR scoring.
+- [ ] FAIR was not treated as identical to open access.
+- [ ] Restricted or sensitive data were checked for transparent access conditions rather than forced open sharing.
+- [ ] Data, code, and materials were checked as separately licensable objects.
+- [ ] Persistent identifiers and repository metadata were checked when links were available.
+- [ ] Missing author knowledge was surfaced as explicit prompts.
+- [ ] Draft statements are specific enough to locate and reuse the objects.
+- [ ] No existing file was overwritten without confirmation.
 ## Templates
 
 ### `README.md`
@@ -330,8 +482,11 @@ When the manuscript source or final PDF is available, verify:
 
 If paper source files cannot be included publicly, document whether they were used during package preparation.
 
-## When to reach for this skill vs. siblings
+## Compose with sibling skills
 
-- `replication-package` (this) — scaffold or audit a replication package at a target directory before upload to any repository.
-- `fair-check` — audit a finished manuscript and its accompanying package against the FAIR principles end-to-end. Use after this skill, before submission.
-- `methods-reporting` — check that the manuscript's methods section reports what the package documents (CONSORT, JARS, DA-RT).
+- `$citation-check` — when repository objects need formal citation or DOI checks.
+- `$figure-table-audit` — to verify figures and tables trace to repository files or scripts.
+- `$methods-reporting` — for DA-RT, TOP, JARS, and CONSORT integration, so the methods section reports what the package documents.
+- `$text-classification`, `$topic-modeling`, `$vlm-ocr` — when FAIRness depends on prompts, models, corpora, or other derived computational objects.
+- `$research-repo` — for the surrounding project repository rather than the publication archive.
+- `$paper-review-lite` or `$presubmit` — for full pre-submission review after the audit's fixes are made.

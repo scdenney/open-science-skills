@@ -26,8 +26,17 @@ find plugin/skills -mindepth 2 -maxdepth 2 -name SKILL.md \
 # Alias commands are thin wrappers that invoke an existing skill with a parameter
 # (e.g. model-committee's chair). They have no skill directory of their own by design.
 cat > "$tmpdir/aliases" <<'ALIASES'
+diverge-codex
+fable-orchestrate
+fair-check
 model-committee-fable
 model-committee-sol
+opus-orchestrate
+paper-review-lite-codex
+post-ocr-cleanup
+survey-flow-audit
+vlm-ocr-evaluation
+vlm-ocr-pipeline
 ALIASES
 
 find plugin/commands -maxdepth 1 -name '*.md' \
@@ -86,4 +95,22 @@ if ! grep -q "Codex_skills-$codex_count-" README.md; then
   exit 1
 fi
 
-echo "package ok: $count Claude skills, $codex_count Codex skills"
+# The two manifests and the README prose must agree with the directory count.
+for f in plugin/.claude-plugin/plugin.json .claude-plugin/marketplace.json; do
+  if ! grep -q "$count \(Claude Code \)\?skills" "$f"; then
+    echo "$f description does not say $count skills" >&2
+    exit 1
+  fi
+done
+v1="$(python3 -c 'import json;print(json.load(open("plugin/.claude-plugin/plugin.json"))["version"])')"
+v2="$(python3 -c 'import json;print(json.load(open(".claude-plugin/marketplace.json"))["plugins"][0]["version"])')"
+if [ "$v1" != "$v2" ]; then
+  echo "version mismatch: plugin.json $v1 vs marketplace.json $v2" >&2
+  exit 1
+fi
+if ! grep -q "^## \[$v1\]" CHANGELOG.md; then
+  echo "CHANGELOG.md has no entry for $v1" >&2
+  exit 1
+fi
+
+echo "package ok: $count Claude skills, $codex_count Codex skills, v$v1"

@@ -1,6 +1,6 @@
 # Post-OCR Correction: Prompt Templates and Provenance JSONL Schema
 
-Worked prompt templates and a span-level provenance schema to accompany SKILL.md §2 (LLM-Based Correction) and §7 (Provenance and Documentation). All three prompt templates are written to be compatible with constrained decoding (Sastre et al. 2025) — they do not ask the model to produce commentary, and they instruct the model to emit *only* corrected text so token-level Constrained Beam Search or beam + CER re-ranking can score output fidelity against the input string directly.
+Worked prompt templates and a span-level provenance schema to accompany SKILL.md, `clean` phase §2 (LLM-Based Correction) and §7 (Provenance and Documentation). All three prompt templates are written to be compatible with constrained decoding (Sastre et al. 2025) — they do not ask the model to produce commentary, and they instruct the model to emit *only* corrected text so token-level Constrained Beam Search or beam + CER re-ranking can score output fidelity against the input string directly.
 
 ---
 

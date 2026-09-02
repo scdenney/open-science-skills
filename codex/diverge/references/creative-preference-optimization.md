@@ -1,6 +1,6 @@
 # Creative Preference Optimization (CrPO) — background
 
-Background note for the `diverge` and `diverge-codex` skills. Source:
+Background note for the `diverge` skill, in both its default and `--codex` modes. Source:
 
 > Ismayilzada, M., Laverghetta Jr., A., Luchini, S. A., Patel, R., Bosselut, A., van der Plas, L., & Beaty, R. E. (2025). [Creative Preference Optimization](https://arxiv.org/abs/2505.14442). *Findings of the Association for Computational Linguistics: EMNLP 2025*, 9580–9609.
 
@@ -37,4 +37,4 @@ But the paper's own prompting baseline — **brainstorm-then-select** — produc
 3. Require at least one approach that is explicitly surprising or non-obvious.
 4. Defer quality and implementation until after selection.
 
-These do not require fine-tuning. They require enforcing a structure the model will not enforce on its own. The `diverge` and `diverge-codex` skills encode exactly that structure as invocable behavior.
+These do not require fine-tuning. They require enforcing a structure the model will not enforce on its own. The `diverge` skill encodes exactly that structure as invocable behavior.

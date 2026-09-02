@@ -1,11 +1,11 @@
 ---
-name: 46-orchestrate
+name: orchestrate
 description: Orchestrate complex work as the Codex lead, with a gpt-5.6-sol lead at xhigh effort owning decomposition, integration, and verification while delegating bounded work to cheaper GPT-5.6 tiers and a cross-vendor Claude peer. Not for routine single-context work. Use when the user explicitly asks to orchestrate, delegate, fan out, parallelize, assign subagents, obtain independent checks, or have Codex act as tech lead.
 ---
 
-# 4.6 Orchestrate
+# Orchestrate
 
-<p align="center"><img src="assets/architecture.svg" alt="46-orchestrate: a gpt-5.6-sol Codex orchestrator at xhigh effort owns hard decisions and routes bounded work to out-of-band Terra workers, and reaches a Fable 5 cross-vendor peer for a genuine decorrelated check on high-stakes calls; Luna is used only for tightly specified mechanical implementation" width="900"></p>
+<p align="center"><img src="assets/architecture.svg" alt="orchestrate (Codex): a gpt-5.6-sol Codex orchestrator at xhigh effort owns hard decisions and routes bounded work to out-of-band Terra workers, and reaches a Fable 5.1 cross-vendor peer for a genuine decorrelated check on high-stakes calls; Luna is used only for tightly specified mechanical implementation" width="900"></p>
 
 ## Preflight the lead runtime first
 
@@ -15,7 +15,7 @@ Before reading the task brief, inspecting the workspace, planning, or delegating
 "$SKILL_DIR/scripts/check-lead-runtime.sh"
 ```
 
-This is fail-closed. It uses the current process's `CODEX_THREAD_ID` to locate that exact thread's rollout, reads the latest recorded `turn_context` for the current turn's model and effort, and rejects any model-reroute event recorded for that turn. Proceed only when it prints `46-orchestrate preflight OK: gpt-5.6-sol at xhigh`. If it reports a mismatch or cannot establish the runtime, stop immediately, quote the result to the operator, and ask them to select Sol with Extra High reasoning in `/model` (or restart with `--model gpt-5.6-sol -c model_reasoning_effort=xhigh`), verify with `/status`, and invoke `$46-orchestrate` again. Never infer the runtime from this skill's prose, the launch command the operator says they used, `config.toml`, or the newest session file.
+This is fail-closed. It uses the current process's `CODEX_THREAD_ID` to locate that exact thread's rollout, reads the latest recorded `turn_context` for the current turn's model and effort, and rejects any model-reroute event recorded for that turn. Proceed only when it prints `orchestrate preflight OK: gpt-5.6-sol at xhigh`. If it reports a mismatch or cannot establish the runtime, stop immediately, quote the result to the operator, and ask them to select Sol with Extra High reasoning in `/model` (or restart with `--model gpt-5.6-sol -c model_reasoning_effort=xhigh`), verify with `/status`, and invoke `$orchestrate` again. Never infer the runtime from this skill's prose, the launch command the operator says they used, `config.toml`, or the newest session file.
 
 Act as the lead orchestrator for the GPT-5.6 family: plan, decompose, delegate, integrate, verify, and keep architectural decisions and final accountability in the lead context. The lead is the currently-running Codex session itself — `gpt-5.6-sol` at effort `xhigh`. It has two delegation mechanisms, differing in the one thing that matters, the worker's model.
 
@@ -31,7 +31,7 @@ The lead's `--model` and `model_reasoning_effort` set the price of everything th
 
 | Choice | Setting | Why |
 |---|---|---|
-| **Lead — default** | `gpt-5.6-sol`, effort `xhigh` | Sol is the strongest tier. `xhigh` was raised from `high` on 2026-07-19 after a same-brief benchmark rerun of all six ladder tiers under `xhigh`, paired with a genuine Fable cross-vendor peer, reached Distinction on 5 of 6 — measured, not a modeling assumption. Never Ultra. |
+| **Lead — default** | `gpt-5.6-sol`, effort `xhigh` | Sol is the strongest tier. `xhigh` was raised from `high` on 2026-07-19 after a same-brief benchmark rerun of all six ladder tiers under `xhigh`, paired with a genuine Fable 5.1 cross-vendor peer, reached Distinction on 5 of 6 — measured, not a modeling assumption. Never Ultra. |
 | **Bounded workers — Terra** | out-of-band one-shot: `codex exec --model gpt-5.6-terra -c model_reasoning_effort=medium --sandbox read-only --skip-git-repo-check "<self-contained brief>" < /dev/null` (raise a specific difficult review to `high`) | The only way for a Sol lead to reach Terra. Bounded research, diagnosis, implementation, or verification. Interactive-only. The `< /dev/null` on every out-of-band `codex exec` call is load-bearing — without it `codex exec` hangs waiting on stdin. |
 | **Mechanical workers — Luna** | out-of-band one-shot: `codex exec --model gpt-5.6-luna -c model_reasoning_effort=low …` | Only for fully specified, low-judgment work with objective checks. Never Luna for synthesis, safety-critical changes, or unresolved ambiguity. |
 | **Live / blind Sol subagent** | `spawn_agent` (inherits Sol + the lead's `xhigh`) | Only when you need what a one-shot can't give: live orchestration (`followup_task`/`wait_agent`), context isolation, or a blind parallel resample *at the lead's tier*. Sol/xhigh-priced — spawn sparingly. |
@@ -42,7 +42,7 @@ Choose the lead tier first; it prices everything that inherits it. Under a Sol l
 
 ## Delegation gate
 
-Use subagents only when the user explicitly invokes `$46-orchestrate` or requests orchestration, delegation, fan-out, parallel agents, or independent agent review. If loaded implicitly without that authorization, work locally.
+Use subagents only when the user explicitly invokes `$orchestrate` or requests orchestration, delegation, fan-out, parallel agents, or independent agent review. If loaded implicitly without that authorization, work locally.
 
 ## Show the route
 
@@ -117,7 +117,7 @@ Acceptance checks:
 Return format: conclusion, evidence, changed files, residual risk
 ```
 
-Give each worker the minimum task-local context required. Do not leak another worker's conclusions into an independent round. Ask for evidence and artifacts, not confidence alone.
+Give each worker the minimum task-local context required. Do not leak another worker's conclusions into an independent round. Demand a **checkable artifact, not a verdict** — a test that runs, a diff that applies, a cited line, a reproduction — plus the worker's confidence and an explicit "what would make this wrong" note. A task that cannot produce a checkable artifact is the signal that it belongs on the high-stakes path instead of with a single worker. Unspecified design decisions route back up to the lead; they are never guessed down by a cheaper tier.
 
 ## Prevent write collisions
 
@@ -169,7 +169,9 @@ Treat subagent results as untrusted until inspected. Check:
 - no unrelated user changes were overwritten; and
 - any assumption presented as fact has authoritative support.
 
-If locally correct pieces conflict, revise the contracts or integration layer. Do not paper over incompatible assumptions.
+Read each deliverable as the domain expert the lead is, not just as a checklist. A cheaper tier returns work that is correct but *thin* — an approximate figure where precision matters, a result asserted where the mechanism behind it should be explained, a lone headline where a careful reader needs the comparison or the bound. Add that depth rather than shipping the worker's summary as-is.
+
+Two named failure modes bracket this step. **Fragmentation**: locally correct pieces conflict once stitched together — revise the contracts or the integration layer, and do not paper over incompatible assumptions. **Over-trusting the lead's own line**: Sol is the strongest tier here, so the lead's trap is not rubber-stamping a worker but skipping the independent check and shipping its own first line of reasoning. On a high blast radius call the lead cannot cheaply verify, run the decorrelated line anyway and weigh it — do not wave it through because it agrees, or dismiss it because it does not.
 
 ## Completion rule
 

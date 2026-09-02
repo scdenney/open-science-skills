@@ -8,7 +8,7 @@ argument-hint: "[describe the figure you are building, the data, the claim it su
 
 ## Heritage and scope
 
-This is an original Open Science Skills workflow for figure production in social-science manuscripts. It is general — apply to any figure type (line, bar, point, density, map, network, small multiples). For figures whose interpretation depends on method-specific standards, also consult the relevant sibling skill (`conjoint-design`, `conjoint-diagnostics`, `list-experiment`, `topic-modeling`, `text-classification`, `vlm-ocr-pipeline`). For end-stage QA on a finished figure set, hand off to `figure-table-audit`.
+This is an original Open Science Skills workflow for figure production in social-science manuscripts. It is general — apply to any figure type (line, bar, point, density, map, network, small multiples). For figures whose interpretation depends on method-specific standards, also consult the relevant sibling skill (`conjoint-design`, `conjoint-diagnostics`, `list-experiment`, `topic-modeling`, `text-classification`, `vlm-ocr`). For end-stage QA on a finished figure set, hand off to `figure-table-audit`.
 
 A good figure earns its place in the manuscript: it makes a single comparison legible, it can be read without the surrounding text, and it can be regenerated from a script. If a figure cannot do all three, it is not yet ready.
 

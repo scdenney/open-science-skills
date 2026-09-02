@@ -16,7 +16,7 @@ One skill, three chairs. The chair is a parameter, not a separate skill — the 
 | chair | GPT member | Claude member | Chair pin | Why this chair |
 |---|---|---|---|---|
 | `opus` (default) | `gpt-5.6-sol`, effort `xhigh` | `claude-opus-5`, effort `high` | the running session, or `claude-opus-5` at effort `high` | Strongest available synthesis. Shares a family with the Opus member, which is exactly why it must not vote a third time. |
-| `fable` | `gpt-5.6-sol`, effort `xhigh` | `claude-opus-5`, effort `high` | `claude-fable-5`, effort `max`, through `claude-member.sh` | The heavy reasoning is already spent in the three rounds and what remains is mostly mechanical, so a lean chair is a deliberate cost choice. Being neither member, it cannot vote its own prior again. |
+| `fable` | `gpt-5.6-sol`, effort `xhigh` | `claude-opus-5`, effort `high` | `claude-fable-5-1`, effort `max`, through `claude-member.sh` | The heavy reasoning is already spent in the three rounds and what remains is mostly mechanical, so a lean chair is a deliberate cost choice. Being neither member, it cannot vote its own prior again. |
 | `sol` | `gpt-5.6-terra`, effort `xhigh` | `claude-opus-5`, effort `high` | `gpt-5.6-sol`, effort `xhigh` — the running session under Codex/Sol, else through `codex-member.sh` | Sol is neither deliberating member: cross-family to the Opus member and a distinct 5.6 tier from the Terra member. |
 
 Under `chair: sol` the GPT member drops to `gpt-5.6-terra`, the balanced 5.6 tier, precisely because the chair is Sol; a chair identical to a member defeats the point. Never fall back to `gpt-5.6-terra` for the chair itself for the same reason.
@@ -89,7 +89,7 @@ Chair after round 3. If the running session is the chair (`opus` in a Claude Opu
 ```bash
 # chair: fable
 "$SKILL_DIR/scripts/claude-member.sh" \
-  --prompt-file chair.prompt.md --out decision.md --model claude-fable-5 --effort max -C <working-directory>
+  --prompt-file chair.prompt.md --out decision.md --model claude-fable-5-1 --effort max -C <working-directory>
 
 # chair: sol, from outside a Sol session
 "$SKILL_DIR/scripts/codex-member.sh" \
