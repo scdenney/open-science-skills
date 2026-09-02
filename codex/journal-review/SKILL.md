@@ -1,6 +1,6 @@
 ---
 name: journal-review
-description: Draft a senior peer-review report on a social-science manuscript.
+description: Drafts a referee report on someone else's manuscript for a journal editor — a recommendation, a summary of the claim and design, three to six major concerns that drive the decision, additional concerns, and a coherent revision plan, produced by five parallel adversarial finders (Breaker, Butcher, Shredder, Void, Situator), a Blue Team error filter, a Chief Reviewer synthesis, and a Tone Guard legal pass, with an optional confidential note to the editor. Use when the user has been asked to referee a manuscript for a journal. Self-audit of the user's own draft goes to paper-review-lite or presubmit, and writing an author-side response to reviewers goes to referee-response.
 ---
 
 # Journal Article Peer Review
@@ -266,16 +266,14 @@ Spawn on the Chief Reviewer's draft.
 
 After reviewing the change log, **delete the HTML comments from `referee_report.md`** — that file goes to the editor and authors.
 
-## Phase 5 — Run `$sci-edit` on the prose (if available)
+## Phase 5 — Strip AI tells from the prose
 
-After Tone Guard, the report is legally clean but may still read as AI-drafted. If `$sci-edit` is installed in Codex, invoke it on the report file:
+After Tone Guard the report is legally clean but may still read as machine-drafted. Two routes:
 
-```
-$sci-edit <slug>/referee_report.md
-```
+- **If the user has an academic prose linter installed** (Steven's `$sci-edit` at `~/.claude/skills/sci-edit/`, or any equivalent), run it on `<slug>/referee_report.md` and apply its suggestions to the Major Concerns paragraphs first; those are what the editor and authors read.
+- **Otherwise apply this inline pass yourself** and say in the final summary that no external linter ran. Read the Major Concerns and Suggestions paragraphs once each and fix: hedge stacks (keep one hedge per claim); negative parallelism ("not X but Y") and triadic lists used for rhythm rather than content; em dashes (replace with a period or a comma); colons and semicolons where a period would do; sentence-initial connectives (Moreover, Furthermore, Therefore, Notably); template phrases ("it is worth noting", "this raises the question", "the real question is"); significance inflation (crucial, critical, pivotal, underscore, delve, multifaceted, robust used as praise); synonym cycling of a key term; and any sentence that describes the paper instead of stating a concern. Keep the referee's claims, page citations, and quoted passages untouched.
 
-This applies the user's academic-prose linter (Kobak Tier-1 vocab blocklist, phrasal AI tells, voice overrides). Apply its suggestions to the Major Concerns paragraphs especially — these are what the author and editor actually read. If it is not installed, skip this phase and say so in the final summary.
-
+Either route leaves the report in the reviewer's own measured register: short declarative sentences, one concern per paragraph, no rhetorical questions.
 ## Phase 6 — Optional confidential editor note
 
 After the main report is final, ask the user whether to also generate the confidential editor note. If yes, single-pass:
@@ -311,7 +309,7 @@ Save as `<slug>/editor_confidential.md`.
 - [ ] Additional Concerns do not duplicate Major Concerns at lower volume.
 - [ ] Suggestions for Revision map 1:1 onto Major Concerns where possible. An unmapped Major Concern is either not major, or the suggestion is missing.
 - [ ] Recommendation consistent with the body. A Reject recommendation should not be followed by "fix X and Y" suggestions.
-- [ ] `$sci-edit` applied to Major Concerns prose at minimum.
+- [ ] Phase 5 tell-removal applied to Major Concerns prose at minimum (external linter or the inline pass).
 
 ## File layout
 
@@ -326,7 +324,7 @@ Save as `<slug>/editor_confidential.md`.
 ├── agent_5_situator.md
 ├── agent_6_blue_team.md
 ├── referee_report_draft.md         (Chief Reviewer output)
-├── referee_report.md               (after Tone Guard + $sci-edit — this is what you send)
+├── referee_report.md               (after Tone Guard + Phase 5 — this is what you send)
 └── editor_confidential.md          (optional, never sent to authors)
 ```
 

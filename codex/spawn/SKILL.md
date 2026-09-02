@@ -9,7 +9,7 @@ You are the **lead**. A spawned peer is a **full agent session** — its own con
 
 | Tier | What it is | Lifetime | Reach it via |
 |---|---|---|---|
-| subagent | `spawn_agent` child — context isolation, same model | dies with the thread | `$46-orchestrate` |
+| subagent | `spawn_agent` child — context isolation, same model | dies with the thread | `$orchestrate` |
 | one-shot | fresh `codex exec` / `claude -p` process | one turn, deliberately not resumable | advisor and peer scripts |
 | **spawned peer** | full interactive session, own pane + worktree | survives you; user-steerable | this skill |
 
@@ -56,7 +56,7 @@ The status line names the mode directly (for example, `⏵⏵ bypass permissions
 
 ## Write the brief first
 
-The brief is a file (`<WT_PATH>/.spawn/brief.md`), not an inline prompt. It survives the peer's own compaction and sits in the worktree at merge-review time as the audit record. The kickoff prompt is one line pointing at it. Use this library's own delegation contract, the same fields `$46-orchestrate` gives any worker: **Objective · Inputs and authoritative paths · In scope · Out of scope · Constraints and invariants · Write ownership · Expected artifact · Acceptance checks · Return format** (conclusion, evidence, changed files, residual risk). Then three spawn-specific lines:
+The brief is a file (`<WT_PATH>/.spawn/brief.md`), not an inline prompt. It survives the peer's own compaction and sits in the worktree at merge-review time as the audit record. The kickoff prompt is one line pointing at it. Use this library's own delegation contract, the same fields `$orchestrate` gives any worker: **Objective · Inputs and authoritative paths · In scope · Out of scope · Constraints and invariants · Write ownership · Expected artifact · Acceptance checks · Return format** (conclusion, evidence, changed files, residual risk). Then three spawn-specific lines:
 
 ```markdown
 Branch etiquette — commit to spawn/<slug>; never merge, never push; do not commit .spawn/.
@@ -77,16 +77,33 @@ Run the two-step wait as a foreground command with output to a file. Let the Cod
 
 Then judge the true state, since the agent's word is not the artifact: `herdr agent read "$slug" --lines 60`, plus `git -C <WT_PATH> status --porcelain` and `git -C <WT_PATH> log --oneline -3`. A blocked peer: `agent read` first. A question you can answer → `herdr agent prompt`. A TUI dialog → `herdr agent send-keys`. A judgment call → `herdr agent focus` and tell the user which pane and why.
 
-## Integrate and clean up
+## Fold back in
 
-1. The peer commits on `spawn/<slug>` and stops — it never merges (the brief says so).
-2. Review from the main checkout: `git log main..spawn/<slug>` and `git diff main...spawn/<slug>`. Substitute the repo's integration branch when it is not `main`.
-3. If main moved, have the **peer** rebase and re-run its acceptance checks — it holds the conflict context.
-4. Merge from the main checkout and run the acceptance checks yourself; you retain integration ownership.
-5. `herdr worktree remove --workspace <WS_ID>`, then `git branch -d spawn/<slug>`.
+Run this checklist per peer, in order. Skipping the last two steps is how orphaned checkouts accumulate under `~/.herdr/worktrees/<repo>/`.
 
-`--force` on `worktree remove` only when the agent is idle or done AND the worktree porcelain is empty — or the work is deliberately abandoned. With several peers, merge one at a time and rebase the next between merges.
+1. **Peer commits and stops.** It commits on `spawn/<slug>` and never merges (the brief says so). Confirm: `git -C <WT_PATH> status --porcelain` is empty and `git -C <WT_PATH> log --oneline -3` shows its work.
+2. **Review from the main checkout.** `git log main..spawn/<slug>` and `git diff main...spawn/<slug>`; worktree branches are visible with no fetch. Substitute the repo's integration branch when it is not `main`.
+3. **If main moved, the peer rebases** and re-runs its acceptance checks: `herdr agent prompt "$slug" "Rebase onto main, re-run the acceptance checks, and report."` It holds the conflict context; you do not.
+4. **Merge from the main checkout and run the acceptance checks yourself.** You retain integration ownership, of correctness and of rigor.
+5. **Remove the checkout.** `herdr worktree remove --workspace <WS_ID>`. `--force` only when the agent is idle or done AND the checkout is clean, or the work is deliberately abandoned. A checkout that holds submodules cannot be removed by `git worktree remove`; delete the directory and run `git worktree prune` in the main checkout.
+6. **Delete the branch.** `git branch -d spawn/<slug>` from the main checkout, after the worktree is gone (the same branch cannot be checked out twice, and `-d` refuses an unmerged branch, which is the safety you want).
+7. **Confirm nothing is left.** `git worktree list` in the main checkout shows only the main checkout and any peers still running; `ls ~/.herdr/worktrees/<repo>/` shows no directory for this slug.
 
+With several peers, merge one at a time and rebase the next between merges: worktrees prevent write collisions, not merge collisions.
+
+### Sweep orphans
+
+Run at the start of a spawn session, or whenever `~/.herdr/worktrees/` looks crowded:
+
+```bash
+for wt in ~/.herdr/worktrees/*/*/; do
+  b=$(git -C "$wt" branch --show-current 2>/dev/null) || { echo "$wt: not a checkout"; continue; }
+  main=$(git -C "$wt" worktree list --porcelain | head -1 | sed 's/^worktree //')
+  echo "$wt  branch=$b  dirty=$(git -C "$wt" status --porcelain | wc -l | tr -d ' ')  unmerged=$(git -C "$main" log --oneline main..$b | wc -l | tr -d ' ')"
+done
+```
+
+A checkout with `dirty=0` and `unmerged=0` is done: remove it (`herdr worktree remove`, or `git worktree remove` from the main checkout) and delete its branch. A checkout with dirty files or unmerged commits is not yours to delete; put it to the user with the branch name and the counts. A directory that is no longer a checkout at all (`.git` file pointing at a pruned worktree) is a leftover: `git worktree prune` in the main repo, then delete the directory. Finish with `herdr worktree list` so herdr's own workspace records agree with git.
 ## Fallbacks
 
 **`$TMUX` set:** `git worktree add ../<repo>-spawn-<slug> -b spawn/<slug>`, then `tmux split-window -P -F '#{pane_id}' -c <WT_PATH>`, then `send-keys` the agent command (`codex` or `claude`) followed by the kickoff line. Monitor with `capture-pane -p | tail -30`. There is no state detection here — the human is the `blocked` detector.

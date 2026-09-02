@@ -1,6 +1,6 @@
 ---
 name: journal-review
-description: Draft a senior peer-review report on a social-science manuscript.
+description: Drafts a referee report on someone else's manuscript for a journal editor — a recommendation, a summary of the claim and design, three to six major concerns that drive the decision, additional concerns, and a coherent revision plan, produced by five parallel adversarial finders (Breaker, Butcher, Shredder, Void, Situator), a Blue Team error filter, a Chief Reviewer synthesis, and a Tone Guard legal pass, with an optional confidential note to the editor. Use when the user has been asked to referee a manuscript for a journal. Self-audit of the user's own draft goes to paper-review-lite or presubmit, and writing an author-side response to reviewers goes to referee-response.
 argument-hint: "[path to manuscript PDF, plus target journal and any editor's-letter notes]"
 context: fork
 ---
@@ -26,9 +26,9 @@ Not a long exhaustive issue list, and not a takedown.
 3. Copy the manuscript PDF into the slug folder as `manuscript.pdf`. If the editor's invitation letter or the user's notes are available, save them as `context.md` in the same folder.
 4. Read the manuscript yourself once before writing agent prompts. Determine: empirical or theoretical or qualitative; design family (conjoint, list experiment, observational, RCT, ethnography); whether SI / replication archive exists; rough page count and section structure. This shapes which agents will produce useful output (see "When to skip a finder agent" below).
 
-**Orchestration lead.** This referee draft is orchestrated by whatever model you are running — Claude Opus 5 or Fable 5 — at medium reasoning effort by default (raise to high for the recommendation call and for verifying every quoted passage against the PDF — a bounded judgment call, not the sustained orchestration role). The orchestrator reads the manuscript, spawns the five finders, the Blue Team, the Chief Reviewer, and Tone Guard, then owns the last-mile checklist; the sub-agents do the finding and drafting. If the `Workflow` tool is listed among your tools this session, express Phase 1 (five finders) → Phase 2 (Blue Team) → Phase 3 (Chief Reviewer) → Phase 4 (Tone Guard) as a `Workflow`; otherwise — the common case, since dynamic Workflows are gated per session by org policy, the launch gate, or the "Dynamic workflows" setting in `/config`, and invoking a skill does not grant them — launch each phase's agents with parallel `Agent` calls in a single message and start the next phase once their outputs land. The fallback is the default, not a degraded mode; branch on tool availability, not on which model is leading.
+**Orchestration lead.** This referee draft is orchestrated by whatever model you are running — Claude Opus 5 or Fable 5.1 — at medium reasoning effort by default (raise to high for the recommendation call and for verifying every quoted passage against the PDF — a bounded judgment call, not the sustained orchestration role). The orchestrator reads the manuscript, spawns the five finders, the Blue Team, the Chief Reviewer, and Tone Guard, then owns the last-mile checklist; the sub-agents do the finding and drafting. If the `Workflow` tool is listed among your tools this session, express Phase 1 (five finders) → Phase 2 (Blue Team) → Phase 3 (Chief Reviewer) → Phase 4 (Tone Guard) as a `Workflow`; otherwise — the common case, since dynamic Workflows are gated per session by org policy, the launch gate, or the "Dynamic workflows" setting in `/config`, and invoking a skill does not grant them — launch each phase's agents with parallel `Agent` calls in a single message and start the next phase once their outputs land. The fallback is the default, not a degraded mode; branch on tool availability, not on which model is leading.
 
-**Sub-agent model routing.** Unlike a single-model pipeline, each role below is pinned to the model tier its difficulty warrants — Opus for open-ended argument-level judgment, Fable for the synthesis role that most rewards the strongest reasoning, Sonnet for mechanical or checklist-bound verification. Fable 5 is the *most* expensive tier here, not a cheaper one ($10/$50 per MTok against Opus 5's $5/$25), so it is pinned only where its reasoning is what the role needs. Each finder's heading states its `Model:` / `Effort:`; use these as the `opts.model` / `opts.effort` passed to `agent()` in the Workflow (or the `model` param on a plain `Agent` call, noting the standalone `Agent` tool has no effort field — fold the effort instruction into the prompt text itself in that case). The tier ladder, strongest first, is **Fable → Opus → Sonnet → Haiku**. If a pinned tier is unavailable in your environment, fall back one step down that ladder rather than skipping the role. See [`opus-orchestrate`](../opus-orchestrate/SKILL.md) / [`fable-orchestrate`](../fable-orchestrate/SKILL.md) for the general routing patterns this borrows from.
+**Sub-agent model routing.** Unlike a single-model pipeline, each role below is pinned to the model tier its difficulty warrants — Opus for open-ended argument-level judgment, Fable for the synthesis role that most rewards the strongest reasoning, Sonnet for mechanical or checklist-bound verification. Fable 5.1 is the *most* expensive tier here, not a cheaper one ($10/$50 per MTok against Opus 5's $5/$25), so it is pinned only where its reasoning is what the role needs. Each finder's heading states its `Model:` / `Effort:`; use these as the `opts.model` / `opts.effort` passed to `agent()` in the Workflow (or the `model` param on a plain `Agent` call, noting the standalone `Agent` tool has no effort field — fold the effort instruction into the prompt text itself in that case). The tier ladder, strongest first, is **Fable → Opus → Sonnet → Haiku**. If a pinned tier is unavailable in your environment, fall back one step down that ladder rather than skipping the role. See [`orchestrate`](../orchestrate/SKILL.md) for the general routing patterns this borrows from.
 
 | Role | Model | Effort | Why |
 |---|---|---|---|
@@ -272,16 +272,14 @@ Spawn on the Chief Reviewer's draft.
 
 After reviewing the change log, **delete the HTML comments from `referee_report.md`** — that file goes to the editor and authors.
 
-## Phase 5 — Run /sci-edit on the prose (if available)
+## Phase 5 — Strip AI tells from the prose
 
-After Tone Guard, the report is legally clean but may still read as AI-drafted. If `/sci-edit` is installed at `~/.claude/skills/sci-edit/`, invoke it on the report file:
+After Tone Guard the report is legally clean but may still read as machine-drafted. Two routes:
 
-```
-/sci-edit <slug>/referee_report.md
-```
+- **If the user has an academic prose linter installed** (Steven's `/sci-edit` at `~/.claude/skills/sci-edit/`, or any equivalent), run it on `<slug>/referee_report.md` and apply its suggestions to the Major Concerns paragraphs first; those are what the editor and authors read.
+- **Otherwise apply this inline pass yourself** and say in the final summary that no external linter ran. Read the Major Concerns and Suggestions paragraphs once each and fix: hedge stacks (keep one hedge per claim); negative parallelism ("not X but Y") and triadic lists used for rhythm rather than content; em dashes (replace with a period or a comma); colons and semicolons where a period would do; sentence-initial connectives (Moreover, Furthermore, Therefore, Notably); template phrases ("it is worth noting", "this raises the question", "the real question is"); significance inflation (crucial, critical, pivotal, underscore, delve, multifaceted, robust used as praise); synonym cycling of a key term; and any sentence that describes the paper instead of stating a concern. Keep the referee's claims, page citations, and quoted passages untouched.
 
-This applies the user's academic-prose linter (Kobak Tier-1 vocab blocklist, phrasal AI tells, voice overrides). Apply its suggestions to the Major Concerns paragraphs especially — these are what the author and editor actually read. If it is not installed, skip this phase and say so in the final summary.
-
+Either route leaves the report in the reviewer's own measured register: short declarative sentences, one concern per paragraph, no rhetorical questions.
 ## Phase 6 — Optional confidential editor note
 
 After the main report is final, ask the user whether to also generate the confidential editor note. If yes, single-pass:
@@ -317,7 +315,7 @@ Save as `<slug>/editor_confidential.md`.
 - [ ] Additional Concerns do not duplicate Major Concerns at lower volume.
 - [ ] Suggestions for Revision map 1:1 onto Major Concerns where possible. An unmapped Major Concern is either not major, or the suggestion is missing.
 - [ ] Recommendation consistent with the body. A Reject recommendation should not be followed by "fix X and Y" suggestions.
-- [ ] `/sci-edit` applied to Major Concerns prose at minimum.
+- [ ] Phase 5 tell-removal applied to Major Concerns prose at minimum (external linter or the inline pass).
 
 ## File layout
 
@@ -332,7 +330,7 @@ Save as `<slug>/editor_confidential.md`.
 ├── agent_5_situator.md
 ├── agent_6_blue_team.md
 ├── referee_report_draft.md         (Chief Reviewer output)
-├── referee_report.md               (after Tone Guard + /sci-edit — this is what you send)
+├── referee_report.md               (after Tone Guard + Phase 5 — this is what you send)
 └── editor_confidential.md          (optional, never sent to authors)
 ```
 

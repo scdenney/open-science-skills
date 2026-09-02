@@ -90,7 +90,7 @@ Ask in rounds: the complete frontier of questions whose prerequisites are settle
 ➡️ Recommended — the subgroup; the mechanism is specific to it, and representativeness costs power you need.
 ```
 
-Facts get looked up, not asked — dispatch the lookup while the interview continues. Decisions go to the researcher, always. A round ends when its answers land in the ticket. Matt Pocock's `grill-me` (see `RECOMMENDED.md`) is the standalone version of this move; pair it with `diverge` when an answer needs genuinely distinct options on the table first.
+Facts get looked up, not asked — dispatch the lookup while the interview continues. Decisions go to the researcher, always. A round ends when its answers land in the ticket. `research-grill` is the standalone, single-sitting version of this interview (its heritage is Matt Pocock's `grill-me`, see `RECOMMENDED.md`); pair it with `diverge` when an answer needs genuinely distinct options on the table first.
 
 ## Exit
 

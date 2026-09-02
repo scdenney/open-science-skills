@@ -1,6 +1,6 @@
 ---
 name: text-classification
-description: "Design and validate LLM-based text classification. Use for codebooks, prompts, validation samples, agreement statistics, and reporting model-coded data."
+description: "Designs and validates LLM-based text classification for research data — codebook construction, choice of learning regime, model selection and reproducibility, prompt construction, pilot validation against human coding with agreement statistics (kappa, F1), hybrid human-LLM workflows, and reporting model-coded data. Also carries a resumable batch pipeline with a rule-based baseline for coding large sets of repeated free-text values against a closed codebook — occupation, institution, and registry text, and open-text survey responses — with a frozen input set, incremental output, residual buckets, stratified hand validation, a regex or dictionary comparison, and a published lookup table. Use when the user asks to classify, code, or label text at scale. Discovering categories rather than applying them goes to topic-modeling."
 ---
 
 # LLM-Based Text Classification for Social Science Research
@@ -94,6 +94,19 @@ description: "Design and validate LLM-based text classification. Use for codeboo
 - When citing LLM-classified data in results, present representative examples for each code category. Readers need to assess whether the classification matches their substantive understanding (Glazier, Boydstun & Feezell 2021).
 - For CONSORT/JARS-style flow reporting when classifications feed a sampled experiment, and for DA-RT compliance on archived prompts and classifier code, see `methods-reporting`. When the underlying category set is not fixed in advance and discovery of categories is itself the goal, unsupervised approaches may be more appropriate — see `topic-modeling`.
 
+### 9. Resumable Batch Pipeline and Rule-Based Baseline
+
+For a large set of repeated free-text values against a closed codebook (occupation, institution, or residence coding from registry text; open-text survey responses; affiliation taxonomies), run classification as a resumable batch job with an audit trail, not as a one-off prompt.
+
+1. **Freeze the input set.** Deduplicate the raw strings; keep a frequency count and a stable input ID per unique string. Record the exact codebook, model name, prompt version, seed, and date.
+2. **Classify unique strings in batches.** Request JSON; keep the code set closed (the model chooses only among allowed codes); save incremental output so an interrupted run resumes; capture a short rationale and a confidence signal or log-probability when available (`$llm-calibration-logprobs`).
+3. **Normalize and defend against drift.** Map out-of-vocabulary outputs to explicit residual buckets and log every normalization. Keep original string, predicted label, and rationale in one table.
+4. **Validate a stratified sample by hand.** Over-represent rare classes and known failure modes; add human correctness flags and a note column; score overall and class-level accuracy and calibration by confidence bin (Section 5 covers the agreement statistics).
+5. **Compare against the existing baseline.** Run the regex or dictionary classifier on the same unique strings; measure agreement, collisions, and known false positives; decide which rules to tighten, replace, or keep as fallback.
+6. **Publish the lookup table, not only the narrative.** One row per unique string with final code, validation signals, and reproducibility metadata, and an explicit stable join key back to the analytic frame.
+
+Do not use this for one-off qualitative coding with no stable codebook, for tasks where a human must read every item anyway, or where a supervised model with an evaluation harness already exists.
+
 ## Quality Checks
 
 - [ ] Codebook includes all components per code: label, definition, clarification, negative clarification, examples (adapted from Halterman & Keith 2025)
@@ -112,3 +125,4 @@ description: "Design and validate LLM-based text classification. Use for codeboo
 - [ ] Data privacy addressed: PII not sent to commercial APIs without policy review (Chae & Davidson 2025)
 - [ ] Downstream analysis acknowledges measurement error from classification; if classifier labels feed causal estimation, design-based correction planned up front (Egami et al. 2023; Knox, Lucas & Cho 2022)
 - [ ] Discovery vs. confirmation framing made explicit; codebook revision history documented if applicable
+- [ ] Batch runs: unique-value set frozen, codebook and prompt version recorded, run resumable, out-of-vocabulary outputs mapped explicitly, stratified human sample scored, baseline agreement measured, lookup table joinable.
