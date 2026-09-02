@@ -2,6 +2,10 @@
 
 Versions are the `version` field shared by `plugin/.claude-plugin/plugin.json` and `.claude-plugin/marketplace.json`; `plugin/scripts/check.sh` fails if they differ or if this file has no entry for the current version. Earlier history is in commit subjects and in `AUDITS.md`.
 
+## [2.25.1] — 2026-09-02
+
+`spawn` corrected after a live dry run on herdr 0.8.0: `--cwd "$PWD"` is mandatory on `worktree create` and `worktree open` (herdr resolves the repository from the calling workspace, and the bare form checked out an unrelated repository); a fresh peer always blocks first on Claude Code's workspace-trust dialog and needs `agent send-keys`, which the `auto` classifier may refuse; `agent explain` prints five text lines with the detection rule, not a hook/screen label; `wait` can settle on `done` while `explain` says `idle`; `worktree remove` succeeds without `--force` on a running peer; the fold-back checklist now also closes the source workspace `worktree create` opens and removes the empty per-repo directory.
+
 ## [2.25.0] — 2026-09-02
 
 Consolidation release: 43 skills become 38. Every pre-2.25 skill name still resolves; the absorbed names are alias commands that call the merged skill with its mode forced (`plugin/commands/<old-name>.md`, whitelisted in `check.sh`).

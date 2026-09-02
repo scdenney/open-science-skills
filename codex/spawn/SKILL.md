@@ -38,7 +38,7 @@ Each command emits JSON carrying the ids the next one needs. `worktree create` r
 
 ```bash
 slug=fix-ingest    # short dashed name, 2–4 lowercase words, e.g. fix-ingest — names the branch, the workspace label, and the agent
-herdr worktree create --branch "spawn/$slug" --label "$slug"   # JSON — workspace_id, checkout path, root pane_id
+herdr worktree create --cwd "$PWD" --branch "spawn/$slug" --label "$slug"   # JSON — workspace_id, checkout path, root pane_id
 # write the brief before starting the agent (next section) → <WT_PATH>/.spawn/brief.md
 herdr agent start "$slug" --kind codex --pane <PANE_ID>        # the root pane; or --kind claude; agent flags go after --
 herdr agent prompt "$slug" "Read .spawn/brief.md and begin. Reply here when the acceptance checks pass."
@@ -87,7 +87,7 @@ Run this checklist per peer, in order. Skipping the last two steps is how orphan
 4. **Merge from the main checkout and run the acceptance checks yourself.** You retain integration ownership, of correctness and of rigor.
 5. **Remove the checkout.** `herdr worktree remove --workspace <WS_ID>`. `--force` only when the agent is idle or done AND the checkout is clean, or the work is deliberately abandoned. A checkout that holds submodules cannot be removed by `git worktree remove`; delete the directory and run `git worktree prune` in the main checkout.
 6. **Delete the branch.** `git branch -d spawn/<slug>` from the main checkout, after the worktree is gone (the same branch cannot be checked out twice, and `-d` refuses an unmerged branch, which is the safety you want).
-7. **Confirm nothing is left.** `git worktree list` in the main checkout shows only the main checkout and any peers still running; `ls ~/.herdr/worktrees/<repo>/` shows no directory for this slug.
+7. **Confirm nothing is left**, in three places: `git worktree list` (main checkout only), `ls ~/.herdr/worktrees/<repo>/` (no directory for this slug; `rmdir` the parent if empty), and `herdr worktree list` plus `herdr workspace list` (close the source workspace with `herdr workspace close <id>`, positional, if the spawn opened one).
 
 With several peers, merge one at a time and rebase the next between merges: worktrees prevent write collisions, not merge collisions.
 
@@ -113,6 +113,8 @@ A checkout with `dirty=0` and `unmerged=0` is done: remove it (`herdr worktree r
 Under a restricted sandbox, both fallbacks are user-run too. The tmux socket and sibling-directory worktree writes may be equally blocked.
 
 ## Gotchas
+
+- **`--cwd "$PWD"` on `worktree create` and `worktree open` is mandatory**: herdr resolves the repository from the calling workspace, not the shell directory. A fresh Claude peer's first state is `blocked` on Claude Code's workspace-trust dialog; clear it with `herdr agent send-keys "$slug" Down Enter`, not `agent prompt`. `wait` can settle on `done` while `explain` reports `idle`; judge from git.
 
 - `agent prompt --wait` from an idle agent demands an observed state change within 5000 ms or returns `agent_prompt_stalled` — and it matches *states*, not turns. Use the two-step wait.
 - `agent wait` is **indefinite without `--timeout`**. Always bound it.

@@ -46,13 +46,16 @@ Each command emits JSON carrying the ids the next one needs. `worktree create` r
 
 ```bash
 slug=fix-ingest    # short dashed name, 2–4 lowercase words, e.g. fix-ingest — names the branch, the workspace label, and the agent
-herdr worktree create --branch "spawn/$slug" --label "$slug"   # JSON — workspace_id, checkout path, root pane_id
+herdr worktree create --cwd "$PWD" --branch "spawn/$slug" --label "$slug"   # JSON — workspace_id, checkout path, root pane_id
 # write the brief before starting the agent (next section) → <WT_PATH>/.spawn/brief.md
 herdr agent start "$slug" --kind claude --pane <PANE_ID>       # the root pane; agent flags go after --  (e.g. -- --model opus)
+herdr agent wait "$slug" --until blocked --timeout 15000 || true # a fresh peer always blocks first: Claude Code's workspace-trust dialog
+herdr agent read "$slug" --lines 20                              # expect "Is this a project you created or one you trust?"
+herdr agent send-keys "$slug" Down Enter                         # select "Yes, I trust this folder"; agent prompt cannot clear a dialog
 herdr agent prompt "$slug" "Read .spawn/brief.md and begin. Reply here when the acceptance checks pass."
 ```
 
-`--base <ref>` on `worktree create` pins the baseline when main is moving under you.
+**`--cwd "$PWD"` is not optional.** herdr resolves the repository from the calling workspace, not from the shell's directory, and every Bash call is a fresh shell, so without `--cwd` it branches and checks out whatever repository the workspace is associated with. Verified 2026-09-02: from a scratch repo, the bare form created a worktree of an unrelated repository. Check `repo_root` in the JSON before going on. `--base <ref>` pins the baseline when main is moving under you.
 
 Permissions match yours, not a hardcoded default. Before starting the peer, read your own pane to see your live mode, and read wide enough to actually find it:
 
@@ -93,7 +96,7 @@ herdr agent read "$slug" --lines 60
 git -C <WT_PATH> status --porcelain && git -C <WT_PATH> log --oneline -3
 ```
 
-`agent explain` names the detection source. Claude Code peers report their state through the herdr hook (`herdr integration status` should show `claude: current`); a peer whose state is only screen-inferred is a peer whose hook is missing or outdated, and `wait` will be less reliable for it. `herdr agent get "$slug"` returns the agent's ids and pane when you have lost them.
+`agent explain` prints five plain-text lines, not JSON: `agent`, `state` (`blocked` | `idle` | `working`), `manifest`, `rule` (the detection rule that fired, with its screen region and priority), and `evidence` (the captured text). Observed on 0.8.0: the trust dialog is `live_blocked_form`, a settled prompt box is `live_prompt_box`, and a running turn is `osc_title_working`. `integration status` tells you whether the hook is current; `explain` tells you which rule fired. A current hook registers the peer's `agent_session` id (visible in `agent get`), which is what makes `wait` reliable; the state itself is usually resolved by a screen rule either way. `herdr agent get "$slug"` returns the agent's ids and pane when you have lost them.
 
 A blocked peer: `agent read` first. A question you can answer → `herdr agent prompt`. A TUI dialog (a permission menu) → `herdr agent send-keys`. A judgment call → `herdr agent focus` and tell the user which pane and why. Spot-check anytime with `agent read` and a small `--lines`; do not stream panes into your context.
 
@@ -107,7 +110,7 @@ Run this checklist per peer, in order. Skipping the last two steps is how orphan
 4. **Merge from the main checkout and run the acceptance checks yourself.** You retain integration ownership, of correctness and of rigor.
 5. **Remove the checkout.** `herdr worktree remove --workspace <WS_ID>`. `--force` only when the agent is idle or done AND the checkout is clean, or the work is deliberately abandoned. A checkout that holds submodules cannot be removed by `git worktree remove`; delete the directory and run `git worktree prune` in the main checkout.
 6. **Delete the branch.** `git branch -d spawn/<slug>` from the main checkout, after the worktree is gone (the same branch cannot be checked out twice, and `-d` refuses an unmerged branch, which is the safety you want).
-7. **Confirm nothing is left.** `git worktree list` in the main checkout shows only the main checkout and any peers still running; `ls ~/.herdr/worktrees/<repo>/` shows no directory for this slug.
+7. **Confirm nothing is left**, in three places. `git worktree list` in the main checkout shows only the main checkout and any peers still running. `ls ~/.herdr/worktrees/<repo>/` shows no directory for this slug; `rmdir` the parent if it is now empty, since `worktree remove` leaves it. `herdr worktree list` and `herdr workspace list` show no workspace for this spawn; `worktree create` also opens a workspace for the source checkout, which nothing else closes, so `herdr workspace close <id>` (positional, not `--workspace`) when the spawn opened one.
 
 With several peers, merge one at a time and rebase the next between merges: worktrees prevent write collisions, not merge collisions.
 
@@ -123,7 +126,7 @@ for wt in ~/.herdr/worktrees/*/*/; do
 done
 ```
 
-A checkout with `dirty=0` and `unmerged=0` is done: remove it (`herdr worktree remove`, or `git worktree remove` from the main checkout) and delete its branch. A checkout with dirty files or unmerged commits is not yours to delete; put it to the user with the branch name and the counts. A directory that is no longer a checkout at all (`.git` file pointing at a pruned worktree) is a leftover: `git worktree prune` in the main repo, then delete the directory. Finish with `herdr worktree list` so herdr's own workspace records agree with git.
+A checkout with `dirty=0` and `unmerged=0` is done: remove it (`herdr worktree remove`, or `git worktree remove` from the main checkout) and delete its branch. A checkout with dirty files or unmerged commits is not yours to delete; put it to the user with the branch name and the counts. A directory that is no longer a checkout at all (`.git` file pointing at a pruned worktree) is a leftover: `git worktree prune` in the main repo, then delete the directory. Finish with `herdr worktree list` and `herdr workspace list` so herdr's own records agree with git; empty per-repo directories under `~/.herdr/worktrees/` are leftovers of `worktree remove` and can be removed with `rmdir`.
 ## Fallbacks — tmux, then claude --bg
 
 **tmux** (`$TMUX` set): same brief, manual lifecycle.
@@ -155,9 +158,12 @@ Manage with `claude agents` — coarser steering, same brief, same merge-back.
 - A peer whose mode still prompts (e.g. `manual`, `dontAsk`, plain `auto`) sits `blocked` at its first permission prompt until someone answers. Attend its first minute, or pass the lead's own live mode (see Permissions above) so the peer starts already matched to what you're running.
 - Forgot to pass a mode? The peer used Claude Code's configured default, not yours — check with `herdr agent read <name> --lines 30` (grep for the mode string as above) and restart it with the right `--permission-mode` if the two diverge.
 - `agent prompt` submits a *turn*; TUI dialogs need `agent send-keys`.
+- **A fresh peer's first state is `blocked`**, on Claude Code's workspace-trust dialog, because the worktree path is new. Clear it with `agent send-keys "$slug" Down Enter`; no `--permission-mode` skips it. In `auto` permission mode the lead's own classifier may refuse `agent send-keys`, `workspace close`, and `worktree remove --force`; hand those to the user rather than retrying.
+- `wait` can settle on `done` while a follow-up `explain` reports `idle`; `done` is transient. Judge from git, not from either word.
+- `worktree remove --workspace <id>` succeeds without `--force` even while a peer is still running in the pane, and takes the agent and pane down silently. Check `agent explain` first.
 - A peer starts on the **user's** default model and effort, not yours — pin with `-- --model … --effort …` when the tier matters (observed 2026-08-06: a Fable lead spawned a Sonnet-default peer).
 - Lost an id → `herdr worktree list`, `herdr agent list`, `herdr agent get <name>`, `herdr api snapshot`.
-- **Reattaching after a restart.** A peer's checkout survives a herdr or terminal restart; its pane and agent do not. `herdr worktree open --path <WT_PATH>` (or `--branch spawn/<slug>`) reopens the checkout as a workspace with a fresh root pane; then `herdr agent start` again and prompt it to read `.spawn/brief.md` and continue from the last commit.
+- **Reattaching after a restart.** A peer's checkout survives a herdr or terminal restart; its pane and agent do not. `herdr worktree open --cwd <REPO_ROOT> --path <WT_PATH>` (or `--branch spawn/<slug>`) reopens the checkout as a workspace with a fresh root pane (the checkout must still exist; after `worktree remove` there is nothing to reopen); then `herdr agent start` again and prompt it to read `.spawn/brief.md` and continue from the last commit.
 - `HERDR_*` variables exist only inside herdr — and spawned tabs inherit them, so peers can themselves spawn.
 - The same branch cannot be checked out in two worktrees. Merge from the main checkout; delete the branch only after `worktree remove`.
 
@@ -173,4 +179,4 @@ Manage with `claude agents` — coarser steering, same brief, same merge-back.
 - A **Codex peer** is one flag: `herdr agent start "$slug" --kind codex --pane <PANE_ID>` — same brief; the contract is Codex's own from `orchestrate`. herdr detects 21 agent kinds, so the same move spawns other agents too. State detection for a kind depends on its integration hook being current (`herdr integration status`; install or update with `herdr integration install <kind>`), otherwise `wait` falls back to screen inference.
 - Heritage: generalizes Matt Pocock's `claude-handoff` (MIT, [mattpocock/skills](https://github.com/mattpocock/skills)) — handoff compacts one conversation into a document for one `claude --bg` successor; spawn adds environment detection, worktree isolation, directed contract briefs, and lifecycle management for N peers. See [`RECOMMENDED.md`](../../../RECOMMENDED.md).
 - Routed to by `orchestrate` routing row 8; standalone via `/oss:spawn`.
-- herdr surface verified 2026-08-06 by live run on herdr 0.7.5; re-checked 2026-09-02 against `herdr api schema --json` (protocol 19) on herdr 0.8.0, which added `agent explain`, `agent get`, `worktree open`, and `integration`. Flag names above match the 0.8.0 schema (`worktree create`: `--branch --label --base --path --cwd`; `worktree remove`: `--workspace --force`; `agent start`: `--kind --pane --timeout`; `agent wait`: `--until --timeout`). The fold-back checklist and orphan sweep were written after a sweep found ten orphaned checkouts across three repos.
+- herdr surface verified 2026-08-06 by live run on herdr 0.7.5; re-verified 2026-09-02 by a live dry run on herdr 0.8.0 (protocol 19, Claude and Codex integration hooks v7), which added `agent explain`, `agent get`, `worktree open`, and `integration`. The dry run is what established the `--cwd` requirement, the trust-dialog block, and the `explain` output shape above. Flag names above match the 0.8.0 schema (`worktree create`: `--branch --label --base --path --cwd`; `worktree remove`: `--workspace --force`; `agent start`: `--kind --pane --timeout`; `agent wait`: `--until --timeout`). The fold-back checklist and orphan sweep were written after a sweep found ten orphaned checkouts across three repos.
