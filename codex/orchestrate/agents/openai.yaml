@@ -1,6 +1,6 @@
 interface:
   display_name: "Orchestrate"
-  short_description: "Let Astra lead parallel Codex workstreams"
-  default_prompt: "Use $orchestrate to lead and verify this task across Codex subagents."
+  short_description: "Orchestrate from an Astra or Sol session"
+  default_prompt: "Use $orchestrate to lead and verify this task from the active Astra or Sol session."
 policy:
   allow_implicit_invocation: false

@@ -6,7 +6,7 @@
 
 [![Claude Code](https://img.shields.io/badge/Claude_Code-plugin-D97757?logo=anthropic&logoColor=white)](https://code.claude.com/docs/en/skills)
 [![OpenAI Codex](https://img.shields.io/badge/OpenAI_Codex-library-111111?logo=openai&logoColor=white)](codex/README.md)
-[![version](https://img.shields.io/badge/version-2.27.0-blue)](https://github.com/scdenney/open-science-skills/releases)
+[![version](https://img.shields.io/badge/version-2.28.0-blue)](https://github.com/scdenney/open-science-skills/releases)
 [![license](https://img.shields.io/badge/license-CC%20BY--NC%204.0-lightgrey)](LICENSE)
 [![Claude skills](https://img.shields.io/badge/Claude_skills-38-D97757?logo=anthropic&logoColor=white)](#skills)
 [![Codex skills](https://img.shields.io/badge/Codex_skills-37-111111?logo=openai&logoColor=white)](#skills)
@@ -25,7 +25,7 @@ This is the toolkit I use in my own research, and it grows as I add sources and 
 | [Claude Code](https://code.claude.com/docs/en/skills) | 38, as the [`oss` plugin](plugin/skills) | `/oss:skill-name` |
 | [OpenAI Codex](https://developers.openai.com/codex/skills) | 37, as the [`codex/` library](codex/README.md) | `$skill-name` |
 
-The two libraries differ only in invocation and tooling. The Codex side omits `presubmit`; its `orchestrate` is the Codex-native version led by GPT-6 Astra. See [`codex/README.md`](codex/README.md).
+The two libraries differ only in invocation and tooling. The Codex side omits `presubmit`; its `orchestrate` is the Codex-native version led by the active GPT-6 Astra or GPT-5.6 Sol session, with mode-aware routing between them. See [`codex/README.md`](codex/README.md).
 
 Model selection and reusable migration practices are documented in [MODEL-POLICY.md](MODEL-POLICY.md).
 
@@ -70,7 +70,7 @@ Skills are grouped by where they fall in a project. Unless the Platform column s
 
 | Skill | Platform | Command | What it does |
 |---|---|---|---|
-| [orchestrate](plugin/skills/orchestrate/SKILL.md) | Both | `/oss:orchestrate` · `/oss:fable-orchestrate` · `/oss:opus-orchestrate` · `$orchestrate` | Run a multi-model workflow. Reads the session model and takes the matching lead role: Fable 5.1 keeps the hard reasoning in-lead and delegates mechanical and wide work; Opus 5 is itself the deep reasoner and delegates to fan out. Routes to Sonnet fast-workers, Opus deep-reasoners, a GPT-6 Astra Codex peer, and `spawn`. The two aliases force the lead. On Codex, GPT-6 Astra leads. |
+| [orchestrate](plugin/skills/orchestrate/SKILL.md) | Both | `/oss:orchestrate` · `/oss:fable-orchestrate` · `/oss:opus-orchestrate` · `$orchestrate` | Run a multi-model workflow. Claude reads the session model and takes the matching Fable 5.1 or Opus 5 lead role. Codex likewise detects the active GPT-6 Astra or GPT-5.6 Sol session: Astra keeps compact hard reasoning in-lead, while Sol escalates unusually difficult units to Astra. Both Codex modes route bounded and mechanical work to lower GPT-5.6 tiers and can use a Claude peer. |
 | [spawn](plugin/skills/spawn/SKILL.md) | Both | `/oss:spawn` | Spawn full peer sessions in new terminal panes — real sessions, not subagents — each in its own git worktree on a directed task with a contract brief. Detects herdr, tmux, or a plain terminal and takes the strongest path; the lead monitors without babysitting and merges each branch back. |
 | [advisor](plugin/skills/advisor/SKILL.md) | Both | `/oss:advisor` / `$advisor` | Escalate one decision point from a working model to an independent second reviewer before committing to an interpretation or calling a task done. Your session is the main seat, on Opus 5 or on Sonnet 5 for cheaper sustained work; the advisor seat is Fable 5.1, pinned to max reasoning effort. Not for a Fable session — a second Fable is not a check; a Fable lead goes cross-vendor through `orchestrate`'s Astra peer or the committee instead. The [Codex counterpart](codex/advisor/SKILL.md) escalates to Astra/xhigh the same way. |
 

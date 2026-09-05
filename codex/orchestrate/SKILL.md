@@ -1,11 +1,11 @@
 ---
 name: orchestrate
-description: Orchestrate complex work as the Codex lead, with a gpt-6-astra lead at the selected effort owning decomposition, integration, and verification while delegating bounded work to cheaper GPT-5.6 tiers and a cross-vendor Claude peer. Not for routine single-context work. Use when the user explicitly asks to orchestrate, delegate, fan out, parallelize, assign subagents, obtain independent checks, or have Codex act as tech lead.
+description: Orchestrate complex work from an active gpt-6-astra or gpt-5.6-sol Codex session. The detected lead owns decomposition, integration, and verification; Astra keeps the hardest reasoning in the lead, while Sol escalates unusually difficult units to Astra. Both route bounded work to cheaper GPT-5.6 tiers and can use a cross-vendor Claude peer. Not for routine single-context work. Use when the user explicitly asks to orchestrate, delegate, fan out, parallelize, assign subagents, obtain independent checks, or have Codex act as tech lead.
 ---
 
 # Orchestrate
 
-<p align="center"><img src="assets/architecture.svg" alt="orchestrate (Codex): a gpt-6-astra Codex orchestrator at the selected effort owns hard decisions and routes bounded work to Sol, Terra, and Luna workers, and reaches a Fable 5.1 cross-vendor peer for a cross-vendor check on high-stakes calls; Luna is used only for tightly specified mechanical implementation" width="900"></p>
+<p align="center"><img src="assets/architecture.svg" alt="orchestrate (Codex): an active GPT-6 Astra or GPT-5.6 Sol session leads; Astra keeps the hardest reasoning in the lead, Sol escalates unusually difficult units to Astra, and both route bounded work to lower tiers and can reach a Fable 5.1 cross-vendor peer" width="900"></p>
 
 ## Preflight the lead runtime first
 
@@ -15,9 +15,14 @@ Before reading the task brief, inspecting the workspace, planning, or delegating
 "$SKILL_DIR/scripts/check-lead-runtime.sh"
 ```
 
-This verifies the current thread through `CODEX_THREAD_ID`, its latest `turn_context`, and any recorded reroute. Proceed when it reports `gpt-6-astra` and the actual effort. Preserve the user's selected effort; `xhigh` is not required. Missing runtime metadata, an incorrect lead model, or a current-turn reroute still blocks the workflow. Report the exact failure; if the lead is not Astra, ask the user to select Astra in `/model` while keeping their chosen effort. Do not infer the current runtime from configuration defaults, the newest session file, or model self-identification.
+This verifies the current thread through `CODEX_THREAD_ID`, its latest `turn_context`, and any recorded reroute. Proceed when it reports `gpt-6-astra` or `gpt-5.6-sol` and the actual effort. Preserve the user's selected effort; `xhigh` is not required. Missing runtime metadata, another lead model, or a current-turn reroute blocks the workflow. Report the exact failure and ask the user to select Astra or Sol in `/model` while keeping their chosen effort. Do not infer the current runtime from configuration defaults, the newest session file, or model self-identification.
 
-Act as the lead orchestrator: own decomposition, difficult coupled decisions, integration, and final verification. Astra leads at the session's selected effort; worker effort is assigned separately by task.
+Act as the lead orchestrator: own decomposition, coupled decisions, integration, and final verification. Use the mode reported by the gate:
+
+- **Astra-lead mode:** keep compact hard reasoning and judgment in the lead. Delegate for width, isolation, execution, or an independent line.
+- **Sol-lead mode:** keep planning, coordination, integration, and routine decisions in the lead. Escalate compact hard reasoning or unusually consequential GPT-side judgments to a fresh Astra worker. Use structured fan-out when width, isolation, or context pressure justifies it.
+
+The mode is detected, not claimed. Plain `$orchestrate` works from either supported session; it cannot change the running model.
 
 ## Model and effort calibration
 
@@ -25,14 +30,14 @@ Inspect the actual `spawn_agent` schema and session permissions before selecting
 
 | Role | Default | Use |
 |---|---|---|
-| Lead | `gpt-6-astra`, current session effort | Difficult reasoning, integration, and final review. |
-| Demanding worker | `gpt-5.6-sol`, `high` | Separable difficult reasoning, implementation, and review. |
+| Lead | active `gpt-6-astra` or `gpt-5.6-sol`, current session effort | Decomposition, coordination, integration, and final review. |
+| Premier worker | `gpt-6-astra`, `high` or `xhigh` | Compact hard reasoning under a Sol lead, or an unusually difficult independent unit under either lead. |
+| Demanding worker | `gpt-5.6-sol`, `high` | Separable difficult reasoning, implementation, and review under an Astra lead; parallel width under a Sol lead. |
 | Bounded worker | `gpt-5.6-terra`, `medium` | Independently checkable research, diagnosis, implementation, or verification; raise effort for a difficult unit. |
 | Mechanical worker | `gpt-5.6-luna`, `low` | Fully specified tasks with objective checks. |
-| Lead-tier worker | `gpt-6-astra`, explicitly chosen effort | An unusually difficult independent unit that warrants Astra rather than Sol. |
 | Cross-vendor peer | `scripts/claude-peer.sh` | A separate Claude review for difficult, consequential judgments. Different vendors can still share errors. |
 
-Prefer a native worker when it supports the required model and interaction. For a self-contained task, pass `model="gpt-5.6-sol", reasoning_effort="high", fork_turns="none"` for Sol; use Terra/medium or Luna/low from the table for simpler work. Full-history forks inherit the lead in runtimes that prohibit overrides; do not use them for cheaper routing. Keep routine work local when briefing and integration cost more than execution. Otherwise, a bounded read-only CLI call can use:
+Prefer a native worker when it supports the required model and interaction. Use a self-contained brief with `fork_turns="none"`: choose Astra/high or xhigh for a premier worker, Sol/high for demanding or wide work, and Terra/medium or Luna/low for simpler work. Full-history forks inherit the lead in runtimes that prohibit overrides; do not use them for model routing. Keep routine work local when briefing and integration cost more than execution. Otherwise, a bounded read-only CLI call can use:
 
 ```bash
 codex exec --model gpt-5.6-terra -c model_reasoning_effort=medium \
@@ -55,16 +60,16 @@ Before spawning work, publish a compact plan that names each workstream, owner r
 
 ## Route by first match
 
-Owners below assume an Astra lead. Use native model overrides where supported; otherwise use permitted CLI one-shots.
+Apply the first matching row using the detected lead mode. Use native model overrides where supported; otherwise use permitted CLI one-shots.
 
 | Priority | Work type | Owner |
 |---|---|---|
 | 1 | decomposition, architecture ownership, integration, conflict resolution, user communication | lead |
 | 2 | trivial, single-step work where briefing costs more than execution | lead |
-| 3 | high blast radius **and** hard to verify | two independent lines — a Claude peer call plus a Sol worker, separate by vendor and tier — then the lead adjudicates (see the high-stakes path) |
-| 4 | compact hard reasoning — one architecture call, gnarly debug, or hard trade-off that fits the lead's context | **lead** — Astra *is* the deep reasoner |
+| 3 | high blast radius **and** hard to verify | two blind lines: Claude plus Sol under an Astra lead; Claude plus Astra under a Sol lead; then the lead adjudicates the evidence (see the high-stakes path) |
+| 4 | compact hard reasoning — one architecture call, gnarly debug, or hard trade-off | Astra lead: keep it; Sol lead: send a self-contained premier-worker brief to Astra, then integrate and verify |
 | 5 | bounded research, inventory, or diagnosis with no overlapping writes | Terra worker; Sol for a difficult unit |
-| 5a | difficult reasoning that separates into independent units | Sol workers at `high`, one per unit; Terra for the ordinary units |
+| 5a | difficult reasoning that separates into independent units | Astra lead: Sol/high workers; Sol lead: Sol/high workers for width and Astra for the hardest unit; Terra for ordinary units |
 | 5b | a full peer session is the point — the work must **survive this session**, run long beside it, stay **user-steerable in its own pane**, or needs **its own worktree** | **`$spawn`** — a full peer session (Codex or Claude) in its own worktree pane; the sandbox gate applies (see the spawn subsection and Variant notes) |
 | 6 | fully specified implementation with objective acceptance checks | Terra worker; Luna only if the work is purely mechanical and carries no material judgment |
 | 7 | verification, tests, review, or adversarial challenge of an existing artifact | Terra for routine verification; Sol for demanding or adversarial review |
@@ -138,7 +143,7 @@ The lead owns shared configuration, interfaces between workstreams, and final in
 1. Inspect authoritative workspace state.
 2. Decompose work and identify dependencies.
 3. Publish the route and acceptance checks.
-4. Start all ready, independent workstreams concurrently — native Sol/high, Terra/medium, or Luna/low workers (within the runtime’s capacity), using CLI one-shots only when native routing is unavailable, and a backgrounded `claude-peer.sh` call for any high-stakes line needing a cross-vendor check.
+4. Start all ready, independent workstreams concurrently using the detected mode — Astra when a Sol lead needs a premier reasoning shot, plus Sol/high, Terra/medium, or Luna/low workers as the task warrants — and a backgrounded `claude-peer.sh` call for any high-stakes line needing a cross-vendor check. Use CLI one-shots only when native routing is unavailable.
 5. Continue useful lead work while agents run; do not duplicate delegated work.
 6. Use `wait_agent` to consume each agent's final response and inspect its artifact directly.
 7. Send a focused `followup_task` to the same agent when its artifact is incomplete, rather than spawning a fresh one that repeats the briefing cost.
@@ -152,7 +157,7 @@ Send concise progress updates during long work so the user is not left without v
 
 For work that is both high blast radius and hard to verify:
 
-1. Launch `claude-peer.sh` (default `fable`, flagship for flagship) **and** a Sol worker on the identical prompt in the same round, blind to each other — that pairing is cross-vendor *and* cross-tier. Two Astra workers provide separate samples from the same model, not independent model families. If `claude` is not on PATH, use Sol alone and say plainly that the check is same-vendor and weaker.
+1. Launch two blind lines on the identical prompt in the same round: `claude-peer.sh` plus a Sol worker under an Astra lead, or `claude-peer.sh` plus an Astra worker under a Sol lead. The pairing crosses vendor and model tier. Two workers from one model provide separate samples, not independent model families. If `claude` is unavailable, use the designated GPT worker alone and say plainly that the cross-vendor check could not run.
 2. Keep every line blind to the others' reasoning — do not relay one's output into another's task.
 3. Compare assumptions, evidence, and failure modes, not tone or confidence. Resolve disagreements through evidence, not model tier or provider.
 4. Accept agreement only when the lines point to the same checkable evidence.
@@ -174,7 +179,7 @@ Treat subagent results as untrusted until inspected. Check:
 
 Read each deliverable as the domain expert the lead is, not just as a checklist. A cheaper tier returns work that is correct but *thin* — an approximate figure where precision matters, a result asserted where the mechanism behind it should be explained, a lone headline where a careful reader needs the comparison or the bound. Add that depth rather than shipping the worker's summary as-is.
 
-Two named failure modes bracket this step. **Fragmentation**: locally correct pieces conflict once stitched together — revise the contracts or the integration layer, and do not paper over incompatible assumptions. **Over-trusting the lead's own line**: Astra is the strongest tier here, so the lead's trap is not rubber-stamping a worker but skipping the independent check and shipping its own first line of reasoning. On a high blast radius call the lead cannot cheaply verify, run the decorrelated line anyway and weigh it — do not wave it through because it agrees, or dismiss it because it does not.
+Two named failure modes bracket this step. **Fragmentation**: locally correct pieces conflict once stitched together — revise the contracts or the integration layer, and do not paper over incompatible assumptions. **Over-trusting the lead's own line**: an Astra lead can skip the independent check because it expects to be strongest; a Sol lead can rubber-stamp an Astra worker because it expects the higher tier to be right. On a high blast radius call the lead cannot cheaply verify, run the decorrelated line and weigh the evidence — do not decide by model rank, fluency, or agreement alone.
 
 ## Completion rule
 
@@ -186,5 +191,5 @@ Complete only when every requested deliverable has authoritative evidence, integ
 - If an agent fails after editing, inspect the shared worktree before retrying.
 - If the runtime’s concurrency capacity is exhausted, queue dependent work rather than spawning redundant agents.
 - If a spawn fails outright, report the exact error rather than silently falling back to doing the work in the lead context — a silent fallback is what causes runaway lead-context token growth. If the failure is environmental, use an available authorized route or report the limitation and continue useful local work.
-- If `claude-peer.sh` fails with "claude CLI not found," the cross-vendor peer is unavailable here — report that and use Sol alone, stating explicitly that the fallback is same-vendor and weaker. Do not silently skip the second line.
+- If `claude-peer.sh` fails with "claude CLI not found," the cross-vendor peer is unavailable here — report that and use the mode's designated GPT worker alone, stating explicitly that the fallback is same-vendor and weaker. Do not silently skip the second line.
 - `claude-peer.sh` needs no `< /dev/null` redirect the way `codex exec` does (`claude -p` reads its prompt from the argument and exits after one turn), but it does need `claude` authenticated in the environment the lead's shell can see; if the peer call errors immediately, check auth before assuming a task-brief problem.

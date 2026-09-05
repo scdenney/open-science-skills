@@ -2,6 +2,11 @@
 
 Versions are the `version` field shared by `plugin/.claude-plugin/plugin.json` and `.claude-plugin/marketplace.json`; `plugin/scripts/check.sh` fails if they differ or if this file has no entry for the current version. Earlier history is in commit subjects and in `AUDITS.md`.
 
+## [2.28.0] — 2026-09-05
+
+- Codex `$orchestrate` now detects and accepts either an active GPT-6 Astra or GPT-5.6 Sol lead. Astra remains the preferred lead and keeps compact hard reasoning in-session. Sol-lead mode retains decomposition, coordination, integration, and verification while escalating unusually difficult units to Astra; both modes route bounded and mechanical work to Terra and Luna and can use a Claude peer.
+- The fail-closed runtime gate still rejects missing metadata, reroutes, and unsupported lead models. Regression tests cover both accepted leads, a rejected Terra lead, missing effort, and reroutes under Astra and Sol.
+
 ## [2.27.0] — 2026-09-05
 
 - On-demand skills. Twenty-seven of the 38 Claude skills now carry `disable-model-invocation: true`: they add nothing to a session until invoked by name, and Claude does not auto-trigger them. The auto-triggering core is citation-check, doc-to-markdown, fact-check, figures, literature-review, paper-review-lite, qualtrics-ops, referee-response, replication-package, research-repo, and spawn (kept visible because orchestrate and research-wayfinder call it). The set comes from six months of invocation evidence plus the six skills whose docs already require explicit invocation. A hidden skill still loads through its alias commands (verified: `/oss:model-committee-opus` reaches `model-committee`). Always-on cost in a research session falls from about 9.9k to about 3.4k tokens.

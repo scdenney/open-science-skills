@@ -7,7 +7,7 @@
 This directory contains 37 Codex-native Open Science Skills. They mirror the Claude Code library with two intentional differences:
 
 - `presubmit` is omitted.
-- [`orchestrate`](orchestrate/SKILL.md) is the Codex-native version of the plugin's lead-detecting `orchestrate`: `gpt-6-astra` at the selected effort owns orchestration, routing demanding work to Sol and bounded work to Terra and reserving Luna for tightly specified mechanical work. It was named `46-orchestrate` before v2.25.0.
+- [`orchestrate`](orchestrate/SKILL.md) is the Codex-native version of the plugin's lead-detecting `orchestrate`. It runs from an active `gpt-6-astra` or `gpt-5.6-sol` session at the selected effort. Astra keeps compact hard reasoning in the lead; Sol escalates unusually difficult units to Astra. Both modes route bounded work to Terra and reserve Luna for tightly specified mechanical work. It was named `46-orchestrate` before v2.25.0.
 
 The Claude Code aliases for retired names (`diverge-codex`, `paper-review-lite-codex`, `survey-flow-audit`, `fair-check`, the three OCR names, the two orchestrate leads) have no Codex counterpart; use the merged skill and name the mode (`$diverge --codex`, `$qualtrics-ops audit`, `$vlm-ocr clean`, and so on).
 
@@ -64,7 +64,7 @@ Member drivers need authentication and the network/process access permitted by t
 
 **`$paper-review-lite --codex`** keeps cross-model review by using Codex as lead and Claude Code's `claude -p` interface as the independent peer. It discloses and confirms external-credit use before running. Under sandbox, a `claude -p` call was observed to hang rather than complete, because network access is restricted. Read the `SKILL.md` before assuming a stalled call will resolve on its own.
 
-**`$orchestrate`** is explicit-invocation only. Astra leads at the session's selected effort, verified against current-thread metadata. Sol/high handles demanding separable work, Terra/medium handles bounded work, and Luna/low handles mechanical tasks. Prefer native model overrides with self-contained briefs and `fork_turns="none"`; use permitted CLI workers when native routing is unavailable. Keep trivial work local and inspect worker evidence.
+**`$orchestrate`** is explicit-invocation only. It detects and verifies an active Astra or Sol session from current-thread metadata. Astra-lead mode keeps compact hard reasoning in the lead and uses Sol/high for demanding separable work. Sol-lead mode keeps orchestration and integration in the lead and escalates unusually difficult units to Astra/high or xhigh. Both use Terra/medium for bounded work and Luna/low for mechanical tasks. Prefer native model overrides with self-contained briefs and `fork_turns="none"`; use permitted CLI workers when native routing is unavailable. Keep trivial work local and inspect worker evidence.
 
 **`$spawn`** drives full peer sessions through the herdr socket (`~/.config/herdr/herdr.sock`), which lives outside the workspace. Verified 2026-08-06 on the Codex CLI (gpt-5.6-sol): under `workspace-write` the socket connect fails with `PermissionDenied: Operation not permitted`. Under `danger-full-access`, `herdr status` connects and reports the server. A Codex lead therefore needs an explicitly authorized full-access session to spawn, or it prints the exact command sequence for the user to run in a normal shell. The skill's preflight gate encodes this, fail-closed. Explicit-invocation only.
 

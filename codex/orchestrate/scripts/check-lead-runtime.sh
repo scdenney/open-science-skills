@@ -2,7 +2,8 @@
 # Verify the model and reasoning effort actually running the current Codex turn.
 set -euo pipefail
 
-EXPECTED_MODEL="gpt-6-astra"
+ASTRA_MODEL="gpt-6-astra"
+SOL_MODEL="gpt-5.6-sol"
 CODEX_STATE_ROOT="${CODEX_HOME:-$HOME/.codex}"
 THREAD_ID="${CODEX_THREAD_ID:-}"
 
@@ -20,11 +21,12 @@ shopt -u nullglob
 
 [[ ${#session_files[@]} -eq 1 ]] || die "expected exactly one rollout for current thread $THREAD_ID, found ${#session_files[@]}; stop rather than guessing"
 
-python3 - "${session_files[0]}" "$EXPECTED_MODEL" <<'PY'
+python3 - "${session_files[0]}" "$ASTRA_MODEL" "$SOL_MODEL" <<'PY'
 import json
 import sys
 
-session_path, expected_model = sys.argv[1:]
+session_path, astra_model, sol_model = sys.argv[1:]
+allowed_models = (astra_model, sol_model)
 latest = None
 reroute = None
 
@@ -70,13 +72,12 @@ if not model or not effort:
         "stop rather than guessing"
     )
 
-if model != expected_model:
+if model not in allowed_models:
     raise SystemExit(
         "orchestrate preflight mismatch: "
-        f"current runtime is {model} at {effort}; required lead is "
-        f"{expected_model}. Do not proceed. Ask the operator to select "
-        "Astra in /model while keeping the selected reasoning effort (or restart Codex with "
-        "--model gpt-6-astra), verify with /status, "
+        f"current runtime is {model} at {effort}; supported leads are "
+        f"{astra_model} and {sol_model}. Do not proceed. Ask the operator to select "
+        "Astra or Sol in /model while keeping the selected reasoning effort, verify with /status, "
         "and invoke $orchestrate again."
     )
 

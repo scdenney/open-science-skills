@@ -129,13 +129,16 @@ class Wrappers(unittest.TestCase):
         env = dict(self.env, CODEX_HOME=str(self.work), CODEX_THREAD_ID='test-thread')
         for model, effort, reroute, success in [
             ('gpt-6-astra', 'xhigh', False, True),
-            ('gpt-5.6-sol', 'xhigh', False, False),
+            ('gpt-5.6-sol', 'xhigh', False, True),
+            ('gpt-5.6-sol', 'medium', False, True),
             ('gpt-6-astra', 'low', False, True),
             ('gpt-6-astra', 'medium', False, True),
             ('gpt-6-astra', 'high', False, True),
             ('gpt-6-astra', 'max', False, True),
+            ('gpt-5.6-terra', 'medium', False, False),
             ('gpt-6-astra', None, False, False),
             ('gpt-6-astra', 'xhigh', True, False),
+            ('gpt-5.6-sol', 'medium', True, False),
         ]:
             with self.subTest(model=model, effort=effort, reroute=reroute):
                 events = [{'type': 'turn_context', 'payload': {'model': model, 'effort': effort}}]
