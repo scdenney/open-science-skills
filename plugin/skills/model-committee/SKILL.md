@@ -1,4 +1,5 @@
 ---
+disable-model-invocation: true
 name: model-committee
 description: Runs a deliberative two-model committee — GPT-6 Astra and Claude Opus 5 as members, under a selectable chair. Chair defaults to Fable 5.1; `/model-committee-astra` selects Astra with a Sol member, `/model-committee-opus` selects Opus, and `/model-committee-sol` retains the Sol chair with a Terra member. Use when one consequential decision must come out of several defensible options and the two model families should propose independently, critique each other, revise, and cross-rank under a predeclared rubric before converging. Fits architecture, research design and interpretation, manuscript strategy, ambiguous diagnosis, evaluation design, plan reconciliation, and policy or standards tradeoffs. Not for factual lookups, independent-coder reliability (use model-council-voting), open-ended brainstorming, routine implementation, or final high-stakes professional judgment.
 argument-hint: "[decision or problem for the committee to deliberate; optionally name the chair]"

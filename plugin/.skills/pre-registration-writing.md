@@ -1,4 +1,5 @@
 ---
+disable-model-invocation: true
 name: pre-registration-writing
 description: Writes a pre-analysis plan before data collection — registry selection (OSF, AsPredicted, AEA, EGAP), PAP document structure, an analytical strategy specified down to the model and the decision rule, analysis code pre-registered against simulated data, contingency planning for attrition, failed manipulations, and exclusions, deviation documentation, and timeline. Operationalizes the pre-data-collection side of DA-RT. Use when the user asks to write or review a pre-registration or PAP, asks which registry to use, asks what to lock down versus leave exploratory, or asks how to handle a deviation later. Hypotheses and estimands come from hypothesis-building, post-hoc reporting from methods-reporting.
 argument-hint: "[describe your study or PAP section to draft]"

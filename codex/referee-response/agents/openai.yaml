@@ -2,3 +2,5 @@ interface:
   display_name: "Referee Response"
   short_description: "Organize and format a response to reviewers"
   default_prompt: "Use $referee-response to map these referee reports and build the response letter skeleton."
+policy:
+  allow_implicit_invocation: false

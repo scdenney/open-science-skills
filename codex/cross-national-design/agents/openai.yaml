@@ -2,3 +2,5 @@ interface:
   display_name: "Cross-National Design"
   short_description: "Design comparable multi-country experiments"
   default_prompt: "Use $cross-national-design to plan this multi-country survey experiment."
+policy:
+  allow_implicit_invocation: false

@@ -39,18 +39,20 @@ See the official [Codex skills documentation](https://developers.openai.com/code
 
 ## Catalog
 
+Skills marked **†** are on demand: invoke them directly as `$skill-name`. Unmarked skills remain available for implicit matching.
+
 | Area | Skills |
 |---|---|
 | Project setup | [`research-repo`](research-repo/SKILL.md) |
 | Orchestration | [`orchestrate`](orchestrate/SKILL.md), [`advisor`](advisor/SKILL.md), [`spawn`](spawn/SKILL.md) |
-| Ideation | [`diverge`](diverge/SKILL.md), [`research-grill`](research-grill/SKILL.md) |
-| Research design | [`conjoint-cleaning`](conjoint-cleaning/SKILL.md), [`conjoint-design`](conjoint-design/SKILL.md), [`conjoint-diagnostics`](conjoint-diagnostics/SKILL.md), [`cross-national-design`](cross-national-design/SKILL.md), [`list-experiment`](list-experiment/SKILL.md), [`qualtrics-ops`](qualtrics-ops/SKILL.md), [`research-wayfinder`](research-wayfinder/SKILL.md), [`survey-data-audit`](survey-data-audit/SKILL.md), [`survey-design`](survey-design/SKILL.md) |
-| Analysis | [`llm-calibration-logprobs`](llm-calibration-logprobs/SKILL.md), [`model-committee`](model-committee/SKILL.md), [`model-council-voting`](model-council-voting/SKILL.md), [`text-classification`](text-classification/SKILL.md), [`topic-modeling`](topic-modeling/SKILL.md) |
-| Corpus processing | [`doc-to-markdown`](doc-to-markdown/SKILL.md), [`vlm-ocr`](vlm-ocr/SKILL.md) |
-| Writing and reporting | [`hypothesis-building`](hypothesis-building/SKILL.md), [`literature-review`](literature-review/SKILL.md), [`methods-reporting`](methods-reporting/SKILL.md), [`narrative-building`](narrative-building/SKILL.md), [`paper-tex`](paper-tex/SKILL.md), [`pre-registration-writing`](pre-registration-writing/SKILL.md) |
+| Ideation | [`diverge`](diverge/SKILL.md), [`research-grill`](research-grill/SKILL.md) **†** |
+| Research design | [`conjoint-cleaning`](conjoint-cleaning/SKILL.md) **†**, [`conjoint-design`](conjoint-design/SKILL.md) **†**, [`conjoint-diagnostics`](conjoint-diagnostics/SKILL.md), [`cross-national-design`](cross-national-design/SKILL.md) **†**, [`list-experiment`](list-experiment/SKILL.md) **†**, [`qualtrics-ops`](qualtrics-ops/SKILL.md) **†**, [`research-wayfinder`](research-wayfinder/SKILL.md) **†**, [`survey-data-audit`](survey-data-audit/SKILL.md) **†**, [`survey-design`](survey-design/SKILL.md) |
+| Analysis | [`llm-calibration-logprobs`](llm-calibration-logprobs/SKILL.md) **†**, [`model-committee`](model-committee/SKILL.md), [`model-council-voting`](model-council-voting/SKILL.md) **†**, [`text-classification`](text-classification/SKILL.md), [`topic-modeling`](topic-modeling/SKILL.md) **†** |
+| Corpus processing | [`doc-to-markdown`](doc-to-markdown/SKILL.md) **†**, [`vlm-ocr`](vlm-ocr/SKILL.md) **†** |
+| Writing and reporting | [`hypothesis-building`](hypothesis-building/SKILL.md), [`literature-review`](literature-review/SKILL.md), [`methods-reporting`](methods-reporting/SKILL.md) **†**, [`narrative-building`](narrative-building/SKILL.md), [`paper-tex`](paper-tex/SKILL.md), [`pre-registration-writing`](pre-registration-writing/SKILL.md) |
 | Figures and tables | [`figure-table-audit`](figure-table-audit/SKILL.md), [`figures`](figures/SKILL.md), [`tables`](tables/SKILL.md) |
-| Manuscript QA | [`citation-check`](citation-check/SKILL.md), [`fact-check`](fact-check/SKILL.md), [`replication-package`](replication-package/SKILL.md) |
-| Review and submission | [`journal-review`](journal-review/SKILL.md), [`paper-review-lite`](paper-review-lite/SKILL.md), [`referee-response`](referee-response/SKILL.md) |
+| Manuscript QA | [`citation-check`](citation-check/SKILL.md), [`fact-check`](fact-check/SKILL.md), [`replication-package`](replication-package/SKILL.md) **†** |
+| Review and submission | [`journal-review`](journal-review/SKILL.md), [`paper-review-lite`](paper-review-lite/SKILL.md), [`referee-response`](referee-response/SKILL.md) **†** |
 
 ## Variant notes
 
