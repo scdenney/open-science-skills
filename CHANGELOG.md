@@ -2,6 +2,20 @@
 
 Versions are the `version` field shared by `plugin/.claude-plugin/plugin.json` and `.claude-plugin/marketplace.json`; `plugin/scripts/check.sh` fails if they differ or if this file has no entry for the current version. Earlier history is in commit subjects and in `AUDITS.md`.
 
+## [2.26.0] — 2026-09-05
+
+- Default demanding Codex peer, advisor, ideation, manuscript-review, committee-member, and orchestration routes to GPT-6 Astra. Keep Terra/Luna work roles, the explicit Sol committee chair, and the legacy `sol-advisor.sh` entrypoint.
+- Codex orchestration preserves the selected Astra effort; the runtime gate checks model identity and reroutes without requiring xhigh. Sol/high handles demanding separable work, Terra/medium bounded work, and Luna/low mechanical work. Use native worker model overrides when exposed, and base nested-call availability on actual permissions. Remove outdated blanket claims about headless execution, fixed subagent schemas, and guaranteed model independence.
+- Preserve existing CLI output files, publish advisor/committee results only after success, validate effort and timeout values, and enforce deadlines on macOS and Linux using Python 3.
+- Add offline wrapper regression tests and CI; extend package checks to strict YAML, helper syntax, and tracked executable modes. Install check dependencies with `python3 -m pip install -r plugin/scripts/requirements-check.txt`.
+- Document reusable migration practices in `MODEL-POLICY.md`; retain frozen research examples and add compatibility gates for classification and logprob workflows.
+- Include Codex changes in the AI for Research notification trigger. Existing site descriptions still require editorial updates; the sync script deliberately preserves them.
+- Premier models chair. `model-committee` now defaults to the Fable 5.1 chair, distinct from both member models. `/model-committee-opus` keeps the cheap in-session Opus chair; `/model-committee-astra` adds the GPT-side mirror (Astra chairs, the GPT member steps down to Sol). `/model-committee-fable` is an alias of the default; `/model-committee-sol` is retained as legacy.
+- `codex-peer.sh` gains a `cross-check` mode and an effort ladder: `consult` defaults to `high`, `cross-check` and `implement` to `xhigh`; `--effort` still overrides per call.
+- `advisor` is documented as an escalation from a working model up to Fable and refuses to run from a Fable session, since a second Fable is not a check; a Fable lead goes cross-vendor through `orchestrate`'s Astra peer or the committee instead.
+
+- Add an idempotent Codex skill installer with dry-run and conflict reporting; preserve existing paths and document discovery and explicit invocation. Add installation regression tests.
+
 ## [2.25.1] — 2026-09-02
 
 `spawn` corrected after a live dry run on herdr 0.8.0: `--cwd "$PWD"` is mandatory on `worktree create` and `worktree open` (herdr resolves the repository from the calling workspace, and the bare form checked out an unrelated repository); a fresh peer always blocks first on Claude Code's workspace-trust dialog and needs `agent send-keys`, which the `auto` classifier may refuse; `agent explain` prints five text lines with the detection rule, not a hook/screen label; `wait` can settle on `done` while `explain` says `idle`; `worktree remove` succeeds without `--force` on a running peer; the fold-back checklist now also closes the source workspace `worktree create` opens and removes the empty per-repo directory.

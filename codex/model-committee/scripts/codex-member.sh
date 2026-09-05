@@ -1,18 +1,33 @@
 #!/usr/bin/env bash
-# SANDBOX WARNING (confirmed by direct reproduction, July 2026): this script
-# nests a `codex exec` process inside whatever process runs it. If the
-# CALLER is itself a sandboxed `codex exec`/Codex session, this nested call
-# fails immediately with "failed to initialize in-process app-server
-# client: Operation not permitted" (macOS) or "Read-only file system"
-# (Linux) -- an OS-level sandbox applies transitively to the whole process
-# tree, and bypass flags on THIS call do not help, since the restriction is
-# imposed on the parent, not requested by the child. Only an unsandboxed
-# caller, or an interactive caller that requests escalation
-# (sandbox_permissions: require_escalated) for this specific call, can
-# succeed. See SKILL.md's "Sandbox constraint" section.
+# Separate read-only CLI session; parent sandbox and network permissions apply.
 set -euo pipefail
 
-MODEL="gpt-5.6-sol"
+# Python is already required by the library; enforce deadlines on macOS and Linux.
+run_with_timeout() {
+  python3 -c '
+import os, signal, subprocess, sys
+seconds = int(sys.argv[1])
+process = subprocess.Popen(sys.argv[2:], start_new_session=True)
+try:
+    code = process.wait(timeout=seconds)
+except subprocess.TimeoutExpired:
+    os.killpg(process.pid, signal.SIGTERM)
+    try:
+        process.wait(timeout=5)
+    except subprocess.TimeoutExpired:
+        pass
+    try:
+        os.killpg(process.pid, signal.SIGKILL)
+    except ProcessLookupError:
+        pass
+    process.wait()
+    sys.exit(124)
+sys.exit(code if code >= 0 else 128 - code)
+' "$@"
+}
+
+
+MODEL="gpt-6-astra"
 EFFORT="xhigh"
 WORKDIR="$PWD"
 PROMPT_FILE=""
@@ -51,17 +66,22 @@ command -v codex >/dev/null || die 'codex CLI not found'
 [[ -n "$OUT" ]] || die '--out is required'
 [[ -d "$WORKDIR" ]] || die "working directory not found: $WORKDIR"
 [[ "$TIMEOUT_SECONDS" =~ ^[1-9][0-9]*$ ]] || die '--timeout must be a positive integer'
+case "$EFFORT" in none|low|medium|high|xhigh|max) ;; *) die "bad --effort: $EFFORT" ;; esac
+[[ "$MODEL" != gpt-6-astra || "$EFFORT" != none ]] || die 'Astra does not support effort none'
+command -v python3 >/dev/null || die 'python3 is required to enforce --timeout'
 case "$PROMPT_FILE" in /*) ;; *) PROMPT_FILE="$PWD/$PROMPT_FILE" ;; esac
 case "$OUT" in /*) ;; *) OUT="$PWD/$OUT" ;; esac
 WORKDIR="$(cd "$WORKDIR" && pwd -P)"
+[[ ! -e "$OUT" && ! -L "$OUT" ]] || die "output already exists: $OUT"
 mkdir -p "$(dirname "$OUT")"
+RESULT_DIR="$(mktemp -d "$(dirname "$OUT")/.codex-result.XXXXXX")"
+trap 'rm -rf "$RESULT_DIR"' EXIT
+RESULT="$RESULT_DIR/answer.md"
 
-cmd=(codex exec --ephemeral --model "$MODEL" -c "model_reasoning_effort=$EFFORT" --sandbox read-only --skip-git-repo-check -C "$WORKDIR" --output-last-message "$OUT" 'Follow the complete committee instructions supplied on stdin. Return only the requested structured response.')
+cmd=(codex exec --ephemeral --model "$MODEL" -c "model_reasoning_effort=$EFFORT" --sandbox read-only --skip-git-repo-check -C "$WORKDIR" --output-last-message "$RESULT" 'Follow the complete committee instructions supplied on stdin. Return only the requested structured response.')
 
-if command -v timeout >/dev/null; then
-  timeout "${TIMEOUT_SECONDS}s" "${cmd[@]}" < "$PROMPT_FILE" >/dev/null
-else
-  "${cmd[@]}" < "$PROMPT_FILE" >/dev/null
-fi
+run_with_timeout "$TIMEOUT_SECONDS" "${cmd[@]}" < "$PROMPT_FILE" >/dev/null
 
-[[ -s "$OUT" ]] || die 'model returned no final message'
+[[ -s "$RESULT" ]] || die 'model returned no final message'
+# link(2) fails if another run has claimed OUT, preserving that run's result.
+python3 -c 'import os, sys; os.link(sys.argv[1], sys.argv[2])' "$RESULT" "$OUT" || die "cannot publish output without replacing an existing file: $OUT"

@@ -2,8 +2,7 @@
 # Verify the model and reasoning effort actually running the current Codex turn.
 set -euo pipefail
 
-EXPECTED_MODEL="gpt-5.6-sol"
-EXPECTED_EFFORT="xhigh"
+EXPECTED_MODEL="gpt-6-astra"
 CODEX_STATE_ROOT="${CODEX_HOME:-$HOME/.codex}"
 THREAD_ID="${CODEX_THREAD_ID:-}"
 
@@ -21,11 +20,11 @@ shopt -u nullglob
 
 [[ ${#session_files[@]} -eq 1 ]] || die "expected exactly one rollout for current thread $THREAD_ID, found ${#session_files[@]}; stop rather than guessing"
 
-python3 - "${session_files[0]}" "$EXPECTED_MODEL" "$EXPECTED_EFFORT" <<'PY'
+python3 - "${session_files[0]}" "$EXPECTED_MODEL" <<'PY'
 import json
 import sys
 
-session_path, expected_model, expected_effort = sys.argv[1:]
+session_path, expected_model = sys.argv[1:]
 latest = None
 reroute = None
 
@@ -60,7 +59,7 @@ if latest is None:
 if reroute is not None:
     raise SystemExit(
         "orchestrate preflight: Codex recorded a model reroute for the current turn; "
-        f"details={json.dumps(reroute, sort_keys=True)}. Do not proceed as if Sol were the lead."
+        f"details={json.dumps(reroute, sort_keys=True)}. Do not proceed as if Astra were the lead."
     )
 
 model = latest.get("model")
@@ -71,13 +70,13 @@ if not model or not effort:
         "stop rather than guessing"
     )
 
-if model != expected_model or effort != expected_effort:
+if model != expected_model:
     raise SystemExit(
         "orchestrate preflight mismatch: "
         f"current runtime is {model} at {effort}; required lead is "
-        f"{expected_model} at {expected_effort}. Do not proceed. Ask the operator to select "
-        "Sol with Extra High reasoning in /model (or restart Codex with "
-        "--model gpt-5.6-sol -c model_reasoning_effort=xhigh), verify with /status, "
+        f"{expected_model}. Do not proceed. Ask the operator to select "
+        "Astra in /model while keeping the selected reasoning effort (or restart Codex with "
+        "--model gpt-6-astra), verify with /status, "
         "and invoke $orchestrate again."
     )
 

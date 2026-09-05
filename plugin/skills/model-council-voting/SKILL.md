@@ -34,7 +34,7 @@ Two running examples supply the concrete figures below, both from the author's o
 - **Run each juror in isolation** — no model sees another model's output, and there is no multi-round "discussion." Debate or chained prompting collapses the disagreement you are trying to measure and manufactures a consensus that reflects persuasion order, not the corpus.
 - **Do not pool jurors into one prompt.** Asking a single model to "play the role of four experts" yields one model's guess at what four models would say, fully correlated by construction. Independence requires N separate inference runs.
 - **Hold every shared input constant across jurors.** Same prompt, same sampled windows, same seed, same post-processing. The term-discovery pipeline gives all four models the same Korean zero-shot prompt, the same adaptive window sampling, and the same wf ≥ 50 absolute floor; only the model varies, so any disagreement is attributable to the model and not to a moving input.
-- **For a deliberation design, use `model-committee` instead**, where GPT-5.6 Sol and Claude Opus 5 inspect each other's arguments, revise, and cross-rank toward one decision. Debate can improve a single *answer*, but a debating pair is not a panel of independent raters — do not report debate-derived consensus as if it were independent-coder agreement.
+- **For a deliberation design, use `model-committee` instead**, where GPT-6 Astra and Claude Opus 5 inspect each other's arguments, revise, and cross-rank toward one decision. Debate can improve a single *answer*, but a debating pair is not a panel of independent raters — do not report debate-derived consensus as if it were independent-coder agreement.
 
 ### 4. Consensus Rules
 

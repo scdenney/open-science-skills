@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# codex-peer.sh — invoke Codex (GPT-5.6 "Sol") as a peer engineer for /orchestrate.
+# codex-peer.sh — invoke Codex (GPT-6 Astra) as a peer engineer for /orchestrate.
 #
 # Codex is a different-vendor peer, not a reviewer. Use it two ways:
 #   consult   (default) — read-only. Ask a question / get a second approach. Prints the answer.
@@ -18,33 +18,48 @@
 # each other, then synthesize.
 #
 # Usage:
-#   codex-peer.sh [--mode consult|implement] [-C DIR] [--timeout SEC]
+#   codex-peer.sh [--mode consult|cross-check|implement] [-C DIR] [--timeout SEC]
 #                 [--model ID] [--out FILE] (--prompt TEXT | --prompt-file PATH | -)
 #
+#   --mode          consult     read-only, a routine fresh-perspective consult   (default effort: high)
+#                   cross-check read-only, the blind high-stakes cross-check     (default effort: xhigh)
+#                   implement   workspace-write                                  (default effort: xhigh)
 #   -C DIR          working dir Codex sees (default: $PWD)
 #   --timeout SEC   hard kill after SEC seconds (default: 600)
-#   --model ID      Codex model to pin (default: gpt-5.6-sol — the flagship
-#                   5.6 tier, confirmed working as of July 2026 on
-#                   ChatGPT-account Codex auth; an earlier "rejected outright"
-#                   finding no longer reproduces — if it ever errors, check
-#                   `codex --version` before assuming a gate, since an
-#                   outdated CLI rejects sol/luna too, with a different
-#                   error). There are three distinct 5.6 tiers, not one
-#                   model: gpt-5.6-sol (flagship), gpt-5.6-terra (balanced),
-#                   gpt-5.6-luna (fast). Pass --model gpt-5.6-terra for a
-#                   cheaper peer on routine consults.
-#   --effort LEVEL  Codex reasoning effort, passed as
-#                   -c model_reasoning_effort=LEVEL (default: xhigh — Sol's
-#                   "Extra high" tier, one below Max/Ultra, which consume
-#                   usage limits faster; stated explicitly so it does not
-#                   silently drift if Codex's own defaults change upstream).
+#   --model ID      default: gpt-6-astra; use gpt-5.6-terra for bounded routine work
+#   --effort LEVEL  low|medium|high|xhigh|max for Astra; overrides the mode default above
 #   --out FILE      also tee Codex's stdout+stderr here (for background reads)
 #   --prompt TEXT   prompt as a single argument
 #   --prompt-file P read prompt from file P
 #   -               read prompt from stdin (the wrapper handles the /dev/null dance)
 set -euo pipefail
 
-MODE="consult"; DIR="$PWD"; TIMEOUT=600; MODEL="gpt-5.6-sol"; EFFORT="xhigh"; OUT=""; PROMPT=""; PROMPT_SET=0
+# Python is already required by the library; enforce deadlines on macOS and Linux.
+run_with_timeout() {
+  python3 -c '
+import os, signal, subprocess, sys
+seconds = int(sys.argv[1])
+process = subprocess.Popen(sys.argv[2:], start_new_session=True)
+try:
+    code = process.wait(timeout=seconds)
+except subprocess.TimeoutExpired:
+    os.killpg(process.pid, signal.SIGTERM)
+    try:
+        process.wait(timeout=5)
+    except subprocess.TimeoutExpired:
+        pass
+    try:
+        os.killpg(process.pid, signal.SIGKILL)
+    except ProcessLookupError:
+        pass
+    process.wait()
+    sys.exit(124)
+sys.exit(code if code >= 0 else 128 - code)
+' "$@"
+}
+
+
+MODE="consult"; DIR="$PWD"; TIMEOUT=600; MODEL="gpt-6-astra"; EFFORT=""; OUT=""; PROMPT=""; PROMPT_SET=0
 
 die(){ echo "codex-peer: $*" >&2; exit 2; }
 
@@ -59,38 +74,42 @@ while [ $# -gt 0 ]; do
     --prompt)      PROMPT="${2:?}"; PROMPT_SET=1; shift 2 ;;
     --prompt-file) PROMPT="$(cat "${2:?}")"; PROMPT_SET=1; shift 2 ;;
     -)             PROMPT="$(cat)"; PROMPT_SET=1; shift ;;   # read stdin NOW, before codex runs
-    -h|--help)     sed -n '2,45p' "$0"; exit 0 ;;
+    -h|--help)     sed -n '2,/^set -euo pipefail/{ /^set -euo pipefail/!p; }' "$0"; exit 0 ;;
     *)             die "unknown arg: $1 (see --help)" ;;
   esac
 done
 
 [ "$PROMPT_SET" = 1 ] || die "no prompt (use --prompt, --prompt-file, or -)"
 [ -n "$PROMPT" ] || die "empty prompt"
+[[ "$TIMEOUT" =~ ^[1-9][0-9]*$ ]] || die '--timeout must be a positive integer'
+command -v python3 >/dev/null || die 'python3 is required to enforce --timeout'
 [ -d "$DIR" ] || die "no such dir: $DIR"
 command -v codex >/dev/null || die "codex CLI not on PATH — install it first"
 
+# The mode sets the sandbox and the default effort: a routine consult runs at
+# `high`; the blind high-stakes cross-check and any write-capable run at `xhigh`.
+# --effort overrides the default for one call.
 case "$MODE" in
-  consult)   SANDBOX="read-only" ;;
-  implement) SANDBOX="workspace-write" ;;
-  *)         die "bad --mode: $MODE (consult|implement)" ;;
+  consult)     SANDBOX="read-only";       DEFAULT_EFFORT="high" ;;
+  cross-check) SANDBOX="read-only";       DEFAULT_EFFORT="xhigh" ;;
+  implement)   SANDBOX="workspace-write"; DEFAULT_EFFORT="xhigh" ;;
+  *)           die "bad --mode: $MODE (consult|cross-check|implement)" ;;
 esac
+EFFORT="${EFFORT:-$DEFAULT_EFFORT}"
+case "$EFFORT" in none|low|medium|high|xhigh|max) ;; *) die "bad --effort: $EFFORT" ;; esac
+[[ "$MODEL" != gpt-6-astra || "$EFFORT" != none ]] || die 'Astra does not support effort none'
 
 run(){
   # `< /dev/null` is mandatory: prompt is already captured above; feeding
   # /dev/null gives codex an immediate EOF on stdin so it does not block.
   local cmd=(codex exec --model "$MODEL" -c "model_reasoning_effort=$EFFORT" --sandbox "$SANDBOX" --skip-git-repo-check -C "$DIR" "$PROMPT")
-  # `timeout` is not preinstalled on macOS (only via GNU coreutils) — guard
-  # rather than assume, matching model-committee's claude-member.sh /
-  # codex-member.sh, which already learned this the hard way.
-  if command -v timeout >/dev/null; then
-    timeout "${TIMEOUT}s" "${cmd[@]}" < /dev/null
-  else
-    "${cmd[@]}" < /dev/null
-  fi
+  run_with_timeout "$TIMEOUT" "${cmd[@]}" < /dev/null
 }
 
 if [ -n "$OUT" ]; then
-  run 2>&1 | tee "$OUT"
+  mkdir -p "$(dirname "$OUT")"
+  (set -o noclobber; : > "$OUT") || die "output already exists or cannot be created: $OUT"
+  run 2>&1 | tee -a "$OUT"
 else
   run
 fi

@@ -1,0 +1,23 @@
+name: Validate skill library
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python3 -m pip install -r plugin/scripts/requirements-check.txt
+      - run: bash plugin/scripts/check.sh
+      - run: python3 plugin/scripts/test-codex-wrappers.py
+      - run: python3 plugin/scripts/test-install-codex.py

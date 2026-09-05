@@ -7,7 +7,7 @@
 This directory contains 37 Codex-native Open Science Skills. They mirror the Claude Code library with two intentional differences:
 
 - `presubmit` is omitted.
-- [`orchestrate`](orchestrate/SKILL.md) is the Codex-native version of the plugin's lead-detecting `orchestrate`: `gpt-5.6-sol` at xhigh effort owns orchestration, routing bounded work to Terra and reserving Luna for tightly specified mechanical work. It was named `46-orchestrate` before v2.25.0.
+- [`orchestrate`](orchestrate/SKILL.md) is the Codex-native version of the plugin's lead-detecting `orchestrate`: `gpt-6-astra` at the selected effort owns orchestration, routing demanding work to Sol and bounded work to Terra and reserving Luna for tightly specified mechanical work. It was named `46-orchestrate` before v2.25.0.
 
 The Claude Code aliases for retired names (`diverge-codex`, `paper-review-lite-codex`, `survey-flow-audit`, `fair-check`, the three OCR names, the two orchestrate leads) have no Codex counterpart; use the merged skill and name the mode (`$diverge --codex`, `$qualtrics-ops audit`, `$vlm-ocr clean`, and so on).
 
@@ -15,23 +15,25 @@ Every skill is a self-contained directory with `SKILL.md`, `agents/openai.yaml`,
 
 ## Install
 
-From the repository root, symlink all skills for the current user:
+From the repository root, preview and install user-wide symlinks:
 
 ```bash
-mkdir -p "$HOME/.agents/skills"
-for skill in "$PWD"/codex/*/; do
-  ln -sfn "${skill%/}" "$HOME/.agents/skills/$(basename "$skill")"
-done
+python3 plugin/scripts/install-codex.py --all --dry-run
+python3 plugin/scripts/install-codex.py --all
 ```
 
-For one repository only, replace `$HOME/.agents/skills` with `<repo>/.agents/skills`. Install one skill by linking or copying only its directory:
+The installer creates missing links, accepts correct existing links, and reports conflicting files, directories, or links without replacing them. A conflict returns a nonzero exit code; inspect it before making any change. Links follow this checkout's edits, including uncommitted changes.
+
+For selected skills or a single repository:
 
 ```bash
-mkdir -p "$HOME/.agents/skills"
-ln -sfn "$PWD/codex/citation-check" "$HOME/.agents/skills/citation-check"
+python3 plugin/scripts/install-codex.py --skill orchestrate model-committee model-council-voting advisor spawn
+python3 plugin/scripts/install-codex.py --skill orchestrate --target /absolute/path/to/repo/.agents/skills
 ```
 
 Invoke a skill as `$citation-check`, `$survey-design`, or another `$skill-name`. Codex can also load most skills implicitly from the task description. Restart Codex only if a new or changed skill does not appear automatically.
+
+`$orchestrate` delegates work; `$model-committee` deliberates toward a decision; `$model-council-voting` designs independent research coding and voting. Explicit-only means a skill requires a direct invocation, not that it should be absent from the picker. If an installed skill is missing, refresh discovery, then restart Codex if needed. Use the exact `$skill-name`; do not enable implicit invocation to work around a stale picker.
 
 See the official [Codex skills documentation](https://developers.openai.com/codex/skills) for discovery scopes and invocation behavior.
 
@@ -52,16 +54,16 @@ See the official [Codex skills documentation](https://developers.openai.com/code
 
 ## Variant notes
 
-**`$model-committee` and its chairs.** The committee runs a GPT-5.6 member and Claude Opus 5 (high) as members through their read-only CLIs, after first checking that deliberation is the right instrument for the task. One skill carries all three chairs as a parameter — `opus` (default), `fable`, or `sol` — replacing the former `$model-committee-fable` and `$model-committee-sol`. Under `opus` and `fable` the GPT member is `gpt-5.6-sol` at xhigh; `fable` hands the post-round-3 tally and compatible-component synthesis to Fable 5.1 at `max` through the bundled `claude-member.sh`. The `sol` chair is the exception — since the chair is Sol, the GPT debater drops to `gpt-5.6-terra`, so the chair is never grading its own family's twin, and under a Codex/Sol session it chairs natively.
+**`$model-committee` and its chairs.** The default members are Astra/xhigh and Claude Opus 5/high, chaired by Fable 5.1/high. Use `chair: astra` for an Astra/xhigh chair with Sol/xhigh as the GPT member; `chair: opus` for the explicit Opus chair; or `chair: sol` for the legacy Sol chair with a Terra member. Claude’s `-astra`, `-opus`, `-fable`, and `-sol` command aliases map to these parameters in Codex. Chairs aggregate under the predeclared rule without adding a third vote; different tiers do not establish independence.
 
-One sandbox constraint applies to every chair. `codex-member.sh` (GPT-5.6 Sol, or Terra under `chair: sol`) needs an unsandboxed or escalated call under a live Codex session, since a nested `codex exec` under sandbox fails structurally (see the `SKILL.md`). `claude-member.sh` was observed to hang under sandbox for the same reason (network access), less rigorously confirmed.
+Member drivers need authentication and the network/process access permitted by the parent. Restricted sandboxes have blocked earlier nested calls; headless execution or approval `never` alone does not prohibit them. Report real errors and never fabricate a member response.
 
 **`$diverge --codex`** uses a fresh Codex subagent context. It does not claim a second model family.
 
 **`$paper-review-lite --codex`** keeps cross-model review by using Codex as lead and Claude Code's `claude -p` interface as the independent peer. It discloses and confirms external-credit use before running. Under sandbox, a `claude -p` call was observed to hang rather than complete, because network access is restricted. Read the `SKILL.md` before assuming a stalled call will resolve on its own.
 
-**`$orchestrate`** is explicit-invocation only. Its default is a `gpt-5.6-sol` lead at `xhigh` effort, which its fail-closed preflight enforces. The lead owns decomposition, hard decisions, integration, and final verification. It delegates bounded, independently checkable work down to `gpt-5.6-terra` through explicit out-of-band one-shots. `gpt-5.6-luna` is reserved for fully specified mechanical work with objective checks. Do not use Ultra. Native in-process `spawn_agent` children inherit the lead's model and effort and cannot be assigned Terra or Luna, so they are useful only for live coordination or context isolation — not cost-tier routing. Nested cross-tier calls need an interactive or escalated parent session, and in headless mode the skill must not promise them.
+**`$orchestrate`** is explicit-invocation only. Astra leads at the session's selected effort, verified against current-thread metadata. Sol/high handles demanding separable work, Terra/medium handles bounded work, and Luna/low handles mechanical tasks. Prefer native model overrides with self-contained briefs and `fork_turns="none"`; use permitted CLI workers when native routing is unavailable. Keep trivial work local and inspect worker evidence.
 
 **`$spawn`** drives full peer sessions through the herdr socket (`~/.config/herdr/herdr.sock`), which lives outside the workspace. Verified 2026-08-06 on the Codex CLI (gpt-5.6-sol): under `workspace-write` the socket connect fails with `PermissionDenied: Operation not permitted`. Under `danger-full-access`, `herdr status` connects and reports the server. A Codex lead therefore needs an explicitly authorized full-access session to spawn, or it prints the exact command sequence for the user to run in a normal shell. The skill's preflight gate encodes this, fail-closed. Explicit-invocation only.
 
-**`$advisor`** is this library's single-turn, independent, read-only GPT-5.6 advisor. It always runs `gpt-5.6-sol` at `xhigh` (Extra high) effort, the flagship tier at its strongest routine setting, because the point of the consult is a stronger reviewer rather than a cheap one. It does not inherit the caller's effort and never uses Max/Ultra. The consult needs an unsandboxed or escalated live Codex session because it launches a nested `codex exec`. A headless session must report that the independent review is unavailable rather than silently self-reviewing.
+**`$advisor`** defaults to Astra at `xhigh` for a separate, read-only review of a demanding decision. Lower effort or explicitly choose Terra for a routine consult. The legacy `sol-advisor.sh` path remains compatible. The driver refuses existing output paths and publishes a final response only after a successful call.

@@ -6,7 +6,7 @@
 
 [![Claude Code](https://img.shields.io/badge/Claude_Code-plugin-D97757?logo=anthropic&logoColor=white)](https://code.claude.com/docs/en/skills)
 [![OpenAI Codex](https://img.shields.io/badge/OpenAI_Codex-library-111111?logo=openai&logoColor=white)](codex/README.md)
-[![version](https://img.shields.io/badge/version-2.25.1-blue)](https://github.com/scdenney/open-science-skills/releases)
+[![version](https://img.shields.io/badge/version-2.26.0-blue)](https://github.com/scdenney/open-science-skills/releases)
 [![license](https://img.shields.io/badge/license-CC%20BY--NC%204.0-lightgrey)](LICENSE)
 [![Claude skills](https://img.shields.io/badge/Claude_skills-38-D97757?logo=anthropic&logoColor=white)](#skills)
 [![Codex skills](https://img.shields.io/badge/Codex_skills-37-111111?logo=openai&logoColor=white)](#skills)
@@ -25,7 +25,9 @@ This is the toolkit I use in my own research, and it grows as I add sources and 
 | [Claude Code](https://code.claude.com/docs/en/skills) | 38, as the [`oss` plugin](plugin/skills) | `/oss:skill-name` |
 | [OpenAI Codex](https://developers.openai.com/codex/skills) | 37, as the [`codex/` library](codex/README.md) | `$skill-name` |
 
-The two libraries differ only in invocation and tooling. The Codex side omits `presubmit`; its `orchestrate` is the Codex-native version led by GPT-5.6 Sol. See [`codex/README.md`](codex/README.md).
+The two libraries differ only in invocation and tooling. The Codex side omits `presubmit`; its `orchestrate` is the Codex-native version led by GPT-6 Astra. See [`codex/README.md`](codex/README.md).
+
+Model selection and reusable migration practices are documented in [MODEL-POLICY.md](MODEL-POLICY.md).
 
 [Quick start](#quick-start) · [Skills](#skills) · [Recommended](#recommended-companion-skills) · [How skills trigger](#how-skills-trigger) · [Installation](#installation) · [Sources](#knowledge-base-and-sources) · [Contributing](#contributing) · [License](#license)
 
@@ -66,15 +68,15 @@ Skills are grouped by where they fall in a project. Unless the Platform column s
 
 | Skill | Platform | Command | What it does |
 |---|---|---|---|
-| [orchestrate](plugin/skills/orchestrate/SKILL.md) | Both | `/oss:orchestrate` · `/oss:fable-orchestrate` · `/oss:opus-orchestrate` · `$orchestrate` | Run a multi-model workflow. Reads the session model and takes the matching lead role: Fable 5.1 keeps the hard reasoning in-lead and delegates mechanical and wide work; Opus 5 is itself the deep reasoner and delegates to fan out. Routes to Sonnet fast-workers, Opus deep-reasoners, a GPT-5.6 Codex peer, and `spawn`. The two aliases force the lead. On Codex, GPT-5.6 Sol leads. |
+| [orchestrate](plugin/skills/orchestrate/SKILL.md) | Both | `/oss:orchestrate` · `/oss:fable-orchestrate` · `/oss:opus-orchestrate` · `$orchestrate` | Run a multi-model workflow. Reads the session model and takes the matching lead role: Fable 5.1 keeps the hard reasoning in-lead and delegates mechanical and wide work; Opus 5 is itself the deep reasoner and delegates to fan out. Routes to Sonnet fast-workers, Opus deep-reasoners, a GPT-6 Astra Codex peer, and `spawn`. The two aliases force the lead. On Codex, GPT-6 Astra leads. |
 | [spawn](plugin/skills/spawn/SKILL.md) | Both | `/oss:spawn` | Spawn full peer sessions in new terminal panes — real sessions, not subagents — each in its own git worktree on a directed task with a contract brief. Detects herdr, tmux, or a plain terminal and takes the strongest path; the lead monitors without babysitting and merges each branch back. |
-| [advisor](plugin/skills/advisor/SKILL.md) | Both | `/oss:advisor` / `$advisor` | Consult an independent second reviewer before committing to an interpretation or calling a task done. Your session is the main seat, on Opus 5 or on Sonnet 5 for cheaper sustained work. The advisor seat is Fable 5.1, pinned to max reasoning effort. The [Codex counterpart](codex/advisor/SKILL.md) always runs Sol/xhigh. |
+| [advisor](plugin/skills/advisor/SKILL.md) | Both | `/oss:advisor` / `$advisor` | Escalate one decision point from a working model to an independent second reviewer before committing to an interpretation or calling a task done. Your session is the main seat, on Opus 5 or on Sonnet 5 for cheaper sustained work; the advisor seat is Fable 5.1, pinned to max reasoning effort. Not for a Fable session — a second Fable is not a check; a Fable lead goes cross-vendor through `orchestrate`'s Astra peer or the committee instead. The [Codex counterpart](codex/advisor/SKILL.md) escalates to Astra/xhigh the same way. |
 
 ### Ideation
 
 | Skill | Platform | Command | What it does |
 |---|---|---|---|
-| [diverge](plugin/skills/diverge/SKILL.md) | Both | `/oss:diverge` · `/oss:diverge-codex` | Before implementing, generate three to five distinct approaches labeled by how they differ, then pause for you to choose. `--codex` (or the alias) has Codex (GPT-5.6 Sol at xhigh) generate and, once chosen, implement. |
+| [diverge](plugin/skills/diverge/SKILL.md) | Both | `/oss:diverge` · `/oss:diverge-codex` | Before implementing, generate three to five distinct approaches labeled by how they differ, then pause for you to choose. `--codex` (or the alias) has Codex (GPT-6 Astra at xhigh) generate and, once chosen, implement. |
 
 ### Research Design
 
@@ -98,7 +100,7 @@ Skills are grouped by where they fall in a project. Unless the Platform column s
 | [topic-modeling](plugin/skills/topic-modeling/SKILL.md) | Both | `/oss:topic-modeling` | Fit structural topic models, choosing the topic count by coherence and exclusivity rather than by eye. Covers covariate specification and what to report. |
 | [text-classification](plugin/skills/text-classification/SKILL.md) | Both | `/oss:text-classification` | Classify text with LLMs. Covers codebook design, human-in-the-loop workflows, validation, and agreement statistics. |
 | [model-council-voting](plugin/skills/model-council-voting/SKILL.md) | Both | `/oss:model-council-voting` | Use a panel of models as independent coders under a consensus rule stated in advance, then read their disagreement with chance-corrected agreement statistics (the kappa and alpha families). Includes checks for correlated errors across jurors. |
-| [model-committee](plugin/skills/model-committee/SKILL.md) | Both | `/oss:model-committee`, `/oss:model-committee-fable`, `/oss:model-committee-sol` | Have GPT-5.6 and Claude Opus 5 deliberate toward one decision. They propose independently, critique each other, revise, and converge under a rule fixed before they start. The chair is a parameter: Opus 5 by default, Fable 5.1 for a lighter chair outside the vote, or GPT-5.6 Sol, which also drops the GPT member to Terra so the chair is not also a member. |
+| [model-committee](plugin/skills/model-committee/SKILL.md) | Both | `/oss:model-committee`, `/oss:model-committee-astra`, `/oss:model-committee-opus`, `/oss:model-committee-fable`, `/oss:model-committee-sol` | Have GPT-6 Astra and Claude Opus 5 deliberate toward one decision. They propose independently, critique each other, revise, and converge under a rule fixed before they start. The chair is a premier model that is never a member: Fable 5.1 by default, or GPT-6 Astra (`-astra`), in which case the GPT member steps down to Sol. `-opus` keeps the cheap in-session Opus chair (which is also a member), `-fable` aliases the default, and `-sol` is the legacy GPT-5.6 chair with Terra as its member. |
 | [llm-calibration-logprobs](plugin/skills/llm-calibration-logprobs/SKILL.md) | Both | `/oss:llm-calibration-logprobs` | Turn token log-probabilities into per-decision confidence, then measure calibration against human labels (ECE and Brier scores, plus reliability diagrams). |
 
 ### Corpus Processing
@@ -139,7 +141,7 @@ Skills are grouped by where they fall in a project. Unless the Platform column s
 
 | Skill | Platform | Command | What it does |
 |---|---|---|---|
-| [paper-review-lite](plugin/skills/paper-review-lite/SKILL.md) | Both | `/oss:paper-review-lite` · `/oss:paper-review-lite-codex` | Run a pre-submission self-audit of your own manuscript across argument, numbers, references, writing, figures, and replication. `--codex` (or the alias) runs the same audit on Claude and Codex (GPT-5.6 Sol) independently and cross-checks the findings with a confidence column. |
+| [paper-review-lite](plugin/skills/paper-review-lite/SKILL.md) | Both | `/oss:paper-review-lite` · `/oss:paper-review-lite-codex` | Run a pre-submission self-audit of your own manuscript across argument, numbers, references, writing, figures, and replication. `--codex` (or the alias) runs the same audit on Claude and Codex (GPT-6 Astra) independently and cross-checks the findings with a confidence column. |
 | [presubmit](plugin/skills/presubmit/SKILL.md) | Claude Code | `/oss:presubmit` | Set up and run the standalone [presubmit CLI](https://github.com/scdenney/presubmit), a heavier 30-plus-stage adversarial review pipeline driven by the Anthropic API. |
 | [referee-response](plugin/skills/referee-response/SKILL.md) | Both | `/oss:referee-response` | Organize and format your response to reviewers: extract every referee point with severity and type, order the revision by dependency, flag defensible pushbacks as questions, and build the response letter with the substantive answers left to you. Never writes the science. |
 | [journal-review](plugin/skills/journal-review/SKILL.md) | Both | `/oss:journal-review` | Draft a senior referee report on someone else's manuscript, using parallel finder agents and a chief-reviewer synthesis to produce a structured report. |
@@ -226,13 +228,11 @@ Manual copy gives auto-trigger only. Slash commands require the plugin.
 
 ### Codex
 
-Codex discovers skills under `.agents/skills` (repository) and `~/.agents/skills` (user-wide). From the repository root, install all 40 skills user-wide:
+Codex discovers skills under `.agents/skills` (repository) and `~/.agents/skills` (user-wide). From this repository's root, preview and install all 37 Codex skills without replacing existing paths:
 
 ```bash
-mkdir -p "$HOME/.agents/skills"
-for skill in "$PWD"/codex/*/; do
-  ln -sfn "${skill%/}" "$HOME/.agents/skills/$(basename "$skill")"
-done
+python3 plugin/scripts/install-codex.py --all --dry-run
+python3 plugin/scripts/install-codex.py --all
 ```
 
 For selective and repository-scoped install, plus the Codex catalog, see [`codex/README.md`](codex/README.md).
@@ -254,7 +254,7 @@ Pull requests are welcome. To add a skill:
 3. Mirror the skill to `plugin/.skills/<name>.md`, byte-identical.
 4. Add the Codex package at `codex/<name>/` (`SKILL.md` and `agents/openai.yaml`), unless the skill is intentionally platform-specific.
 5. Add sources to `SOURCES.md`.
-6. Update the catalogs and badges, then run `bash plugin/scripts/check.sh`.
+6. Update the catalogs and badges. Install check dependencies with `python3 -m pip install -r plugin/scripts/requirements-check.txt`, then run `bash plugin/scripts/check.sh` and `python3 plugin/scripts/test-codex-wrappers.py`.
 
 ## License
 

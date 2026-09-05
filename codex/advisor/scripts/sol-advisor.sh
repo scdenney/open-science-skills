@@ -1,50 +1,40 @@
 #!/usr/bin/env bash
-# sol-advisor.sh — consult GPT-5.6 "Sol" as an independent advisor (Sol/high by default).
-#
-# Read-only advisory consult, not implementation. Spawns a fresh, ephemeral
-# `codex exec` session (--sandbox read-only: no edits) at the explicit
-# effort selected by the library policy: Sol/high, always. See SKILL.md.
-#
-# This spawns an ISOLATED session with no automatic access to the calling
-# conversation, so the caller must compose a self-contained briefing and
-# pass it as --prompt-file.
-#
-# SANDBOX WARNING (confirmed by direct reproduction, July 2026): this script
-# nests a `codex exec` process inside whatever process runs it. If the
-# CALLER is itself a sandboxed `codex exec`/Codex session, this nested call
-# fails immediately with "failed to initialize in-process app-server
-# client: Operation not permitted" (macOS) or "Read-only file system"
-# (Linux) -- an OS-level sandbox applies transitively to the whole process
-# tree, and passing --dangerously-bypass-approvals-and-sandbox to THIS
-# script does not help, since the restriction is imposed on the parent, not
-# requested by the child. Only an unsandboxed caller, or an interactive
-# caller that requests escalation (sandbox_permissions: require_escalated)
-# for this specific call, can succeed. See SKILL.md's "Sandbox constraint"
-# section before assuming this "just works."
-#
-# Usage:
-#   sol-advisor.sh --prompt-file FILE --out FILE [-C DIR] [--model ID]
-#                   [--effort LEVEL] [--timeout SEC]
-#   sol-advisor.sh --check
-#
-#   --prompt-file FILE  the self-contained briefing (task, progress, question)
-#   --out FILE          where Sol's advice is written
-#   -C DIR              working dir Sol sees (default: $PWD)
-#   --model ID          Codex model to pin (default: gpt-5.6-sol — the
-#                        flagship 5.6 tier, confirmed WORKING as of July 2026
-#                        on ChatGPT-account Codex auth; an earlier "rejected
-#                        outright" finding no longer reproduces — re-check
-#                        `codex --version` before assuming a gate if it ever
-#                        errors, since an outdated CLI rejects sol/luna too,
-#                        with a different error). sol/terra/luna are three
-#                        distinct tiers, not one gpt-5.6 model. Pass --model
-#                        gpt-5.6-terra explicitly for a cheaper reviewer on
-#                        routine consults.
-#   --effort LEVEL      none|minimal|low|medium|high|xhigh (default: xhigh)
-#   --timeout SEC        hard kill after SEC seconds (default: 900)
+# sol-advisor.sh — legacy entrypoint for a separate Astra advisory session.
+# Defaults: gpt-6-astra, xhigh, read-only, ephemeral. Model and effort are overridable.
+# Supply a self-contained brief; the child has no automatic parent conversation.
+# Parent sandbox and network permissions still apply to nested calls.
+# Requires Python 3 to enforce the timeout on macOS and Linux.
+# Usage: sol-advisor.sh --prompt-file FILE --out NEW_FILE [-C DIR]
+#                      [--model ID] [--effort LEVEL] [--timeout SEC]
+#        sol-advisor.sh --check
 set -euo pipefail
 
-MODEL="gpt-5.6-sol"
+# Python is already required by the library; enforce deadlines on macOS and Linux.
+run_with_timeout() {
+  python3 -c '
+import os, signal, subprocess, sys
+seconds = int(sys.argv[1])
+process = subprocess.Popen(sys.argv[2:], start_new_session=True)
+try:
+    code = process.wait(timeout=seconds)
+except subprocess.TimeoutExpired:
+    os.killpg(process.pid, signal.SIGTERM)
+    try:
+        process.wait(timeout=5)
+    except subprocess.TimeoutExpired:
+        pass
+    try:
+        os.killpg(process.pid, signal.SIGKILL)
+    except ProcessLookupError:
+        pass
+    process.wait()
+    sys.exit(124)
+sys.exit(code if code >= 0 else 128 - code)
+' "$@"
+}
+
+
+MODEL="gpt-6-astra"
 WORKDIR="$PWD"
 PROMPT_FILE=""
 OUT=""
@@ -83,19 +73,23 @@ command -v codex >/dev/null || die 'codex CLI not found'
 [[ -n "$OUT" ]] || die '--out is required'
 [[ -d "$WORKDIR" ]] || die "working directory not found: $WORKDIR"
 [[ "$TIMEOUT_SECONDS" =~ ^[1-9][0-9]*$ ]] || die '--timeout must be a positive integer'
-case "$EFFORT" in none|minimal|low|medium|high|xhigh) ;; *) die "bad --effort: $EFFORT (none|minimal|low|medium|high|xhigh)" ;; esac
+case "$EFFORT" in none|low|medium|high|xhigh|max) ;; *) die "bad --effort: $EFFORT" ;; esac
+[[ "$MODEL" != gpt-6-astra || "$EFFORT" != none ]] || die 'Astra does not support effort none'
+command -v python3 >/dev/null || die 'python3 is required to enforce --timeout'
 case "$PROMPT_FILE" in /*) ;; *) PROMPT_FILE="$PWD/$PROMPT_FILE" ;; esac
 case "$OUT" in /*) ;; *) OUT="$PWD/$OUT" ;; esac
 WORKDIR="$(cd "$WORKDIR" && pwd -P)"
+[[ ! -e "$OUT" && ! -L "$OUT" ]] || die "output already exists: $OUT"
 mkdir -p "$(dirname "$OUT")"
+RESULT_DIR="$(mktemp -d "$(dirname "$OUT")/.codex-result.XXXXXX")"
+trap 'rm -rf "$RESULT_DIR"' EXIT
+RESULT="$RESULT_DIR/answer.md"
 
-cmd=(codex exec --ephemeral --model "$MODEL" -c model_reasoning_effort="$EFFORT" --sandbox read-only --skip-git-repo-check -C "$WORKDIR" --output-last-message "$OUT" \
-  'You are consulted as an independent GPT-5.6 advisor for one specific decision point — not a co-implementer. Read the self-contained briefing supplied on stdin (the task, what has been done so far, the current approach or findings, and the specific question). You have no access to the original conversation beyond this briefing, so if it seems to be missing something you need, say what is missing rather than guessing. Give direct, decisive advice on the specific question asked. If you disagree with the stated approach, say so plainly and explain the specific failure mode, do not hedge into a survey of options. Do not edit any files — you are read-only advisory only. Return only your advice, no preamble.')
+cmd=(codex exec --ephemeral --model "$MODEL" -c model_reasoning_effort="$EFFORT" --sandbox read-only --skip-git-repo-check -C "$WORKDIR" --output-last-message "$RESULT" \
+  'You are consulted as an independent advisor for one specific decision point — not a co-implementer. Read the self-contained briefing supplied on stdin (the task, what has been done so far, the current approach or findings, and the specific question). You have no access to the original conversation beyond this briefing, so if it seems to be missing something you need, say what is missing rather than guessing. Give direct, decisive advice on the specific question asked. If you disagree with the stated approach, say so plainly and explain the specific failure mode, do not hedge into a survey of options. Do not edit any files — you are read-only advisory only. Return only your advice, no preamble.')
 
-if command -v timeout >/dev/null; then
-  timeout "${TIMEOUT_SECONDS}s" "${cmd[@]}" < "$PROMPT_FILE" >/dev/null
-else
-  "${cmd[@]}" < "$PROMPT_FILE" >/dev/null
-fi
+run_with_timeout "$TIMEOUT_SECONDS" "${cmd[@]}" < "$PROMPT_FILE" >/dev/null
 
-[[ -s "$OUT" ]] || die 'Sol returned no output'
+[[ -s "$RESULT" ]] || die 'model returned no final message'
+# link(2) fails if another run has claimed OUT, preserving that run's result.
+python3 -c 'import os, sys; os.link(sys.argv[1], sys.argv[2])' "$RESULT" "$OUT" || die "cannot publish output without replacing an existing file: $OUT"

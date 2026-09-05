@@ -17,7 +17,7 @@ Use it wherever more than one non-obvious solution exists — creative, architec
 
 When the task itself is still underspecified (goal, constraints, success criteria unsettled), interview before diverging. For research tasks, `research-grill` resolves the decision tree the approaches must answer to; it descends from Matt Pocock's `grill-me` (see [`RECOMMENDED.md`](../../RECOMMENDED.md)). Grilling settles the question, and diverge generates genuinely distinct answers to a settled one.
 
-**Model.** No separate model call in either mode: this runs in whatever model and reasoning effort the current Codex session is already using, not a fixed pin. `--codex` spawns a fresh subagent for a clean context, but that subagent is still Codex, at the same model and effort — it buys freedom from anchoring, not cross-model diversity, and must never be described as an independent model family. A genuinely separate, explicitly pinned model (`gpt-5.6-sol` at `xhigh`) only happens from the Claude Code side, via `/oss:diverge --codex`.
+**Model.** The default mode runs in the current session. For a demanding `--codex` brainstorm, use `gpt-6-astra` at `xhigh` for the fresh worker if the tool exposes model and effort overrides; pass a self-contained brief with `fork_turns="none"` where supported. Otherwise the worker inherits the lead, and the report must name that limitation. A routine brainstorm can retain the current model. A fresh context reduces anchoring but does not establish independent model-family evidence. Claude Code's `/oss:diverge --codex` explicitly launches Astra through the CLI.
 
 ## Behavior
 

@@ -5,7 +5,11 @@ on:
     branches: [main]
     paths:
       - "plugin/skills/**"
+      - "codex/**"
+      - "plugin/commands/**"
+      - "plugin/.claude-plugin/plugin.json"
       - "README.md"
+      - "MODEL-POLICY.md"
   workflow_dispatch: {}
 
 jobs:

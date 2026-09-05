@@ -8,12 +8,37 @@ cd "$ROOT"
 
 python3 - <<'PY'
 import json
+import subprocess
 from pathlib import Path
+import yaml
 
 for path in [Path("plugin/.claude-plugin/plugin.json"), Path(".claude-plugin/marketplace.json")]:
     with path.open(encoding="utf-8") as f:
         json.load(f)
 print("json ok")
+
+skills = sorted(Path("plugin/skills").glob("*/SKILL.md")) + sorted(Path("codex").glob("*/SKILL.md"))
+for path in skills:
+    text = path.read_text(encoding="utf-8")
+    assert text.startswith("---\n"), f"missing frontmatter: {path}"
+    metadata = yaml.safe_load(text.split("---", 2)[1])
+    assert metadata.get("name") == path.parent.name, f"name mismatch: {path}"
+    assert isinstance(metadata.get("description"), str) and metadata["description"].strip(), f"missing description: {path}"
+for path in Path("codex").glob("*/agents/openai.yaml"):
+    yaml.safe_load(path.read_text(encoding="utf-8"))
+print(f"yaml ok: {len(skills)} skills and Codex UI metadata")
+
+for name in (
+    "plugin/skills/orchestrate/codex-peer.sh",
+    "plugin/skills/model-committee/scripts/codex-member.sh",
+    "codex/model-committee/scripts/codex-member.sh",
+    "codex/advisor/scripts/sol-advisor.sh",
+    "codex/orchestrate/scripts/check-lead-runtime.sh",
+):
+    entry = subprocess.check_output(["git", "ls-files", "-s", "--", name], text=True)
+    assert entry.startswith("100755 "), f"helper must be tracked executable: {name}"
+    subprocess.run(["bash", "-n", name], check=True)
+print("Codex helper syntax and executable modes ok")
 PY
 
 tmpdir="$(mktemp -d)"
@@ -29,7 +54,9 @@ cat > "$tmpdir/aliases" <<'ALIASES'
 diverge-codex
 fable-orchestrate
 fair-check
+model-committee-astra
 model-committee-fable
+model-committee-opus
 model-committee-sol
 opus-orchestrate
 paper-review-lite-codex

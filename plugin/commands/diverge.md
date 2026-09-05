@@ -2,6 +2,6 @@
 
 Before implementing anything, generate 3–5 conceptually distinct approaches to the task below — each labeled by creativity dimension ([Novel], [Surprising], [Diverse], [Conventional]), with at least one [Surprising] and one [Novel]. Differences must be in underlying mechanism, not surface vocabulary. For each, give a one-line core mechanism, two to three sentences on how it works, and its main tradeoff. Do not implement: present the approaches and ask which to pursue or whether to synthesize. Brainstorm-then-select, after Creative Preference Optimization (Ismayilzada et al., 2025).
 
-Pass `--codex` to run the brainstorm on a second model family: compose the prompt and send it through `codex exec --model gpt-5.6-sol -c model_reasoning_effort=xhigh` (read-only sandbox, stdin closed with `< /dev/null`), present Codex's approaches verbatim, then run the selected one back through `codex exec` (workspace-write) to implement. Never let Codex implement on the first delegation; if Codex is unavailable or errors, offer to fall back to the Claude-only path.
+Pass `--codex` to run the brainstorm on a second model family: compose the prompt and send it through `codex exec --model gpt-6-astra -c model_reasoning_effort=xhigh` (read-only sandbox, stdin closed with `< /dev/null`), present Codex's approaches verbatim, then run the selected one back through `codex exec` (workspace-write) to implement. Never let Codex implement on the first delegation; if Codex is unavailable or errors, offer to fall back to the Claude-only path.
 
 $ARGUMENTS
