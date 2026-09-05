@@ -5,6 +5,8 @@ description: "Run a pre-submission manuscript audit covering argument, numerics,
 
 # Paper Pre-Submission Review (Lite)
 
+Use a new output path or directory for each run; preserve earlier results and existing user edits.
+
 ## Heritage and scope
 
 An 11-subagent pre-submission review that runs inside a Codex session with no extra review tool to install. Nine parallel dimension agents find issues, two cross-checkers verify each finding against the manuscript before it reaches the report, and the lead synthesizes. This is the Codex-native counterpart to [`presubmit`](https://github.com/scdenney/presubmit), itself descended from the [reviewer2](https://github.com/isitcredible/reviewer2) adversarial peer-review pipeline, and it inherits that lineage's two commitments: a critical-reviewer posture, and a verification cascade that drops any finding not pinned to a quoted passage. It is the fast in-flow check, not the full pipeline — see the last section for when to reach for `presubmit` instead.
@@ -155,11 +157,13 @@ Every issue in the report carries a file path and line number (or section name),
 
 Everything above still holds. This section replaces only the *who runs what* half of the workflow.
 
+For demanding manuscript audits, prefer an Astra lead (`gpt-6-astra`, `xhigh`) or explicitly configured Astra reviewers when the runtime supports overrides. A skill cannot switch the running lead by declaration; retain an explicitly chosen model and record the actual runtime.
+
 Codex stays the lead and Claude Code's non-interactive CLI supplies the second model family. Two cohorts independently apply the § 2 specification to the same paper, then each verifies the other's findings. Two model families have different blind spots, so both their agreements and their disagreements carry information; the adjudication step scores each combination. Neither cohort sees the other's findings during the Red Team phase.
 
 ### Sandbox constraint — read before the first `claude -p` call
 
-`claude -p` is a different binary than `codex exec`, so it does not hit the in-process IPC failure that breaks nested `codex exec` calls under sandbox. But under `workspace-write` sandbox, an outbound `claude -p` network call was observed (July 2026) to hang rather than complete or fail cleanly — Codex's sandbox restricts network access, and `claude -p` needs it to reach Anthropic's API. That observation is less rigorously isolated than the nested-`codex exec` failure (no distinct error message, just an unresponsive process that had to be killed), so treat it as a strong warning rather than a certainty. If a `claude -p` call hangs rather than returning, do not assume it will eventually resolve — request escalation (`sandbox_permissions: require_escalated`) for that call, or run from an unsandboxed session, before retrying.
+`claude -p` requires working authentication and network access. Earlier restricted runs hung, but sandbox behavior depends on the current permissions profile. Use a bounded call under existing authorization; escalate only when the runtime supports it and access is needed. Report a failed reviewer call without simulating its findings.
 
 ### Preflight
 

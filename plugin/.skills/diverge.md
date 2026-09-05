@@ -1,6 +1,6 @@
 ---
 name: diverge
-description: Generate 3-5 conceptually distinct approaches labeled by creativity dimension (Novel, Surprising, Diverse, Conventional) and hold for selection instead of implementing the first idea; the --codex mode runs the same brainstorm on GPT-5.6 Sol via codex exec, then has Codex implement the selected approach. Use when a task has more than one non-obvious solution — creative, architectural, or analytical work — and before committing to an approach; use --codex when a second model family should widen the range of approaches.
+description: Generate 3-5 conceptually distinct approaches labeled by creativity dimension (Novel, Surprising, Diverse, Conventional) and hold for selection instead of implementing the first idea; the --codex mode runs the same brainstorm on GPT-6 Astra via codex exec, then has Codex implement the selected approach. Use when a task has more than one non-obvious solution — creative, architectural, or analytical work — and before committing to an approach; use --codex when a second model family should widen the range of approaches.
 argument-hint: "[describe the task, problem, or design question to diverge on] [--codex]"
 allowed-tools:
   - Bash
@@ -14,6 +14,8 @@ allowed-tools:
 
 Interrupt the default path of jumping to the most probable — and least creative — solution.
 
+Use a new output path or directory for each run; preserve earlier results and existing user edits.
+
 ## Heritage and scope
 
 An original Open Science Skills workflow grounded in **Creative Preference Optimization** (Ismayilzada et al., 2025; background in [`reference/creative-preference-optimization.md`](reference/creative-preference-optimization.md)). Standard preference alignment (RLHF/DPO) optimizes for the most human-expected output, which is by construction the least surprising one. The paper's most accessible remedy — its own "brainstorm-then-select" baseline — needs no fine-tuning: force divergence before convergence, require that at least one approach is surprising and one is novel, and defer quality and implementation until after selection.
@@ -22,7 +24,7 @@ Use it wherever more than one non-obvious solution exists — creative, architec
 
 When the task itself is still underspecified (goal, constraints, success criteria unsettled), interview before diverging. For research tasks, `research-grill` resolves the decision tree the approaches must answer to; it descends from Matt Pocock's `grill-me` (see [`RECOMMENDED.md`](../../../RECOMMENDED.md)). Grilling settles the question, and diverge generates genuinely distinct answers to a settled one.
 
-**Model.** The default mode makes no external model call: it runs in whatever model and reasoning effort the session is already using, not a fixed pin. `--codex` is the exception — it shells out to a genuinely separate model, pinned to `gpt-5.6-sol` at `xhigh` effort.
+**Model.** The default mode makes no external model call: it runs in whatever model and reasoning effort the session is already using, not a fixed pin. `--codex` is the exception — it shells out to a genuinely separate model, pinned to `gpt-6-astra` at `xhigh` effort.
 
 ## Behavior
 
@@ -66,7 +68,7 @@ With `--codex`, the specification above is unchanged — Codex generates the app
 
 Plain Claude Code has no native `codex:codex-rescue` subagent. Every "ask Codex" step means calling `codex exec` through the `Bash` tool (the same mechanism `paper-review-lite --codex` uses):
 
-- **`--model gpt-5.6-sol -c model_reasoning_effort=xhigh`** — pins Codex explicitly rather than relying on `codex exec`'s own implicit default, which can drift upstream.
+- **`--model gpt-6-astra -c model_reasoning_effort=xhigh`** — pins Codex explicitly rather than relying on `codex exec`'s own implicit default, which can drift upstream.
 - **`< /dev/null`** — closes stdin. Without it, `codex exec` hangs on "Reading additional input from stdin…" even when the prompt is passed as a CLI argument. This is the single most common failure mode.
 - **`--skip-git-repo-check`** so it runs regardless of git state, and **`--sandbox`** set per phase: `read-only` for brainstorming, `workspace-write` for implementation.
 - **`timeout: 600000`** (10 min) on the Bash call as a backstop.
@@ -80,7 +82,7 @@ The result returns on stdout — read it directly from the Bash output. Treat a 
 2. **Brainstorm via Codex**, substituting `TASK` with the user's request verbatim and adding none of your own implementation preferences:
 
    ```bash
-   codex exec --model gpt-5.6-sol -c model_reasoning_effort=xhigh --sandbox read-only --skip-git-repo-check "$(cat <<'CODEXEOF'
+   codex exec --model gpt-6-astra -c model_reasoning_effort=xhigh --sandbox read-only --skip-git-repo-check "$(cat <<'CODEXEOF'
    <brainstorm prompt template below, with TASK substituted>
    CODEXEOF
    )" < /dev/null
@@ -91,7 +93,7 @@ The result returns on stdout — read it directly from the Bash output. Treat a 
 4. **Implement via Codex** only after selection, switching the sandbox to `workspace-write` and setting `-C` to the project directory. The Codex plugin's result-handling guidance (stop after presenting findings, apply nothing) applies to code-review handoffs, not here — this step runs only on an explicit user selection, which is the same consent that guidance exists to protect:
 
    ```bash
-   codex exec --model gpt-5.6-sol -c model_reasoning_effort=xhigh --sandbox workspace-write --skip-git-repo-check -C "<project dir>" "$(cat <<'CODEXEOF'
+   codex exec --model gpt-6-astra -c model_reasoning_effort=xhigh --sandbox workspace-write --skip-git-repo-check -C "<project dir>" "$(cat <<'CODEXEOF'
    <implementation prompt template below, with TASK and SELECTED_APPROACH substituted>
    CODEXEOF
    )" < /dev/null

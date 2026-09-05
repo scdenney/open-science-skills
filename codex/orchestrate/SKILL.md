@@ -1,11 +1,11 @@
 ---
 name: orchestrate
-description: Orchestrate complex work as the Codex lead, with a gpt-5.6-sol lead at xhigh effort owning decomposition, integration, and verification while delegating bounded work to cheaper GPT-5.6 tiers and a cross-vendor Claude peer. Not for routine single-context work. Use when the user explicitly asks to orchestrate, delegate, fan out, parallelize, assign subagents, obtain independent checks, or have Codex act as tech lead.
+description: Orchestrate complex work as the Codex lead, with a gpt-6-astra lead at the selected effort owning decomposition, integration, and verification while delegating bounded work to cheaper GPT-5.6 tiers and a cross-vendor Claude peer. Not for routine single-context work. Use when the user explicitly asks to orchestrate, delegate, fan out, parallelize, assign subagents, obtain independent checks, or have Codex act as tech lead.
 ---
 
 # Orchestrate
 
-<p align="center"><img src="assets/architecture.svg" alt="orchestrate (Codex): a gpt-5.6-sol Codex orchestrator at xhigh effort owns hard decisions and routes bounded work to out-of-band Terra workers, and reaches a Fable 5.1 cross-vendor peer for a genuine decorrelated check on high-stakes calls; Luna is used only for tightly specified mechanical implementation" width="900"></p>
+<p align="center"><img src="assets/architecture.svg" alt="orchestrate (Codex): a gpt-6-astra Codex orchestrator at the selected effort owns hard decisions and routes bounded work to Sol, Terra, and Luna workers, and reaches a Fable 5.1 cross-vendor peer for a cross-vendor check on high-stakes calls; Luna is used only for tightly specified mechanical implementation" width="900"></p>
 
 ## Preflight the lead runtime first
 
@@ -15,30 +15,35 @@ Before reading the task brief, inspecting the workspace, planning, or delegating
 "$SKILL_DIR/scripts/check-lead-runtime.sh"
 ```
 
-This is fail-closed. It uses the current process's `CODEX_THREAD_ID` to locate that exact thread's rollout, reads the latest recorded `turn_context` for the current turn's model and effort, and rejects any model-reroute event recorded for that turn. Proceed only when it prints `orchestrate preflight OK: gpt-5.6-sol at xhigh`. If it reports a mismatch or cannot establish the runtime, stop immediately, quote the result to the operator, and ask them to select Sol with Extra High reasoning in `/model` (or restart with `--model gpt-5.6-sol -c model_reasoning_effort=xhigh`), verify with `/status`, and invoke `$orchestrate` again. Never infer the runtime from this skill's prose, the launch command the operator says they used, `config.toml`, or the newest session file.
+This verifies the current thread through `CODEX_THREAD_ID`, its latest `turn_context`, and any recorded reroute. Proceed when it reports `gpt-6-astra` and the actual effort. Preserve the user's selected effort; `xhigh` is not required. Missing runtime metadata, an incorrect lead model, or a current-turn reroute still blocks the workflow. Report the exact failure; if the lead is not Astra, ask the user to select Astra in `/model` while keeping their chosen effort. Do not infer the current runtime from configuration defaults, the newest session file, or model self-identification.
 
-Act as the lead orchestrator for the GPT-5.6 family: plan, decompose, delegate, integrate, verify, and keep architectural decisions and final accountability in the lead context. The lead is the currently-running Codex session itself — `gpt-5.6-sol` at effort `xhigh`. It has two delegation mechanisms, differing in the one thing that matters, the worker's model.
-
-**In-process** subagents use Codex's native multi-agent tool (`functions.collaboration.spawn_agent`, plus `send_message`, `followup_task`, `wait_agent`, `interrupt_agent`, `list_agents` — feature `multi_agent`, stable). They run in the lead's sandbox and are fully orchestratable, but they inherit the lead's model *and* reasoning effort. `spawn_agent`'s model-visible schema has exactly three fields — `task_name`, `message`, `fork_turns` — and no `model` or `effort` parameter (re-verified 2026-07-11 on Codex CLI v0.144.1, also the newest published release; three differently-flagged live probes, including `multi_agent_v2` forced on). This is a regression-by-default rather than a permanent absence: override fields existed and worked around v0.137 (openai/codex#26948), current releases hide them from the schema (`hide_spawn_agent_metadata`, openai/codex#31814), v2 full-history forks reject them (openai/codex#20077), and the TOML custom-agent path is broken (openai/codex#26363) — community reports agree (community.openai.com, 2026-07-10). An "unhide + `fork_turns=\"none\"`" escape hatch circulates but is unconfirmed and reportedly still drops overrides; do not build on it without re-verifying on the installed version. So a Sol lead's spawn children are Sol, not Terra. What spawning saves is **context isolation and parallelism** — the lead's own context never grows with the full working-through of every subtask — never a cheaper model. Say so plainly if a user asks whether a spawn delegates to a cheaper tier.
-
-**Out-of-band** workers are separate `codex exec` one-shots, the only way to run a cheaper tier under the lead. They are fire-and-forget, not orchestratable, and a nested `codex exec` fails under any sandbox mode: confirmed by direct reproduction on macOS (`Operation not permitted, os error 1`) and Linux (`Read-only file system, os error 30`), and unfixable by passing bypass flags to the child, since an OS-level sandbox applies transitively to the whole process tree. Out-of-band delegation therefore runs only from an interactive/escalated/unsandboxed session. A **headless** lead (`codex exec`, approval `never`) is single-tier by construction: say that cross-tier and cross-vendor delegation is unavailable, then keep the work in the lead, or start a separate Terra session if the user authorizes that fallback.
-
-Terra is cheaper than Sol but still GPT-5.6, so a Terra "second opinion" shares whatever blind spot the whole model family has. `scripts/claude-peer.sh` gives the lead a real out-of-band line to a different vendor's model — the same value a Claude lead gets from calling Codex.
+Act as the lead orchestrator: own decomposition, difficult coupled decisions, integration, and final verification. Astra leads at the session's selected effort; worker effort is assigned separately by task.
 
 ## Model and effort calibration
 
-The lead's `--model` and `model_reasoning_effort` set the price of everything that inherits them. Choose the lead tier **first**, gated on one question: **can this session make out-of-band `codex exec` calls?** Interactive / escalated / unsandboxed → yes; headless → no. Set model and effort before substantive work, or start a fresh correctly configured session: a controlled Codex CLI continuation test on 2026-07-20 showed that switching either one mid-thread made the next request lose most session-specific prompt-cache reuse, although a shorter stable prefix could remain cached.
+Inspect the actual `spawn_agent` schema and session permissions before selecting a route. If model and reasoning overrides are exposed, use them with a self-contained brief and the supported `fork_turns` value (`"none"` where available). Full-history forks may require inheritance. If overrides are unavailable, native workers inherit the lead; use explicit CLI one-shots for other tiers only when the environment permits them.
 
-| Choice | Setting | Why |
+| Role | Default | Use |
 |---|---|---|
-| **Lead — default** | `gpt-5.6-sol`, effort `xhigh` | Sol is the strongest tier. `xhigh` was raised from `high` on 2026-07-19 after a same-brief benchmark rerun of all six ladder tiers under `xhigh`, paired with a genuine Fable 5.1 cross-vendor peer, reached Distinction on 5 of 6 — measured, not a modeling assumption. Never Ultra. |
-| **Bounded workers — Terra** | out-of-band one-shot: `codex exec --model gpt-5.6-terra -c model_reasoning_effort=medium --sandbox read-only --skip-git-repo-check "<self-contained brief>" < /dev/null` (raise a specific difficult review to `high`) | The only way for a Sol lead to reach Terra. Bounded research, diagnosis, implementation, or verification. Interactive-only. The `< /dev/null` on every out-of-band `codex exec` call is load-bearing — without it `codex exec` hangs waiting on stdin. |
-| **Mechanical workers — Luna** | out-of-band one-shot: `codex exec --model gpt-5.6-luna -c model_reasoning_effort=low …` | Only for fully specified, low-judgment work with objective checks. Never Luna for synthesis, safety-critical changes, or unresolved ambiguity. |
-| **Live / blind Sol subagent** | `spawn_agent` (inherits Sol + the lead's `xhigh`) | Only when you need what a one-shot can't give: live orchestration (`followup_task`/`wait_agent`), context isolation, or a blind parallel resample *at the lead's tier*. Sol/xhigh-priced — spawn sparingly. |
-| **Cross-vendor peer — Claude** | out-of-band: `scripts/claude-peer.sh --prompt-file <brief> --out <file> -C "$PWD"` (default model `fable`, flagship for flagship, matching Sol; pass `--model sonnet` or `--model opus` for a cheaper check on a routine, lower-stakes consult) | The genuine decorrelated check — a different vendor's family, not a cheaper tier of the same one. Use it on the high-stakes path instead of a same-vendor Terra substitute whenever `claude` is on PATH. Interactive-only. |
-| **Headless constraint** | no cross-tier or cross-vendor worker can be launched | Do not promise Terra/Luna/Claude-peer delegation. Keep the work in the lead or ask to restart in an interactive/escalated session. |
+| Lead | `gpt-6-astra`, current session effort | Difficult reasoning, integration, and final review. |
+| Demanding worker | `gpt-5.6-sol`, `high` | Separable difficult reasoning, implementation, and review. |
+| Bounded worker | `gpt-5.6-terra`, `medium` | Independently checkable research, diagnosis, implementation, or verification; raise effort for a difficult unit. |
+| Mechanical worker | `gpt-5.6-luna`, `low` | Fully specified tasks with objective checks. |
+| Lead-tier worker | `gpt-6-astra`, explicitly chosen effort | An unusually difficult independent unit that warrants Astra rather than Sol. |
+| Cross-vendor peer | `scripts/claude-peer.sh` | A separate Claude review for difficult, consequential judgments. Different vendors can still share errors. |
 
-Choose the lead tier first; it prices everything that inherits it. Under a Sol lead, reason compact hard problems in the lead and delegate *down* to Terra out-of-band for bulk, width, and mechanical work — never escalate up, since nothing outranks Sol. Sol is also the cost floor: Terra bulk helps, but every lead turn is Sol-priced and the lead context grows as it integrates, so keep the lead lean and ingest only worker summaries and stdout.
+Prefer a native worker when it supports the required model and interaction. For a self-contained task, pass `model="gpt-5.6-sol", reasoning_effort="high", fork_turns="none"` for Sol; use Terra/medium or Luna/low from the table for simpler work. Full-history forks inherit the lead in runtimes that prohibit overrides; do not use them for cheaper routing. Keep routine work local when briefing and integration cost more than execution. Otherwise, a bounded read-only CLI call can use:
+
+```bash
+codex exec --model gpt-5.6-terra -c model_reasoning_effort=medium \
+  --sandbox read-only --skip-git-repo-check "<self-contained brief>" < /dev/null
+```
+
+Close stdin when the prompt is an argument; when supplying a prompt file, redirect that file instead. Use `--output-last-message <new-file>` for the final response. Use workspace-write only for authorized implementation and assign disjoint paths.
+
+Headless execution and approval `never` do not by themselves prohibit nested calls. The parent sandbox, network access, authentication, and available tools determine what works. Earlier restricted macOS/Linux runs failed on nested Codex initialization; a child cannot relax its parent's restrictions. Use already authorized permissions, request escalation only if the runtime permits it and the task needs it, and report unavailable delegation without inventing a worker response.
+
+Keep briefs and returned evidence compact. Delegate only when the isolation, parallel work, or lower worker cost justifies briefing and integration. Start with the chosen effort; change it only for a demonstrated need using mechanisms the runtime supports. Do not infer current cache behavior from old CLI experiments.
 
 ## Delegation gate
 
@@ -50,24 +55,24 @@ Before spawning work, publish a compact plan that names each workstream, owner r
 
 ## Route by first match
 
-Owners below assume the **Sol-lead interactive** default; in headless mode these routes cannot be reinterpreted as Terra delegation.
+Owners below assume an Astra lead. Use native model overrides where supported; otherwise use permitted CLI one-shots.
 
-| Priority | Work type | Owner (Sol-lead interactive) |
+| Priority | Work type | Owner |
 |---|---|---|
 | 1 | decomposition, architecture ownership, integration, conflict resolution, user communication | lead |
 | 2 | trivial, single-step work where briefing costs more than execution | lead |
-| 3 | high blast radius **and** hard to verify | two independent lines — a Claude peer call plus a Terra out-of-band one-shot, decorrelated by vendor *and* tier — then the lead adjudicates (see the high-stakes path) |
-| 4 | compact hard reasoning — one architecture call, gnarly debug, or hard trade-off that fits the lead's context | **lead** — Sol *is* the deep reasoner |
-| 5 | bounded research, inventory, or diagnosis with no overlapping writes | Terra out-of-band one-shot (cheaper) — or a Sol `spawn_agent` when the work needs live orchestration or lead-tier context isolation |
-| 5a | reasoning-heavy but wide — decomposes into several independent hard units, or would bloat the lead's context | **several Terra out-of-band one-shots in parallel, one per unit** (raise effort to `high` per call if a unit is itself hard). Do not solve a wide problem serially inside the lead just because Terra lacks a distinct "reasoner" identity from the mechanical-work role |
+| 3 | high blast radius **and** hard to verify | two independent lines — a Claude peer call plus a Sol worker, separate by vendor and tier — then the lead adjudicates (see the high-stakes path) |
+| 4 | compact hard reasoning — one architecture call, gnarly debug, or hard trade-off that fits the lead's context | **lead** — Astra *is* the deep reasoner |
+| 5 | bounded research, inventory, or diagnosis with no overlapping writes | Terra worker; Sol for a difficult unit |
+| 5a | difficult reasoning that separates into independent units | Sol workers at `high`, one per unit; Terra for the ordinary units |
 | 5b | a full peer session is the point — the work must **survive this session**, run long beside it, stay **user-steerable in its own pane**, or needs **its own worktree** | **`$spawn`** — a full peer session (Codex or Claude) in its own worktree pane; the sandbox gate applies (see the spawn subsection and Variant notes) |
-| 6 | fully specified implementation with objective acceptance checks | Terra out-of-band one-shot; Luna only if the work is purely mechanical and carries no material judgment |
-| 7 | verification, tests, review, or adversarial challenge of an existing artifact | Terra out-of-band one-shot — or a Sol `spawn_agent` for a live back-and-forth review |
+| 6 | fully specified implementation with objective acceptance checks | Terra worker; Luna only if the work is purely mechanical and carries no material judgment |
+| 7 | verification, tests, review, or adversarial challenge of an existing artifact | Terra for routine verification; Sol for demanding or adversarial review |
 | 8 | ambiguous or tightly coupled work that cannot be cleanly contracted | lead until separable |
 
 High blast radius includes security/authentication, destructive data operations, public API compatibility, concurrency, cryptography, production incidents, privacy, and externally visible irreversible changes. "Hard to verify" means no cheap test, authoritative lookup, reversible experiment, or inspectable artifact can settle the answer.
 
-Parallelize independent work or genuinely independent judgments. Since spawning does not reduce per-call cost here, an unnecessary spawn is pure overhead, not a cheap experiment.
+Parallelize independent work or genuinely independent judgments. Account for briefing and integration overhead as well as the worker model’s cost.
 
 ## Consult the Claude peer
 
@@ -77,13 +82,11 @@ scripts/claude-peer.sh -C "$PWD" \
   --prompt "Reply with exactly one word and nothing else: PONG"
 ```
 
-The path is relative to this skill's own directory, the same convention `codex/advisor` uses for `scripts/sol-advisor.sh` — Codex resolves it when the skill is loaded, and there is no Codex-side equivalent of Claude Code's `${CLAUDE_PLUGIN_ROOT}`. For a long turn, run it via a backgrounded shell call plus `--out <file>` and read that file when it returns, the same discipline as a Terra one-shot, so a multi-minute Claude turn never blocks the lead.
+The path is relative to this skill's own directory, the same convention `codex/advisor` uses for `scripts/sol-advisor.sh` — Codex resolves it when the skill is loaded, and there is no Codex-side equivalent of Claude Code's `${CLAUDE_PLUGIN_ROOT}`. For a long turn, run it via a backgrounded shell call plus `--out <file>` and read that file when it returns, the same discipline as a CLI worker, so a multi-minute Claude turn never blocks the lead.
 
 ## Spawn subagents correctly
 
-A separately started Terra session can use native Terra spawns, but that is a different lead session, not a hidden fallback under a Sol lead.
-
-`spawn_agent`'s three parameters: `task_name` (a short identifier other calls use to address this agent), `message` (the task brief — the subagent's entire starting context unless `fork_turns` adds more), and `fork_turns` (how much of the lead's own conversation to propagate — `"all"` gives full history; propagate the minimum a bounded task needs, since a large `fork_turns` defeats the context-isolation saving this tool exists for).
+Use `task_name` for a stable identifier and `message` for the complete brief. Pass the minimum context the task needs through `fork_turns`; choose `"none"` for an independent review when supported. Set model and effort only through fields actually exposed by the tool. If the tool only supports inheritance, state that the child uses the lead's model and effort.
 
 | Role | Behavior | fork_turns |
 |---|---|---|
@@ -93,9 +96,9 @@ A separately started Terra session can use native Terra spawns, but that is a di
 
 All agents share the same container, filesystem, and working directory as the lead — edits by one are immediately visible to all others, including the lead. This makes the write-collision discipline below load-bearing, not optional.
 
-**Concurrency is real and bounded.** The tool itself states 4 available concurrency slots, including the lead — so at most 3 subagents run at once regardless of how many are queued. Batch additional work after prior agents finish.
+Respect the concurrency limit reported by the current runtime; batch additional work after earlier agents finish.
 
-Use `wait_agent` to block on a spawned agent's result, `send_message` to pass it a message without triggering a new turn, `followup_task` to give a *running* agent a new task, `list_agents` to check what's active, and `interrupt_agent` to reclaim a stalled one.
+Use `wait_agent` to block on a spawned agent's result, `send_message` to pass it a message without triggering a new turn, `followup_task` to give an existing agent a new task and wake it if idle, `list_agents` to check what's active, and `interrupt_agent` to reclaim a stalled one.
 
 ## Spawn a full peer session (cross-session delegation)
 
@@ -135,7 +138,7 @@ The lead owns shared configuration, interfaces between workstreams, and final in
 1. Inspect authoritative workspace state.
 2. Decompose work and identify dependencies.
 3. Publish the route and acceptance checks.
-4. Start all ready, independent workstreams concurrently — Sol `spawn_agent` children (within the 3-subagent capacity) for live/blind/isolation work, backgrounded Terra `codex exec` one-shots (`--out <file>`) for bulk or wide fan-out (one call per independent unit, not one call for the whole wide problem), and a backgrounded `claude-peer.sh` call for any high-stakes line needing a cross-vendor check.
+4. Start all ready, independent workstreams concurrently — native Sol/high, Terra/medium, or Luna/low workers (within the runtime’s capacity), using CLI one-shots only when native routing is unavailable, and a backgrounded `claude-peer.sh` call for any high-stakes line needing a cross-vendor check.
 5. Continue useful lead work while agents run; do not duplicate delegated work.
 6. Use `wait_agent` to consume each agent's final response and inspect its artifact directly.
 7. Send a focused `followup_task` to the same agent when its artifact is incomplete, rather than spawning a fresh one that repeats the briefing cost.
@@ -149,14 +152,14 @@ Send concise progress updates during long work so the user is not left without v
 
 For work that is both high blast radius and hard to verify:
 
-1. Launch `claude-peer.sh` (default `fable`, flagship for flagship) **and** a Terra out-of-band one-shot on the identical prompt in the same round, blind to each other — that pairing is cross-vendor *and* cross-tier. Two Sol `spawn_agent` children are the *weakest* possible check: identical model, identical inherited effort, same sandbox, so they resample one distribution and share blind spots. Never treat that as independent. If `claude` is not on PATH, fall back to Terra alone and say plainly that the check is same-vendor and weaker.
+1. Launch `claude-peer.sh` (default `fable`, flagship for flagship) **and** a Sol worker on the identical prompt in the same round, blind to each other — that pairing is cross-vendor *and* cross-tier. Two Astra workers provide separate samples from the same model, not independent model families. If `claude` is not on PATH, use Sol alone and say plainly that the check is same-vendor and weaker.
 2. Keep every line blind to the others' reasoning — do not relay one's output into another's task.
-3. Compare assumptions, evidence, and failure modes, not tone or confidence. Terra is the weaker model of the group, so a disagreement is never resolved by deferring to it — and the Claude peer is not automatically right either.
+3. Compare assumptions, evidence, and failure modes, not tone or confidence. Resolve disagreements through evidence, not model tier or provider.
 4. Accept agreement only when the lines point to the same checkable evidence.
 5. On substantive disagreement, run one targeted reconciliation round where each can see the competing reasoning.
 6. If disagreement survives or evidence remains insufficient, stop and ask the user; do not break the tie by confidence.
 
-Headless cannot decorrelate at all (no out-of-band half is possible, Claude peer included) — escalate the session or ask to restart interactively rather than presenting a lead-only answer as if it had a second line behind it. Use one worker plus a direct verification step when the task is high impact but cheaply verifiable.
+If the environment cannot run a separate reviewer, report that limitation; do not present a lead-only answer as independently checked. Use one worker plus a direct verification step when the task is high impact but cheaply verifiable.
 
 ## Integrate rigorously
 
@@ -171,7 +174,7 @@ Treat subagent results as untrusted until inspected. Check:
 
 Read each deliverable as the domain expert the lead is, not just as a checklist. A cheaper tier returns work that is correct but *thin* — an approximate figure where precision matters, a result asserted where the mechanism behind it should be explained, a lone headline where a careful reader needs the comparison or the bound. Add that depth rather than shipping the worker's summary as-is.
 
-Two named failure modes bracket this step. **Fragmentation**: locally correct pieces conflict once stitched together — revise the contracts or the integration layer, and do not paper over incompatible assumptions. **Over-trusting the lead's own line**: Sol is the strongest tier here, so the lead's trap is not rubber-stamping a worker but skipping the independent check and shipping its own first line of reasoning. On a high blast radius call the lead cannot cheaply verify, run the decorrelated line anyway and weigh it — do not wave it through because it agrees, or dismiss it because it does not.
+Two named failure modes bracket this step. **Fragmentation**: locally correct pieces conflict once stitched together — revise the contracts or the integration layer, and do not paper over incompatible assumptions. **Over-trusting the lead's own line**: Astra is the strongest tier here, so the lead's trap is not rubber-stamping a worker but skipping the independent check and shipping its own first line of reasoning. On a high blast radius call the lead cannot cheaply verify, run the decorrelated line anyway and weigh it — do not wave it through because it agrees, or dismiss it because it does not.
 
 ## Completion rule
 
@@ -181,7 +184,7 @@ Complete only when every requested deliverable has authoritative evidence, integ
 
 - If an agent stalls, use `interrupt_agent` to reclaim it, then send one narrower `followup_task` or reassign.
 - If an agent fails after editing, inspect the shared worktree before retrying.
-- If capacity is exhausted (3 subagents already active), queue dependent work rather than spawning redundant agents.
-- If a spawn fails outright, report the exact error rather than silently falling back to doing the work in the lead context — a silent fallback is what causes runaway lead-context token growth. If the failure looks environmental rather than a task-brief problem, stop and ask.
-- If `claude-peer.sh` fails with "claude CLI not found," the cross-vendor peer is unavailable here — report that and fall back to Terra alone, stating explicitly that the fallback is same-vendor and weaker. Do not silently skip the second line.
+- If the runtime’s concurrency capacity is exhausted, queue dependent work rather than spawning redundant agents.
+- If a spawn fails outright, report the exact error rather than silently falling back to doing the work in the lead context — a silent fallback is what causes runaway lead-context token growth. If the failure is environmental, use an available authorized route or report the limitation and continue useful local work.
+- If `claude-peer.sh` fails with "claude CLI not found," the cross-vendor peer is unavailable here — report that and use Sol alone, stating explicitly that the fallback is same-vendor and weaker. Do not silently skip the second line.
 - `claude-peer.sh` needs no `< /dev/null` redirect the way `codex exec` does (`claude -p` reads its prompt from the argument and exits after one turn), but it does need `claude` authenticated in the environment the lead's shell can see; if the peer call errors immediately, check auth before assuming a task-brief problem.

@@ -1,6 +1,6 @@
 ---
 name: orchestrate
-description: Run a multi-model orchestration workflow led by the session's own strongest-available model — Fable 5.1 or Claude Opus 5 — delegating mechanical work (boilerplate, tests, formatting, bulk edits) to a fast-worker subagent (Sonnet), wide or parallel reasoning to deep-reasoner subagents (Opus, pinned high), and high-stakes or fresh-perspective calls to Codex, a different-vendor GPT-5.6 peer (`gpt-5.6-sol` by default). The lead is detected from the model line in the session's own context, and `--lead fable` or `--lead opus` overrides it. Under a Fable lead the hard reasoning and the judgment calls stay in the lead and only mechanical or genuinely wide work goes out; under an Opus lead the lead is itself the deep reasoner, delegating to fan out or stay context-lean, running multi-agent phases as parallel Agent fan-outs and upgrading to a dynamic Workflow where the session actually has that tool. Use to orchestrate, delegate, fan out, get a decorrelated second opinion from Codex, run a blind Opus and Codex cross-check and synthesize, or act as tech lead.
+description: Run a multi-model orchestration workflow led by the session's own strongest-available model — Fable 5.1 or Claude Opus 5 — delegating mechanical work (boilerplate, tests, formatting, bulk edits) to a fast-worker subagent (Sonnet), wide or parallel reasoning to deep-reasoner subagents (Opus, pinned high), and high-stakes or fresh-perspective calls to Codex, a different-vendor GPT-6 Astra peer (`gpt-6-astra` by default). The lead is detected from the model line in the session's own context, and `--lead fable` or `--lead opus` overrides it. Under a Fable lead the hard reasoning and the judgment calls stay in the lead and only mechanical or genuinely wide work goes out; under an Opus lead the lead is itself the deep reasoner, delegating to fan out or stay context-lean, running multi-agent phases as parallel Agent fan-outs and upgrading to a dynamic Workflow where the session actually has that tool. Use to orchestrate, delegate, fan out, get a decorrelated second opinion from Codex, run a blind Opus and Codex cross-check and synthesize, or act as tech lead.
 allowed-tools:
   - Agent
   - Workflow
@@ -12,7 +12,7 @@ allowed-tools:
 
 # orchestrate
 
-<p align="center"><img src="assets/architecture.svg" alt="orchestrate: an orchestrator running on Fable 5.1 at max effort or on Opus 5 at medium effort reasons on the hard problems itself in a main loop, and fans wide, parallel or blind reasoning out to Opus deep-reasoners, mechanical work to a Sonnet fast-worker, and a decorrelated cross-check to a GPT-5.6 Codex peer" width="900"></p>
+<p align="center"><img src="assets/architecture.svg" alt="orchestrate: an orchestrator running on Fable 5.1 at max effort or on Opus 5 at medium effort reasons on the hard problems itself in a main loop, and fans wide, parallel or blind reasoning out to Opus deep-reasoners, mechanical work to a Sonnet fast-worker, and a decorrelated cross-check to a GPT-6 Astra Codex peer" width="900"></p>
 
 You are the **orchestrator**. You plan, decompose, reason, delegate, and synthesize. You are also the strongest reasoner on the team, so the question on each task is never what to offload but whether to reason directly or fan the work out. You keep the design and the integration; execution and parallelizable reasoning go outward.
 
@@ -35,7 +35,7 @@ Switching mid-session has a cost: prompt caching is scoped to a specific model, 
 
 - **Subagents** — the native `Agent` tool, model-pinned (Opus / Sonnet).
 - **Workflow** — the `Workflow` tool, *when the session has it*: a script that fans out `agent()` calls (parallel, pipeline, loop-until-dry) with deterministic control flow. See "Structured fan-out".
-- **Codex peer** — `"${OSS_ROOT}"skills/orchestrate/codex-peer.sh`, a verified wrapper around `codex exec` (a different-vendor GPT-5.6 engineer, `gpt-5.6-sol` by default). Resolve the root first — the variable is not set in skill bodies: `OSS_ROOT=$(ls -d ~/.claude/plugins/cache/open-science-skills/oss/*/ 2>/dev/null | sort -V | tail -1)`.
+- **Codex peer** — resolve `SKILL_DIR` as the directory containing this loaded `SKILL.md`, then invoke `"$SKILL_DIR/codex-peer.sh"`. It defaults to Astra for demanding cross-vendor consults.
 - **Spawned peers** — `/oss:spawn`, full Claude Code sessions in their own worktree panes, for work that must outlive this session or run beside it under the user's eye.
 
 ## The team
@@ -45,7 +45,7 @@ Switching mid-session has a cost: prompt caching is scoped to a specific model, 
 | **you** (orchestrator) | Fable 5.1 at `max`, or Opus 5 at `medium` (`high` for reasoning-heavy sessions) | planning, decomposition, **the hard reasoning and the judgment calls**, Workflow authoring, synthesis, integration, reconciling others' output |
 | **deep-reasoner** | Opus, pinned `high` | a hard sub-problem you deliberately push out for **parallelism, context isolation, or a blind independent second line** — architecture, complex debugging, algorithm design, hard trade-offs |
 | **fast-worker** | Sonnet, pinned `medium` | boilerplate, tests-from-spec, formatting, simple edits, renames, bulk transforms |
-| **Codex** | GPT-5.6 (`gpt-5.6-sol` by default, flagship; `gpt-5.6-terra` on request for cheaper routine consults), peer | fresh-perspective problems, unfamiliar stacks, disputed designs, high-stakes parallel cross-checks |
+| **Codex** | GPT-6 Astra (`gpt-6-astra` by default, flagship — `high` for a routine consult, `xhigh` for the blind cross-check; `gpt-5.6-terra` on request for cheaper bounded work), peer | fresh-perspective problems, unfamiliar stacks, disputed designs, high-stakes parallel cross-checks |
 
 Delegating a reasoning task to a `deep-reasoner` buys one of three things: **parallelism** (many independent hard sub-problems at once), **context hygiene** (a big investigation whose transcript would bloat your working context), or **independence** (a blind second opinion on the high-stakes path). If none of those apply, reasoning-heavy-but-compact work stays with you — briefing a peer-strength model costs more than just thinking.
 
@@ -62,21 +62,22 @@ Model pins say *who* runs; effort says *how hard they think*. The intended setti
 | you (lead), **Opus** | `medium` (default); `high` if this session's own turns will be dominated by direct hard reasoning (row 3) rather than routing, delegation, and synthesis | early Opus 5 field reports show sustained, long-horizon roles suffer at high effort — it argues with instructions or stops before finishing; `medium` is the safer default for a role that persists across a whole orchestration session. Set it per-session with `/effort`, not per-turn (see the cache cost above) |
 | deep-reasoner | `high`, pinned | `effort: high` in `agents/deep-reasoner.md`. Pinned rather than inherited from the session: a bounded fan-out shot is not a sustained role, early Opus 5 field reports put the weakness in sustained high-effort roles, and the shot need not match a Fable lead's `max` or drop to an Opus lead's `medium` |
 | fast-worker | `medium`, pinned | `effort: medium` in `agents/fast-worker.md` — fully-specified work still has to get the API and conventions right; medium is Sonnet's balance point, cheap enough to stay the default execution tier. Inside a Workflow, pass `{effort: "medium"}` explicitly too if the lead session is running at `high` |
-| Codex peer | `xhigh`, pinned | `codex-peer.sh` sets `--effort xhigh` explicitly; pass `--effort` to change per call |
+| Codex peer | a ladder by mode: `consult` → `high`; `cross-check` and `implement` → `xhigh` | `codex-peer.sh` sets the default from `--mode`. A fresh-perspective consult is a bounded read and `high` is Astra's balance point for it; the blind cross-check on the high-stakes path is the one call whose answer decides the outcome, so it runs at the ceiling. Pass `--effort` to override per call — not per session |
 
 After editing an agent def, re-run the Setup `cp` so the `~/.claude/agents/` copies pick up the change.
 
 ## Setup (one-time)
 
-Install the two agent definitions so `deep-reasoner` / `fast-worker` resolve as named subagents everywhere, and confirm Codex is ready. Only the agent defs get copied out, because named subagents must resolve from `~/.claude/agents/`; `codex-peer.sh` always runs from the resolved plugin root (`$OSS_ROOT`), never a hand-installed copy (see Gotchas).
+Resolve `SKILL_DIR` to the directory containing this loaded skill. Inspect existing definitions before installing the bundled `deep-reasoner` and `fast-worker` agents. Preserve local customizations; use the general-purpose agent with an explicit model when a named definition is unavailable.
 
 ```bash
-OSS_ROOT=$(ls -d ~/.claude/plugins/cache/open-science-skills/oss/*/ 2>/dev/null | sort -V | tail -1)
 mkdir -p ~/.claude/agents
-cp "${OSS_ROOT}skills/orchestrate/agents"/*.md ~/.claude/agents/
-chmod +x "${OSS_ROOT}skills/orchestrate/codex-peer.sh"
-codex login status        # must say "Logged in" — otherwise: codex login
+# Copy only missing definitions; review differences in existing files separately.
+cp -n "$SKILL_DIR/agents/"*.md ~/.claude/agents/
+codex login status        # if not authenticated, use codex login
 ```
+
+Invoke `"$SKILL_DIR/codex-peer.sh"` from the installed skill rather than selecting an arbitrary cache version.
 
 Then set `/model` and `/effort` for the lead you want, per Effort calibration. The mechanics below work under any main model; a Fable or Opus lead is what puts the strongest available reasoner on the calls that decide the answer, with the delegates taking execution and parallel work off its plate.
 
@@ -169,7 +170,7 @@ You are the reasoner; Sonnet is the executor. They take turns on the *same* task
 ```bash
 OSS_ROOT=$(ls -d ~/.claude/plugins/cache/open-science-skills/oss/*/ 2>/dev/null | sort -V | tail -1)
 # read-only consult — ask a question / get a second approach; prints the answer
-"${OSS_ROOT}skills/orchestrate/codex-peer.sh" --mode consult -C "$PWD" \
+"$SKILL_DIR/codex-peer.sh" --mode consult -C "$PWD" \
   --prompt "Reply with exactly one word and nothing else: PONG"
 ```
 
@@ -185,19 +186,19 @@ Route to Codex when the value is a **decorrelated prior**, not more horsepower �
 - **Unfamiliar or recent ecosystem.** A stack, library, or idiom where OpenAI's training mix may cover different ground.
 - **Adversarial cross-review.** Have each model attack the other's output (the `paper-review-lite --codex` pattern); ask Codex to *falsify* a confident Opus conclusion, not merely review it.
 
-Skip Codex when the work is cheaply verifiable — verify instead, decorrelation buys nothing you can just check — or when the answer needs deep in-repo context Codex would have to re-acquire, since the briefing cost then exceeds the benefit. Skip it for mechanical or trivial work. Wanting more confidence in something already verified is not a signal; confidence is not a reason and a checkable artifact is. A consult costs about 10–15s, longer for `--mode implement`; where latency is critical the stakes have to justify the vendor round-trip.
+Skip Codex when the work is cheaply verifiable — verify instead, decorrelation buys nothing you can just check — or when the answer needs deep in-repo context Codex would have to re-acquire, since the briefing cost then exceeds the benefit. Skip it for mechanical or trivial work. Wanting more confidence in something already verified is not a signal; confidence is not a reason and a checkable artifact is. Account for the extra latency and usage of a separate consult; measure them on the actual task.
 
 ### The high-stakes parallel path (verified)
 
 Launch a **decorrelated** cross-check on the **same** problem, **in one message, blind to each other** — then you synthesize.
 
 - **Fable lead:** you reason the problem yourself and, in the same turn, launch a blind Codex (a different vendor), optionally a blind Opus deep-reasoner; then reconcile your own line against theirs.
-- **Opus lead:** the two blind halves are a **deep-reasoner (Opus)** and **Codex (GPT-5.6, `gpt-5.6-sol` by default)**, deliberately different vendors, and you adjudicate rather than supplying one of the halves.
+- **Opus lead:** the two blind halves are a **deep-reasoner (Opus)** and **Codex (GPT-6 Astra, `gpt-6-astra` by default)**, deliberately different vendors, and you adjudicate rather than supplying one of the halves.
 
 ```bash
 OSS_ROOT=$(ls -d ~/.claude/plugins/cache/open-science-skills/oss/*/ 2>/dev/null | sort -V | tail -1)
 # Codex half — backgrounded, output teed to a file:
-"${OSS_ROOT}skills/orchestrate/codex-peer.sh" --mode consult -C "$PWD" \
+"$SKILL_DIR/codex-peer.sh" --mode cross-check -C "$PWD" \
   --out codex_out.txt --prompt "$(cat routing_q.txt)"
 ```
 
@@ -229,12 +230,12 @@ Two names for the same trap.
 ## Gotchas
 
 - **`codex exec` hangs without `< /dev/null`.** It prints `Reading additional input from stdin...` and blocks forever, *even when the prompt is passed as an argument*. `codex-peer.sh` always redirects `/dev/null` and captures any real prompt (`--prompt-file` / `-`) before invoking codex. Never call `codex exec` bare in a background job.
-- **Codex reasons at `xhigh` by default; `codex-peer.sh` sets it explicitly** via `--effort xhigh` → `-c model_reasoning_effort=xhigh`, rather than relying on Codex's own implicit default. It prints a header (`model: gpt-5.6-sol`, `sandbox: read-only`) before the answer. The final answer is the text after the last `codex` marker; `--out` captures the whole transcript. A trivial consult is ~5s; a real design question ~10–15s. Pass `--effort` to override per-call for a stronger or cheaper tier.
+- **Effort and output.** `codex-peer.sh` picks the effort from `--mode`: `consult` runs at `high`, `cross-check` and `implement` at `xhigh`. Use `cross-check` for the blind high-stakes path and `consult` for everything else; `--effort` overrides a single call. `--out` captures the transcript in a new file and refuses an existing path. Calls have a bounded timeout; actual latency depends on the task and runtime.
 - **`~/.claude/agents/` may not exist.** The first `cp` fails with `No such file or directory`. `mkdir -p` first (the Setup block does).
 - **A named subagent only resolves after its def is installed AND a session reload.** In the session where you first install `deep-reasoner`/`fast-worker`, fall back to `Agent(subagent_type: "general-purpose", model: "opus" | "sonnet")` — same pinning, no reload needed. Inside a Workflow, `agent(..., {model: "opus" | "sonnet"})` needs no installed def at all.
-- **Model pins are real.** Verified: the Sonnet spawn reported `model-check: Sonnet 5`; the Opus spawn reported `Running as: Opus (claude-opus-5)`; Codex is pinned to `gpt-5.6-sol` and reports `model: gpt-5.6-sol` in its header. **`gpt-5.6` alone is not a valid slug** — there are three distinct GPT-5.6 tiers (`gpt-5.6-sol` flagship, `gpt-5.6-terra` balanced, `gpt-5.6-luna` fast); the bare `gpt-5.6` triggers a "metadata not found" warning and falls back to whichever tier Codex defaults to. `gpt-5.6-sol` is the default here because it's the strongest peer for a decorrelated cross-check — confirmed working (as of July 2026) on ChatGPT-account-authenticated Codex CLI (an earlier "rejected outright" finding no longer reproduces; if it ever errors, check `codex --version` before assuming a gate, since an outdated CLI rejects sol/luna too, with a different error). Pass `--model gpt-5.6-terra` explicitly for a cheaper peer on routine consults.
+- **Verify the requested runtime.** The peer defaults to `gpt-6-astra` (`high` for `consult`, `xhigh` for `cross-check`); inspect CLI metadata rather than asking the model to identify itself. Model IDs are explicit choices, not guarantees of immutable snapshots or account access. If unavailable, report the error and use only an explicitly accepted replacement. Use `--model gpt-5.6-terra` for a cheaper bounded consult.
 - **Keep your own context lean.** Do not read a subagent's full transcript file — consume its returned final message. Long/slow executors go to the background so they never stall the loop. When an investigation's *width* would bloat your context, that width is exactly what belongs on a `deep-reasoner` or a fan-out stage (the "gather then reason" split).
-- **A stray global `codex-peer.sh` shadows the plugin's own and can silently drop the model pin.** Earlier docs told you to hand-install `codex-peer.sh` under `~/.claude/skills/`; that copy never updates on plugin upgrade. If it is older than the `--model` pin, it calls bare `codex exec` with no `--model` flag, and Codex falls back to whatever tier it defaults to — observed once as an older, cheaper tier rather than `gpt-5.6-sol`, with no error, so the drift is invisible until you read the `model:` line in Codex's own header. Delete any `~/.claude/skills/orchestrate/codex-peer.sh` (or the older `fable-orchestrate` / `opus-orchestrate` paths) you may have installed under the old instructions; always invoke `"${OSS_ROOT}skills/orchestrate/codex-peer.sh"`. Trust the CLI's printed `model:` header over anything Codex says about itself when asked directly — models cannot reliably self-report their own version.
+- **Use the installed plugin helper.** Resolve the helper relative to the loaded skill directory. Older manually installed copies can shadow the plugin and omit model pins. Inspect their paths and differences before replacing anything; do not delete user-managed copies automatically.
 - **Don't fan out for its own sake.** Fan-outs are cheap to reach for, but a barrier (`parallel()`) wastes wall-clock when one stage lags, and a compact reasoning task (row 3) is faster in your own head than briefed to a peer-strength subagent. Fan out for width, hygiene, parallelism, or independence — not activity.
 
 ## Troubleshooting

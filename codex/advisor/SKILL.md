@@ -1,21 +1,23 @@
 ---
 name: advisor
-description: Consult an independent, read-only GPT-5.6 advisor before committing to a substantive interpretation, approach, or final result. Not for routine work, implementation, or file edits. Always gpt-5.6-sol at xhigh effort, the flagship tier at its strongest routine setting.
+description: Consult an independent, read-only GPT-6 Astra advisor before committing to a substantive interpretation, approach, or final result. Not for routine work, implementation, or file edits. Defaults to gpt-6-astra at xhigh for demanding reviews.
 ---
 
-# Advisor (GPT-5.6)
+# Advisor (GPT-6 Astra)
 
 This is the Codex-native advisor maintained in this library. It is a single-turn, independent, read-only consult — not delegated implementation and not a substitute for the lead's judgment.
 
-<p align="center"><img src="assets/architecture.svg" alt="Codex advisor: the solver (any GPT-5.6 lead) sends a self-contained briefing to a Sol xhigh advisor; the advisor returns one decisive read-only review" width="900"></p>
+<p align="center"><img src="assets/architecture.svg" alt="Codex advisor: the solver (any Codex lead) sends a self-contained briefing to an Astra xhigh advisor; the advisor returns one decisive read-only review" width="900"></p>
+
+Use a new output path or directory for each run; preserve earlier results and existing user edits.
 
 ## Default
 
 | Advisor | Effort | Use when |
 |---|---|---|
-| `gpt-5.6-sol` | `xhigh` (Extra high) | A substantive interpretation, approach, draft, analysis, or completion check needs an independent review. |
+| `gpt-6-astra` | `xhigh` (Extra high) | A substantive interpretation, approach, draft, analysis, or completion check needs an independent review. |
 
-Do **not** match the calling session's effort. This skill owns a predictable policy of Sol/xhigh, always. Do not use Max or Ultra (they consume usage limits faster for no established benefit here). Pass `--model gpt-5.6-terra` explicitly only if cost is a hard constraint for a routine, low-stakes consult — the default is the flagship tier at its strongest routine effort because this is meant to be a stronger reviewer rather than a cheap one.
+Use Astra at `xhigh` for demanding consults. For a routine question, lower the effort or explicitly choose Terra when the review remains adequate. Reserve `max` for a demonstrated need; Astra does not support `none`. A fresh Astra session is a separate review context, not an independent model family when the caller also uses Astra.
 
 Luna is not an advisor tier. It is appropriate only for tightly specified mechanical work with objective acceptance checks, not for judgment or synthesis.
 
@@ -30,19 +32,16 @@ Do not consult for simple orientation or routine, cheaply verifiable work. On lo
 
 ## Sandbox constraint
 
-[`scripts/sol-advisor.sh`](scripts/sol-advisor.sh) launches a nested `codex exec`. It works only from an unsandboxed or escalated interactive parent session. A nested call from a sandboxed or headless `codex exec` fails structurally; do not retry it indefinitely or pretend that a self-review was independent.
-
-- In an interactive session, request escalation for this one command if needed.
-- In a headless/non-interactive session, report that the independent consult is unavailable and ask whether to continue without it or restart in an interactive session.
+[`scripts/sol-advisor.sh`](scripts/sol-advisor.sh) keeps its legacy filename for existing callers and defaults to Astra. Nested CLI calls depend on the parent sandbox, network access, and authentication; headless execution or approval `never` alone does not rule them out. Use the session's authorized permissions. If a restricted parent blocks initialization, the child cannot bypass it. Request escalation only when supported and necessary; otherwise report the missing independent consult and continue the authorized work without claiming it was reviewed.
 
 ## Run a consult
 
 1. Write a self-contained briefing: task, key evidence and paths, current approach or claim, alternatives considered, exact question, and any irreversible or high-impact consequences. The advisor has no access to the original conversation.
 2. Make any deliverable durable before a completion review.
-3. Run the Sol/xhigh default:
+3. Run the Astra/xhigh default:
 
    ```bash
-   scripts/sol-advisor.sh --prompt-file <briefing-path> --out <output-path> -C "$PWD" --model gpt-5.6-sol --effort xhigh
+   scripts/sol-advisor.sh --prompt-file <briefing-path> --out <output-path> -C "$PWD" --model gpt-6-astra --effort xhigh
    ```
 
 4. Read the output, verify factual claims where possible, and record why you follow or decline any material recommendation.

@@ -1,6 +1,6 @@
 ---
 name: paper-review-lite
-description: Pre-submission audit of a manuscript — argument, numerical consistency, references and DOIs, writing, figures, CONSORT flow, pre-registration, replication archive. Use before submitting a paper, or whenever a draft needs an adversarial, quote-grounded review with a journal-readiness checklist. Add `--codex` to run the same specification independently on Claude and on Codex (GPT-5.6 "Sol") and cross-check the two sets of findings.
+description: Pre-submission audit of a manuscript — argument, numerical consistency, references and DOIs, writing, figures, CONSORT flow, pre-registration, replication archive. Use before submitting a paper, or whenever a draft needs an adversarial, quote-grounded review with a journal-readiness checklist. Add `--codex` to run the same specification independently on Claude and on Codex (GPT-6 Astra) and cross-check the two sets of findings.
 argument-hint: "[path to paper or describe manuscript to review] [--codex]"
 context: fork  # Claude Code: run skill in a forked subagent context (isolated from conversation history). See https://code.claude.com/docs/en/skills#frontmatter-reference
 allowed-tools:
@@ -16,6 +16,8 @@ allowed-tools:
 ---
 
 # Paper Pre-Submission Review (Lite)
+
+Use a new output path or directory for each run; preserve earlier results and existing user edits.
 
 ## Heritage and scope
 
@@ -179,7 +181,7 @@ Every issue in the report carries a file path and line number (or section name),
 
 Everything above still holds. This section replaces only the *who runs what* half of the workflow.
 
-Two reviewers — Claude (the orchestrator) and Codex (GPT-5.6 "Sol" at `xhigh` reasoning effort, invoked via Bash `codex exec`) — independently apply the § 2 specification to the same paper, then each plays Blue Team to the other's Red Team. Two model families have different blind spots, so both their agreements and their disagreements carry information; Phase 4 scores each combination. Neither team sees the other's findings during Phase 2.
+Two reviewers — Claude (the orchestrator) and Codex (GPT-6 Astra at `xhigh` reasoning effort, invoked via Bash `codex exec`) — independently apply the § 2 specification to the same paper, then each plays Blue Team to the other's Red Team. Two model families have different blind spots, so both their agreements and their disagreements carry information; Phase 4 scores each combination. Neither team sees the other's findings during Phase 2.
 
 Roughly 22 model calls total (9 Claude Red Team, 9 Codex Red Team, 4 cross-model Blue Team) plus orientation and synthesis by the orchestrator. Reach for it before submission when you want maximum adversarial pressure and a second model family's blind spots.
 
@@ -191,7 +193,7 @@ Claude Code has no native `codex:codex-rescue` subagent. Every "spawn Codex" ref
 
 ```bash
 codex exec \
-  --model gpt-5.6-sol \
+  --model gpt-6-astra \
   -c model_reasoning_effort=xhigh \
   --sandbox workspace-write \
   --skip-git-repo-check \
@@ -204,7 +206,7 @@ CODEXEOF
 
 **Required:**
 
-- **`--model gpt-5.6-sol -c model_reasoning_effort=xhigh`** — pins the peer explicitly rather than relying on `codex exec`'s own implicit default, so it does not silently drift if that default changes upstream.
+- **`--model gpt-6-astra -c model_reasoning_effort=xhigh`** — pins the peer explicitly rather than relying on `codex exec`'s own implicit default, so it does not silently drift if that default changes upstream.
 - **`< /dev/null`** — closes stdin. Without it, `codex exec` hangs indefinitely on "Reading additional input from stdin..." even when the prompt is passed as a CLI argument. This is the single most common failure mode.
 - **`run_in_background: true`** on every `Bash` call. Eleven parallel Codex calls per run (9 Phase 2 + 2 Phase 3) make foreground execution impractical.
 - **`timeout: 600000`** (10 minutes) as a harness backstop. If a call hangs for any reason, the harness kills it.
