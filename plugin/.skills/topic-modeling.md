@@ -1,4 +1,5 @@
 ---
+disable-model-invocation: true
 name: topic-modeling
 description: Specifies and diagnoses structural topic models for survey and experimental text — choosing among STM, LDA, and BERTopic, preprocessing decisions and their consequences, prevalence and content formulas with spectral initialization and a recorded seed, selecting the topic count across semantic coherence, exclusivity and FREX, held-out likelihood, and residuals rather than one metric, interpretation and validation against representative documents, robustness checks, and DA-RT-compliant reporting. Use when the user has open-ended responses or another corpus and asks what topics are in it, asks how many topics to use, asks about STM, searchK, coherence, or FREX, or wants topic prevalence compared across treatment arms or countries. Coding against a fixed codebook goes to text-classification.
 argument-hint: "[describe your corpus and research question]"

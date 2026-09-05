@@ -1,4 +1,5 @@
 ---
+disable-model-invocation: true
 name: list-experiment
 description: Designs and diagnoses list experiments (the item count technique) — whether indirect measurement is warranted at all, control-list construction against ceiling and floor effects, design variants such as double list and direct-question pairing, difference-in-means and maximum-likelihood estimators via ictreg, the no-design-effect and no-liar assumptions with ict.test and ict.hausman.test, corrections for common failures, and power planning that accounts for the large precision penalty. Use when the user is measuring a sensitive attitude or behavior and asks about list experiments, item count, unmatched count, or veiled questioning, or has one returning a negative or implausible prevalence estimate. Deciding whether sensitivity bias exists at all goes to survey-design.
 argument-hint: "[describe your sensitive question or list experiment design]"

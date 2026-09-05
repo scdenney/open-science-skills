@@ -1,4 +1,5 @@
 ---
+disable-model-invocation: true
 name: advisor
 description: Consult Fable 5.1 as an independent second reviewer, always at max reasoning effort. The calling session is the main model — Opus 5 or Sonnet 5 — and Fable holds the advisor seat. Use before committing to an interpretation or a substantial piece of writing/analysis, when stuck (recurring errors, a non-converging approach, results that do not fit), when considering a change of approach, or when you believe a task is complete and want a check before finalizing. Fallback for when the native advisor tool is unavailable. Not a co-implementer — read-only advisory only, does not edit files.
 allowed-tools:

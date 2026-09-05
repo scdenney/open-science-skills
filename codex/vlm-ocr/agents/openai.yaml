@@ -2,3 +2,5 @@ interface:
   display_name: "VLM OCR"
   short_description: "Evaluate, run, and clean VLM-based OCR"
   default_prompt: "Use $vlm-ocr to evaluate, run, or clean OCR on this corpus."
+policy:
+  allow_implicit_invocation: false

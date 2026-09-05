@@ -1,4 +1,5 @@
 ---
+disable-model-invocation: true
 name: tables
 description: Designs and formats publication-quality tables for social-science manuscripts — column order, row grouping and panels, decimal precision, standard-error versus confidence-interval conventions, self-contained titles and notes, and code-generated output. Use when the user is building or revising a regression table, balance table, descriptive-statistics table, summary table, or robustness table, mentions stargazer, modelsummary, gt, huxtable, kable, pystout, esttab, or booktabs, or asks whether a result belongs in a table or a figure. Hand the finished table set to figure-table-audit for end-stage QA.
 argument-hint: "[describe the table you are building, the model or data, the claim it supports, and the target venue]"

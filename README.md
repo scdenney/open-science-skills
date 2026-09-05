@@ -6,7 +6,7 @@
 
 [![Claude Code](https://img.shields.io/badge/Claude_Code-plugin-D97757?logo=anthropic&logoColor=white)](https://code.claude.com/docs/en/skills)
 [![OpenAI Codex](https://img.shields.io/badge/OpenAI_Codex-library-111111?logo=openai&logoColor=white)](codex/README.md)
-[![version](https://img.shields.io/badge/version-2.26.0-blue)](https://github.com/scdenney/open-science-skills/releases)
+[![version](https://img.shields.io/badge/version-2.27.0-blue)](https://github.com/scdenney/open-science-skills/releases)
 [![license](https://img.shields.io/badge/license-CC%20BY--NC%204.0-lightgrey)](LICENSE)
 [![Claude skills](https://img.shields.io/badge/Claude_skills-38-D97757?logo=anthropic&logoColor=white)](#skills)
 [![Codex skills](https://img.shields.io/badge/Codex_skills-37-111111?logo=openai&logoColor=white)](#skills)
@@ -48,13 +48,15 @@ claude plugin install oss@open-science-skills
 claude plugin install oss@open-science-skills --scope project
 ```
 
-Then invoke a skill explicitly, for example `/oss:conjoint-design`, or just describe your task in plain language and let the matching skill load on its own.
+Then invoke a skill explicitly, for example `/oss:conjoint-design`, or just describe your task in plain language and let the matching skill load on its own — for the auto-triggering core; on-demand skills load only by name (see *On-demand skills* under [Skills](#skills)).
 
 On Codex there is no plugin. Install the skills library instead (see [Codex](#codex)).
 
 ---
 
 ## Skills
+
+**On-demand skills.** Eleven skills are the auto-triggering core — Claude loads them from context when the task matches: `citation-check`, `doc-to-markdown`, `fact-check`, `figures`, `literature-review`, `paper-review-lite`, `qualtrics-ops`, `referee-response`, `replication-package`, `research-repo`, `spawn`. The other 27 are **on-demand**: they cost nothing in a session until you invoke them by name (`/oss:conjoint-design`), and Claude does not suggest them unprompted. That keeps a research session's always-on cost near 3k tokens instead of 10k. The orchestration and deliberation skills (`orchestrate`, `advisor`, `model-committee`, `model-council-voting`, `diverge`, `journal-review`) are on-demand by design, since they start subagents or external models; the rest are specialists that fire rarely enough that a name is the better trigger. Every skill still resolves as a slash command and through its aliases. The Codex library applies the same rule with its own evidence (`allow_implicit_invocation: false`; see [`codex/README.md`](codex/README.md)).
 
 Skills are grouped by where they fall in a project. Unless the Platform column says otherwise, a skill runs on both Claude Code (`/oss:name`) and Codex (`$name`). Names retired in v2.25.0 (`fable-orchestrate`, `opus-orchestrate`, `diverge-codex`, `paper-review-lite-codex`, `survey-flow-audit`, `vlm-ocr-evaluation`, `vlm-ocr-pipeline`, `post-ocr-cleanup`, `fair-check`) still work as aliases that call the merged skill with its mode set.
 
@@ -158,7 +160,7 @@ Third-party skills this library recommends and builds on — credited, not claim
 
 Most skills load on their own. When your prompt matches a skill's description, Claude Code or Codex reads that skill into context and follows it, so you usually don't need to name anything. You can also invoke any skill explicitly, with `/oss:skill-name` in Claude Code or `$skill-name` in Codex.
 
-The orchestration and delegated-review skills (`orchestrate` and its lead aliases, `spawn`, `advisor`, `model-committee` and its chair variants, `diverge --codex`, and `paper-review-lite --codex`) run only when invoked explicitly, because they start subagents, full peer sessions, or an external model.
+The orchestration and delegated-review skills (`orchestrate` and its lead aliases, `spawn`, `advisor`, `model-committee` and its chair variants, `diverge --codex`, and `paper-review-lite --codex`) run only when invoked explicitly and are on-demand in the catalog (see *On-demand skills* above), because they start subagents, full peer sessions, or an external model.
 
 ---
 

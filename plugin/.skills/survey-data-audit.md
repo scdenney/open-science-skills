@@ -1,4 +1,5 @@
 ---
+disable-model-invocation: true
 name: survey-data-audit
 description: Audit fielded survey response data for registered elements, data quality, bot and AI-automation screening, and sample integrity. Emits an appendix-ready quality report.
 argument-hint: "[path to the response export, plus the pre-registration or data-quality SOP if one exists]"

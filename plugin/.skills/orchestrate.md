@@ -1,4 +1,5 @@
 ---
+disable-model-invocation: true
 name: orchestrate
 description: Run a multi-model orchestration workflow led by the session's own strongest-available model — Fable 5.1 or Claude Opus 5 — delegating mechanical work (boilerplate, tests, formatting, bulk edits) to a fast-worker subagent (Sonnet), wide or parallel reasoning to deep-reasoner subagents (Opus, pinned high), and high-stakes or fresh-perspective calls to Codex, a different-vendor GPT-6 Astra peer (`gpt-6-astra` by default). The lead is detected from the model line in the session's own context, and `--lead fable` or `--lead opus` overrides it. Under a Fable lead the hard reasoning and the judgment calls stay in the lead and only mechanical or genuinely wide work goes out; under an Opus lead the lead is itself the deep reasoner, delegating to fan out or stay context-lean, running multi-agent phases as parallel Agent fan-outs and upgrading to a dynamic Workflow where the session actually has that tool. Use to orchestrate, delegate, fan out, get a decorrelated second opinion from Codex, run a blind Opus and Codex cross-check and synthesize, or act as tech lead.
 allowed-tools:

@@ -1,4 +1,5 @@
 ---
+disable-model-invocation: true
 name: figure-table-audit
 description: End-stage QA on a finished figure and table set — an inventory with in-text callouts and producing scripts, cross-reference and numbering checks, text-to-evidence consistency between claims and plotted or tabulated values, captions and statistical notes that stand alone, accessibility and production quality, and SI and replication-package linkage. Marks anything requiring values read off an image as needing author verification rather than inventing them. Use when the user is preparing a submission and asks to check figures, tables, captions, cross-references, or table notes, or asks whether the numbers in the text match the exhibits. Design guidance during drafting lives in figures and tables.
 argument-hint: "[path to manuscript, figures, tables, SI, or compiled PDF; include target journal if known]"

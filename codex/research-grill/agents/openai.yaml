@@ -2,3 +2,5 @@ interface:
   display_name: "Research Grill"
   short_description: "Interview a researcher until no design decision is assumed"
   default_prompt: "Use $research-grill to interview me about this research idea, design, or draft."
+policy:
+  allow_implicit_invocation: false

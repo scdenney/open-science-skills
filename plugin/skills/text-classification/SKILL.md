@@ -1,4 +1,5 @@
 ---
+disable-model-invocation: true
 name: text-classification
 description: Designs and validates LLM-based text classification for research data — codebook construction, choice of learning regime, model selection and reproducibility, prompt construction, pilot validation against human coding with agreement statistics (kappa, F1), hybrid human-LLM workflows, and reporting model-coded data. Also carries a resumable batch pipeline with a rule-based baseline for coding large sets of repeated free-text values against a closed codebook — occupation, institution, and registry text, and open-text survey responses — with a frozen input set, incremental output, residual buckets, stratified hand validation, a regex or dictionary comparison, and a published lookup table. Use when the user asks to classify, code, or label text at scale. Discovering categories rather than applying them goes to topic-modeling.
 argument-hint: "[describe your text data and classification task]"

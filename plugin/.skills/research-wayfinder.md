@@ -1,4 +1,5 @@
 ---
+disable-model-invocation: true
 name: research-wayfinder
 description: Plan a research project as a decision map that outlives any single session — a destination (a defensible, pre-registerable design) reached by resolving decision tickets of four kinds, one at a time. Adapted for research from Matt Pocock's wayfinder. The map lives in the repo as markdown; each session claims one frontier ticket; literature sweeps run as parallel research tickets; the resolved map compiles into a pre-analysis plan. Use at the start of a project, when a design has more open decisions than one conversation can hold, or when planning keeps restarting from scratch each session. Not for executing analyses or writing the paper.
 argument-hint: "[describe the research idea or project to chart, or name the ticket to work]"
