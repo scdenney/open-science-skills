@@ -87,7 +87,7 @@ Run this checklist per peer, in order. Skipping the last two steps is how orphan
 4. **Merge from the main checkout and run the acceptance checks yourself.** You retain integration ownership, of correctness and of rigor.
 5. **Remove the checkout.** `herdr worktree remove --workspace <WS_ID>`. `--force` only when the agent is idle or done AND the checkout is clean, or the work is deliberately abandoned. A checkout that holds submodules cannot be removed by `git worktree remove`; delete the directory and run `git worktree prune` in the main checkout.
 6. **Delete the branch.** `git branch -d spawn/<slug>` from the main checkout, after the worktree is gone (the same branch cannot be checked out twice, and `-d` refuses an unmerged branch, which is the safety you want).
-7. **Confirm nothing is left**, in three places: `git worktree list` (main checkout only), `ls ~/.herdr/worktrees/<repo>/` (no directory for this slug; `rmdir` the parent if empty), and `herdr worktree list` plus `herdr workspace list` (close the source workspace with `herdr workspace close <id>`, positional, if the spawn opened one).
+7. **Confirm nothing is left**, in three places: `git worktree list` (main checkout only), `ls ~/.herdr/worktrees/<repo>/` (no directory for this slug; `rmdir` the parent if empty), and `herdr worktree list` plus `herdr workspace list` (close the source workspace with `herdr workspace close <id>`, positional, if the spawn opened one; since herdr 0.9 that close is refused while worktree workspaces of the repo are still open, and `--group` closes them all at once without removing their checkouts, so remove checkouts first and close the source last).
 
 With several peers, merge one at a time and rebase the next between merges: worktrees prevent write collisions, not merge collisions.
 
@@ -114,7 +114,7 @@ Under a restricted sandbox, both fallbacks are user-run too. The tmux socket and
 
 ## Gotchas
 
-- **`--cwd "$PWD"` on `worktree create` and `worktree open` is mandatory**: herdr resolves the repository from the calling workspace, not the shell directory. A fresh Claude peer's first state is `blocked` on Claude Code's workspace-trust dialog; clear it with `herdr agent send-keys "$slug" Down Enter`, not `agent prompt`. `wait` can settle on `done` while `explain` reports `idle`; judge from git.
+- **`--cwd "$PWD"` on `worktree create` and `worktree open` is mandatory**: herdr resolves the repository from the calling workspace, not the shell directory. A fresh Claude peer's first state is `blocked` on Claude Code's workspace-trust dialog; on herdr 0.9 `agent start` reports it as `agent_not_ready` (exit 1) while the peer is running. Clear it with `herdr agent send-keys "$slug" Down Enter`, not `agent prompt`, then poll `agent explain` for `idle` before prompting (the agent record lags the screen for a few seconds). `wait` can settle on `done` while `explain` reports `idle`; judge from git.
 
 - `agent prompt --wait` from an idle agent demands an observed state change within 5000 ms or returns `agent_prompt_stalled` — and it matches *states*, not turns. Use the two-step wait.
 - `agent wait` is **indefinite without `--timeout`**. Always bound it.
@@ -129,5 +129,5 @@ Under a restricted sandbox, both fallbacks are user-run too. The tmux socket and
 ## Notes
 
 - Heritage: generalizes Matt Pocock's `claude-handoff` (MIT, [mattpocock/skills](https://github.com/mattpocock/skills)). See [`RECOMMENDED.md`](../../RECOMMENDED.md). The Claude-side twin is `/oss:spawn`.
-- The herdr surface (worktree, tab, and agent commands; state detection) was verified 2026-08-06 on herdr 0.7.5. Codex-lead socket access depends on the sandbox, hence the preflight gate. When the gate fails, the user-runs-commands path always works.
+- The herdr surface (worktree, tab, and agent commands; state detection) was verified 2026-08-06 on herdr 0.7.5 and re-verified 2026-09-08 on herdr 0.9.0 (protocol 22; Codex hook v8). On 0.9 checkouts are named `spawn-<slug>` under `~/.herdr/worktrees/<repo>/`, and `herdr machine add` aggregates remote servers in the client while the `agent`/`worktree`/`workspace` CLI still target only the local server. Codex-lead socket access depends on the sandbox, hence the preflight gate. When the gate fails, the user-runs-commands path always works.
 - The library's other cross-model calls (`sol-advisor.sh`, `claude-peer.sh`, committee members) are deliberately isolated one-shots; a spawned peer is the opposite — persistent, steerable, resumable. Choose by whether the work needs a lifetime.
