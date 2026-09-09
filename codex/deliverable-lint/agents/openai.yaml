@@ -1,0 +1,6 @@
+interface:
+  display_name: "Deliverable Lint"
+  short_description: "Whole-deliverable editorial review, detection only"
+  default_prompt: "Use $deliverable-lint to review this deliverable before it ships."
+policy:
+  allow_implicit_invocation: false

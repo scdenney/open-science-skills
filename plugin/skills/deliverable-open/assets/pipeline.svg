@@ -1,0 +1,105 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 760" font-family="Helvetica, Arial, sans-serif" font-size="15">
+  <style>
+    .box{fill:#fff;stroke:#DCE2DD;stroke-width:2;rx:12}
+    .you{stroke:#eb6834}.night{stroke:#5C6862;stroke-dasharray:7 5}
+    .tag{font-size:12px;font-weight:700;fill:#fff}
+    .t{fill:#1F2823;font-weight:700;font-size:17px}.d{fill:#1F2823}.f{fill:#2a78d6;font-family:Menlo,monospace;font-size:12px}
+    .w{fill:#5C6862;font-size:11px;letter-spacing:1px}
+    .arrow{stroke:#2a78d6;stroke-width:2.5;fill:none;marker-end:url(#m)}
+    .layer{stroke-width:2;rx:12}.lt{font-weight:700;font-size:16px;fill:#1F2823}.ld{fill:#1F2823;font-size:13.5px}
+  </style>
+  <defs><marker id="m" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#2a78d6"/></marker></defs>
+  <rect width="1600" height="760" fill="#F7F4ED"/>
+  <text x="40" y="44" font-size="26" font-weight="700" fill="#1F2823">Deliverable pipeline</text>
+  <text x="40" y="68" fill="#5C6862">Orange = the author. White = the agent (Claude or Codex, same files, same scripts). Dashed = night shift, opt-in per deliverable. Skills are invoked by name.</text>
+
+  <!-- row 1 -->
+  <g transform="translate(40,100)">
+    <rect class="box you" width="340" height="150"/><rect x="12" y="-12" width="70" height="22" rx="11" fill="#eb6834"/><text class="tag" x="22" y="4">1 OPEN</text>
+    <text class="t" x="16" y="38">deliverable-open</text>
+    <text class="d" x="16" y="62">Interview from the kind profile</text><text class="d" x="16" y="82">(talk · paper · module · chapter · review)</text>
+    <text class="f" x="16" y="108">deliverable.yml · HANDOFF.md · planning/ · inbox/</text><text class="w" x="16" y="134">AUTHOR + AGENT · ONCE</text>
+  </g>
+  <path class="arrow" d="M384,175 L412,175"/>
+  <g transform="translate(420,100)">
+    <rect class="box you" width="340" height="150"/><rect x="12" y="-12" width="100" height="22" rx="11" fill="#eb6834"/><text class="tag" x="22" y="4">2 BRAINDUMP</text>
+    <text class="t" x="16" y="38">Dictate into inbox/</text>
+    <text class="d" x="16" y="62">Raw capture, never edited.</text>
+    <text class="f" x="16" y="108">inbox/2026-09-10-debrief.md</text><text class="w" x="16" y="134">AUTHOR · ANY TIME</text>
+  </g>
+  <path class="arrow" d="M764,175 L792,175"/>
+  <g transform="translate(800,100)">
+    <rect class="box" width="340" height="150"/><rect x="12" y="-12" width="80" height="22" rx="11" fill="#16305A"/><text class="tag" x="22" y="4">3 INTAKE</text>
+    <text class="t" x="16" y="38">deliverable-intake</text>
+    <text class="d" x="16" y="62">One diff against the wiki: decision, claim,</text><text class="d" x="16" y="82">question, task, dropped. Applied on a yes.</text>
+    <text class="f" x="16" y="108">planning/*.md · capture → .done.md</text><text class="w" x="16" y="134">AGENT · AUTHOR ASSENTS</text>
+  </g>
+  <path class="arrow" d="M1144,175 L1172,175"/>
+  <g transform="translate(1180,100)">
+    <rect class="box" width="380" height="150"/><rect x="12" y="-12" width="76" height="22" rx="11" fill="#16305A"/><text class="tag" x="22" y="4">4 DRAFT</text>
+    <text class="t" x="16" y="38">Write it</text>
+    <text class="d" x="16" y="62">Section by section; sci-edit, guarded.</text><text class="d" x="16" y="82">Never a whole-document rewrite.</text>
+    <text class="w" x="16" y="134">AUTHOR + AGENT · DAY</text>
+  </g>
+
+  <!-- row 2 -->
+  <g transform="translate(40,290)">
+    <rect class="box" width="340" height="160"/><rect x="12" y="-12" width="70" height="22" rx="11" fill="#16305A"/><text class="tag" x="22" y="4">5 GATE</text>
+    <text class="t" x="16" y="38">git commit → pre-commit</text>
+    <text class="d" x="16" y="62">No LLM. Citations resolve; numbers match</text><text class="d" x="16" y="82">the snapshot; facts, leaks, secrets.</text>
+    <text class="f" x="16" y="108">check_deliverable.py --fast</text><text class="w" x="16" y="140">AUTOMATIC · EVERY COMMIT · CI RERUNS</text>
+  </g>
+  <path class="arrow" d="M384,370 L412,370"/>
+  <g transform="translate(420,290)">
+    <rect class="box night" width="340" height="160"/><rect x="12" y="-12" width="66" height="22" rx="11" fill="#5C6862"/><text class="tag" x="22" y="4">6 LINT</text>
+    <text class="t" x="16" y="38">deliverable-lint</text>
+    <text class="d" x="16" y="62">Detection only. One finder per section,</text><text class="d" x="16" y="82">one global pass, adjudicated. P0/P1/P2,</text><text class="d" x="16" y="102">honest NOT CHECKED.</text>
+    <text class="f" x="16" y="126">checks/&lt;date&gt;/report.md</text><text class="w" x="16" y="148">AGENT · ON DEMAND OR NIGHT SHIFT</text>
+  </g>
+  <path class="arrow" d="M764,370 L792,370"/>
+  <g transform="translate(800,290)">
+    <rect class="box you" width="340" height="160"/><rect x="12" y="-12" width="78" height="22" rx="11" fill="#eb6834"/><text class="tag" x="22" y="4">7 REACT</text>
+    <text class="t" x="16" y="38">Read, dictate back</text>
+    <text class="d" x="16" y="62">Accepted → tasks. Rejected → wiki's</text><text class="d" x="16" y="82">08-open-questions.md, never raised again.</text>
+    <text class="w" x="16" y="140">AUTHOR · THEN STEP 3</text>
+  </g>
+  <path class="arrow" d="M1144,370 L1172,370"/>
+  <g transform="translate(1180,290)">
+    <rect class="box" width="380" height="160"/><rect x="12" y="-12" width="120" height="22" rx="11" fill="#16305A"/><text class="tag" x="22" y="4">8 SHIP + CLOSE</text>
+    <text class="t" x="16" y="38">ship · finished</text>
+    <text class="d" x="16" y="62">Ship: gate passed, lint fresh and complete,</text><text class="d" x="16" y="82">zero P0. Receipt with hashes.</text><text class="d" x="16" y="102">finished: stamped HANDOFF entry, one</text><text class="d" x="16" y="122">commons proposal.</text>
+    <text class="w" x="16" y="148">AUTHOR + AGENT · AT A MILESTONE</text>
+  </g>
+
+  <!-- layers -->
+  <g transform="translate(40,490)">
+    <rect class="layer" width="490" height="230" fill="#EEF1EE" stroke="#16305A"/>
+    <text class="lt" x="18" y="32">Research piece: one wiki</text>
+    <text class="ld" x="18" y="60">planning/ at the paper or module level.</text>
+    <text class="ld" x="18" y="82">00-README.md index · numbered files ·</text>
+    <text class="ld" x="18" y="104">08-open-questions.md.</text>
+    <text class="ld" x="18" y="134">The paper, its talks, its referee responses</text>
+    <text class="ld" x="18" y="156">all declare it as planning_dir.</text>
+    <text class="ld" x="18" y="186">Read at every step; written through intake.</text>
+  </g>
+  <g transform="translate(555,490)">
+    <rect class="layer" width="490" height="230" fill="#FBE3D8" stroke="#eb6834"/>
+    <text class="lt" x="18" y="32">Deliverable: one manifest, one kind</text>
+    <text class="ld" x="18" y="60">deliverable.yml: agent: routing, sources of truth,</text>
+    <text class="ld" x="18" y="82">sections, checks, knowledge_base, commons_tags,</text>
+    <text class="ld" x="18" y="104">night_shift.enabled: false.</text>
+    <text class="ld" x="18" y="134">Kind profile: interview, defaults, lint questions,</text>
+    <text class="ld" x="18" y="156">ship step, related skills.</text>
+    <text class="ld" x="18" y="186">Session start: deliverable_context.py, both vendors.</text>
+  </g>
+  <g transform="translate(1070,490)">
+    <rect class="layer" width="490" height="230" fill="#D9E7F8" stroke="#2a78d6"/>
+    <text class="lt" x="18" y="32">Commons: shared across repositories</text>
+    <text class="ld" x="18" y="60">Shared sources + bib · one-fact cards with</text>
+    <text class="ld" x="18" y="82">evidence · threads where agents converse ·</text>
+    <text class="ld" x="18" y="104">JSON-lines INDEX.md.</text>
+    <text class="ld" x="18" y="134">Only index lines matching the manifest's tags</text>
+    <text class="ld" x="18" y="156">enter a session (≤ 20).</text>
+    <text class="ld" x="18" y="186">Written only at closure, with the author's yes.</text>
+  </g>
+</svg>

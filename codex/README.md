@@ -4,7 +4,7 @@
 
 # Codex skills
 
-This directory contains 37 Codex-native Open Science Skills. They mirror the Claude Code library with two intentional differences:
+This directory contains 40 Codex-native Open Science Skills. They mirror the Claude Code library with two intentional differences:
 
 - `presubmit` is omitted.
 - [`orchestrate`](orchestrate/SKILL.md) is the Codex-native version of the plugin's lead-detecting `orchestrate`. It runs from an active `gpt-6-astra` or `gpt-5.6-sol` session at the selected effort. Astra keeps compact hard reasoning in the lead; Sol escalates unusually difficult units to Astra. Both modes route bounded work to Terra and reserve Luna for tightly specified mechanical work. It was named `46-orchestrate` before v2.25.0.
@@ -45,6 +45,7 @@ Skills marked **†** are on demand: invoke them directly as `$skill-name`. Unma
 |---|---|
 | Project setup | [`research-repo`](research-repo/SKILL.md) |
 | Orchestration | [`orchestrate`](orchestrate/SKILL.md), [`advisor`](advisor/SKILL.md), [`spawn`](spawn/SKILL.md) |
+| Deliverable pipeline | [`deliverable-open`](deliverable-open/SKILL.md) **†**, [`deliverable-intake`](deliverable-intake/SKILL.md), [`deliverable-lint`](deliverable-lint/SKILL.md) |
 | Ideation | [`diverge`](diverge/SKILL.md), [`research-grill`](research-grill/SKILL.md) **†** |
 | Research design | [`conjoint-cleaning`](conjoint-cleaning/SKILL.md) **†**, [`conjoint-design`](conjoint-design/SKILL.md) **†**, [`conjoint-diagnostics`](conjoint-diagnostics/SKILL.md), [`cross-national-design`](cross-national-design/SKILL.md) **†**, [`list-experiment`](list-experiment/SKILL.md) **†**, [`qualtrics-ops`](qualtrics-ops/SKILL.md) **†**, [`research-wayfinder`](research-wayfinder/SKILL.md) **†**, [`survey-data-audit`](survey-data-audit/SKILL.md) **†**, [`survey-design`](survey-design/SKILL.md) |
 | Analysis | [`llm-calibration-logprobs`](llm-calibration-logprobs/SKILL.md) **†**, [`model-committee`](model-committee/SKILL.md), [`model-council-voting`](model-council-voting/SKILL.md) **†**, [`text-classification`](text-classification/SKILL.md), [`topic-modeling`](topic-modeling/SKILL.md) **†** |

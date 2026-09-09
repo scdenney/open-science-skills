@@ -1,0 +1,6 @@
+interface:
+  display_name: "Deliverable Open"
+  short_description: "Open a talk, module, paper, or chapter as a pipeline unit"
+  default_prompt: "Use $deliverable-open to set up this deliverable for the pipeline."
+policy:
+  allow_implicit_invocation: false

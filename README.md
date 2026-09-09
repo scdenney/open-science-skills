@@ -6,15 +6,15 @@
 
 [![Claude Code](https://img.shields.io/badge/Claude_Code-plugin-D97757?logo=anthropic&logoColor=white)](https://code.claude.com/docs/en/skills)
 [![OpenAI Codex](https://img.shields.io/badge/OpenAI_Codex-library-111111?logo=openai&logoColor=white)](codex/README.md)
-[![version](https://img.shields.io/badge/version-2.28.0-blue)](https://github.com/scdenney/open-science-skills/releases)
+[![version](https://img.shields.io/badge/version-2.29.0-blue)](https://github.com/scdenney/open-science-skills/releases)
 [![license](https://img.shields.io/badge/license-CC%20BY--NC%204.0-lightgrey)](LICENSE)
-[![Claude skills](https://img.shields.io/badge/Claude_skills-38-D97757?logo=anthropic&logoColor=white)](#skills)
-[![Codex skills](https://img.shields.io/badge/Codex_skills-37-111111?logo=openai&logoColor=white)](#skills)
+[![Claude skills](https://img.shields.io/badge/Claude_skills-41-D97757?logo=anthropic&logoColor=white)](#skills)
+[![Codex skills](https://img.shields.io/badge/Codex_skills-40-111111?logo=openai&logoColor=white)](#skills)
 [![updated](https://img.shields.io/badge/updated-September%202026-green)](https://github.com/scdenney/open-science-skills/commits/main)
 [![sources](https://img.shields.io/badge/sources-150%2B-purple)](SOURCES.md)
 [![PRs welcome](https://img.shields.io/badge/PRs-welcome-brightgreen)](#contributing)
 
-Open Science Skills is a library of 38 agentic skills for Claude Code, with a parallel 37-skill library for OpenAI Codex, written for computational social scientists and digital humanists. Each skill is meant to work the way the field expects. Identify the data-generating process before proposing an estimator, and design experiments and instruments to a standard. Drafts are held to established reporting norms.
+Open Science Skills is a library of 41 agentic skills for Claude Code, with a parallel 40-skill library for OpenAI Codex, written for computational social scientists and digital humanists. Each skill is meant to work the way the field expects. Identify the data-generating process before proposing an estimator, and design experiments and instruments to a standard. Drafts are held to established reporting norms.
 
 The library follows the research lifecycle. It covers survey design, list experiments, topic modeling, LLM text classification, VLM-based OCR pipelines, manuscript QA, multi-model orchestration, and transparent reporting under APSA, JARS, DA-RT, TOP, and FAIR expectations. Every skill is grounded in published methods sources and based on best practices for writing skills. See [SOURCES.md](SOURCES.md) for the bibliography of 150+ works consulted.
 
@@ -22,7 +22,7 @@ This is the toolkit I use in my own research, and it grows as I add sources and 
 
 | Platform | Skills | Invoke |
 |---|---|---|
-| [Claude Code](https://code.claude.com/docs/en/skills) | 38, as the [`oss` plugin](plugin/skills) | `/oss:skill-name` |
+| [Claude Code](https://code.claude.com/docs/en/skills) | 41, as the [`oss` plugin](plugin/skills) | `/oss:skill-name` |
 | [OpenAI Codex](https://developers.openai.com/codex/skills) | 37, as the [`codex/` library](codex/README.md) | `$skill-name` |
 
 The two libraries differ only in invocation and tooling. The Codex side omits `presubmit`; its `orchestrate` is the Codex-native version led by the active GPT-6 Astra or GPT-5.6 Sol session, with mode-aware routing between them. See [`codex/README.md`](codex/README.md).
@@ -56,7 +56,7 @@ On Codex there is no plugin. Install the skills library instead (see [Codex](#co
 
 ## Skills
 
-**On-demand skills.** Eleven skills are the auto-triggering core — Claude loads them from context when the task matches: `citation-check`, `doc-to-markdown`, `fact-check`, `figures`, `literature-review`, `paper-review-lite`, `qualtrics-ops`, `referee-response`, `replication-package`, `research-repo`, `spawn`. The other 27 are **on-demand**: they cost nothing in a session until you invoke them by name (`/oss:conjoint-design`), and Claude does not suggest them unprompted. That keeps a research session's always-on cost near 3k tokens instead of 10k. The orchestration and deliberation skills (`orchestrate`, `advisor`, `model-committee`, `model-council-voting`, `diverge`, `journal-review`) are on-demand by design, since they start subagents or external models; the rest are specialists that fire rarely enough that a name is the better trigger. Every skill still resolves as a slash command and through its aliases. The Codex library applies the same rule with its own evidence (`allow_implicit_invocation: false`; see [`codex/README.md`](codex/README.md)).
+**On-demand skills.** Eleven skills are the auto-triggering core — Claude loads them from context when the task matches: `citation-check`, `doc-to-markdown`, `fact-check`, `figures`, `literature-review`, `paper-review-lite`, `qualtrics-ops`, `referee-response`, `replication-package`, `research-repo`, `spawn`. The other 30 are **on-demand**: they cost nothing in a session until you invoke them by name (`/oss:conjoint-design`), and Claude does not suggest them unprompted. That keeps a research session's always-on cost near 3k tokens instead of 10k. The orchestration and deliberation skills (`orchestrate`, `advisor`, `model-committee`, `model-council-voting`, `diverge`, `journal-review`) are on-demand by design, since they start subagents or external models; the rest are specialists that fire rarely enough that a name is the better trigger. Every skill still resolves as a slash command and through its aliases. The Codex library applies the same rule with its own evidence (`allow_implicit_invocation: false`; see [`codex/README.md`](codex/README.md)).
 
 Skills are grouped by where they fall in a project. Unless the Platform column says otherwise, a skill runs on both Claude Code (`/oss:name`) and Codex (`$name`). Names retired in v2.25.0 (`fable-orchestrate`, `opus-orchestrate`, `diverge-codex`, `paper-review-lite-codex`, `survey-flow-audit`, `vlm-ocr-evaluation`, `vlm-ocr-pipeline`, `post-ocr-cleanup`, `fair-check`) still work as aliases that call the merged skill with its mode set.
 
@@ -73,6 +73,16 @@ Skills are grouped by where they fall in a project. Unless the Platform column s
 | [orchestrate](plugin/skills/orchestrate/SKILL.md) | Both | `/oss:orchestrate` · `/oss:fable-orchestrate` · `/oss:opus-orchestrate` · `$orchestrate` | Run a multi-model workflow. Claude reads the session model and takes the matching Fable 5.1 or Opus 5 lead role. Codex likewise detects the active GPT-6 Astra or GPT-5.6 Sol session: Astra keeps compact hard reasoning in-lead, while Sol escalates unusually difficult units to Astra. Both Codex modes route bounded and mechanical work to lower GPT-5.6 tiers and can use a Claude peer. |
 | [spawn](plugin/skills/spawn/SKILL.md) | Both | `/oss:spawn` | Spawn full peer sessions in new terminal panes — real sessions, not subagents — each in its own git worktree on a directed task with a contract brief. Detects herdr, tmux, or a plain terminal and takes the strongest path; the lead monitors without babysitting and merges each branch back. |
 | [advisor](plugin/skills/advisor/SKILL.md) | Both | `/oss:advisor` / `$advisor` | Escalate one decision point from a working model to an independent second reviewer before committing to an interpretation or calling a task done. Your session is the main seat, on Opus 5 or on Sonnet 5 for cheaper sustained work; the advisor seat is Fable 5.1, pinned to max reasoning effort. Not for a Fable session — a second Fable is not a check; a Fable lead goes cross-vendor through `orchestrate`'s Astra peer or the committee instead. The [Codex counterpart](codex/advisor/SKILL.md) escalates to Astra/xhigh the same way. |
+
+### Deliverable pipeline
+
+The architecture behind these three skills — one wiki per piece of research, one manifest per deliverable, one profile per kind; a deterministic gate before any model review; detection parallel, revision serial; both vendors on the same files — is written up with a diagram in [`docs/deliverable-pipeline.md`](docs/deliverable-pipeline.md).
+
+| Skill | Platform | Command | What it does |
+|---|---|---|---|
+| [deliverable-open](plugin/skills/deliverable-open/SKILL.md) | Claude | `/oss:deliverable-open` | Open a talk, module, paper, chapter, or review as a pipeline unit: a rounds interview writes `deliverable.yml` (audience, deadline, claim, done-test, sources of truth, sections, checks), an append-only `HANDOFF.md`, a numbered `planning/` wiki, an `inbox/` for dictated braindumps; a talk gets the house deck template. |
+| [deliverable-intake](plugin/skills/deliverable-intake/SKILL.md) | Claude | `/oss:deliverable-intake` | Dictated or typed captures into a unified diff against the planning wiki, every statement classified (decision, evidence claim, question, task, dropped) and traced; uncertain names and citations stay UNRESOLVED; decisions apply only on assent. |
+| [deliverable-lint](plugin/skills/deliverable-lint/SKILL.md) | Claude | `/oss:deliverable-lint` | Whole-deliverable editorial review, detection only: the deterministic gate first (build, citations, numbers, facts, leaks), then one cheap finder per section and one strong-model global pass, adjudicated into anchored P0/P1/P2 findings with honest NOT-CHECKED coverage under a dollar budget. The night shift runs it headless. |
 
 ### Ideation
 
@@ -168,7 +178,7 @@ The orchestration and delegated-review skills (`orchestrate` and its lead aliase
 
 ### Claude Code
 
-The recommended install is the plugin, shown in [Quick start](#quick-start). It registers the marketplace and installs all 38 skills, their slash commands, and the alias commands for retired names. The command prefix is `oss:`, for open science skills. The marketplace and the repository are both named `open-science-skills`.
+The recommended install is the plugin, shown in [Quick start](#quick-start). It registers the marketplace and installs all 41 skills, their slash commands, and the alias commands for retired names. The command prefix is `oss:`, for open science skills. The marketplace and the repository are both named `open-science-skills`.
 
 To try the plugin for one session without installing:
 
@@ -230,7 +240,7 @@ Manual copy gives auto-trigger only. Slash commands require the plugin.
 
 ### Codex
 
-Codex discovers skills under `.agents/skills` (repository) and `~/.agents/skills` (user-wide). From this repository's root, preview and install all 37 Codex skills without replacing existing paths:
+Codex discovers skills under `.agents/skills` (repository) and `~/.agents/skills` (user-wide). From this repository's root, preview and install all 40 Codex skills without replacing existing paths:
 
 ```bash
 python3 plugin/scripts/install-codex.py --all --dry-run

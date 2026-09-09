@@ -1,0 +1,6 @@
+interface:
+  display_name: "Deliverable Intake"
+  short_description: "Promote inbox captures into the planning wiki, with assent"
+  default_prompt: "Use $deliverable-intake to process the captures in inbox/."
+policy:
+  allow_implicit_invocation: false
