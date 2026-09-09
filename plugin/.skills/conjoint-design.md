@@ -1,8 +1,8 @@
 ---
 disable-model-invocation: true
 name: conjoint-design
-description: Designs conjoint and factorial-vignette experiments end to end — attribute architecture and randomization restrictions, effective-N power from the closed-form AMCE standard error, treatment realism, estimand choice among AMCE, marginal means, and AMIE, design variants such as forced choice versus rating, PAP tiers for conjoint flexibility, and the regression models and R packages that implement each. Use when the user is planning a conjoint, drafting or critiquing an attribute table, asking how many respondents or tasks are needed, asking whether to report AMCEs or marginal means, or asking how to test interactions. Reviewing an existing design goes to conjoint-diagnostics, cleaning the export to conjoint-cleaning.
-argument-hint: "[describe your design question or paste attribute table]"
+description: Designs conjoint and factorial-vignette experiments end to end. Covers attribute architecture and randomization restrictions, effective-N power from closed-form AMCE standard errors, treatment realism, AMCE, marginal-mean, and AMIE estimands, forced-choice and rating designs, PAP tiers for conjoint flexibility, and the regression models and R packages for each. Use when the user is planning a conjoint, drafting or critiquing an attribute table, asking how many respondents or tasks are needed, whether to report AMCEs or marginal means, or how to test interactions. Existing-design review goes to conjoint-diagnostics, export cleaning to conjoint-cleaning.
+argument-hint: '[describe your design question or paste attribute table]'
 ---
 
 # Conjoint Design Expert

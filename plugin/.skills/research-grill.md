@@ -1,19 +1,19 @@
 ---
 disable-model-invocation: true
 name: research-grill
-description: Interviews a researcher, in rounds, until a research idea, design, or draft has no silently assumed decision left — every question numbered, each with a plain-language "why this matters" and a recommended answer, facts fetched by the assistant rather than asked, and every settled decision written to a file. Three stages, idea (a topic or hunch → a falsifiable question and a contribution claim), design (a question → estimand, identification, sample and power, measurement, pre-registration, analysis plan, venue), and defend (a finished design or draft → the objections a reviewer would raise, before the reviewer does). Use when the user says "grill me", "grill this", "stress-test my idea/design/plan", "interview me about this project", "poke holes in this", "what am I assuming", or brings a research idea that is not yet a design. Suitable for BA, MA, and PhD students as well as grant designs; it never answers the research question for the researcher. Adapted for research from Matt Pocock's grill-me. For a software or process plan rather than research, run it with `--plan`.
-argument-hint: "[describe the idea, design, or draft to grill; optionally: idea | design | defend | --plan]"
+description: Interviews a researcher in rounds until a research idea, design, or draft has no unexamined decision. Numbers every question, explains "why this matters", recommends an answer, fetches facts rather than asking for them, and records settled decisions. Three stages cover idea, a topic or hunch to a falsifiable question and contribution claim, design, a question to estimand, identification, sample and power, measurement, pre-registration, analysis plan, and venue, and defend, reviewer objections to a finished design or draft. Use when the user says "grill me", "grill this", "stress-test my idea/design/plan", "interview me about this project", "poke holes in this", "what am I assuming", or brings an idea that is not yet a design. Use `--plan` for software or process plans.
+argument-hint: '[describe the idea, design, or draft to grill; optionally: idea | design | defend | --plan]'
 allowed-tools:
-  - Read
-  - Glob
-  - Grep
-  - Bash
-  - Write
-  - Edit
-  - Agent
-  - WebSearch
-  - WebFetch
-  - AskUserQuestion
+- Read
+- Glob
+- Grep
+- Bash
+- Write
+- Edit
+- Agent
+- WebSearch
+- WebFetch
+- AskUserQuestion
 ---
 
 # Research Grill

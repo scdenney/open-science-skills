@@ -1,8 +1,8 @@
 ---
 disable-model-invocation: true
 name: model-council-voting
-description: Runs several language models as independent coders on the same labeling or discovery task and reads their disagreement as data — panel assembly for model diversity, keeping votes independent, consensus rules, agreement statistics (Cohen's and Fleiss kappa, Krippendorff's alpha), the correlated-errors caveat that stops agreement being mistaken for validity, human validation beyond the panel, and reporting. Use when the user asks about a council, panel, ensemble, or jury of models, asks how to combine several models' labels, or asks what kappa or alpha to report for model coders. Single-model codebook and validation work goes to text-classification, per-item confidence to llm-calibration-logprobs.
-argument-hint: "[describe your coding/discovery task, candidate models, and what agreement you want to measure]"
+description: Runs several language models as independent coders on one labeling or discovery task and treats disagreement as data. Covers diverse panel assembly, independent voting, consensus rules, Cohen’s and Fleiss kappa, Krippendorff’s alpha, correlated-error limits on validity claims, human validation, and reporting. Use when the user asks about a council, panel, ensemble, or jury of models, how to combine model labels, or what kappa or alpha to report for model coders. Single-model codebook and validation work goes to text-classification, per-item confidence to llm-calibration-logprobs.
+argument-hint: '[describe your coding/discovery task, candidate models, and what agreement you want to measure]'
 ---
 
 # Model Council Voting: Panels of Language Models as Independent Coders

@@ -1,7 +1,7 @@
 ---
 name: citation-check
-description: Audits the citation layer of a manuscript — in-text and reference-list parity, fabricated or nonexistent sources, DOIs that resolve to a different work, style and completeness against APA 7 or a named journal style, and whether each cited work actually supports the claim attached to it. Verifies against Crossref, OpenAlex, DataCite, and Semantic Scholar, drives LaTeX audits off the keys actually cited, and marks anything it cannot check as NOT CHECKED rather than guessing. Use when the user asks to check citations or references, suspects an AI-invented source, wants a .bib checked against the text, or asks whether the DOIs are right. Figures and tables go to figure-table-audit.
-argument-hint: "[path to manuscript and bibliography, or paste citation list; include target style/journal if known]"
+description: Audits a manuscript’s citation layer, including in-text and reference-list parity, fabricated or nonexistent sources, DOIs resolving to another work, APA 7 or named-journal style, completeness, and whether each source supports its attached claim. Verifies against Crossref, OpenAlex, DataCite, and Semantic Scholar, audits LaTeX from cited keys, and marks unchecked items as NOT CHECKED. Use when the user asks to check citations or references, suspects an AI-invented source, wants a .bib checked against the text, or asks whether DOIs are right. Figures and tables go to figure-table-audit.
+argument-hint: '[path to manuscript and bibliography, or paste citation list; include target style/journal if known]'
 ---
 
 # Citation Integrity Auditor

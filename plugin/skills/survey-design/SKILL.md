@@ -1,8 +1,8 @@
 ---
 disable-model-invocation: true
 name: survey-design
-description: Designs survey instruments — item-specific question wording that avoids acquiescence, double-barreling, and leading language, scale construction (points, labeling, polarity, feeling thermometers, index reliability with Cronbach's alpha and McDonald's omega), flow and ordering with treatment placement and buffer items, pretesting through cognitive interviews and soft launches, respondent burden with attention checks and speeding rules, sensitive questions and social-desirability bias, and treatment delivery with comprehension gates. Use when the user is writing or revising survey questions, choosing a scale, ordering blocks, planning a pilot, or worried respondents will not answer honestly. Indirect measurement goes to list-experiment, multi-country instruments to cross-national-design, and operating a live survey to qualtrics-ops.
-argument-hint: "[describe your survey question or design challenge]"
+description: Designs survey instruments. Covers item-specific wording that avoids acquiescence, double-barreling, and leading language, scale construction including points, labels, polarity, feeling thermometers, Cronbach’s alpha, and McDonald’s omega, flow and ordering, treatment placement, buffer items, cognitive interviews, soft launches, burden, attention checks, speeding rules, sensitive questions, social-desirability bias, and comprehension gates. Use when the user writes or revises survey questions, chooses a scale, orders blocks, plans a pilot, or worries respondents will not answer honestly. Indirect measurement goes to list-experiment, multi-country instruments to cross-national-design, and live-survey operations to qualtrics-ops.
+argument-hint: '[describe your survey question or design challenge]'
 ---
 
 # Survey Instrument Designer

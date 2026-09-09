@@ -1,7 +1,7 @@
 ---
 name: literature-review
-description: Builds or audits a literature review — evidence map, closest prior work, source clusters, gap verdict, and a synthesis plan that feeds the introduction. Use when the user asks whether a contribution is novel, who else has studied a question, what the literature actually establishes, how to organize or restructure a review section, or wants a reading list, Zotero export, or pile of papers turned into a review. Produces a systematic-review protocol scaffold and hands off to registration (PROSPERO, OSF) and screening tools when the user asks for PRISMA or a meta-analysis.
-argument-hint: "[topic, draft literature review, paper list, Zotero export, or claimed contribution]"
+description: Builds or audits a literature review. Produces an evidence map, closest prior work, source clusters, a gap verdict, and a synthesis plan for the introduction. Use when the user asks whether a contribution is novel, who has studied a question, what the literature establishes, how to organize or restructure a review, or wants a reading list, Zotero export, or paper pile turned into a review. Produces a systematic-review protocol scaffold and directs PRISMA or meta-analysis requests to registration, PROSPERO or OSF, and screening tools.
+argument-hint: '[topic, draft literature review, paper list, Zotero export, or claimed contribution]'
 ---
 
 # Literature Review Evidence Mapper

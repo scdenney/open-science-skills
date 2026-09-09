@@ -1,16 +1,16 @@
 ---
 disable-model-invocation: true
 name: deliverable-intake
-description: Turn raw captures - dictated braindumps in a deliverable's inbox/, or recent entries from the macwhspr dictation log - into proposed changes to the deliverable's planning wiki, shown as a unified diff the author accepts or rejects. Every line of a capture is classified as a decision, an evidence claim, a question, a task, or dropped with a reason, and traced back to the capture; uncertain names and citations stay marked UNRESOLVED rather than guessed; a decision is applied only on explicit assent. Use when the user says "intake", "absorb my notes", "process the inbox", "I dictated something", or after a talk, meeting, or reading session produced notes. Never edits the deliverable's source files, only planning/ and the open-questions list.
-argument-hint: "[inbox file or --all; optionally --from-log N to import the last N dictation-log entries]"
+description: Turns raw captures, dictated braindumps in a deliverable’s inbox/, or recent macwhspr dictation-log entries into proposed planning-wiki changes, shown as a unified diff for author acceptance or rejection. Classifies every capture line as a decision, evidence claim, question, task, or dropped item with a reason, and traces it to its source. Uncertain names and citations remain UNRESOLVED. Applies decisions only with explicit assent. Use when the user says "intake", "absorb my notes", "process the inbox", "I dictated something", or after notes from a talk, meeting, or reading session. Never edits source files, only planning/ and open questions.
+argument-hint: '[inbox file or --all; optionally --from-log N to import the last N dictation-log entries]'
 allowed-tools:
-  - Read
-  - Glob
-  - Grep
-  - Bash
-  - Write
-  - Edit
-  - AskUserQuestion
+- Read
+- Glob
+- Grep
+- Bash
+- Write
+- Edit
+- AskUserQuestion
 ---
 
 # Deliverable intake

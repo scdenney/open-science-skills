@@ -1,8 +1,8 @@
 ---
 disable-model-invocation: true
 name: hypothesis-building
-description: Turns a theory into falsifiable, pre-registerable hypotheses — DAGs and backdoor closure, how the design resolves the FPCI, SATE versus PATE, counterfactual and directional framing, a named theoretical and empirical estimand, a justified SESOI, the choice among NHST, interval, equivalence (TOST), and minimum-effect tests, scope conditions, and primary, secondary, and exploratory tiers across multi-experiment designs. Use when the user has a research question or theory and asks to turn it into hypotheses, asks whether a prediction is falsifiable or testable, asks what the estimand is, or asks how to predict a null. Framing the paper around it goes to narrative-building, the plan to pre-registration-writing.
-argument-hint: "[describe your theory or research question]"
+description: Turns theory into falsifiable, pre-registerable hypotheses. Covers DAGs and backdoor closure, design resolution of the FPCI, SATE versus PATE, counterfactual and directional framing, named theoretical and empirical estimands, justified SESOIs, NHST, interval, equivalence (TOST), and minimum-effect tests, scope conditions, and primary, secondary, and exploratory tiers across multi-experiment designs. Use when the user asks to turn a research question or theory into hypotheses, asks whether a prediction is falsifiable or testable, what the estimand is, or how to predict a null. Framing goes to narrative-building, planning to pre-registration-writing.
+argument-hint: '[describe your theory or research question]'
 ---
 
 # Causal Hypothesis Architect

@@ -1,14 +1,14 @@
 ---
 name: referee-response
-description: Organizes and formats an author's response to peer review — extracts every distinct point from the referee reports and the editor's letter, tags severity and type, maps the dependencies so the revision runs in the right order, flags which points the author may want to push back on, and builds the response-to-reviewers letter as a numbered comment → response → location table with the substantive answers left for the author to write. It formats and checks the response; it never writes the scientific content of an answer. Use when the user has referee or reviewer reports, a revise-and-resubmit decision, or an editor's letter and says "respond to reviewers", "plan the revision", "map the referee comments", "draft the response letter", or "check I addressed everything". The reviewer-side twin is journal-review; prose polish afterwards goes to sci-edit.
-argument-hint: "[paths to the referee reports and editor letter, plus the manuscript; optionally: plan | letter | check]"
+description: Organizes and formats an author’s response to peer review. Extracts every distinct point from referee reports and the editor’s letter, tags severity and type, maps dependencies to sequence revisions, flags potential pushback, and builds a numbered comment → response → location table with substantive responses left to the author. It formats and checks the response without writing scientific content. Use when the user has reports, a revise-and-resubmit decision, or an editor’s letter and says "respond to reviewers", "plan the revision", "map the referee comments", "draft the response letter", or "check I addressed everything". The reviewer-side twin is journal-review. Prose polish goes to sci-edit.
+argument-hint: '[paths to the referee reports and editor letter, plus the manuscript; optionally: plan | letter | check]'
 allowed-tools:
-  - Read
-  - Glob
-  - Grep
-  - Write
-  - Edit
-  - AskUserQuestion
+- Read
+- Glob
+- Grep
+- Write
+- Edit
+- AskUserQuestion
 ---
 
 # Referee Response

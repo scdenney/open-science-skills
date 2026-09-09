@@ -1,8 +1,8 @@
 ---
 disable-model-invocation: true
 name: paper-tex
-description: Typeset a working paper or journal submission in house-style LaTeX from any draft — Markdown, Word (.docx), TeX, ODT, RTF, or HTML. Convert with pandoc, wrap in an EB Garamond template, build the PDF with latexmk, and prepare for a specific journal (spacing, page limit, anonymization, disclosures, citation style). Use for "format/typeset/convert my paper to LaTeX", "make a working paper", "prepare this for submission to <journal>".
-argument-hint: "[path to the draft, and the target journal (or 'working paper')]"
+description: Typesets a working paper or journal submission in house-style LaTeX from Markdown, Word (.docx), TeX, ODT, RTF, or HTML. Converts with pandoc, wraps the document in an EB Garamond template, builds the PDF with latexmk, and prepares journal-specific spacing, page limits, anonymization, disclosures, and citation style. Use for "format/typeset/convert my paper to LaTeX", "make a working paper", or "prepare this for submission to <journal>".
+argument-hint: '[path to the draft, and the target journal (or ''working paper'')]'
 ---
 
 # Paper formatter (LaTeX)

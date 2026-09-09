@@ -1,6 +1,6 @@
 ---
 name: deliverable-open
-description: Open a deliverable (a talk, a course module, a paper, a book chapter, a referee report) as a unit of AI-assisted work that outlives any one session. Interviews the author in rounds until the manifest is written, then scaffolds the house files - deliverable.yml (audience, deadline, claim, done-test, sources of truth, sections, checks, night-shift opt-in), an append-only HANDOFF.md, a numbered planning/ wiki with an index and an open-questions file, an inbox/ for dictated braindumps, and a gitignored checks/ dir - and for a talk copies the house deck template. Use when the user says "open a deliverable", "set up this talk/paper/module for the pipeline", "make a manifest", or starts a piece of work with a deadline and an audience that will take more than one session. Not for one-off tasks.
+description: Opens a deliverable, such as a talk, course module, paper, book chapter, or referee report, for AI-assisted work across sessions. Interviews the author until the manifest is written, then scaffolds deliverable.yml, append-only HANDOFF.md, a numbered planning/ wiki with index and open questions, inbox/ for dictated braindumps, gitignored checks/, and the house deck template for talks. Use when the user says "open a deliverable", "set up this talk/paper/module for the pipeline", "make a manifest", or starts deadline-driven work that spans sessions. Not for one-off tasks.
 argument-hint: '[path to the deliverable directory; optionally --kind talk|course|paper|chapter|review]'
 ---
 

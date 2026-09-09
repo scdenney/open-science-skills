@@ -1,18 +1,18 @@
 ---
 name: paper-review-lite
-description: Pre-submission audit of a manuscript — argument, numerical consistency, references and DOIs, writing, figures, CONSORT flow, pre-registration, replication archive. Use before submitting a paper, or whenever a draft needs an adversarial, quote-grounded review with a journal-readiness checklist. Add `--codex` to run the same specification independently on Claude and on Codex (GPT-6 Astra) and cross-check the two sets of findings.
-argument-hint: "[path to paper or describe manuscript to review] [--codex]"
-context: fork  # Claude Code: run skill in a forked subagent context (isolated from conversation history). See https://code.claude.com/docs/en/skills#frontmatter-reference
+description: Provides a pre-submission manuscript audit covering argument, numerical consistency, references and DOIs, writing, figures, CONSORT flow, pre-registration, and the replication archive. Use before paper submission or when a draft needs an adversarial, quote-grounded review with a journal-readiness checklist. Add `--codex` to run the specification independently on Claude and Codex, GPT-6 Astra, and cross-check findings.
+argument-hint: '[path to paper or describe manuscript to review] [--codex]'
+context: fork
 allowed-tools:
-  - Read
-  - Write
-  - Edit
-  - Bash
-  - Glob
-  - Grep
-  - WebSearch
-  - WebFetch
-  - Agent
+- Read
+- Write
+- Edit
+- Bash
+- Glob
+- Grep
+- WebSearch
+- WebFetch
+- Agent
 ---
 
 # Paper Pre-Submission Review (Lite)

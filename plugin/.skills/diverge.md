@@ -1,14 +1,14 @@
 ---
 disable-model-invocation: true
 name: diverge
-description: Generate 3-5 conceptually distinct approaches labeled by creativity dimension (Novel, Surprising, Diverse, Conventional) and hold for selection instead of implementing the first idea; the --codex mode runs the same brainstorm on GPT-6 Astra via codex exec, then has Codex implement the selected approach. Use when a task has more than one non-obvious solution — creative, architectural, or analytical work — and before committing to an approach; use --codex when a second model family should widen the range of approaches.
-argument-hint: "[describe the task, problem, or design question to diverge on] [--codex]"
+description: Generate 3-5 conceptually distinct approaches labeled by creativity dimension, Novel, Surprising, Diverse, Conventional, and hold for selection before implementation. The --codex mode runs the brainstorm on GPT-6 Astra via codex exec, then has Codex implement the selected approach. Use when a task has more than one non-obvious solution in creative, architectural, or analytical work, and before committing to an approach. Use --codex when another model family should widen the range.
+argument-hint: '[describe the task, problem, or design question to diverge on] [--codex]'
 allowed-tools:
-  - Bash
-  - Read
-  - Write
-  - Edit
-  - AskUserQuestion
+- Bash
+- Read
+- Write
+- Edit
+- AskUserQuestion
 ---
 
 # Diverge

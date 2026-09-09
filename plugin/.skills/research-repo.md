@@ -1,12 +1,12 @@
 ---
 name: research-repo
-description: Scaffold or audit an entire research project repository organized around its source library. Use whenever the user is starting, structuring, organizing, or reviewing a whole project — "set up a research repo", "how should I structure/organize this project", "initialize my sources folder", "new paper or literature-review project", "audit my repo structure", "is my sources folder set up right", "check my project layout". Builds the sources spine (original PDFs, tracked Markdown conversions, a drop zone, and the bibliography), the conversion and intake pipeline, and the archetype-appropriate analysis, manuscript, and review folders; or audits an existing repo and reports what is present, partial, or missing. NOT for intaking or converting a single PDF (use process-source) or building a publication replication package (use replication-package).
-argument-hint: "[path to the research repo; defaults to the current directory]"
+description: Scaffolds or audits an entire research-project repository organized around its source library. Use when the user starts, structures, organizes, or reviews a project, including "set up a research repo", "how should I structure/organize this project", "initialize my sources folder", "new paper or literature-review project", "audit my repo structure", "is my sources folder set up right", or "check my project layout". Builds the source spine, original PDFs, tracked Markdown conversions, drop zone, bibliography, intake pipeline, and suitable analysis, manuscript, and review folders, or audits what is present, partial, or missing. Single-PDF intake goes to process-source, replication packages to replication-package.
+argument-hint: '[path to the research repo; defaults to the current directory]'
 allowed-tools:
-  - Read
-  - Write
-  - Edit
-  - Bash
+- Read
+- Write
+- Edit
+- Bash
 ---
 
 # Research Repository Scaffold & Audit

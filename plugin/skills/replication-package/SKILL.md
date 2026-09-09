@@ -1,12 +1,12 @@
 ---
 name: replication-package
-description: Scaffold or audit a social-science replication package, and audit the manuscript and its archived research objects against the FAIR principles. Scaffold mode writes the folder structure, README, master.R, figure/table crosswalk, codebook template, LICENSE placeholder, .gitignore, and pre-release checklist. Audit mode grades an existing package against that checklist and runs the FAIR block over data, code, materials, prompts, preregistrations, DOIs, metadata, licenses, access restrictions, and availability statements. Use when setting up or repairing a replication package, checking one before submission, auditing research objects against FAIR (Findable, Accessible, Interoperable, Reusable), or drafting and verifying data-, code-, and materials-availability statements. Adapted from Yusaku Horiuchi's replication-package-guide; platform-neutral (Harvard Dataverse, OSF, Zenodo, GitHub releases, institutional archives).
-argument-hint: "[path to replication folder, plus manuscript path or availability statements when auditing; package path defaults to ./replication]"
+description: Scaffolds or audits a social-science replication package and evaluates the manuscript and archived research objects against FAIR principles. Scaffold mode writes folder structure, README, master.R, figure-table crosswalk, codebook template, LICENSE placeholder, .gitignore, and a pre-release checklist. Audit mode grades the package and audits data, code, materials, prompts, preregistrations, DOIs, metadata, licenses, access restrictions, and availability statements. Use when setting up or repairing a package, checking one before submission, auditing FAIR, Findable, Accessible, Interoperable, Reusable, or drafting availability statements. Adapted from Yusaku Horiuchi’s replication-package-guide. Platform-neutral across Harvard Dataverse, OSF, Zenodo, GitHub releases, and institutional archives.
+argument-hint: '[path to replication folder, plus manuscript path or availability statements when auditing; package path defaults to ./replication]'
 allowed-tools:
-  - Read
-  - Write
-  - Edit
-  - Bash
+- Read
+- Write
+- Edit
+- Bash
 ---
 
 # Replication Package

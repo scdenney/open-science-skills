@@ -1,8 +1,8 @@
 ---
 disable-model-invocation: true
 name: conjoint-cleaning
-description: Turns a raw Qualtrics conjoint export into an analysis-ready long-format dataset — export settings and metadata rows, identifying which Qualtrics implementation produced the file, reshaping wide to long by hand or with cjoint read.qualtrics and cjdata reshape_conjoint, mapping the choice variable onto profiles, ratings and secondary DVs, attribute-level translation and factor ordering, pilot data-quality diagnostics, and subgroup merges. Use when the user has a conjoint CSV and asks how to clean, reshape, restructure, or debug it, cannot line the choice column up with the profiles, or asks what the data must look like before AMCE estimation. Design questions go to conjoint-design, validity review to conjoint-diagnostics.
-argument-hint: "[describe your Qualtrics export or paste data sample]"
+description: Turns a raw Qualtrics conjoint export into an analysis-ready long-format dataset. Covers export settings and metadata rows, implementation identification, wide-to-long reshaping by hand or with cjoint read.qualtrics and cjdata reshape_conjoint, choice-profile alignment, ratings and secondary DVs, attribute translation and factor order, pilot quality diagnostics, and subgroup merges. Use when the user has a conjoint CSV and asks how to clean, reshape, restructure, or debug it, cannot align choices with profiles, or asks what data must look like before AMCE estimation. Design goes to conjoint-design, validity review to conjoint-diagnostics.
+argument-hint: '[describe your Qualtrics export or paste data sample]'
 ---
 
 # Conjoint Data Cleaning Expert

@@ -2,6 +2,10 @@
 
 Versions are the `version` field shared by `plugin/.claude-plugin/plugin.json` and `.claude-plugin/marketplace.json`; `plugin/scripts/check.sh` fails if they differ or if this file has no entry for the current version. Earlier history is in commit subjects and in `AUDITS.md`.
 
+## [2.29.1] — 2026-09-09
+
+- Copyedit pass over every skill description, the README skill tables and prose, and the pipeline guide, under the house rules (no em dashes or arrows, no colons or semicolons in running prose, one term per concept, no filler). Quoted trigger phrases, skill and model names, and code spans are unchanged, so triggering is unaffected. `research-grill` and `research-wayfinder` now sit under Ideation in the README.
+
 ## [2.29.0] — 2026-09-09
 
 - Deliverable pipeline, three new Claude skills (41 total). `deliverable-open` interviews the author in rounds and writes the house files for a unit of work with a deadline and an audience: `deliverable.yml` (audience, deadline, claim, done-test, sources of truth, logical sections, which deterministic checks apply, a night-shift opt-in that defaults off), an append-only `HANDOFF.md`, a numbered `planning/` wiki, an `inbox/` for dictated braindumps, and for a talk the house deck template. `deliverable-intake` turns captures (inbox files, or chosen entries from the macwhspr dictation log) into one unified diff against the wiki, classifying and tracing every statement, leaving uncertain names and citations UNRESOLVED, and applying decisions only on assent. `deliverable-lint` is the whole-deliverable editorial review, detection only: the deterministic gate first and stop on failure, one Sonnet finder per section in parallel, one Opus global pass, adjudication with verified anchors, evidence-backed fabrication flags, and honest NOT-CHECKED coverage under a dollar budget; it never rewrites (that stays with `sci-edit manuscript`, serial and guarded).

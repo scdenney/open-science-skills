@@ -1,7 +1,7 @@
 ---
 name: doc-to-markdown
-description: Read or convert any document a research workflow hands you — PDF, Word, PowerPoint, Excel, OpenDocument, RTF, EPUB, or CSV. Fires whenever a document has to be read, opened, quoted, summarized, searched, extracted, or added to a source library, including plain phrasings like "read this paper", "what does this PDF say", "pull the tables out of this", "summarize the attached report", "add this to my sources", or a bare path to a document file. Decides whether to read the file directly or convert it, picks the converter from the document's actual structure, and decides whether the resulting Markdown is a tracked artifact or a scratch file to delete. Hands scanned or image-only documents to vlm-ocr and bulk source intake to research-repo.
-argument-hint: "[path to the document, plus what you need from it]"
+description: Read or convert documents in a research workflow, including PDF, Word, PowerPoint, Excel, OpenDocument, RTF, EPUB, and CSV. Fires whenever a document must be read, opened, quoted, summarized, searched, extracted, or added to a source library, including "read this paper", "what does this PDF say", "pull the tables out of this", "summarize the attached report", "add this to my sources", or a bare document path. Chooses direct reading or conversion, selects a converter from document structure, and determines whether Markdown is tracked or temporary. Sends scanned documents to vlm-ocr and bulk intake to research-repo.
+argument-hint: '[path to the document, plus what you need from it]'
 ---
 
 # Reading and Converting Documents

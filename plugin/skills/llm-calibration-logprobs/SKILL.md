@@ -1,8 +1,8 @@
 ---
 disable-model-invocation: true
 name: llm-calibration-logprobs
-description: Reads a model's own uncertainty off its token log-probabilities — collecting logprobs and aggregating multi-token labels, confidence tiers and margins for triage, calibration assessment with ECE, Brier scores, and reliability diagrams, using confidence downstream without laundering it into evidence, and what to archive for reproducibility. Use when the user asks how confident a classifier was on each item, asks about logprobs, top-k tokens, calibration, ECE, Brier, or reliability diagrams, or wants low-confidence cases routed to human review. This is within-model confidence — agreement across several independent model coders goes to model-council-voting, and codebook and validation design to text-classification.
-argument-hint: "[describe your classifier, the label set, and where logprobs come from]"
+description: Reads model uncertainty from token log-probabilities. Covers collecting logprobs and aggregating multi-token labels, confidence tiers and margins for triage, calibration assessment with ECE, Brier scores, and reliability diagrams, responsible downstream use of confidence, and reproducibility archives. Use when the user asks classifier confidence by item, logprobs, top-k tokens, calibration, ECE, Brier, reliability diagrams, or routing low-confidence cases to human review. This is within-model confidence. Independent-model agreement goes to model-council-voting, and codebook and validation design to text-classification.
+argument-hint: '[describe your classifier, the label set, and where logprobs come from]'
 ---
 
 # Reading a Model's Own Uncertainty from Token Log-Probabilities

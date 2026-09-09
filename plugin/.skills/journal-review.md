@@ -1,8 +1,8 @@
 ---
 disable-model-invocation: true
 name: journal-review
-description: Drafts a referee report on someone else's manuscript for a journal editor — a recommendation, a summary of the claim and design, three to six major concerns that drive the decision, additional concerns, and a coherent revision plan, produced by five parallel adversarial finders (Breaker, Butcher, Shredder, Void, Situator), a Blue Team error filter, a Chief Reviewer synthesis, and a Tone Guard legal pass, with an optional confidential note to the editor. Use when the user has been asked to referee a manuscript for a journal. Self-audit of the user's own draft goes to paper-review-lite or presubmit, and writing an author-side response to reviewers goes to referee-response.
-argument-hint: "[path to manuscript PDF, plus target journal and any editor's-letter notes]"
+description: Drafts a referee report for a journal editor. Produces a recommendation, claim-and-design summary, three to six decision-driving concerns, additional concerns, and a revision plan through five parallel adversarial finders, Breaker, Butcher, Shredder, Void, Situator, a Blue Team error filter, Chief Reviewer synthesis, Tone Guard legal pass, and optional confidential editor note. Use when the user has been asked to referee a manuscript. Self-audits go to paper-review-lite or presubmit, and author responses go to referee-response.
+argument-hint: '[path to manuscript PDF, plus target journal and any editor''s-letter notes]'
 context: fork
 ---
 

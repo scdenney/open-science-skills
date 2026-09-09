@@ -1,12 +1,12 @@
 ---
 name: spawn
-description: Spawn full Claude Code peer sessions in their own terminal panes and git worktrees — real sessions, not subagents — each on a directed task with a contract brief, monitored and merged back by the spawning lead. Detects the environment and takes the strongest path — herdr first, then tmux, then a native claude background agent. Use when work must outlive or run beside the current session, needs its own worktree or its own permission settings, should stay steerable by the user in a visible pane, or when the user asks to spawn, hand off, or parallelize across full sessions. Also spawns Codex peers into the same panes. Not for bounded consults or work a subagent covers.
-argument-hint: "[describe the task(s) to run in spawned peer sessions; one worktree and brief per task]"
+description: Spawns full Claude Code peer sessions in separate terminal panes and git worktrees, real sessions rather than subagents, each with a directed task and contract brief, monitored and merged by the spawning lead. Detects the environment and uses herdr first, then tmux, then a native claude background agent. Use when work must persist or run beside the current session, needs a separate worktree or permission settings, should remain user-steerable in a visible pane, or when the user asks to spawn, hand off, or parallelize full sessions. Also spawns Codex peers into those panes. Excludes bounded consults and subagent-scale work.
+argument-hint: '[describe the task(s) to run in spawned peer sessions; one worktree and brief per task]'
 allowed-tools:
-  - Bash
-  - Read
-  - Write
-  - Edit
+- Bash
+- Read
+- Write
+- Edit
 ---
 
 # Spawn

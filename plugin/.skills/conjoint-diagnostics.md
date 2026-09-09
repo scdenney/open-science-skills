@@ -1,8 +1,8 @@
 ---
 disable-model-invocation: true
 name: conjoint-diagnostics
-description: Reviews an existing conjoint study for threats to inference and returns prioritized findings across five areas — design integrity (attributes, profile restrictions, task count and satisficing, randomization, power), estimation (estimand clarity, reference levels, subgroups, clustered standard errors, multiple testing), measurement error, external validity and behavioral benchmarking, and interpretation, including the guard-rail against reading an AMCE as a majority preference. Use when the user asks whether a conjoint design or analysis holds up, has referee comments on a conjoint, or wants a second opinion on estimation and interpretation choices. Building a design from scratch goes to conjoint-design, reshaping the data to conjoint-cleaning.
-argument-hint: "[describe your conjoint study or paste analysis code]"
+description: Reviews an existing conjoint study for inferential threats and returns prioritized findings across design integrity, estimation, measurement error, external validity and behavioral benchmarking, and interpretation. Covers attributes, restrictions, task count, satisficing, randomization, power, estimands, reference levels, subgroups, clustered errors, multiple testing, and the guardrail against reading an AMCE as majority preference. Use when the user asks whether a conjoint design or analysis holds up, has referee comments on a conjoint, or wants a second opinion on estimation or interpretation. New designs go to conjoint-design, reshaping to conjoint-cleaning.
+argument-hint: '[describe your conjoint study or paste analysis code]'
 ---
 
 # Conjoint Experiment Diagnostics

@@ -1,8 +1,8 @@
 ---
 disable-model-invocation: true
 name: vlm-ocr
-description: OCR a scanned or image-only corpus with vision-language models, in three phases — evaluate compares candidate OCR systems against stratified human ground truth and picks one on measured CER/WER; run builds the production pipeline (model selection, image handling, prompts, architecture, batching, accuracy evaluation, reproducibility); clean corrects the raw OCR text with LLM and rule-based passes, quality diagnostics, multilingual handling, and span-level provenance. Use when the question is which OCR or VLM to run on a corpus or how accurate one is on your own pages, when scanned documents have to be transcribed at scale, or when raw OCR output needs correction, QA, or a provenance log. Not for born-digital documents with a text layer — those go to doc-to-markdown.
-argument-hint: "[evaluate|run|clean] [describe your corpus, languages, candidate or chosen models, and compute environment]"
+description: OCRs scanned or image-only corpora with vision-language models in three phases. Evaluate compares candidate systems against stratified human ground truth and selects one by measured CER or WER. Run builds the production pipeline, including model selection, image handling, prompts, architecture, batching, accuracy evaluation, and reproducibility. Clean corrects raw OCR with LLM and rule-based passes, quality diagnostics, multilingual handling, and span-level provenance. Use when choosing an OCR or VLM for a corpus, measuring accuracy on pages, transcribing scans at scale, or correcting raw OCR with QA or provenance logs. Born-digital documents with text layers go to doc-to-markdown.
+argument-hint: '[evaluate|run|clean] [describe your corpus, languages, candidate or chosen models, and compute environment]'
 ---
 
 # VLM-OCR: Scanned Corpora from Page Images to Research-Usable Text
