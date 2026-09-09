@@ -2,6 +2,6 @@
 
 Alias for `/oss:paper-review-lite --codex`. Run the `paper-review-lite` skill in its cross-model mode: Claude and Codex (GPT-6 Astra at xhigh effort) independently apply the nine review dimensions, each cross-checks the other's findings, and every retained Critical or Recommended issue carries a confidence label.
 
-Treat `--codex` as set even if the arguments below do not name it.
+Treat `--codex` as set even if the arguments below do not name it. Pass `--codex-effort <low|medium|high|xhigh>` to run the Codex side below the default `xhigh`.
 
 $ARGUMENTS

@@ -2,6 +2,11 @@
 
 Versions are the `version` field shared by `plugin/.claude-plugin/plugin.json` and `.claude-plugin/marketplace.json`; `plugin/scripts/check.sh` fails if they differ or if this file has no entry for the current version. Earlier history is in commit subjects and in `AUDITS.md`.
 
+## [2.28.2] — 2026-09-08
+
+- `paper-review-lite` calibrated for a Fable 5.1 lead. The orchestration effort rule now covers both leads (medium sustained, high for the Phase 4 adjudication). When Fable leads, Agent 1 (Content & Argument) runs on Fable at high instead of Opus, since it is the one Red Team dimension where reasoning quality dominates reading volume; Agents 2, 6, 7 stay on Opus and the mechanical agents on Sonnet. Agent 10 then checks Agent 1's findings on Opus and the rest on Fable so checker and checked never share a model.
+- New `--codex-effort <low|medium|high|xhigh>` argument (default `xhigh`) for `--codex` mode and the `paper-review-lite-codex` alias sets the reasoning effort for every Codex call in the run.
+
 ## [2.28.1] — 2026-09-08
 
 - `spawn` re-verified by a live dry run on herdr 0.9.0 (protocol 22, Claude hook v9, Codex hook v8). Four observed changes are now documented in the Claude and Codex skills: `agent start` exits 1 with `agent_not_ready` while a fresh peer sits on the workspace-trust dialog (the peer is running; clear the dialog and poll `agent explain` for `idle` before prompting, since the agent record lags the screen); checkouts are named `spawn-<slug>` rather than `worktree-<adjective>-<noun>-<hex>`; `workspace close` on a source workspace is refused with `workspace_group_close_required` while worktree workspaces are open and `--group` closes the group without removing checkouts; `worktree` commands gained `--trust-repository` and `--focus|--no-focus`. A note records that `herdr machine add` aggregates remote servers in the client but the `agent`, `worktree`, and `workspace` CLI still address only the local server, so peers stay local.
