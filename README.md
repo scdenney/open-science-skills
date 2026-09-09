@@ -76,7 +76,7 @@ Skills are grouped by where they fall in a project. Unless the Platform column s
 
 ### Deliverable pipeline
 
-The architecture behind these three skills — one wiki per piece of research, one manifest per deliverable, one profile per kind; a deterministic gate before any model review; detection parallel, revision serial; both vendors on the same files — is written up with a diagram in [`docs/deliverable-pipeline.md`](docs/deliverable-pipeline.md).
+The architecture behind these three skills is written up, with a diagram, in [`docs/deliverable-pipeline.md`](docs/deliverable-pipeline.md). It rests on one wiki per piece of research, one manifest per deliverable, and one profile per kind, with a deterministic gate before any model review, detection in parallel and revision in series, and both vendors working on the same files.
 
 | Skill | Platform | Command | What it does |
 |---|---|---|---|

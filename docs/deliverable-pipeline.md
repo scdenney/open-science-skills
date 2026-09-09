@@ -1,16 +1,16 @@
 # The deliverable pipeline
 
-How this library supports a piece of creative, knowledge-based work — a talk, a paper, a course module, a book chapter, a referee report — across many sessions and two agent vendors, without losing context, without letting an unchecked draft ship, and without loading everything into every session. Written as a guide for others and as the author's own reference for how to think about the architecture.
+How this library supports creative, knowledge-based work – a talk, a paper, a course module, a book chapter, or a referee report – across sessions and two agent vendors. It preserves context, prevents unchecked drafts from shipping, and avoids loading everything into every session. It serves as a guide for others and as the author's reference for the architecture.
 
 <p align="center"><img src="../plugin/skills/deliverable-open/assets/pipeline.svg" alt="The eight-step deliverable pipeline over three layers: one wiki per piece of research, one manifest per deliverable, one shared commons" width="960"></p>
 
 ## Five principles
 
-1. **One wiki per piece of research, one manifest per deliverable, one profile per kind.** The paper, its talks, and its referee responses share one `planning/` wiki; each deliverable has its own `deliverable.yml` and `HANDOFF.md`; the deliverable's kind selects the advice (what to ask at open, which checks apply, what lint looks for, how it ships) so an agent holds one profile at a time, not all of them.
-2. **Deterministic before generative.** A script that resolves citations, checks numbers against the snapshot of record, and catches leaks runs at every commit in seconds and costs nothing. The language-model review runs after it and stops if it failed. Every defect that shipped from this estate before the pipeline was a fabricated source or a stale number, and each was catchable by a lookup.
-3. **Detection is parallel; revision is serial.** Many cheap readers can look at sections at once; nothing rewrites more than one section at a time, and never a whole document in one prompt. A finding is a claim about a line, with a verbatim quote and, for anything blocking, evidence the reader can check. Two models agreeing is not evidence.
-4. **Repository files are the authority; nothing lives only in an agent's memory.** State is an append-only `HANDOFF.md` whose top entry is the present. Raw captures are never edited. A session's context comes from a script both vendors run, not from a vendor's hook.
-5. **On demand, by name.** The pipeline's skills do not fire from phrases. The repository's `AGENTS.md` says when to invoke which; the author or the agent types the name. This costs one line of habit and buys predictability.
+1. **One wiki per piece of research, one manifest per deliverable, one profile per kind.** The paper, its talks, and its referee responses share one `planning/` wiki. Each deliverable has its own `deliverable.yml` and `HANDOFF.md`. The deliverable's kind selects the advice, including what to ask at open, which checks apply, what lint looks for, and how it ships. An agent holds one profile at a time.
+2. **Deterministic before generative.** A script resolves citations, checks numbers against the snapshot of record, and catches leaks at every commit. It runs in seconds and costs nothing. Language-model review runs afterward and stops if the script fails. Every defect that previously shipped from this estate was a fabricated source or stale number. Each was catchable through a lookup.
+3. **Detection is parallel. Revision is serial.** Many inexpensive readers can assess sections at once. Revision affects only one section at a time and never rewrites a whole document in one prompt. A finding is a claim about a line, with a verbatim quote and verifiable evidence for anything blocking. Agreement between two models is not evidence.
+4. **Repository files are the authority. Nothing lives only in an agent's memory.** State is an append-only `HANDOFF.md` with the current entry at the top. Raw captures are never edited. A script that both vendors run provides session context. A vendor hook does not.
+5. **On demand, by name.** Pipeline skills do not activate from phrases. The repository's `AGENTS.md` states when to invoke each skill. The author or agent types its name. This requires one habitual line and provides predictability.
 
 ## The eight steps
 
@@ -36,11 +36,11 @@ paper/                        the piece of research
 AGENTS.md  (CLAUDE.md -> symlink)    rules only, with a "Deliverable pipeline" paragraph saying when to invoke what
 ```
 
-`deliverable.yml` names the audience, deadline, claim, done-test, sources of truth, logical sections (never a physical split), which checks apply, the knowledge base, commons tags, and an `agent:` routing block that both vendors read. `HANDOFF.md`: two-line header, dated `## YYYY-MM-DD (topic)` entries newest first, each stamped with agent and time, with Decision, Completed, Finding, Next actions; another session's entry is never revised.
+`deliverable.yml` names the audience, deadline, claim, done-test, sources of truth, logical sections, applicable checks, the knowledge base, commons tags, and an `agent:` routing block that both vendors read. Sections are logical and never require a physical split. `HANDOFF.md` has a two-line header and dated `## YYYY-MM-DD (topic)` entries, newest first. Each entry records the agent, time, Decision, Completed, Finding, and Next actions. Another session's entry is never revised.
 
 ## Kind profiles
 
-One file per kind in `project_hygiene/kinds/`: the interview questions beyond the common five, manifest defaults, the lint questions `lint_prepare.py` appends, the ship step, the related skills. A talk asks about the slot and what stays off the slides and ships to a URL; a paper asks about the venue and the pre-registration and ships through `paper-review-lite` and `presubmit`; a module asks about the calendar and the students and ships per session without a required lint; a chapter answers to the book map; a review answers to the manuscript version it read.
+One file per kind in `project_hygiene/kinds/` contains the interview questions beyond the common five, manifest defaults, lint questions that `lint_prepare.py` appends, the ship step, and related skills. A talk asks about the slot and what stays off the slides. It ships to a URL. A paper asks about the venue and the pre-registration. It ships through `paper-review-lite` and `presubmit`. A module asks about the calendar and students. It ships per session without a required lint. A chapter answers to the book map. A review answers to the manuscript version it read.
 
 ## Integration with the rest of the library
 
@@ -54,12 +54,12 @@ One file per kind in `project_hygiene/kinds/`: the interview questions beyond th
 
 ## Two vendors, one infrastructure
 
-Claude and Codex read and write the same files through the same scripts in `project_hygiene/scripts/`: `deliverable_context.py` (session start; Claude via a hook, Codex via the `AGENTS.md` paragraph), `check_deliverable.py` (the gate), `lint_prepare.py` and `lint_adjudicate.py` (the review), `commons.py` (the shared layer). The Codex library carries the same three skills (`$deliverable-open`, `$deliverable-intake`, `$deliverable-lint`). The design was reviewed blind by a Codex session and reconciled; the exchange is the first thread in the commons.
+Claude and Codex read and write the same files through the same scripts in `project_hygiene/scripts/`: `deliverable_context.py` (session start; Claude via a hook, Codex via the `AGENTS.md` paragraph), `check_deliverable.py` (the gate), `lint_prepare.py` and `lint_adjudicate.py` (the review), `commons.py` (the shared layer). The Codex library carries the same three skills (`$deliverable-open`, `$deliverable-intake`, `$deliverable-lint`). A Codex session reviewed the design blind, and the results were reconciled. The exchange is the first thread in the commons.
 
 ## The commons
 
-`research/commons/`: shared sources and bibliography, one-fact cards with evidence and `supersedes`, threads where agents leave notes for each other, and a JSON-lines index. A session sees only the index lines matching its manifest's tags. Writes happen at closure, as a proposal the author approves; a rejected proposal leaves a trace in the deliverable, not in the commons.
+`research/commons/` contains shared sources and bibliography, one-fact cards with evidence and `supersedes`, threads where agents leave notes for each other, and a JSON-lines index. A session sees only index lines that match its manifest's tags. At closure, writes are proposals that the author approves. A rejected proposal leaves a trace in the deliverable rather than in the commons.
 
 ## What to watch
 
-Whether the manifests keep being updated after creation (if not, the manifest is ceremony and `HANDOFF.md` alone suffices); whether section fan-out finds more than a single whole-document pass (if not, collapse it); whether the pre-commit gate gets bypassed (if so, CI is the only gate); whether fabricated *claims about real sources* dominate over fabricated *sources* (if so, weight moves from the citation gate to `fact-check` against the knowledge base).
+Determine whether manifests continue to be updated after creation. If they do not, the manifest is ceremony and `HANDOFF.md` alone suffices. Determine whether section fan-out finds more than a single whole-document pass. If it does not, collapse it. Determine whether the pre-commit gate is bypassed. If it is, CI is the only gate. Determine whether fabricated *claims about real sources* dominate fabricated *sources*. If they do, move weight from the citation gate to `fact-check` against the knowledge base.
