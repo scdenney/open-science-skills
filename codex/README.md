@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://img.shields.io/badge/OpenAI_Codex-37_open--science_skills-111111?style=for-the-badge&logo=openai&logoColor=white" alt="OpenAI Codex — 37 open-science skills">
+  <img src="https://img.shields.io/badge/OpenAI_Codex-40_open--science_skills-111111?style=for-the-badge&logo=openai&logoColor=white" alt="OpenAI Codex — 40 open-science skills">
 </p>
 
 # Codex skills
@@ -9,7 +9,7 @@ This directory contains 40 Codex-native Open Science Skills. They mirror the Cla
 - `presubmit` is omitted.
 - [`orchestrate`](orchestrate/SKILL.md) is the Codex-native version of the plugin's lead-detecting `orchestrate`. It runs from an active `gpt-6-astra` or `gpt-5.6-sol` session at the selected effort. Astra keeps compact hard reasoning in the lead; Sol escalates unusually difficult units to Astra. Both modes route bounded work to Terra and reserve Luna for tightly specified mechanical work. It was named `46-orchestrate` before v2.25.0.
 
-The Claude Code aliases for retired names (`diverge-codex`, `paper-review-lite-codex`, `survey-flow-audit`, `fair-check`, the three OCR names, the two orchestrate leads) have no Codex counterpart; use the merged skill and name the mode (`$diverge --codex`, `$qualtrics-ops audit`, `$vlm-ocr clean`, and so on).
+The Claude Code aliases for retired names (`diverge-codex`, `paper-review-lite-codex`, `survey-flow-audit`, `fair-check`, the three OCR names) have no Codex counterpart; use the merged skill and name the mode (`$diverge --codex`, `$qualtrics-ops audit`, `$vlm-ocr clean`, and so on).
 
 Every skill is a self-contained directory with `SKILL.md`, `agents/openai.yaml`, and only the references, scripts, or assets it needs. Codex supports these skills in the CLI, IDE extension, and app.
 

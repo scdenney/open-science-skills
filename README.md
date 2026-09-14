@@ -23,7 +23,7 @@ This is the toolkit I use in my own research, and it grows as I add sources and 
 | Platform | Skills | Invoke |
 |---|---|---|
 | [Claude Code](https://code.claude.com/docs/en/skills) | 41, as the [`oss` plugin](plugin/skills) | `/oss:skill-name` |  
-| [OpenAI Codex](https://developers.openai.com/codex/skills) | 37, as the [`codex/` library](codex/README.md) | `$skill-name` |  
+| [OpenAI Codex](https://developers.openai.com/codex/skills) | 40, as the [`codex/` library](codex/README.md) | `$skill-name` |  
 
 The two libraries differ only in invocation and tooling. The Codex side omits `presubmit`; its `orchestrate` is the Codex-native version led by the active GPT-6 Astra or GPT-5.6 Sol session, with mode-aware routing between them. See [`codex/README.md`](codex/README.md).
 
@@ -58,7 +58,7 @@ On Codex there is no plugin. Install the skills library instead (see [Codex](#co
 
 **On-demand skills.** Eleven skills are the auto-triggering core. Claude loads them from context when the task matches: `citation-check`, `doc-to-markdown`, `fact-check`, `figures`, `literature-review`, `paper-review-lite`, `qualtrics-ops`, `referee-response`, `replication-package`, `research-repo`, `spawn`. The other 30 are **on-demand**: they cost nothing in a session until you invoke them by name (`/oss:conjoint-design`), and Claude does not suggest them unprompted. That keeps a research session's always-on cost near 3k tokens instead of 10k. The orchestration and deliberation skills (`orchestrate`, `advisor`, `model-committee`, `model-council-voting`, `diverge`, `journal-review`) are on-demand by design, since they start subagents or external models. The rest are specialists that fire rarely enough that a name is the better trigger. Every skill still resolves as a slash command and through its aliases. The Codex library applies the same rule with its own evidence (`allow_implicit_invocation: false`; see [`codex/README.md`](codex/README.md)).
 
-Skills are grouped by where they fall in a project. Unless the Platform column says otherwise, a skill runs on both Claude Code (`/oss:name`) and Codex (`$name`). Names retired in v2.25.0 (`fable-orchestrate`, `opus-orchestrate`, `diverge-codex`, `paper-review-lite-codex`, `survey-flow-audit`, `vlm-ocr-evaluation`, `vlm-ocr-pipeline`, `post-ocr-cleanup`, `fair-check`) still work as aliases that call the merged skill with its mode set.
+Skills are grouped by where they fall in a project. Unless the Platform column says otherwise, a skill runs on both Claude Code (`/oss:name`) and Codex (`$name`). Names retired in v2.25.0 (`diverge-codex`, `paper-review-lite-codex`, `survey-flow-audit`, `vlm-ocr-evaluation`, `vlm-ocr-pipeline`, `post-ocr-cleanup`, `fair-check`) still work as aliases that call the merged skill with its mode set.
 
 ### Project Setup
 
@@ -70,7 +70,7 @@ Skills are grouped by where they fall in a project. Unless the Platform column s
 
 | Skill | Platform | Command | What it does |
 |---|---|---|---|
-| [orchestrate](plugin/skills/orchestrate/SKILL.md) | Both | `/oss:orchestrate` · `/oss:fable-orchestrate` · `/oss:opus-orchestrate` · `$orchestrate` | Run a multi-model workflow. Claude selects Fable 5.1 or Opus 5. Codex selects GPT-6 Astra or GPT-5.6 Sol. Astra leads hard reasoning, while Sol escalates difficult work to Astra. Both route bounded work to lower GPT-5.6 tiers and can use a Claude peer. |
+| [orchestrate](plugin/skills/orchestrate/SKILL.md) | Both | `/oss:orchestrate` · `$orchestrate` | Run a multi-model workflow. Claude selects Fable 5.1 or Opus 5. Codex selects GPT-6 Astra or GPT-5.6 Sol. Astra leads hard reasoning, while Sol escalates difficult work to Astra. Both route bounded work to lower GPT-5.6 tiers and can use a Claude peer. |
 | [spawn](plugin/skills/spawn/SKILL.md) | Both | `/oss:spawn` | Spawn peer sessions in new terminal panes, each in its own git worktree with a directed task and contract brief. Detects herdr, tmux, or a plain terminal. The lead monitors and merges branches. |
 | [advisor](plugin/skills/advisor/SKILL.md) | Both | `/oss:advisor` / `$advisor` | Escalate one decision to an independent second reviewer before committing to an interpretation or completing a task. Your session leads on Opus 5 or Sonnet 5. The Fable 5.1 advisor uses max reasoning. A Fable lead uses `orchestrate`'s Astra peer or the committee. The [Codex counterpart](codex/advisor/SKILL.md) uses Astra/xhigh. |
 
@@ -112,7 +112,7 @@ The architecture behind these three skills is written up, with a diagram, in [`d
 | [topic-modeling](plugin/skills/topic-modeling/SKILL.md) | Both | `/oss:topic-modeling` | Fit structural topic models. Choose topic count by coherence and exclusivity. Covers covariates and reporting. |
 | [text-classification](plugin/skills/text-classification/SKILL.md) | Both | `/oss:text-classification` | Classify text with LLMs. Covers codebook design, human-in-the-loop workflows, validation, and agreement statistics. |
 | [model-council-voting](plugin/skills/model-council-voting/SKILL.md) | Both | `/oss:model-council-voting` | Use a model panel as independent coders under a pre-stated consensus rule. Assess disagreement with chance-corrected kappa and alpha statistics. Checks correlated juror errors. |
-| [model-committee](plugin/skills/model-committee/SKILL.md) | Both | `/oss:model-committee`, `/oss:model-committee-astra`, `/oss:model-committee-opus`, `/oss:model-committee-fable`, `/oss:model-committee-sol` | Have GPT-6 Astra and Claude Opus 5 deliberate toward one decision. They propose independently, critique, revise, and converge under a pre-set rule. Fable 5.1 chairs by default and is not a member. With `-astra`, GPT-6 Astra chairs and Sol replaces it as a member. `-opus` uses the in-session Opus chair. `-fable` aliases the default. `-sol` uses the legacy GPT-5.6 chair and Terra. |
+| [model-committee](plugin/skills/model-committee/SKILL.md) | Both | `/oss:model-committee`, `/oss:model-committee-astra`, `/oss:model-committee-opus`, `/oss:model-committee-sol` | Have GPT-6 Astra and Claude Opus 5 deliberate toward one decision. They propose independently, critique, revise, and converge under a pre-set rule. Fable 5.1 chairs by default and is not a member. With `-astra`, GPT-6 Astra chairs and Sol replaces it as a member. `-opus` uses the in-session Opus chair. `-sol` uses the legacy GPT-5.6 chair and Terra. |
 | [llm-calibration-logprobs](plugin/skills/llm-calibration-logprobs/SKILL.md) | Both | `/oss:llm-calibration-logprobs` | Turn token log-probabilities into per-decision confidence. Measure calibration against human labels with ECE, Brier scores, and reliability diagrams. |
 
 ### Corpus Processing
@@ -170,7 +170,7 @@ Third-party skills this library recommends and builds on, credited, not claimed,
 
 Most skills load on their own. When your prompt matches a skill's description, Claude Code or Codex reads that skill into context and follows it, so you usually don't need to name anything. You can also invoke any skill explicitly, with `/oss:skill-name` in Claude Code or `$skill-name` in Codex.
 
-The orchestration and delegated-review skills (`orchestrate` and its lead aliases, `spawn`, `advisor`, `model-committee` and its chair variants, `diverge --codex`, and `paper-review-lite --codex`) run only when invoked explicitly and are on-demand in the catalog (see *On-demand skills* above), because they start subagents, full peer sessions, or an external model.
+The orchestration and delegated-review skills (`orchestrate`, `spawn`, `advisor`, `model-committee` and its chair variants, `diverge --codex`, and `paper-review-lite --codex`) run only when invoked explicitly and are on-demand in the catalog (see *On-demand skills* above), because they start subagents, full peer sessions, or an external model.
 
 ---
 

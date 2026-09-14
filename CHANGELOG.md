@@ -2,6 +2,11 @@
 
 Versions are the `version` field shared by `plugin/.claude-plugin/plugin.json` and `.claude-plugin/marketplace.json`; `plugin/scripts/check.sh` fails if they differ or if this file has no entry for the current version. Earlier history is in commit subjects and in `AUDITS.md`.
 
+## [2.30.0] — 2026-09-14
+
+- Three redundant alias commands removed: `/oss:fable-orchestrate`, `/oss:opus-orchestrate`, and `/oss:model-committee-fable`. The two orchestrate aliases only forced a lead that `/oss:orchestrate` already detects from the session model, and both told the user not to force it on a session running something else, so they were useful only in the case they warned against. `/oss:model-committee-fable` named the chair that `/oss:model-committee` already uses by default. `--lead fable|opus` still overrides detection. The skill count is unchanged at 41 Claude and 40 Codex; only commands were removed.
+- README and `codex/README.md` corrected: the Codex library is 40 skills, not 37, in the platform table and the badge.
+
 ## [2.29.1] — 2026-09-09
 
 - Copyedit pass over every skill description, the README skill tables and prose, and the pipeline guide, under the house rules (no em dashes or arrows, no colons or semicolons in running prose, one term per concept, no filler). Quoted trigger phrases, skill and model names, and code spans are unchanged, so triggering is unaffected. `research-grill` and `research-wayfinder` now sit under Ideation in the README.

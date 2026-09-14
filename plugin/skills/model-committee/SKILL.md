@@ -23,12 +23,12 @@ The chair is a parameter, not a separate workflow. Five slash commands select it
 
 | Chair | Invoked by | Chair pin | Chair effort | GPT member | Chair invocation |
 | --- | --- | --- | --- | --- | --- |
-| Fable 5.1 (default) | `/model-committee`, `/model-committee-fable` | `claude-fable-5-1` | `high` | `gpt-6-astra` | `claude-member.sh --model claude-fable-5-1 --effort high` |
+| Fable 5.1 (default) | `/model-committee` | `claude-fable-5-1` | `high` | `gpt-6-astra` | `claude-member.sh --model claude-fable-5-1 --effort high` |
 | Opus 5 | `/model-committee-opus` | `claude-opus-5` | `high` | `gpt-6-astra` | `claude-member.sh --model claude-opus-5 --effort high` |
 | Astra | `/model-committee-astra` | `gpt-6-astra` | `xhigh` | `gpt-5.6-sol` | `codex-member.sh --model gpt-6-astra --effort xhigh` |
 | Sol | `/model-committee-sol` | `gpt-5.6-sol` | `xhigh` | `gpt-5.6-terra` | `codex-member.sh --model gpt-5.6-sol --effort xhigh` |
 
-If the user did not name a chair, use Fable 5.1. The premier models orchestrate: a committee is chaired by a frontier model that sits outside both members, and the two premier chairs — Fable on the Claude side, Astra on the GPT side — are the ones to reach for on a consequential call. `/model-committee-fable` is kept as an alias of the default so every earlier name still resolves.
+If the user did not name a chair, use Fable 5.1. The premier models orchestrate: a committee is chaired by a frontier model that sits outside both members, and the two premier chairs — Fable on the Claude side, Astra on the GPT side — are the ones to reach for on a consequential call.
 
 Score aggregation and the tie rule are mechanical whoever chairs; schema validation and compatible-component synthesis carry the chair's own judgment, which is what the choice of chair buys.
 

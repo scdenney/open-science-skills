@@ -52,13 +52,10 @@ find plugin/skills -mindepth 2 -maxdepth 2 -name SKILL.md \
 # (e.g. model-committee's chair). They have no skill directory of their own by design.
 cat > "$tmpdir/aliases" <<'ALIASES'
 diverge-codex
-fable-orchestrate
 fair-check
 model-committee-astra
-model-committee-fable
 model-committee-opus
 model-committee-sol
-opus-orchestrate
 paper-review-lite-codex
 post-ocr-cleanup
 survey-flow-audit
