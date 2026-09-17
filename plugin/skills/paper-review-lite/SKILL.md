@@ -1,4 +1,5 @@
 ---
+disable-model-invocation: true
 name: paper-review-lite
 description: Provides a pre-submission manuscript audit covering argument, numerical consistency, references and DOIs, writing, figures, CONSORT flow, pre-registration, and the replication archive. Use before paper submission or when a draft needs an adversarial, quote-grounded review with a journal-readiness checklist. Add `--codex` to run the specification independently on Claude and Codex, GPT-6 Astra, and cross-check findings.
 argument-hint: '[path to paper or describe manuscript to review] [--codex]'

@@ -1,0 +1,6 @@
+interface:
+  display_name: "Session Sitrep"
+  short_description: "Report where a repository actually stands"
+  default_prompt: "Use $sitrep to report where this project stands before I change anything."
+policy:
+  allow_implicit_invocation: false

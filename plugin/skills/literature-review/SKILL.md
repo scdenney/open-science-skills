@@ -1,4 +1,5 @@
 ---
+disable-model-invocation: true
 name: literature-review
 description: Builds or audits a literature review. Produces an evidence map, closest prior work, source clusters, a gap verdict, and a synthesis plan for the introduction. Use when the user asks whether a contribution is novel, who has studied a question, what the literature establishes, how to organize or restructure a review, or wants a reading list, Zotero export, or paper pile turned into a review. Produces a systematic-review protocol scaffold and directs PRISMA or meta-analysis requests to registration, PROSPERO or OSF, and screening tools.
 argument-hint: '[topic, draft literature review, paper list, Zotero export, or claimed contribution]'

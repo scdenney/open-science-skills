@@ -8,8 +8,8 @@
 [![OpenAI Codex](https://img.shields.io/badge/OpenAI_Codex-library-111111?logo=openai&logoColor=white)](codex/README.md)
 [![version](https://img.shields.io/badge/version-2.29.1-blue)](https://github.com/scdenney/open-science-skills/releases)
 [![license](https://img.shields.io/badge/license-CC%20BY--NC%204.0-lightgrey)](LICENSE)
-[![Claude skills](https://img.shields.io/badge/Claude_skills-41-D97757?logo=anthropic&logoColor=white)](#skills)
-[![Codex skills](https://img.shields.io/badge/Codex_skills-40-111111?logo=openai&logoColor=white)](#skills)
+[![Claude skills](https://img.shields.io/badge/Claude_skills-43-D97757?logo=anthropic&logoColor=white)](#skills)
+[![Codex skills](https://img.shields.io/badge/Codex_skills-42-111111?logo=openai&logoColor=white)](#skills)
 [![updated](https://img.shields.io/badge/updated-September%202026-green)](https://github.com/scdenney/open-science-skills/commits/main)
 [![sources](https://img.shields.io/badge/sources-150%2B-purple)](SOURCES.md)
 [![PRs welcome](https://img.shields.io/badge/PRs-welcome-brightgreen)](#contributing)
@@ -22,8 +22,8 @@ This is the toolkit I use in my own research, and it grows as I add sources and 
 
 | Platform | Skills | Invoke |
 |---|---|---|
-| [Claude Code](https://code.claude.com/docs/en/skills) | 41, as the [`oss` plugin](plugin/skills) | `/oss:skill-name` |  
-| [OpenAI Codex](https://developers.openai.com/codex/skills) | 40, as the [`codex/` library](codex/README.md) | `$skill-name` |  
+| [Claude Code](https://code.claude.com/docs/en/skills) | 43, as the [`oss` plugin](plugin/skills) | `/oss:skill-name` |  
+| [OpenAI Codex](https://developers.openai.com/codex/skills) | 42, as the [`codex/` library](codex/README.md) | `$skill-name` |  
 
 The two libraries differ only in invocation and tooling. The Codex side omits `presubmit`; its `orchestrate` is the Codex-native version led by the active GPT-6 Astra or GPT-5.6 Sol session, with mode-aware routing between them. See [`codex/README.md`](codex/README.md).
 
@@ -48,7 +48,7 @@ claude plugin install oss@open-science-skills
 claude plugin install oss@open-science-skills --scope project
 ```
 
-Then invoke a skill explicitly, for example `/oss:conjoint-design`, or just describe your task in plain language and let the matching skill load on its own. For the auto-triggering core, on-demand skills load only by name (see *On-demand skills* under [Skills](#skills)).
+Then invoke a skill by name, for example `/oss:conjoint-design`. Every skill is on demand, so nothing loads into a session until you ask for it (see *On-demand skills* under [Skills](#skills)).
 
 On Codex there is no plugin. Install the skills library instead (see [Codex](#codex)).
 
@@ -56,7 +56,7 @@ On Codex there is no plugin. Install the skills library instead (see [Codex](#co
 
 ## Skills
 
-**On-demand skills.** Eleven skills are the auto-triggering core. Claude loads them from context when the task matches: `citation-check`, `doc-to-markdown`, `fact-check`, `figures`, `literature-review`, `paper-review-lite`, `qualtrics-ops`, `referee-response`, `replication-package`, `research-repo`, `spawn`. The other 30 are **on-demand**: they cost nothing in a session until you invoke them by name (`/oss:conjoint-design`), and Claude does not suggest them unprompted. That keeps a research session's always-on cost near 3k tokens instead of 10k. The orchestration and deliberation skills (`orchestrate`, `advisor`, `model-committee`, `model-council-voting`, `diverge`, `journal-review`) are on-demand by design, since they start subagents or external models. The rest are specialists that fire rarely enough that a name is the better trigger. Every skill still resolves as a slash command and through its aliases. The Codex library applies the same rule with its own evidence (`allow_implicit_invocation: false`; see [`codex/README.md`](codex/README.md)).
+**On-demand skills.** Every skill in the library is on demand. None loads from context, none is suggested unprompted, and none costs a session anything until you invoke it by name (`/oss:conjoint-design`). That holds a research session's always-on cost near zero instead of the roughly 10k tokens a fully implicit library carries. The tradeoff is deliberate. A skill that fires on its own has to earn its context in every session, and a specialist that fires rarely is cheaper to name than to carry. Claude Code enforces this with `disable-model-invocation: true` in each skill's frontmatter, and the Codex library states the same policy as `allow_implicit_invocation: false` (see [`codex/README.md`](codex/README.md)). `plugin/scripts/check.sh` fails if a skill on either platform is missing its flag.
 
 Skills are grouped by where they fall in a project. Unless the Platform column says otherwise, a skill runs on both Claude Code (`/oss:name`) and Codex (`$name`). Names retired in v2.25.0 (`diverge-codex`, `paper-review-lite-codex`, `survey-flow-audit`, `vlm-ocr-evaluation`, `vlm-ocr-pipeline`, `post-ocr-cleanup`, `fair-check`) still work as aliases that call the merged skill with its mode set.
 
@@ -65,6 +65,13 @@ Skills are grouped by where they fall in a project. Unless the Platform column s
 | Skill | Platform | Command | What it does |
 |---|---|---|---|
 | [research-repo](plugin/skills/research-repo/SKILL.md) | Both | `/oss:research-repo` | Scaffold a research project around its source library, or audit an existing one. Builds references, intake tools, analysis and manuscript folders, and a review area. |
+
+### Repo Hygiene
+
+| Skill | Platform | Command | What it does |
+|---|---|---|---|
+| [sitrep](plugin/skills/sitrep/SKILL.md) | Both | `/oss:sitrep` | Report where a project actually stands. Reads the handoff and log files the repository keeps, checks live git state, and flags where the documents and the repository disagree. |
+| [finished](plugin/skills/finished/SKILL.md) | Both | `/oss:finished` | Close a session. Records what changed into the project's own handoff and log, separating verified work from work merely attempted, and reports what was left uncommitted. |
 
 ### Workflow & Orchestration
 
@@ -168,9 +175,9 @@ Third-party skills this library recommends and builds on, credited, not claimed,
 
 ## How skills trigger
 
-Most skills load on their own. When your prompt matches a skill's description, Claude Code or Codex reads that skill into context and follows it, so you usually don't need to name anything. You can also invoke any skill explicitly, with `/oss:skill-name` in Claude Code or `$skill-name` in Codex.
+No skill loads on its own. Name one, with `/oss:skill-name` in Claude Code or `$skill-name` in Codex, and it reads into context and runs. Nothing is suggested unprompted, so the library costs an idle session nothing.
 
-The orchestration and delegated-review skills (`orchestrate`, `spawn`, `advisor`, `model-committee` and its chair variants, `diverge --codex`, and `paper-review-lite --codex`) run only when invoked explicitly and are on-demand in the catalog (see *On-demand skills* above), because they start subagents, full peer sessions, or an external model.
+The orchestration and delegated-review skills (`orchestrate`, `spawn`, `advisor`, `model-committee` and its chair variants, `diverge --codex`, and `paper-review-lite --codex`) start subagents, full peer sessions, or an external model. Every skill is on demand (see *On-demand skills* above), but for these the rule is load-bearing rather than economical.
 
 ---
 
@@ -188,7 +195,7 @@ cd open-science-skills && claude --plugin-dir ./plugin
 ```
 
 <details>
-<summary><b>Selective install</b> – pick specific skills (auto-trigger only, no slash commands)</summary>
+<summary><b>Selective install</b> – pick specific skills, outside the `/oss:` namespace</summary>
 
 Clone the repository and run the interactive installer, which lists the skills and installs your choices to `./.claude/skills/` (current project) by default:
 
@@ -216,7 +223,7 @@ Restart Claude Code after installing.
 </details>
 
 <details>
-<summary><b>Manual copy</b> – a single skill by hand (auto-trigger only)</summary>
+<summary><b>Manual copy</b> – a single skill by hand</summary>
 
 Copy the whole skill folder, since many skills ship reference, asset, or script files their `SKILL.md` points at (replace `your-project` with your project's path):
 
@@ -234,7 +241,7 @@ mkdir -p ~/.claude/skills
 cp -R open-science-skills/plugin/skills/list-experiment ~/.claude/skills/
 ```
 
-Manual copy gives auto-trigger only. Slash commands require the plugin.
+A copied skill is invoked by its own name. The `/oss:` namespace and the alias commands require the plugin.
 
 </details>
 

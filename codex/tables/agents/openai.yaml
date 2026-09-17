@@ -2,3 +2,5 @@ interface:
   display_name: "Publication Tables"
   short_description: "Design clear, reproducible research tables"
   default_prompt: "Use $tables to design or improve this publication table."
+policy:
+  allow_implicit_invocation: false

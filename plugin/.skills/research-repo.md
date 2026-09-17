@@ -1,4 +1,5 @@
 ---
+disable-model-invocation: true
 name: research-repo
 description: Scaffolds or audits an entire research-project repository organized around its source library. Use when the user starts, structures, organizes, or reviews a project, including "set up a research repo", "how should I structure/organize this project", "initialize my sources folder", "new paper or literature-review project", "audit my repo structure", "is my sources folder set up right", or "check my project layout". Builds the source spine, original PDFs, tracked Markdown conversions, drop zone, bibliography, intake pipeline, and suitable analysis, manuscript, and review folders, or audits what is present, partial, or missing. Single-PDF intake goes to process-source, replication packages to replication-package.
 argument-hint: '[path to the research repo; defaults to the current directory]'

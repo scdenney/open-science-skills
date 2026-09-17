@@ -1,0 +1,6 @@
+interface:
+  display_name: "Session Closure"
+  short_description: "Record what changed into the project's handoff"
+  default_prompt: "Use $finished to close out this session and update the handoff and log."
+policy:
+  allow_implicit_invocation: false

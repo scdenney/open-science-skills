@@ -1,4 +1,5 @@
 ---
+disable-model-invocation: true
 name: fact-check
 description: Fact-checks manuscript claims against their cited sources. Locates each source’s knowledge-base Markdown file and verifies that every in-text claim is supported. Runs a pre-flight gate requiring a clean per-source Markdown knowledge base, one file per cited source, with all raw PDFs converted. Then runs citation-check and audits claim support, overclaiming, direction, scope, and misattribution.
 argument-hint: '[path to manuscript + bibliography; point to the project''s sources/ or knowledge_base/ directory if non-standard]'

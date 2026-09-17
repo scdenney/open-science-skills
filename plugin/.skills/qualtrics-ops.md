@@ -1,4 +1,5 @@
 ---
+disable-model-invocation: true
 name: qualtrics-ops
 description: Operates or audits a live Qualtrics survey through the v3 APIs without disrupting fielding. Covers publish gating, quotas, flow routing, embedded data, panel-vendor redirects, read-back verification, and read-only pre-fielding audits. Use when publishing or patching an instrument, when a quota counts without blocking, when configuring panel-vendor redirects or flow gates, or when auditing before launch for consent-before-anything gates, force-response completeness, quota and redirect checks, anti-bot instrumentation, and language-arm symmetry.
 argument-hint: '[audit | describe the live survey and the change you need to make]'

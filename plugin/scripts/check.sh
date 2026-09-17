@@ -28,17 +28,19 @@ for path in Path("codex").glob("*/agents/openai.yaml"):
     yaml.safe_load(path.read_text(encoding="utf-8"))
 print(f"yaml ok: {len(skills)} skills and Codex UI metadata")
 
-for name in (
-    "plugin/skills/orchestrate/codex-peer.sh",
-    "plugin/skills/model-committee/scripts/codex-member.sh",
-    "codex/model-committee/scripts/codex-member.sh",
-    "codex/advisor/scripts/sol-advisor.sh",
-    "codex/orchestrate/scripts/check-lead-runtime.sh",
-):
+# Glob rather than a hardcoded list: a newly bundled helper must be guarded the
+# day it is added. SyncThing's 777 + core.fileMode false hides a bad mode locally,
+# so the tracked mode in the index is the only thing worth asserting.
+helpers = sorted(
+    str(p) for p in list(Path("plugin/skills").rglob("*.sh")) + list(Path("codex").rglob("*.sh"))
+)
+assert helpers, "no bundled helper scripts found -- glob is wrong"
+for name in helpers:
     entry = subprocess.check_output(["git", "ls-files", "-s", "--", name], text=True)
+    assert entry, f"helper is untracked: {name}"
     assert entry.startswith("100755 "), f"helper must be tracked executable: {name}"
     subprocess.run(["bash", "-n", name], check=True)
-print("Codex helper syntax and executable modes ok")
+print(f"helper syntax and executable modes ok: {len(helpers)} scripts")
 PY
 
 tmpdir="$(mktemp -d)"
@@ -48,8 +50,11 @@ find plugin/skills -mindepth 2 -maxdepth 2 -name SKILL.md \
   | sed 's#plugin/skills/##; s#/SKILL.md$##' \
   | sort > "$tmpdir/skills"
 
-# Alias commands are thin wrappers that invoke an existing skill with a parameter
-# (e.g. model-committee's chair). They have no skill directory of their own by design.
+# Every skill is its own slash command: Claude Code registers plugin skills as
+# /oss:<name> directly. A command file that shares a skill's name therefore
+# registers a SECOND, duplicate menu entry. So plugin/commands/ holds only alias
+# commands -- thin wrappers that invoke an existing skill with a preset parameter
+# (e.g. model-committee's chair) -- and no command may share a skill's name.
 cat > "$tmpdir/aliases" <<'ALIASES'
 diverge-codex
 fair-check
@@ -67,8 +72,6 @@ find plugin/commands -maxdepth 1 -name '*.md' \
   | sed 's#plugin/commands/##; s#.md$##' \
   | sort > "$tmpdir/commands-all"
 
-comm -23 "$tmpdir/commands-all" "$tmpdir/aliases" > "$tmpdir/commands"
-
 # Every declared alias must exist as a command file.
 missing_aliases="$(comm -13 "$tmpdir/commands-all" "$tmpdir/aliases")"
 if [ -n "$missing_aliases" ]; then
@@ -76,14 +79,24 @@ if [ -n "$missing_aliases" ]; then
   exit 1
 fi
 
+# ...and every command file must be a declared alias. Anything else is either an
+# undeclared alias or a duplicate of a skill's own slash command.
+undeclared="$(comm -23 "$tmpdir/commands-all" "$tmpdir/aliases")"
+if [ -n "$undeclared" ]; then
+  echo "command file is not a declared alias: $undeclared" >&2
+  exit 1
+fi
+
+# No command may collide with a skill name, which would register a duplicate entry.
+collisions="$(comm -12 "$tmpdir/commands-all" "$tmpdir/skills")"
+if [ -n "$collisions" ]; then
+  echo "command duplicates a skill's own slash command: $collisions" >&2
+  exit 1
+fi
+
 find plugin/.skills -maxdepth 1 -name '*.md' \
   | sed 's#plugin/.skills/##; s#.md$##' \
   | sort > "$tmpdir/flat"
-
-if ! diff -u "$tmpdir/skills" "$tmpdir/commands"; then
-  echo "skill/command mismatch" >&2
-  exit 1
-fi
 
 if ! diff -u "$tmpdir/skills" "$tmpdir/flat"; then
   echo "skill/.skills mismatch" >&2
@@ -105,7 +118,22 @@ while IFS= read -r skill; do
     echo "missing description: $skill" >&2
     exit 1
   fi
+  # Every skill is on demand. Implicit invocation costs context in every session
+  # whether or not the skill is used; a name is the cheaper trigger.
+  if ! sed -n '1,8p' "$src" | grep -q "^disable-model-invocation: true$"; then
+    echo "skill is not on-demand (missing disable-model-invocation): $skill" >&2
+    exit 1
+  fi
 done < "$tmpdir/skills"
+
+# The Codex library states the same policy in its own dialect.
+while IFS= read -r skill; do
+  yml="codex/$skill/agents/openai.yaml"
+  if ! grep -q "allow_implicit_invocation: false" "$yml"; then
+    echo "codex skill is not on-demand: $skill" >&2
+    exit 1
+  fi
+done < <(find codex -mindepth 1 -maxdepth 1 -type d ! -name assets | sed 's#codex/##' | sort)
 
 count="$(wc -l < "$tmpdir/skills" | tr -d ' ')"
 if ! grep -q "Claude_skills-$count-" README.md; then

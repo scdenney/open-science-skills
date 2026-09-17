@@ -1,4 +1,5 @@
 ---
+disable-model-invocation: true
 name: replication-package
 description: Scaffolds or audits a social-science replication package and evaluates the manuscript and archived research objects against FAIR principles. Scaffold mode writes folder structure, README, master.R, figure-table crosswalk, codebook template, LICENSE placeholder, .gitignore, and a pre-release checklist. Audit mode grades the package and audits data, code, materials, prompts, preregistrations, DOIs, metadata, licenses, access restrictions, and availability statements. Use when setting up or repairing a package, checking one before submission, auditing FAIR, Findable, Accessible, Interoperable, Reusable, or drafting availability statements. Adapted from Yusaku Horiuchi’s replication-package-guide. Platform-neutral across Harvard Dataverse, OSF, Zenodo, GitHub releases, and institutional archives.
 argument-hint: '[path to replication folder, plus manuscript path or availability statements when auditing; package path defaults to ./replication]'

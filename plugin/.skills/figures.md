@@ -1,4 +1,5 @@
 ---
+disable-model-invocation: true
 name: figures
 description: Designs and formats publication-quality figures for social-science manuscripts. Covers chart type, scales, color, legend order, self-contained captions, and script-based reproducibility. Use when the user is making, revising, or critiquing a figure for a paper, including coefficient plots, small multiples, distributions, trends, maps, and networks, or asks about labels, colorblind-safe palettes, legend order, direct labels, or captions. Prefer this for manuscript, working-paper, and journal-submission figures. Send finished sets to figure-table-audit for end-stage QA.
 argument-hint: '[describe the figure you are building, the data, the claim it supports, and the target venue]'

@@ -2,3 +2,5 @@ interface:
   display_name: "Citation Check"
   short_description: "Audit citations, references, and DOI integrity"
   default_prompt: "Use $citation-check to audit this manuscript's citations and references."
+policy:
+  allow_implicit_invocation: false

@@ -1,4 +1,5 @@
 ---
+disable-model-invocation: true
 name: doc-to-markdown
 description: Read or convert documents in a research workflow, including PDF, Word, PowerPoint, Excel, OpenDocument, RTF, EPUB, and CSV. Fires whenever a document must be read, opened, quoted, summarized, searched, extracted, or added to a source library, including "read this paper", "what does this PDF say", "pull the tables out of this", "summarize the attached report", "add this to my sources", or a bare document path. Chooses direct reading or conversion, selects a converter from document structure, and determines whether Markdown is tracked or temporary. Sends scanned documents to vlm-ocr and bulk intake to research-repo.
 argument-hint: '[path to the document, plus what you need from it]'
