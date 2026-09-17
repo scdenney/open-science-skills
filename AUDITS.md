@@ -199,9 +199,11 @@ Both machines verified on 2.31.0. The Codex install on the Linux box was missing
 some long predating this release, and was repaired with `install-codex.py`; both machines now symlink
 into the library so future changes need no reinstall. Fourteen redundant per-project
 `enabledPlugins` blocks were removed, having pinned old plugin versions as far back as 2.22.0. The
-`session` skill was retired in favour of `sitrep` and `finished`. `installed_plugins.json` still holds
-stale project-scope entries on both machines; that file is written by the running process and was left
-alone deliberately.
+`session` skill was retired in favour of `sitrep` and `finished`. `installed_plugins.json` held
+stale project-scope entries on both machines. These were later found not to be inert records: each carried a
+`projectPath` and an `installPath` pointing at an old cache directory, so opening those repositories would
+have loaded 2.30.0. Pruned on both machines, with backups taken and the result parse-checked before the
+swap.
 
 ## 2026-09-17 — the deliverable pipeline, relocated and set apart (v2.32.0)
 
@@ -230,4 +232,28 @@ explicit exclusion list rather than an omission, so the category is skipped sile
 reported forever as a new one needing a hand-built chapter, its skills are not flagged as removed
 upstream, and the colophon counts what the page actually lists rather than what the library holds. The
 page states the exclusion instead of leaving the difference between 40 and 43 unexplained.
+
+### Closing state
+
+Three commits sit past the `v2.32.0` tag, one of them a copyedit made on GitHub web. The other two put
+`How skills trigger` and `Installation` ahead of the catalog, because a reader had to scroll past 142
+lines of skill tables to learn how to install the plugin or how a skill is invoked, and then repaired
+two cross-references that broke in the process: both pointed at an *On-demand skills* subheading whose
+bold lead an earlier copyedit had removed, and one said "above" when the move had put its target below.
+
+The downstream site's failures were finally diagnosed properly, and an earlier attribution in this file
+was wrong. The empty-commit guard was a real fix for a real edge case, but it was not why every run went
+red. The log is unambiguous: `GitHub Actions is not permitted to create or approve pull requests
+(createPullRequest)`. The repository had `default_workflow_permissions: read` with pull-request creation
+disabled, so each dispatch pushed a branch and then died at the pull-request step. That is the mechanism
+that produced all sixteen orphan branches, now deleted, and the setting is corrected. A second fault
+would have replaced red runs with noise: the colophon date was rewritten unconditionally, making
+`page !== before` true on every run, so each dispatch would have opened a pull request containing
+nothing but today's date. The date now follows a real change rather than causing one, verified
+idempotent across two consecutive runs, and a triggered run passes.
+
+Both machines are on plugin 2.32.0 at user scope, updated through `claude plugin update` rather than the
+slash command so the Mac could be done over SSH. The bundled toolchain was confirmed present in the
+plugin cache, which is the check that matters: it is the first release where these skills can run for
+someone who is not the author.
 
