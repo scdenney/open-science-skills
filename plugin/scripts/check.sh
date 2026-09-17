@@ -24,6 +24,10 @@ for path in skills:
     metadata = yaml.safe_load(text.split("---", 2)[1])
     assert metadata.get("name") == path.parent.name, f"name mismatch: {path}"
     assert isinstance(metadata.get("description"), str) and metadata["description"].strip(), f"missing description: {path}"
+    # Anthropic caps a skill description at 1024 characters. Over the cap the
+    # skill is rejected at load, and nothing upstream says so out loud.
+    n = len(metadata["description"])
+    assert n <= 1024, f"description is {n} chars, over the 1024 cap: {path}"
 for path in Path("codex").glob("*/agents/openai.yaml"):
     yaml.safe_load(path.read_text(encoding="utf-8"))
 print(f"yaml ok: {len(skills)} skills and Codex UI metadata")
