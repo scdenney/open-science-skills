@@ -48,7 +48,7 @@ claude plugin install oss@open-science-skills
 claude plugin install oss@open-science-skills --scope project
 ```
 
-Then invoke a skill by name, for example `/oss:conjoint-design`. Every skill is on demand, so nothing loads into a session until you ask for it (see *On-demand skills* under [Skills](#skills)).
+Then invoke a skill by name, for example `/oss:conjoint-design`. Every skill is on demand, so nothing loads into a session until you ask for it (see [Skills](#skills)).
 
 On Codex there is no plugin. Install the skills library instead (see [Codex](#codex)).
 
@@ -58,7 +58,7 @@ On Codex there is no plugin. Install the skills library instead (see [Codex](#co
 
 No skill loads on its own. Name one, with `/oss:skill-name` in Claude Code or `$skill-name` in Codex, and it reads into context and runs. Nothing is suggested unprompted, so the library costs an idle session nothing.
 
-The orchestration and delegated-review skills (`orchestrate`, `spawn`, `advisor`, `model-committee` and its chair variants, `diverge --codex`, and `paper-review-lite --codex`) start subagents, full peer sessions, or an external model. Every skill is on demand (see *On-demand skills* above), but for these the rule is load-bearing rather than economical.
+The orchestration and delegated-review skills (`orchestrate`, `spawn`, `advisor`, `model-committee` and its chair variants, `diverge --codex`, and `paper-review-lite --codex`) start subagents, full peer sessions, or an external model. Every skill is on demand (see [Skills](#skills)), but for these the rule is load-bearing rather than economical.
 
 ---
 
