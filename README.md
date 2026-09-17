@@ -56,9 +56,9 @@ On Codex there is no plugin. Install the skills library instead (see [Codex](#co
 
 ## Skills
 
-Every skill in the library is on demand. None loads automatically, none is suggested unprompted, and none consumes session context until invoked by name (`/oss:conjoint-design`). This keeps the library’s always-on context cost near zero, rather than the roughly 10,000 tokens required to carry the full library implicitly.
+Every skill in the library is on demand. None loads automatically, none is suggested unprompted, and none uses context until invoked by name (`/oss:conjoint-design`). This keeps the library’s baseline context cost near zero, compared with roughly 10,000 tokens if the full library were loaded into every session.
 
-The tradeoff is deliberate. A skill that loads automatically must justify its context cost in every session. A specialist used only occasionally is cheaper to invoke by name than to carry by default. Claude Code enforces this with `disable-model-invocation: true` in each skill’s frontmatter. The Codex library uses the equivalent `allow_implicit_invocation: false` policy (see [`codex/README.md`](codex/README.md)). `plugin/scripts/check.sh` fails if a skill on either platform is missing the required flag.
+The tradeoff is deliberate. Automatically loading a skill imposes a context cost in every session, whether the skill is needed or not. For specialized skills used only occasionally, explicit invocation is more efficient. Claude Code enforces this with `disable-model-invocation: true` in each skill’s frontmatter. The Codex library uses the equivalent `allow_implicit_invocation: false` policy (see [`codex/README.md`](codex/README.md)). `plugin/scripts/check.sh` fails if a skill on either platform is missing the required flag.
 
 Skills are grouped by their role in a research project. Unless the Platform column indicates otherwise, each skill runs on both Claude Code (`/oss:name`) and Codex (`$name`). Names retired in v2.25.0 (`diverge-codex`, `paper-review-lite-codex`, `survey-flow-audit`, `vlm-ocr-evaluation`, `vlm-ocr-pipeline`, `post-ocr-cleanup`, `fair-check`) remain available as aliases that invoke the merged skill in the corresponding mode.
 
