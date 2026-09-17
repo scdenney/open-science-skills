@@ -120,6 +120,16 @@ One audit, two blocks. The **package block** grades the local package against th
 
 Read everything in the target directory. Grade it against the **Pre-Release Checklist** and, when manuscript source or a final PDF is available, the **Paper Consistency Check** below. Report each item as present, partial, or missing, with the file or path that supports the verdict.
 
+### Step 6b. Run the deterministic checks
+
+Grading a package by reading it cannot establish whether it reproduces. `scripts/verify_package.py` answers the part reading cannot.
+
+**Static tier, safe to run unasked.** `python3 scripts/verify_package.py --root <dir>` reads files only. It reports whether a seed is set, whether session or environment information is recorded, whether a dependency lockfile exists, whether any absolute path will fail on another machine, whether anything credential-shaped is committed, and a sha256 manifest of the data directory. Fold each result into the Pre-Release Checklist rather than restating it separately.
+
+**Execution tier, never without authorization.** `--run` copies the package to a temporary directory, executes its master script there, and compares what appeared against the figure-table crosswalk. That executes code the package's author wrote, on this machine. Ask first, in one line, naming the master script you found and what it will run, and proceed only on an explicit yes. If the user declines, if no master script exists, or if the interpreter is not installed, record the clean-room run as **NOT CHECKED** in the audit report and say so plainly. A request for an audit is not authorization to execute.
+
+Report the script's verdict rather than re-deriving it. A failure on `crosswalk` means the package claims outputs its own code did not produce, which is a blocking issue.
+
 ### Step 7. FAIR block — inventory research objects
 
 Before judging FAIR compliance, list every research object the manuscript depends on, whether or not it is inside the package:

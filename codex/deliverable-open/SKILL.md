@@ -10,14 +10,16 @@ A deliverable gets the pipeline when it has a deadline, an audience, and more th
 
 ## Where the tooling lives
 
-- Gate script: `~/Documents/GitHub/resources/project_hygiene/scripts/check_deliverable.py` (or `$DELIVERABLE_CHECK`). Its docstring is the manifest reference; read it before writing a manifest.
-- Hook installer: `~/Documents/GitHub/resources/project_hygiene/scripts/install-hooks.sh <repo>`.
-- Deck template: `~/Documents/GitHub/resources/deck-template/` (self-contained HTML + PDF deck, `content.md` -> `src/build.py`).
+- **Resolve the roots once, before any path below.** `$GH` is your GitHub checkout root: the first of `$OSS_GITHUB_ROOT`, `~/Documents/GitHub`, `~/Documents/github` that exists. Case matters on Linux and not on macOS, so never hardcode one spelling. `$RES` is `$GH/resources` and `$HYG` is `$RES/project_hygiene`. If no candidate exists, say so and stop rather than guessing a path.
+
+- Gate script: `$HYG/scripts/check_deliverable.py` (or `$DELIVERABLE_CHECK`). Its docstring is the manifest reference; read it before writing a manifest.
+- Hook installer: `$HYG/scripts/install-hooks.sh <repo>`.
+- Deck template: `$RES/deck-template/` (self-contained HTML + PDF deck, `content.md` -> `src/build.py`).
 - Handoff format: the one `courses/hdw/HANDOFF.md` uses; wiki format: `courses/hdw/data-module/lecture-planning/00-README.md`.
 
 ## Kind profiles
 
-One file per kind at `~/Documents/GitHub/resources/project_hygiene/kinds/<kind>.md` (talk, paper, module, chapter, review): the interview questions beyond the common five, the manifest defaults, the lint questions `lint_prepare.py` appends, the ship step, and the related skills. Read the profile for the deliverable's kind before round 1 and let it drive rounds 2 and 3; never load more than one profile. One piece of research has one wiki: a paper's talk and referee response declare the paper's `planning/` as their `planning_dir` and add their own numbered files to it, rather than opening a second wiki.
+One file per kind at `$HYG/kinds/<kind>.md` (talk, paper, module, chapter, review): the interview questions beyond the common five, the manifest defaults, the lint questions `lint_prepare.py` appends, the ship step, and the related skills. Read the profile for the deliverable's kind before round 1 and let it drive rounds 2 and 3; never load more than one profile. One piece of research has one wiki: a paper's talk and referee response declare the paper's `planning/` as their `planning_dir` and add their own numbered files to it, rather than opening a second wiki.
 
 ## Rounds
 
@@ -36,7 +38,7 @@ Round 2, from the answers:
 6. **Checks.** Which gate checks apply (see the script docstring): `citations` (bib, scan files, `cite_fields` for decks, `reading_lists` for Markdown syllabi, `verify_bib` where fabricated entries are the risk), `numbers` (source, snapshot id, the data tables that copy it), `facts` and `leaks` for a Jekyll site, `deck_budget`, `prose_tells`, `build`.
 7. **Knowledge base** (research repos). If the repo has a `research-repo` layout, set `knowledge_base: sources/md` and add `references.bib` to `sources_of_truth`; the gate then warns when a cited work has no Markdown source, intake routes unknown sources to `process-source`, and lint checks claims against the sources. Ask once; default to setting it when `sources/md/` exists.
 8. **Planning wiki.** Does a wiki already exist (`lecture-planning/`, `chapters/CLAUDE.md`, `planning/map.md`)? Declare it as `planning_dir`; never move it. Otherwise create `planning/`.
-9. **Voice pin.** The writing-toolkit commit the prose rules are pinned to: `git -C ~/Documents/GitHub/resources/writing-toolkit rev-parse --short HEAD`.
+9. **Voice pin.** The writing-toolkit commit the prose rules are pinned to: `git -C $RES/writing-toolkit rev-parse --short HEAD`.
 10. **Night shift.** Stays `enabled: false` at open. Say so; it is switched on only after one manual `deliverable-lint` run has been read.
 
 ## What gets written
@@ -53,7 +55,7 @@ At the deliverable root:
     preserve_raw_captures: true
     session_state: HANDOFF.md
   ```
-- Commons fields when the research commons exists (`~/Documents/GitHub/research/commons/`): `commons_root` (relative path), `commons_tags` (sorted lowercase slugs), and optionally `commons_revision` (a full commit to pin). At session start only the commons INDEX lines matching the tags enter context, capped at twenty; cards and threads are read on demand.
+- Commons fields when the research commons exists (`$GH/research/commons/`): `commons_root` (relative path), `commons_tags` (sorted lowercase slugs), and optionally `commons_revision` (a full commit to pin). At session start only the commons INDEX lines matching the tags enter context, capped at twenty; cards and threads are read on demand.
 - `HANDOFF.md` with the standard header and a first entry dated today: **Decision** (what was opened and why), **Completed** (the files created), **Next actions** (run the gate; first intake).
 - `planning/00-README.md` (folder map, sources of truth, decisions recorded here) and `planning/08-open-questions.md` (open list plus a resolved log) unless an existing wiki was declared; then add the manifest pointer to that wiki's index instead.
 - `inbox/README.md`: "Raw captures. Dictate into a new dated file here; never edit a capture; `deliverable-intake` promotes it and renames it `*.done.md`."
@@ -65,7 +67,7 @@ Then:
 - If the repo has no `.githooks/pre-commit`, offer `install-hooks.sh`; install only on a yes.
 - Offer to append the deliverable's proper nouns (people, places, named theories, project names) to `~/.config/macwhspr/vocab.md` so dictation renders them correctly; append only on a yes, one term per line, under a heading naming the deliverable.
 - Offer to add the manifest path to `~/.claude-assistant/config/deliverables.yml` (the night-shift registry). Listing is not enabling.
-- If the repo root has no `AGENTS.md`, say so and stop; do not create one here. If it has one and lacks a `## Deliverable pipeline` section, offer to append the canonical paragraph from `~/Documents/GitHub/resources/project_hygiene/notes/agents-pipeline-paragraph.md` (it is what tells either vendor when to invoke which on-demand skill, and what lets Codex, which has no hooks, start from the same context).
+- If the repo root has no `AGENTS.md`, say so and stop; do not create one here. If it has one and lacks a `## Deliverable pipeline` section, offer to append the canonical paragraph from `$HYG/notes/agents-pipeline-paragraph.md` (it is what tells either vendor when to invoke which on-demand skill, and what lets Codex, which has no hooks, start from the same context).
 
 ## Exit
 

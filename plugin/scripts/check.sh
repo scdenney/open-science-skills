@@ -9,6 +9,7 @@ cd "$ROOT"
 python3 - <<'PY'
 import json
 import subprocess
+import sys
 from pathlib import Path
 import yaml
 
@@ -36,14 +37,18 @@ print(f"yaml ok: {len(skills)} skills and Codex UI metadata")
 # day it is added. SyncThing's 777 + core.fileMode false hides a bad mode locally,
 # so the tracked mode in the index is the only thing worth asserting.
 helpers = sorted(
-    str(p) for p in list(Path("plugin/skills").rglob("*.sh")) + list(Path("codex").rglob("*.sh"))
+    str(p) for root in ("plugin/skills", "codex")
+    for pat in ("*.sh", "*.py") for p in Path(root).rglob(pat)
 )
 assert helpers, "no bundled helper scripts found -- glob is wrong"
 for name in helpers:
     entry = subprocess.check_output(["git", "ls-files", "-s", "--", name], text=True)
     assert entry, f"helper is untracked: {name}"
     assert entry.startswith("100755 "), f"helper must be tracked executable: {name}"
-    subprocess.run(["bash", "-n", name], check=True)
+    if name.endswith(".sh"):
+        subprocess.run(["bash", "-n", name], check=True)
+    else:
+        subprocess.run([sys.executable, "-m", "py_compile", name], check=True)
 print(f"helper syntax and executable modes ok: {len(helpers)} scripts")
 PY
 
