@@ -41,6 +41,8 @@ Record actual absolute paths, design family, source format, target journal, and 
 
 Each subagent receives only the relevant dimension block, the manuscript and related absolute paths, the common severity and quote requirements, and its assigned output path. Keep agents blind to one another. A non-zero exit, an empty output file, or a refusal is a failed reviewer, not evidence that the manuscript passed.
 
+**Deterministic pre-pass (do this before launching any agent).** If the paper ships analysis code or a replication package, run the `replication-package` skill's `scripts/verify_package.py --root <dir>` static tier. It reads files only, costs nothing, and takes seconds. Hand its output to Agent 2 and Agent 9 as evidence. Without it, Agent 2 can only compare the manuscript to itself, so a table that disagrees with what the code now produces is invisible to every agent in the fan-out. If a master script exists, ask once, in one line, whether to re-run with `--run` for a clean-room execution; on anything short of an explicit yes, record the clean-room run as NOT CHECKED. Never execute the author's code unasked.
+
 ### 2. Parallel Deep Review (nine agents)
 
 **Agent 1 — Content & Argument (Red Team primary)**: Read the full paper. Your posture is adversarial but fair: find every place the argument is weaker than the paper presents it to be. Check logical flow from introduction through conclusion. Identify unsupported claims, logical gaps, missing caveats, and places where the argument is unclear or circular. Flag any claims in the abstract not backed up in the body. Note missing discussion of limitations. Check whether the framing accurately positions the contribution relative to cited prior work.

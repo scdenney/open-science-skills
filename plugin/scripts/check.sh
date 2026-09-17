@@ -73,6 +73,7 @@ model-committee-sol
 paper-review-lite-codex
 post-ocr-cleanup
 survey-flow-audit
+verify
 vlm-ocr-evaluation
 vlm-ocr-pipeline
 ALIASES
