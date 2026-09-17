@@ -156,15 +156,14 @@ Skills are grouped by their role in a research project. Unless the Platform colu
 | [presubmit](plugin/skills/presubmit/SKILL.md) | Claude Code | `/oss:presubmit` | Set up and run the standalone [presubmit CLI](https://github.com/scdenney/presubmit), a 30-plus-stage adversarial review pipeline driven by the Anthropic API. |
 | [referee-response](plugin/skills/referee-response/SKILL.md) | Both | `/oss:referee-response` | Organize and format a response to reviewers. Extract each referee point with severity and type, order revisions by dependency, flag defensible pushbacks as questions, and build the response letter with substantive answers left to you. Never writes the science. |
 | [journal-review](plugin/skills/journal-review/SKILL.md) | Both | `/oss:journal-review` | Draft a senior referee report on someone else's manuscript. Uses parallel finder agents and a chief-reviewer synthesis to produce a structured report. |
-### Deliverable pipeline — experimental, and a different animal
+### Deliverable pipeline (experimental)
 
-These three stand apart from the rest of the library, and are numbered last on purpose.
+These three skills stand apart from the rest of the library.
 
 Every other skill here enforces a methodological standard: identify the data-generating process
 before proposing an estimator, hold a design to its pre-analysis plan, report to APSA, JARS and
-DA-RT. These three do not. They manage the **writing project** around an output, whatever kind it
-is — a talk, a course module, a journal article, a book chapter, or a referee report. Only one of
-those five is a research paper. The pipeline does not care whether your estimator matches your
+DA-RT. These three do not. They manage the **writing project and process** around an output, whatever kind it
+is — a talk, a course module, a journal article, a book chapter, or a referee report. The pipeline does not care whether your estimator matches your
 design; it cares whether the thing you are writing has a stated audience, a claim, a done-test, and
 a record of what changed.
 
@@ -175,7 +174,7 @@ of competing with it: `research-repo` builds the source and analysis spine (`sou
 `deliverable-lint` sits earlier than `paper-review-lite` and `presubmit` rather than replacing them:
 it is the cheap, section-anchored pass at any milestone, and it feeds them at the submission one.
 
-**Experimental.** The interfaces here are less settled than the rest of the library and may change
+The interfaces here are less settled than the rest of the library and may change
 without an alias for the old name. The ideas are borrowed rather than invented — the manifest and
 done-test come from how software projects state acceptance criteria, the append-only handoff from
 engineering hand-off logs, and the detection-in-parallel, revision-in-series split from how editorial
