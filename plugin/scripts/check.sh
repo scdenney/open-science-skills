@@ -37,7 +37,7 @@ print(f"yaml ok: {len(skills)} skills and Codex UI metadata")
 # day it is added. SyncThing's 777 + core.fileMode false hides a bad mode locally,
 # so the tracked mode in the index is the only thing worth asserting.
 helpers = sorted(
-    str(p) for root in ("plugin/skills", "codex")
+    str(p) for root in ("plugin/skills", "plugin/tools", "codex")
     for pat in ("*.sh", "*.py") for p in Path(root).rglob(pat)
 )
 assert helpers, "no bundled helper scripts found -- glob is wrong"
@@ -50,6 +50,14 @@ for name in helpers:
     else:
         subprocess.run([sys.executable, "-m", "py_compile", name], check=True)
 print(f"helper syntax and executable modes ok: {len(helpers)} scripts")
+tool = Path("plugin/tools/deliverable")
+if tool.is_dir():
+    for sub in ("scripts", "kinds"):
+        assert (tool / sub).is_dir(), f"deliverable toolchain is missing {sub}/"
+    assert (tool / "scripts" / "check_deliverable.py").exists(), "lint scripts need check_deliverable.py as a sibling"
+    assert list((tool / "kinds").glob("*.md")), "no kind profiles"
+    print(f"deliverable toolchain ok: {len([x for x in (tool/"scripts").iterdir() if x.is_file()])} scripts, {len(list((tool/'kinds').glob('*.md')))} kind profiles")
+
 PY
 
 tmpdir="$(mktemp -d)"

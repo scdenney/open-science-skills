@@ -203,3 +203,31 @@ into the library so future changes need no reinstall. Fourteen redundant per-pro
 stale project-scope entries on both machines; that file is written by the running process and was left
 alone deliberately.
 
+## 2026-09-17 — the deliverable pipeline, relocated and set apart (v2.32.0)
+
+Prompted by a plain question about the README: are these three skills redundant with `paper-review-lite`
+and `replication-package`? They are not, and checking established why. The file sets are disjoint —
+`research-repo` scaffolds `sources/`, `references.bib` and `manuscript/`, `deliverable-open` scaffolds
+`deliverable.yml`, `HANDOFF.md`, `planning/` and `inbox/`, and nothing is built twice. `deliverable-lint`
+already states its own position as the cheap section-anchored pass at any milestone that feeds
+`paper-review-lite` and `presubmit` at the submission one.
+
+The real mismatch was one of category, not function. The pipeline serves five kinds — chapter, module,
+paper, review, talk — of which one is a research output; `module` is teaching. The library's stated
+purpose is methodological: data-generating process before estimator, theory to falsifiable if-then,
+reporting to APSA, JARS and DA-RT. The pipeline enforces none of that. It manages the writing project
+around an output. That is why it read as bolted on, and the answer was to say so rather than to pretend
+otherwise.
+
+Two decisions followed. The toolchain moved into the library at `plugin/tools/deliverable/`, ending the
+state where two of the three skills could only run on the author's machines, with relative symlinks left
+at the old path so seven dependent repositories and the installed git hooks keep resolving one copy.
+And the section moved to the end of the catalog, marked experimental, with its borrowed ideas credited
+and its table rewritten in plain language.
+
+It is deliberately **not** published on the ai-for-research skills index. The sync script now carries an
+explicit exclusion list rather than an omission, so the category is skipped silently instead of being
+reported forever as a new one needing a hand-built chapter, its skills are not flagged as removed
+upstream, and the colophon counts what the page actually lists rather than what the library holds. The
+page states the exclusion instead of leaving the difference between 40 and 43 unexplained.
+

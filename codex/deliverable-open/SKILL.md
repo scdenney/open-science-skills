@@ -10,16 +10,16 @@ A deliverable gets the pipeline when it has a deadline, an audience, and more th
 
 ## Where the tooling lives
 
-- **Resolve the roots once, before any path below.** `$GH` is your GitHub checkout root: the first of `$OSS_GITHUB_ROOT`, `~/Documents/GitHub`, `~/Documents/github` that exists. Case matters on Linux and not on macOS, so never hardcode one spelling. `$RES` is `$GH/resources` and `$HYG` is `$RES/project_hygiene`. If no candidate exists, or `$HYG` is not a directory, stop and say exactly why: this skill drives scripts kept in a separate `project_hygiene` checkout that is not part of this plugin. Name the paths you tried and point at `$OSS_GITHUB_ROOT`. Never guess a path, and never continue with a degraded run.
+- **Resolve the toolchain once, before any path below.** `$DTOOL` is the deliverable toolchain, which now ships with this library at `plugin/tools/deliverable`. Take the first that exists: `$DELIVERABLE_TOOLS`, `${CLAUDE_PLUGIN_ROOT}/tools/deliverable` (Claude Code sets that variable for a plugin skill), the `plugin/tools/deliverable` directory of an `open-science-skills` checkout, then a legacy `project_hygiene/scripts` checkout for installations that predate the move. Scripts are at `$DTOOL/scripts/` and kind profiles at `$DTOOL/kinds/`, and the two must stay siblings because `lint_prepare.py` resolves profiles relative to its own directory. If none exists, stop, name the paths you tried, and never continue with a degraded run.
 
-- Gate script: `$HYG/scripts/check_deliverable.py` (or `$DELIVERABLE_CHECK`). Its docstring is the manifest reference; read it before writing a manifest.
-- Hook installer: `$HYG/scripts/install-hooks.sh <repo>`.
+- Gate script: `$DTOOL/scripts/check_deliverable.py` (or `$DELIVERABLE_CHECK`). Its docstring is the manifest reference; read it before writing a manifest.
+- Hook installer: `$DTOOL/scripts/install-hooks.sh <repo>`.
 - Deck template: `$RES/deck-template/` (self-contained HTML + PDF deck, `content.md` -> `src/build.py`).
 - Handoff format: the one `courses/hdw/HANDOFF.md` uses; wiki format: `courses/hdw/data-module/lecture-planning/00-README.md`.
 
 ## Kind profiles
 
-One file per kind at `$HYG/kinds/<kind>.md` (talk, paper, module, chapter, review): the interview questions beyond the common five, the manifest defaults, the lint questions `lint_prepare.py` appends, the ship step, and the related skills. Read the profile for the deliverable's kind before round 1 and let it drive rounds 2 and 3; never load more than one profile. One piece of research has one wiki: a paper's talk and referee response declare the paper's `planning/` as their `planning_dir` and add their own numbered files to it, rather than opening a second wiki.
+One file per kind at `$DTOOL/kinds/<kind>.md` (talk, paper, module, chapter, review): the interview questions beyond the common five, the manifest defaults, the lint questions `lint_prepare.py` appends, the ship step, and the related skills. Read the profile for the deliverable's kind before round 1 and let it drive rounds 2 and 3; never load more than one profile. One piece of research has one wiki: a paper's talk and referee response declare the paper's `planning/` as their `planning_dir` and add their own numbered files to it, rather than opening a second wiki.
 
 ## Rounds
 
@@ -67,11 +67,11 @@ Then:
 - If the repo has no `.githooks/pre-commit`, offer `install-hooks.sh`; install only on a yes.
 - Offer to append the deliverable's proper nouns (people, places, named theories, project names) to `~/.config/macwhspr/vocab.md` so dictation renders them correctly; append only on a yes, one term per line, under a heading naming the deliverable.
 - Offer to add the manifest path to `~/.claude-assistant/config/deliverables.yml` (the night-shift registry). Listing is not enabling.
-- If the repo root has no `AGENTS.md`, say so and stop; do not create one here. If it has one and lacks a `## Deliverable pipeline` section, offer to append the canonical paragraph from `$HYG/notes/agents-pipeline-paragraph.md` (it is what tells either vendor when to invoke which on-demand skill, and what lets Codex, which has no hooks, start from the same context).
+- If the repo root has no `AGENTS.md`, say so and stop; do not create one here. If it has one and lacks a `## Deliverable pipeline` section, offer to append the canonical paragraph from `$DTOOL/notes/agents-pipeline-paragraph.md` (it is what tells either vendor when to invoke which on-demand skill, and what lets Codex, which has no hooks, start from the same context).
 
 ## Exit
 
-Run `python3 $HYG/scripts/check_deliverable.py --root <dir>` once and show the result. Name the next step in one line: dictate the first braindump into `inbox/`, then `$deliverable-intake`.
+Run `python3 $DTOOL/scripts/check_deliverable.py --root <dir>` once and show the result. Name the next step in one line: dictate the first braindump into `inbox/`, then `$deliverable-intake`.
 
 ## Notes
 

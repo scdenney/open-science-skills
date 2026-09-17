@@ -83,18 +83,6 @@ Skills are grouped by their role in a research project. Unless the Platform colu
 | [spawn](plugin/skills/spawn/SKILL.md) | Both | `/oss:spawn` | Spawn peer sessions in new terminal panes, each in its own git worktree with a directed task and contract brief. Detects herdr, tmux, or a plain terminal. The lead monitors and merges branches. |
 | [advisor](plugin/skills/advisor/SKILL.md) | Both | `/oss:advisor` / `$advisor` | Escalate one decision to an independent second reviewer before committing to an interpretation or completing a task. Your session leads on Opus 5 or Sonnet 5. The Fable 5.1 advisor uses max reasoning. A Fable lead uses `orchestrate`'s Astra peer or the committee. The [Codex counterpart](codex/advisor/SKILL.md) uses Astra/xhigh. |
 
-### Deliverable pipeline
-
-The architecture behind these three skills is written up, with a diagram, in [`docs/deliverable-pipeline.md`](docs/deliverable-pipeline.md). It rests on one wiki per piece of research, one manifest per deliverable, and one profile per kind, with a deterministic gate before any model review, detection in parallel and revision in series, and both vendors working on the same files.
-
-**External dependency.** `deliverable-open` and `deliverable-lint` drive a deterministic gate and a run-preparation script that live in a separate `project_hygiene` checkout, not in this repository, and they stop with a message naming what is missing when it is absent. `deliverable-intake` is self-contained and works on its own. Set `$OSS_GITHUB_ROOT` if your checkouts are not under `~/Documents/GitHub` or `~/Documents/github`.
-
-| Skill | Platform | Command | What it does |
-|---|---|---|---|
-| [deliverable-open](plugin/skills/deliverable-open/SKILL.md) | Both | `/oss:deliverable-open` | Open a talk, module, paper, chapter, or review as a pipeline unit. A rounds interview creates `deliverable.yml`, `HANDOFF.md`, a `planning/` wiki, and an `inbox/` for dictated notes. Talks use the house deck template. |
-| [deliverable-intake](plugin/skills/deliverable-intake/SKILL.md) | Both | `/oss:deliverable-intake` | Convert dictated or typed notes into a unified diff against the planning wiki. Classify and trace each statement. Keep uncertain names and citations UNRESOLVED. Apply decisions only on assent. |
-| [deliverable-lint](plugin/skills/deliverable-lint/SKILL.md) | Both | `/oss:deliverable-lint` | Run whole-deliverable editorial review in detection mode. Start with build, citations, numbers, facts, and leaks. Add a cheap finder per section and a strong global pass. Produce anchored P0/P1/P2 findings and honest NOT-CHECKED coverage within a dollar budget. The night shift runs headless. |
-
 ### Ideation
 
 | Skill | Platform | Command | What it does |
@@ -168,6 +156,44 @@ The architecture behind these three skills is written up, with a diagram, in [`d
 | [presubmit](plugin/skills/presubmit/SKILL.md) | Claude Code | `/oss:presubmit` | Set up and run the standalone [presubmit CLI](https://github.com/scdenney/presubmit), a 30-plus-stage adversarial review pipeline driven by the Anthropic API. |
 | [referee-response](plugin/skills/referee-response/SKILL.md) | Both | `/oss:referee-response` | Organize and format a response to reviewers. Extract each referee point with severity and type, order revisions by dependency, flag defensible pushbacks as questions, and build the response letter with substantive answers left to you. Never writes the science. |
 | [journal-review](plugin/skills/journal-review/SKILL.md) | Both | `/oss:journal-review` | Draft a senior referee report on someone else's manuscript. Uses parallel finder agents and a chief-reviewer synthesis to produce a structured report. |
+### Deliverable pipeline — experimental, and a different animal
+
+These three stand apart from the rest of the library, and are numbered last on purpose.
+
+Every other skill here enforces a methodological standard: identify the data-generating process
+before proposing an estimator, hold a design to its pre-analysis plan, report to APSA, JARS and
+DA-RT. These three do not. They manage the **writing project** around an output, whatever kind it
+is — a talk, a course module, a journal article, a book chapter, or a referee report. Only one of
+those five is a research paper. The pipeline does not care whether your estimator matches your
+design; it cares whether the thing you are writing has a stated audience, a claim, a done-test, and
+a record of what changed.
+
+So treat this as adjacent work rather than part of the core. It composes with `research-repo` instead
+of competing with it: `research-repo` builds the source and analysis spine (`sources/`,
+`references.bib`, `manuscript/`), while `deliverable-open` builds the writing spine
+(`deliverable.yml`, `HANDOFF.md`, `planning/`, `inbox/`). Nothing is scaffolded twice. And
+`deliverable-lint` sits earlier than `paper-review-lite` and `presubmit` rather than replacing them:
+it is the cheap, section-anchored pass at any milestone, and it feeds them at the submission one.
+
+**Experimental.** The interfaces here are less settled than the rest of the library and may change
+without an alias for the old name. The ideas are borrowed rather than invented — the manifest and
+done-test come from how software projects state acceptance criteria, the append-only handoff from
+engineering hand-off logs, and the detection-in-parallel, revision-in-series split from how editorial
+teams separate finding problems from fixing them. The architecture is written up, with a diagram, in
+[`docs/deliverable-pipeline.md`](docs/deliverable-pipeline.md).
+
+The toolchain these skills drive now ships with the library, at
+[`plugin/tools/deliverable/`](plugin/tools/deliverable) — the deterministic gate, the run-preparation
+and adjudication scripts, and the five kind profiles. It used to live in a separate checkout, so
+these skills only worked on the author's own machines.
+
+| Skill | Platform | Command | What it does |
+|---|---|---|---|
+| [deliverable-open](plugin/skills/deliverable-open/SKILL.md) | Both | `/oss:deliverable-open` | Set a piece of writing up as a tracked project. An interview asks who it is for, what it claims, and how you will know it is done, then writes that down along with a handoff file, a planning folder, and a drop box for dictated notes. |
+| [deliverable-intake](plugin/skills/deliverable-intake/SKILL.md) | Both | `/oss:deliverable-intake` | Turn a dictated or typed braindump into proposed edits to the planning notes, with every statement traced back to what you said. Nothing is applied until you agree to it. |
+| [deliverable-lint](plugin/skills/deliverable-lint/SKILL.md) | Both | `/oss:deliverable-lint` | Review a draft section by section without rewriting it. Mechanical checks run first and stop the run if they fail; then one reader per section and one over the whole piece. Findings are ranked, tied to a file and line, and honest about what went unchecked. |
+
+
 
 ---
 
