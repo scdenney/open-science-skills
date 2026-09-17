@@ -262,14 +262,6 @@ For selective and repository-scoped install, plus the Codex catalog, see [`codex
 
 ---
 
-## Knowledge base and sources
-
-The skills are built from a curated corpus of methods texts rather than the model's built-in knowledge. [SOURCES.md](SOURCES.md) is the full bibliography, around 150 works, and it is the part that ships. The Markdown conversions behind it stay local to the authoring machine, for copyright and size, so no source corpus is distributed with the plugin.
-
-Where a skill needs chapter-and-verse support it reads **your** source library, not one bundled here. `fact-check` looks for a per-source Markdown directory in whatever project you point it at, trying `sources/md/`, `knowledge_base/md/`, `sources/`, then `knowledge_base/`, and refuses to run when none of them is populated rather than verifying a claim against nothing. `research-repo` scaffolds that layout and `doc-to-markdown` fills it.
-
----
-
 ## Contributing
 
 Pull requests are welcome. To add a skill:
