@@ -14,7 +14,7 @@
 [![sources](https://img.shields.io/badge/sources-150%2B-purple)](SOURCES.md)
 [![PRs welcome](https://img.shields.io/badge/PRs-welcome-brightgreen)](#contributing)
 
-Open Science Skills is a library of 41 agentic skills for Claude Code, with a parallel 40-skill library for OpenAI Codex, written for computational social scientists and digital humanists. Each skill is meant to work the way the field expects. Identify the data-generating process before proposing an estimator, and design experiments and instruments to a standard. Drafts are held to established reporting norms.
+Open Science Skills is a library of 43 agentic skills for Claude Code, with a parallel 42-skill library for OpenAI Codex, written for computational social scientists and digital humanists. Each skill is meant to work the way the field expects. Identify the data-generating process before proposing an estimator, and design experiments and instruments to a standard. Drafts are held to established reporting norms.
 
 The library follows the research lifecycle. It covers survey design, list experiments, topic modeling, LLM text classification, VLM-based OCR pipelines, manuscript QA, multi-model orchestration, and transparent reporting under APSA, JARS, DA-RT, TOP, and FAIR expectations. Every skill is grounded in published methods sources and based on best practices for writing skills. See [SOURCES.md](SOURCES.md) for the bibliography of 150+ works consulted.
 
@@ -84,6 +84,8 @@ Skills are grouped by where they fall in a project. Unless the Platform column s
 ### Deliverable pipeline
 
 The architecture behind these three skills is written up, with a diagram, in [`docs/deliverable-pipeline.md`](docs/deliverable-pipeline.md). It rests on one wiki per piece of research, one manifest per deliverable, and one profile per kind, with a deterministic gate before any model review, detection in parallel and revision in series, and both vendors working on the same files.
+
+**External dependency.** `deliverable-open` and `deliverable-lint` drive a deterministic gate and a run-preparation script that live in a separate `project_hygiene` checkout, not in this repository, and they stop with a message naming what is missing when it is absent. `deliverable-intake` is self-contained and works on its own. Set `$OSS_GITHUB_ROOT` if your checkouts are not under `~/Documents/GitHub` or `~/Documents/github`.
 
 | Skill | Platform | Command | What it does |
 |---|---|---|---|
@@ -185,7 +187,7 @@ The orchestration and delegated-review skills (`orchestrate`, `spawn`, `advisor`
 
 ### Claude Code
 
-The recommended install is the plugin, shown in [Quick start](#quick-start). It registers the marketplace and installs all 41 skills, their slash commands, and the alias commands for retired names. The command prefix is `oss:`, for open science skills. The marketplace and the repository are both named `open-science-skills`.
+The recommended install is the plugin, shown in [Quick start](#quick-start). It registers the marketplace and installs all 43 skills, each of which registers as its own `/oss:` slash command, plus the alias commands for retired names and preset modes. The command prefix is `oss:`, for open science skills. The marketplace and the repository are both named `open-science-skills`.
 
 To try the plugin for one session without installing:
 
@@ -247,7 +249,7 @@ A copied skill is invoked by its own name. The `/oss:` namespace and the alias c
 
 ### Codex
 
-Codex discovers skills under `.agents/skills` (repository) and `~/.agents/skills` (user-wide). From this repository's root, preview and install all 40 Codex skills without replacing existing paths:
+Codex discovers skills under `.agents/skills` (repository) and `~/.agents/skills` (user-wide). From this repository's root, preview and install all 42 Codex skills without replacing existing paths:
 
 ```bash
 python3 plugin/scripts/install-codex.py --all --dry-run
@@ -269,11 +271,11 @@ The skills are built from a curated corpus of methods texts rather than the mode
 Pull requests are welcome. To add a skill:
 
 1. Write `plugin/skills/<name>/SKILL.md`, following the [skill authoring best practices](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices).
-2. Add `plugin/commands/<name>.md` (a one-paragraph activation prompt plus `$ARGUMENTS`, following the existing examples).
+2. Give the frontmatter `disable-model-invocation: true`. Every skill is on demand, and `check.sh` fails without it. Do **not** add `plugin/commands/<name>.md`; a plugin skill already registers as `/oss:<name>`, so a same-named command file is a duplicate menu entry and `check.sh` rejects it. That directory is for alias commands only.
 3. Mirror the skill to `plugin/.skills/<name>.md`, byte-identical.
 4. Add the Codex package at `codex/<name>/` (`SKILL.md` and `agents/openai.yaml`), unless the skill is intentionally platform-specific.
 5. Add sources to `SOURCES.md`.
-6. Update the catalogs and badges. Install check dependencies with `python3 -m pip install -r plugin/scripts/requirements-check.txt`, then run `bash plugin/scripts/check.sh` and `python3 plugin/scripts/test-codex-wrappers.py`.
+6. Update the catalogs and badges. Install check dependencies with `python3 -m pip install -r plugin/scripts/requirements-check.txt`, then run `bash plugin/scripts/check.sh`, `python3 plugin/scripts/test-codex-wrappers.py`, and `python3 plugin/scripts/test-install-codex.py`. CI runs all three.
 
 ## License
 

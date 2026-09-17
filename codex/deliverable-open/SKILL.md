@@ -10,7 +10,7 @@ A deliverable gets the pipeline when it has a deadline, an audience, and more th
 
 ## Where the tooling lives
 
-- **Resolve the roots once, before any path below.** `$GH` is your GitHub checkout root: the first of `$OSS_GITHUB_ROOT`, `~/Documents/GitHub`, `~/Documents/github` that exists. Case matters on Linux and not on macOS, so never hardcode one spelling. `$RES` is `$GH/resources` and `$HYG` is `$RES/project_hygiene`. If no candidate exists, say so and stop rather than guessing a path.
+- **Resolve the roots once, before any path below.** `$GH` is your GitHub checkout root: the first of `$OSS_GITHUB_ROOT`, `~/Documents/GitHub`, `~/Documents/github` that exists. Case matters on Linux and not on macOS, so never hardcode one spelling. `$RES` is `$GH/resources` and `$HYG` is `$RES/project_hygiene`. If no candidate exists, or `$HYG` is not a directory, stop and say exactly why: this skill drives scripts kept in a separate `project_hygiene` checkout that is not part of this plugin. Name the paths you tried and point at `$OSS_GITHUB_ROOT`. Never guess a path, and never continue with a degraded run.
 
 - Gate script: `$HYG/scripts/check_deliverable.py` (or `$DELIVERABLE_CHECK`). Its docstring is the manifest reference; read it before writing a manifest.
 - Hook installer: `$HYG/scripts/install-hooks.sh <repo>`.
@@ -71,7 +71,7 @@ Then:
 
 ## Exit
 
-Run `python3 check_deliverable.py --root <dir>` once and show the result. Name the next step in one line: dictate the first braindump into `inbox/`, then `$deliverable-intake`.
+Run `python3 $HYG/scripts/check_deliverable.py --root <dir>` once and show the result. Name the next step in one line: dictate the first braindump into `inbox/`, then `$deliverable-intake`.
 
 ## Notes
 

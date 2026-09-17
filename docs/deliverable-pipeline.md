@@ -40,7 +40,7 @@ AGENTS.md  (CLAUDE.md -> symlink)    rules only, with a "Deliverable pipeline" p
 
 ## Kind profiles
 
-One file per kind in `project_hygiene/kinds/` contains the interview questions beyond the common five, manifest defaults, lint questions that `lint_prepare.py` appends, the ship step, and related skills. A talk asks about the slot and what stays off the slides. It ships to a URL. A paper asks about the venue and the pre-registration. It ships through `paper-review-lite` and `presubmit`. A module asks about the calendar and students. It ships per session without a required lint. A chapter answers to the book map. A review answers to the manuscript version it read.
+One file per kind in the `project_hygiene` checkout's `kinds/` (resolved as `$HYG/kinds/`, see the skills) contains the interview questions beyond the common five, manifest defaults, lint questions that `lint_prepare.py` appends, the ship step, and related skills. A talk asks about the slot and what stays off the slides. It ships to a URL. A paper asks about the venue and the pre-registration. It ships through `paper-review-lite` and `presubmit`. A module asks about the calendar and students. It ships per session without a required lint. A chapter answers to the book map. A review answers to the manuscript version it read.
 
 ## Integration with the rest of the library
 
@@ -54,7 +54,7 @@ One file per kind in `project_hygiene/kinds/` contains the interview questions b
 
 ## Two vendors, one infrastructure
 
-Claude and Codex read and write the same files through the same scripts in `project_hygiene/scripts/`: `deliverable_context.py` (session start; Claude via a hook, Codex via the `AGENTS.md` paragraph), `check_deliverable.py` (the gate), `lint_prepare.py` and `lint_adjudicate.py` (the review), `commons.py` (the shared layer). The Codex library carries the same three skills (`$deliverable-open`, `$deliverable-intake`, `$deliverable-lint`). A Codex session reviewed the design blind, and the results were reconciled. The exchange is the first thread in the commons.
+Claude and Codex read and write the same files through the same scripts in the `project_hygiene` checkout's `scripts/` (`$HYG/scripts/`): `deliverable_context.py` (session start; Claude via a hook, Codex via the `AGENTS.md` paragraph), `check_deliverable.py` (the gate), `lint_prepare.py` and `lint_adjudicate.py` (the review), `commons.py` (the shared layer). The Codex library carries the same three skills (`$deliverable-open`, `$deliverable-intake`, `$deliverable-lint`). A Codex session reviewed the design blind, and the results were reconciled. The exchange is the first thread in the commons.
 
 ## The commons
 

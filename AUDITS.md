@@ -105,3 +105,58 @@ Implemented the follow-up plan while preserving the prior audit and coordinated 
 - Package, wrapper, and installer checks passed. Installer tests cover preview, repeat runs, missing paths, conflicting directories/files/broken links, unknown names, and full-catalog installation. CI runs the installer suite as well.
 
 GitHub publication, the installed Claude plugin update, and the standalone-site publication remain pending. No global model configuration or permissions were changed.
+
+## 2026-09-14 — alias audit and command cleanup (v2.30.0)
+
+Triggered by a live failure: `/oss:fable-orchestrate` fired but did not orchestrate. Scope grew into a
+full audit of the command layer, the alias set, and count drift. Three redundant alias commands were
+removed (`/oss:fable-orchestrate`, `/oss:opus-orchestrate`, `/oss:model-committee-fable`). The two
+orchestrate aliases forced a lead that `/oss:orchestrate` already detects from the session model, and
+both warned the user not to force it on a session running something else, so they were useful only in
+the case they warned against. The README and `codex/README.md` were corrected: the Codex library is
+40 skills, not 37. Skill counts were unchanged; only commands were removed. Commit `310509d`.
+
+Recorded here after the fact. The working notes lived in a gitignored `.claude/` file and so were
+invisible to anyone but the machine that wrote them.
+
+## 2026-09-17 — duplicate slash commands, implicit invocation, and the verification gap (v2.31.0)
+
+Triggered by a user observation that the slash-command menu showed `/oss:spawn` twice. The cause was
+structural rather than local. Claude Code registers a plugin skill as `/oss:<name>` on its own, so the
+per-skill wrapper in `plugin/commands/` had been registering a second, identical entry for every one
+of the 41 skills, one row carrying the SKILL.md description and one carrying only the H1. `check.sh`
+had been *enforcing* the duplication by asserting a 1:1 command-to-skill mapping. The 41 colliding
+wrappers were removed and the assertion inverted: no command may share a skill's name, and every
+command must be a declared alias.
+
+Auditing implicit invocation in the same pass found the two libraries had drifted apart on which
+skills matched from context. Eleven Claude skills and seventeen Codex skills still fired implicitly,
+and the sets did not agree: `tables`, `narrative-building`, `text-classification`, and `paper-tex`
+fired on Codex but not on Claude. Every skill is now on demand on both platforms, asserted by
+`check.sh` in each platform's own dialect.
+
+A separate audit of what the library actually verifies found that no skill executed anything against a
+research artifact. `lintr`, `styler`, `ruff`, `pytest`, `testthat`, and `sha256` appeared zero times
+across all skills. `replication-package`'s audit mode graded a package by reading it, and its own
+checklist item "the package runs in a clean temporary directory" was a human checkbox that nothing
+tested. `paper-review-lite`'s nine agents all read, so Agent 2 could compare a manuscript only against
+itself: a table disagreeing with what the code now produces is invisible when both documents agree and
+both are wrong. `verify_package.py` was bundled into `replication-package` to close this, with a static
+tier that reads files and an execution tier behind explicit authorization, wired into
+`paper-review-lite`'s orientation and exposed as `/oss:verify`.
+
+Two skills were added under a new Repo Hygiene category, `sitrep` and `finished`. Claude 43 skills,
+Codex 42.
+
+Incidental defects found and fixed: `deliverable-open` and `deliverable-lint` hardcoded a macOS-cased
+path that does not exist on Linux, so both failed outright there; `codex/research-grill`'s description
+was 1086 characters, over Anthropic's 1024 cap, and was also the pre-copyedit text a prior pass had
+fixed only on the Claude side; `paper-tex`'s `format_paper.py` was tracked `100644` on both platforms
+while declaring a shebang. `check.sh` gained assertions for the description cap and for bundled `.py`,
+and its executable-bit check now globs rather than naming five paths.
+
+Deliberately not done: the deliverable pipeline's engine stays in the separate `project_hygiene`
+checkout. Moving it would break seven external consumers and silently disable installed git hooks,
+which probe fixed paths and exit 0 when none match. The defect was that the README never disclosed the
+dependency, so that is what was fixed.
+
