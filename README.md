@@ -54,6 +54,91 @@ On Codex there is no plugin. Install the skills library instead (see [Codex](#co
 
 ---
 
+## How skills trigger
+
+No skill loads on its own. Name one, with `/oss:skill-name` in Claude Code or `$skill-name` in Codex, and it reads into context and runs. Nothing is suggested unprompted, so the library costs an idle session nothing.
+
+The orchestration and delegated-review skills (`orchestrate`, `spawn`, `advisor`, `model-committee` and its chair variants, `diverge --codex`, and `paper-review-lite --codex`) start subagents, full peer sessions, or an external model. Every skill is on demand (see *On-demand skills* above), but for these the rule is load-bearing rather than economical.
+
+---
+
+## Installation
+
+### Claude Code
+
+The recommended install is the plugin, shown in [Quick start](#quick-start). It registers the marketplace and installs all 43 skills, each of which registers as its own `/oss:` slash command, plus the alias commands for retired names and preset modes. The command prefix is `oss:`, for open science skills. The marketplace and the repository are both named `open-science-skills`.
+
+To try the plugin for one session without installing:
+
+```bash
+git clone https://github.com/scdenney/open-science-skills.git
+cd open-science-skills && claude --plugin-dir ./plugin
+```
+
+<details>
+<summary><b>Selective install</b> – pick specific skills, outside the `/oss:` namespace</summary>
+
+Clone the repository and run the interactive installer, which lists the skills and installs your choices to `./.claude/skills/` (current project) by default:
+
+```bash
+git clone https://github.com/scdenney/open-science-skills.git
+cd open-science-skills
+bash plugin/scripts/install.sh
+```
+
+Other targets and non-interactive selection:
+
+```bash
+# Install to user-wide skills directory (all projects)
+bash plugin/scripts/install.sh --target ~/.claude/skills
+
+# Install specific skills non-interactively
+bash plugin/scripts/install.sh --skill conjoint-design survey-design list-experiment
+
+# Install all skills
+bash plugin/scripts/install.sh --all --target ~/.claude/skills
+```
+
+Restart Claude Code after installing.
+
+</details>
+
+<details>
+<summary><b>Manual copy</b> – a single skill by hand</summary>
+
+Copy the whole skill folder, since many skills ship reference, asset, or script files their `SKILL.md` points at (replace `your-project` with your project's path):
+
+```bash
+git clone https://github.com/scdenney/open-science-skills.git
+
+# Project-level (current project only) – copy the whole skill folder:
+# many skills ship reference/, assets/, or scripts/ files their SKILL.md points at
+mkdir -p your-project/.claude/skills
+cp -R open-science-skills/plugin/skills/conjoint-design \
+   your-project/.claude/skills/
+
+# User-wide (all projects)
+mkdir -p ~/.claude/skills
+cp -R open-science-skills/plugin/skills/list-experiment ~/.claude/skills/
+```
+
+A copied skill is invoked by its own name. The `/oss:` namespace and the alias commands require the plugin.
+
+</details>
+
+### Codex
+
+Codex discovers skills under `.agents/skills` (repository) and `~/.agents/skills` (user-wide). From this repository's root, preview and install all 42 Codex skills without replacing existing paths:
+
+```bash
+python3 plugin/scripts/install-codex.py --all --dry-run
+python3 plugin/scripts/install-codex.py --all
+```
+
+For selective and repository-scoped install, plus the Codex catalog, see [`codex/README.md`](codex/README.md).
+
+---
+
 ## Skills
 
 Every skill in the library is on demand. None loads automatically, none is suggested unprompted, and none uses context until invoked by name (`/oss:conjoint-design`). This keeps the library’s baseline context cost near zero, compared with roughly 10,000 tokens if the full library were loaded into every session.
@@ -192,98 +277,11 @@ these skills only worked on the author's own machines.
 | [deliverable-intake](plugin/skills/deliverable-intake/SKILL.md) | Both | `/oss:deliverable-intake` | Turn a dictated or typed braindump into proposed edits to the planning notes, with every statement traced back to what you said. Nothing is applied until you agree to it. |
 | [deliverable-lint](plugin/skills/deliverable-lint/SKILL.md) | Both | `/oss:deliverable-lint` | Review a draft section by section without rewriting it. Mechanical checks run first and stop the run if they fail; then one reader per section and one over the whole piece. Findings are ranked, tied to a file and line, and honest about what went unchecked. |
 
-
-
 ---
 
 ## Recommended companion skills
 
 Third-party skills this library recommends and builds on, credited, not claimed, and not counted in the badges. From [Matt Pocock's skills](https://github.com/mattpocock/skills) (MIT): **grill-me** (a frontier-rounds design interview, the seed of `research-grill`, and pairs with `diverge`), **wayfinder** (decision-map planning for software work, the source concept for `research-wayfinder`), and **handoff / claude-handoff** (handoff documents for a successor session, the seed of `spawn`). See [RECOMMENDED.md](RECOMMENDED.md) for the full write-up and [`third-party/mattpocock/`](third-party/mattpocock) for pinned, unmodified reference copies.
-
----
-
-## How skills trigger
-
-No skill loads on its own. Name one, with `/oss:skill-name` in Claude Code or `$skill-name` in Codex, and it reads into context and runs. Nothing is suggested unprompted, so the library costs an idle session nothing.
-
-The orchestration and delegated-review skills (`orchestrate`, `spawn`, `advisor`, `model-committee` and its chair variants, `diverge --codex`, and `paper-review-lite --codex`) start subagents, full peer sessions, or an external model. Every skill is on demand (see *On-demand skills* above), but for these the rule is load-bearing rather than economical.
-
----
-
-## Installation
-
-### Claude Code
-
-The recommended install is the plugin, shown in [Quick start](#quick-start). It registers the marketplace and installs all 43 skills, each of which registers as its own `/oss:` slash command, plus the alias commands for retired names and preset modes. The command prefix is `oss:`, for open science skills. The marketplace and the repository are both named `open-science-skills`.
-
-To try the plugin for one session without installing:
-
-```bash
-git clone https://github.com/scdenney/open-science-skills.git
-cd open-science-skills && claude --plugin-dir ./plugin
-```
-
-<details>
-<summary><b>Selective install</b> – pick specific skills, outside the `/oss:` namespace</summary>
-
-Clone the repository and run the interactive installer, which lists the skills and installs your choices to `./.claude/skills/` (current project) by default:
-
-```bash
-git clone https://github.com/scdenney/open-science-skills.git
-cd open-science-skills
-bash plugin/scripts/install.sh
-```
-
-Other targets and non-interactive selection:
-
-```bash
-# Install to user-wide skills directory (all projects)
-bash plugin/scripts/install.sh --target ~/.claude/skills
-
-# Install specific skills non-interactively
-bash plugin/scripts/install.sh --skill conjoint-design survey-design list-experiment
-
-# Install all skills
-bash plugin/scripts/install.sh --all --target ~/.claude/skills
-```
-
-Restart Claude Code after installing.
-
-</details>
-
-<details>
-<summary><b>Manual copy</b> – a single skill by hand</summary>
-
-Copy the whole skill folder, since many skills ship reference, asset, or script files their `SKILL.md` points at (replace `your-project` with your project's path):
-
-```bash
-git clone https://github.com/scdenney/open-science-skills.git
-
-# Project-level (current project only) – copy the whole skill folder:
-# many skills ship reference/, assets/, or scripts/ files their SKILL.md points at
-mkdir -p your-project/.claude/skills
-cp -R open-science-skills/plugin/skills/conjoint-design \
-   your-project/.claude/skills/
-
-# User-wide (all projects)
-mkdir -p ~/.claude/skills
-cp -R open-science-skills/plugin/skills/list-experiment ~/.claude/skills/
-```
-
-A copied skill is invoked by its own name. The `/oss:` namespace and the alias commands require the plugin.
-
-</details>
-
-### Codex
-
-Codex discovers skills under `.agents/skills` (repository) and `~/.agents/skills` (user-wide). From this repository's root, preview and install all 42 Codex skills without replacing existing paths:
-
-```bash
-python3 plugin/scripts/install-codex.py --all --dry-run
-python3 plugin/scripts/install-codex.py --all
-```
-
-For selective and repository-scoped install, plus the Codex catalog, see [`codex/README.md`](codex/README.md).
 
 ---
 
