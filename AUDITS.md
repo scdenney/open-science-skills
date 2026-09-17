@@ -160,3 +160,46 @@ checkout. Moving it would break seven external consumers and silently disable in
 which probe fixed paths and exit 0 when none match. The defect was that the README never disclosed the
 dependency, so that is what was fixed.
 
+### After the tag
+
+`v2.31.0` sits at `2553f3d`. Four commits landed on `main` after it, two of them copyedits made on
+GitHub web and two removing a false claim the README had carried for a long time: that the repository
+ships a `knowledge_base/` folder the skills read. It does not. The directory is gitignored with zero
+files tracked, so the link 404'd for everyone but the author, and no skill reads it in any case.
+`fact-check` reads the source library of whatever project it is pointed at, searching `sources/md/`,
+`knowledge_base/md/`, `sources/`, then `knowledge_base/` — naming conventions a user's own repository
+might use, not this one's folder. The section was then removed entirely, because the provenance claim
+and the `SOURCES.md` link already appear in the opening paragraph and in the sources badge. These four
+commits are not in any tagged release.
+
+### The downstream site
+
+`ai-for-research` had been stuck at 38 skills and `v2.28.2` since v2.29.0, with fourteen orphaned
+`sync-skills-*` branches on its origin and every sync run since then going red. Four faults, three in
+`scripts/sync-skills.mjs` and one in the workflow. `CATEGORY_MAP` knew ten categories against the
+README's twelve, and an unmapped category is skipped entirely, which accounts for exactly the five
+missing skills. The insertion regex matched `<div class="chapter">` while the page renders
+`<button class="chapter">`, so any new skill in a mapped category would have been reported as added
+and silently dropped. The colophon count regex expected `"). 38 skills"` against text reading
+`"). It includes 38 skills"`, so counts never updated while the version did. And a new category set
+`changed=true` while leaving the page byte-identical, so the PR step committed nothing, exited 1, and
+left a branch behind — the mechanism that produced all fourteen. Fixed, and the release's own dispatch
+passed rather than failing.
+
+Only `docs/skills/index.html` auto-syncs, so two hand-maintained pages were checked separately and both
+carried claims this work had falsified. The getting-started page told readers Codex "can also pick up
+commonly used skills implicitly from how you describe the task", true that morning and false by the
+afternoon, and listed `fable-orchestrate` among retired names that still resolve as aliases, which had
+been wrong since v2.30.0 removed it three days earlier. Both corrected, along with skill counts on the
+homepage and the getting-started page.
+
+### Machine state
+
+Both machines verified on 2.31.0. The Codex install on the Linux box was missing ten library skills,
+some long predating this release, and was repaired with `install-codex.py`; both machines now symlink
+into the library so future changes need no reinstall. Fourteen redundant per-project
+`enabledPlugins` blocks were removed, having pinned old plugin versions as far back as 2.22.0. The
+`session` skill was retired in favour of `sitrep` and `finished`. `installed_plugins.json` still holds
+stale project-scope entries on both machines; that file is written by the running process and was left
+alone deliberately.
+
