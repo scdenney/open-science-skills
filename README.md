@@ -91,9 +91,9 @@ The architecture behind these three skills is written up, with a diagram, in [`d
 
 | Skill | Platform | Command | What it does |
 |---|---|---|---|
-| [deliverable-open](plugin/skills/deliverable-open/SKILL.md) | Claude | `/oss:deliverable-open` | Open a talk, module, paper, chapter, or review as a pipeline unit. A rounds interview creates `deliverable.yml`, `HANDOFF.md`, a `planning/` wiki, and an `inbox/` for dictated notes. Talks use the house deck template. |
-| [deliverable-intake](plugin/skills/deliverable-intake/SKILL.md) | Claude | `/oss:deliverable-intake` | Convert dictated or typed notes into a unified diff against the planning wiki. Classify and trace each statement. Keep uncertain names and citations UNRESOLVED. Apply decisions only on assent. |
-| [deliverable-lint](plugin/skills/deliverable-lint/SKILL.md) | Claude | `/oss:deliverable-lint` | Run whole-deliverable editorial review in detection mode. Start with build, citations, numbers, facts, and leaks. Add a cheap finder per section and a strong global pass. Produce anchored P0/P1/P2 findings and honest NOT-CHECKED coverage within a dollar budget. The night shift runs headless. |
+| [deliverable-open](plugin/skills/deliverable-open/SKILL.md) | Both | `/oss:deliverable-open` | Open a talk, module, paper, chapter, or review as a pipeline unit. A rounds interview creates `deliverable.yml`, `HANDOFF.md`, a `planning/` wiki, and an `inbox/` for dictated notes. Talks use the house deck template. |
+| [deliverable-intake](plugin/skills/deliverable-intake/SKILL.md) | Both | `/oss:deliverable-intake` | Convert dictated or typed notes into a unified diff against the planning wiki. Classify and trace each statement. Keep uncertain names and citations UNRESOLVED. Apply decisions only on assent. |
+| [deliverable-lint](plugin/skills/deliverable-lint/SKILL.md) | Both | `/oss:deliverable-lint` | Run whole-deliverable editorial review in detection mode. Start with build, citations, numbers, facts, and leaks. Add a cheap finder per section and a strong global pass. Produce anchored P0/P1/P2 findings and honest NOT-CHECKED coverage within a dollar budget. The night shift runs headless. |
 
 ### Ideation
 
