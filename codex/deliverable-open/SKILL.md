@@ -6,7 +6,7 @@ argument-hint: '[path to the deliverable directory; optionally --kind talk|cours
 
 # Deliverable open
 
-A deliverable gets the pipeline when it has a deadline, an audience, and more than one session of work. This skill writes the files the rest of the pipeline reads: `check_deliverable.py` (the deterministic gate), `deliverable-intake` (braindumps into the wiki), `deliverable-lint` (the editorial review), and the `session` skill's `$sitrep` and `$finished`.
+A deliverable gets the pipeline when it has a deadline, an audience, and more than one session of work. This skill writes the files the rest of the pipeline reads: `check_deliverable.py` (the deterministic gate), `deliverable-intake` (braindumps into the wiki), `deliverable-lint` (the editorial review), and the `sitrep` and `finished` session skills.
 
 ## Where the tooling lives
 
