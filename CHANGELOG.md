@@ -2,6 +2,10 @@
 
 Versions are the `version` field shared by `plugin/.claude-plugin/plugin.json` and `.claude-plugin/marketplace.json`; `plugin/scripts/check.sh` fails if they differ or if this file has no entry for the current version. Earlier history is in commit subjects and in `AUDITS.md`.
 
+## [2.32.2] — 2026-09-18
+
+- **`spawn` now pins the peer's model and effort.** A peer starts on the user's configured default model, not the lead's, and the skill mentioned the `--model` flag only in a gotcha, so leads skipped it and a Fable lead would spawn a Sonnet peer. The skill now takes `--model` and `--effort` in its argument hint, resolves them in a fixed order (the user's request, else the lead's own model), and shows the flags on the herdr, tmux, and `claude --bg` launch lines. Codex peers take `-m <model>` and `model_reasoning_effort`. The gotcha is rewritten as a recovery step: read the status line, stop, restart with the flags.
+
 ## [2.32.1] — 2026-09-18
 
 - `deliverable-open` still described the pipeline as using "the `session` skill's `/sitrep` and `/finished`". 2.31.0 split that skill into `sitrep` and `finished`; the paragraph now names them. A user-level launcher copied from the old wording failed with `Unknown skill: session`.

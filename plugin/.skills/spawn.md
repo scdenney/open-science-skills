@@ -2,7 +2,7 @@
 disable-model-invocation: true
 name: spawn
 description: Spawns full Claude Code peer sessions in separate terminal panes and git worktrees, real sessions rather than subagents, each with a directed task and contract brief, monitored and merged by the spawning lead. Detects the environment and uses herdr first, then tmux, then a native claude background agent. Use when work must persist or run beside the current session, needs a separate worktree or permission settings, should remain user-steerable in a visible pane, or when the user asks to spawn, hand off, or parallelize full sessions. Also spawns Codex peers into those panes. Excludes bounded consults and subagent-scale work.
-argument-hint: '[describe the task(s) to run in spawned peer sessions; one worktree and brief per task]'
+argument-hint: '[describe the task(s) to run in spawned peer sessions; one worktree and brief per task] [--model <alias or id>] [--effort <level>]'
 allowed-tools:
 - Bash
 - Read
@@ -49,7 +49,8 @@ Each command emits JSON carrying the ids the next one needs. `worktree create` r
 slug=fix-ingest    # short dashed name, 2–4 lowercase words, e.g. fix-ingest — names the branch, the workspace label, and the agent
 herdr worktree create --cwd "$PWD" --branch "spawn/$slug" --label "$slug"   # JSON — workspace_id, checkout path, root pane_id
 # write the brief before starting the agent (next section) → <WT_PATH>/.spawn/brief.md
-herdr agent start "$slug" --kind claude --pane <PANE_ID> || true # the root pane; agent flags go after --  (e.g. -- --model opus)
+herdr agent start "$slug" --kind claude --pane <PANE_ID> -- --permission-mode <mode> --model <model> --effort <level> || true
+                                                                  # the root pane; everything after -- is passed verbatim to the claude binary (Permissions and Model below)
                                                                   # on 0.9 this exits 1 with agent_not_ready when the trust dialog blocks startup; the peer is running and named anyway
 herdr agent read "$slug" --lines 20                              # expect "Is this a project you created or one you trust?"
 herdr agent send-keys "$slug" Down Enter                         # select "Yes, I trust this folder"; agent prompt cannot clear a dialog
@@ -66,6 +67,21 @@ herdr agent read "$HERDR_PANE_ID" --lines 30 | grep -iE "bypass permissions|acce
 ```
 
 The status line names the mode directly (for example, `⏵⏵ bypass permissions on (shift+tab to cycle)`). Match whichever mode phrase the status line shows — the six modes render as distinct phrases and the exact strings beyond the verified ones may differ by version, one more reason never to guess. A tight read such as `--lines 3` is unreliable here: it works only when the status line is the last thing rendered, and this skill is routed to from leads with background subagents running — exactly the state whose task list pushes the status line out of the last few rows. If the grep returns nothing, widen it with `--source visible` before concluding anything. **Do not pass a mode you did not actually read** — guessing reintroduces the default-fallback bug this self-read exists to prevent. Pass the matching flag after `--`, `--permission-mode <mode>`, one of `acceptEdits | auto | bypassPermissions | manual | dontAsk | plan`. Skip this and the peer falls back to Claude Code's own configured default (`~/.claude/settings.json`'s `permissions.defaultMode`), which can silently diverge from what you're actually running. This very session, for instance, is configured to `auto` but its live status line currently reads `bypassPermissions`, because the mode was cycled mid-session — only the self-read catches that gap. The visible pane is still the safety net either way, since herdr surfaces `blocked` the moment the peer asks for something its mode doesn't cover. If your own mode already grants broad access, the peer inherits that same exposure: worktree isolation confines its *file* edits, never its shell commands.
+
+### Model and effort
+
+A peer starts on the **user's configured default model and effort** (`~/.claude/settings.json`), not on yours — observed 2026-08-06, when a Fable lead spawned a Sonnet-default peer. So the model is always pinned explicitly, and the choice is resolved in this order:
+
+1. **The user named one.** A `--model` or `--effort` in the spawn request (`/oss:spawn --model opus --effort high …`, or "spawn this on Sonnet") is passed through verbatim. Aliases (`fable`, `opus`, `sonnet`, `haiku`) and full model ids both work; `claude --help` lists the accepted forms if one is refused. With several tasks, the same model applies to every peer unless the request assigns models per task.
+2. **The user named none.** Pin the peer to **your own** model and effort — your system prompt states which model you are — so the peer reasons at the tier the user chose for this session. Drop to a cheaper tier only when the brief is mechanical and you say so in your report.
+
+Pass both as claude flags after `--`, on the same `agent start` line as the permission mode:
+
+```bash
+herdr agent start "$slug" --kind claude --pane <PANE_ID> -- --permission-mode bypassPermissions --model opus --effort high || true
+```
+
+For a **Codex peer** the flags are Codex's own: `-- -m <model>` for the model and `-- -c model_reasoning_effort="<level>"` for effort (`codex --help` for the accepted names; the spelling is `-m`, not `--model`). Confirm the pin took before prompting: `herdr agent read "$slug" --lines 30` shows the model in the Claude Code status line, and if it does not match, stop the agent and restart it with the flags rather than prompting a mis-tiered peer.
 
 ## Write the brief first
 
@@ -136,7 +152,7 @@ A checkout with `dirty=0` and `unmerged=0` is done: remove it (`herdr worktree r
 ```bash
 git worktree add "../$(basename "$PWD")-spawn-$slug" -b "spawn/$slug"
 pane=$(tmux split-window -P -F '#{pane_id}' -c "<WT_PATH>")   # or new-window -n "$slug"
-tmux send-keys -t "$pane" 'claude' Enter
+tmux send-keys -t "$pane" 'claude --permission-mode <mode> --model <model> --effort <level>' Enter   # same flags as the herdr path
 # wait for the REPL to draw, then:
 tmux send-keys -t "$pane" 'Read .spawn/brief.md and begin.' Enter
 ```
@@ -147,7 +163,7 @@ Monitor with `tmux capture-pane -p -t "$pane" | tail -30`. There is no agent-sta
 
 ```bash
 git worktree add "../$(basename "$PWD")-spawn-$slug" -b "spawn/$slug"
-( cd <WT_PATH> && claude --bg --name "$slug" "Read .spawn/brief.md and begin." )
+( cd <WT_PATH> && claude --bg --name "$slug" --permission-mode <mode> --model <model> --effort <level> "Read .spawn/brief.md and begin." )
 ```
 
 Manage with `claude agents` — coarser steering, same brief, same merge-back.
@@ -163,7 +179,7 @@ Manage with `claude agents` — coarser steering, same brief, same merge-back.
 - **A fresh peer's first state is `blocked`**, on Claude Code's workspace-trust dialog, because the worktree path is new. On 0.9 `agent start` reports this as an error (`agent_not_ready`, exit 1) while the peer is running with `launch_pending: true` in `agent list`; treat that exit as the expected block, not a failed start. Clear it with `agent send-keys "$slug" Down Enter`; no `--permission-mode` skips it. For a few seconds after the dialog clears, `agent wait` returns the stale `blocked` record at once and `agent prompt` fails with `agent_blocked`; poll `agent explain` for `state: idle` before prompting. In `auto` permission mode the lead's own classifier may refuse `agent send-keys`, `workspace close`, and `worktree remove --force`; hand those to the user rather than retrying.
 - `wait` can settle on `done` while a follow-up `explain` reports `idle`; `done` is transient. Judge from git, not from either word.
 - `worktree remove --workspace <id>` succeeds without `--force` even while a peer is still running in the pane, and takes the agent and pane down silently. Check `agent explain` first.
-- A peer starts on the **user's** default model and effort, not yours — pin with `-- --model … --effort …` when the tier matters (observed 2026-08-06: a Fable lead spawned a Sonnet-default peer).
+- Forgot to pin the model? The peer is on the user's configured default, whatever the lead runs on. Read the status line with `herdr agent read`, and restart with `-- --model … --effort …` (see Model and effort) — there is no way to change a running session's model from outside its pane.
 - Lost an id → `herdr worktree list`, `herdr agent list`, `herdr agent get <name>`, `herdr api snapshot`.
 - **Reattaching after a restart.** A peer's checkout survives a herdr or terminal restart; its pane and agent do not. `herdr worktree open --cwd <REPO_ROOT> --path <WT_PATH>` (or `--branch spawn/<slug>`) reopens the checkout as a workspace with a fresh root pane (the checkout must still exist; after `worktree remove` there is nothing to reopen); then `herdr agent start` again and prompt it to read `.spawn/brief.md` and continue from the last commit.
 - `HERDR_*` variables exist only inside herdr — and spawned tabs inherit them, so peers can themselves spawn.
@@ -178,7 +194,7 @@ Manage with `claude agents` — coarser steering, same brief, same merge-back.
 ## Notes
 
 - The library's other cross-model calls (`fable-advisor.sh`, `codex-peer.sh`, the committee members) are deliberately isolated one-shots with session persistence off; a spawned peer is the opposite — persistent, steerable, resumable. Choose by whether the work needs a lifetime.
-- A **Codex peer** is one flag: `herdr agent start "$slug" --kind codex --pane <PANE_ID>` — same brief; the contract is Codex's own from `orchestrate`. herdr detects 21 agent kinds, so the same move spawns other agents too. State detection for a kind depends on its integration hook being current (`herdr integration status`; install or update with `herdr integration install <kind>`), otherwise `wait` falls back to screen inference.
+- A **Codex peer** is one flag: `herdr agent start "$slug" --kind codex --pane <PANE_ID> -- -m <model>` — same brief; the contract is Codex's own from `orchestrate`. herdr detects 21 agent kinds, so the same move spawns other agents too. State detection for a kind depends on its integration hook being current (`herdr integration status`; install or update with `herdr integration install <kind>`), otherwise `wait` falls back to screen inference.
 - Heritage: generalizes Matt Pocock's `claude-handoff` (MIT, [mattpocock/skills](https://github.com/mattpocock/skills)) — handoff compacts one conversation into a document for one `claude --bg` successor; spawn adds environment detection, worktree isolation, directed contract briefs, and lifecycle management for N peers. See [`RECOMMENDED.md`](../../../RECOMMENDED.md).
 - Routed to by `orchestrate` routing row 8; standalone via `/oss:spawn`.
 - **Remote machines.** herdr 0.9 aggregates SSH-reachable herdr servers into one client (`herdr machine add <ssh-host> --label <name>`; the remote needs herdr on its non-interactive PATH). The `agent`, `worktree`, and `workspace` CLI groups still address only the local server, so spawn peers stay on the machine the lead runs on; a remote machine is for viewing and driving long-running sessions from the sidebar, not for `agent start`.
