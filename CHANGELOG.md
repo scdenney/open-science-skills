@@ -2,6 +2,10 @@
 
 Versions are the `version` field shared by `plugin/.claude-plugin/plugin.json` and `.claude-plugin/marketplace.json`; `plugin/scripts/check.sh` fails if they differ or if this file has no entry for the current version. Earlier history is in commit subjects and in `AUDITS.md`.
 
+## [2.32.1] — 2026-09-18
+
+- `deliverable-open` still described the pipeline as using "the `session` skill's `/sitrep` and `/finished`". 2.31.0 split that skill into `sitrep` and `finished`; the paragraph now names them. A user-level launcher copied from the old wording failed with `Unknown skill: session`.
+
 ## [2.32.0] — 2026-09-17
 
 - **The deliverable toolchain now ships with the library**, at `plugin/tools/deliverable/`: the deterministic gate, the run-preparation and adjudication scripts, the hook installer, and the five kind profiles. `deliverable-open` and `deliverable-lint` previously drove scripts from a separate `project_hygiene` checkout that existed on two machines and was published nowhere, so anyone installing the plugin got three deliverable skills of which two could not run. They now resolve `$DTOOL` from `$DELIVERABLE_TOOLS`, `${CLAUDE_PLUGIN_ROOT}/tools/deliverable`, a repository checkout, and only then a legacy `project_hygiene`. `check.sh` asserts the toolchain's layout, because `lint_prepare.py` resolves kind profiles relative to its own directory and the two directories must stay siblings.
