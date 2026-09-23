@@ -257,3 +257,26 @@ slash command so the Mac could be done over SSH. The bundled toolchain was confi
 plugin cache, which is the check that matters: it is the first release where these skills can run for
 someone who is not the author.
 
+
+## 2026-09-18 — spawn pins the peer's model (v2.32.1, v2.32.2)
+
+Two point releases. The first repaired `deliverable-open`, which still named the `session` skill that
+2.31.0 had split into `sitrep` and `finished`; a launcher copied from the old wording failed with
+`Unknown skill: session`.
+
+The second answered a question about `/oss:spawn`: why a model could not be specified. It could. The
+flag had been documented since 2026-08-06, when a Fable lead spawned a Sonnet-default peer, but only as
+a gotcha near the end of the skill, and a gotcha is what a lead skips. The skill now takes `--model` and
+`--effort` in its argument hint, resolves them in a fixed order (the user's request, else the lead's own
+model, never the settings default), and carries the flags on all three launch lines: herdr, tmux, and
+`claude --bg`. Codex peers take `-m` and `model_reasoning_effort`. The old gotcha is a recovery step,
+since a running session's model cannot be changed from outside its pane. The Codex twin is unaffected;
+`spawn` has no Codex package.
+
+### Closing state
+
+Main is at 350e889, pushed, tree clean. Both hosts are on `oss` 2.32.2 at user scope with no
+project-scope entries left in `installed_plugins.json`. The Mac's `codex` plugin moved 1.0.2 → 1.0.6 in
+the same pass; omarchy does not have it installed. `check.sh` passed at both releases. The skill edit is
+verified only by `check.sh` and a read of the diff, not by a live spawn with the flags: the flag
+passthrough after `--` was already the verified herdr path, but no peer was started this session.
