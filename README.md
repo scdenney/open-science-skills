@@ -164,9 +164,9 @@ Skills are grouped by their role in a research project. Unless the Platform colu
 
 | Skill | Platform | Command | What it does |
 |---|---|---|---|
-| [orchestrate](plugin/skills/orchestrate/SKILL.md) | Both | `/oss:orchestrate` · `$orchestrate` | Run a multi-model workflow. Claude selects Fable 5.1 or Opus 5. Codex selects GPT-6 Astra or GPT-5.6 Sol. Astra leads hard reasoning, while Sol escalates difficult work to Astra. Both route bounded work to lower GPT-5.6 tiers and can use a Claude peer. |
+| [orchestrate](plugin/skills/orchestrate/SKILL.md) | Both | `/oss:orchestrate` · `$orchestrate` | Run a multi-model workflow. Claude selects Fable or Opus. Codex selects GPT-6 Astra or GPT-5.6 Sol. Astra leads hard reasoning, while Sol escalates difficult work to Astra. Both route bounded work to lower GPT-5.6 tiers and can use a Claude peer. |
 | [spawn](plugin/skills/spawn/SKILL.md) | Both | `/oss:spawn` | Spawn peer sessions in new terminal panes, each in its own git worktree with a directed task and contract brief. Detects herdr, tmux, or a plain terminal. The lead monitors and merges branches. |
-| [advisor](plugin/skills/advisor/SKILL.md) | Both | `/oss:advisor` / `$advisor` | Escalate one decision to an independent second reviewer before committing to an interpretation or completing a task. Your session leads on Opus 5 or Sonnet 5. The Fable 5.1 advisor uses max reasoning. A Fable lead uses `orchestrate`'s Astra peer or the committee. The [Codex counterpart](codex/advisor/SKILL.md) uses Astra/xhigh. |
+| [advisor](plugin/skills/advisor/SKILL.md) | Both | `/oss:advisor` / `$advisor` | Escalate one decision to an independent second reviewer before committing to an interpretation or completing a task. Your session leads on Opus or Sonnet. The Fable advisor uses max reasoning. A Fable lead uses `orchestrate`'s Astra peer or the committee. The [Codex counterpart](codex/advisor/SKILL.md) uses Astra/xhigh. |
 
 ### Ideation
 
@@ -196,7 +196,7 @@ Skills are grouped by their role in a research project. Unless the Platform colu
 | [topic-modeling](plugin/skills/topic-modeling/SKILL.md) | Both | `/oss:topic-modeling` | Fit structural topic models. Choose topic count by coherence and exclusivity. Covers covariates and reporting. |
 | [text-classification](plugin/skills/text-classification/SKILL.md) | Both | `/oss:text-classification` | Classify text with LLMs. Covers codebook design, human-in-the-loop workflows, validation, and agreement statistics. |
 | [model-council-voting](plugin/skills/model-council-voting/SKILL.md) | Both | `/oss:model-council-voting` | Use a model panel as independent coders under a pre-stated consensus rule. Assess disagreement with chance-corrected kappa and alpha statistics. Checks correlated juror errors. |
-| [model-committee](plugin/skills/model-committee/SKILL.md) | Both | `/oss:model-committee`, `/oss:model-committee-astra`, `/oss:model-committee-opus`, `/oss:model-committee-sol` | Have GPT-6 Astra and Claude Opus 5 deliberate toward one decision. They propose independently, critique, revise, and converge under a pre-set rule. Fable 5.1 chairs by default and is not a member. With `-astra`, GPT-6 Astra chairs and Sol replaces it as a member. `-opus` uses the in-session Opus chair. `-sol` uses the legacy GPT-5.6 chair and Terra. |
+| [model-committee](plugin/skills/model-committee/SKILL.md) | Both | `/oss:model-committee`, `/oss:model-committee-astra`, `/oss:model-committee-opus`, `/oss:model-committee-sol` | Have GPT-6 Astra and Claude Opus deliberate toward one decision. They propose independently, critique, revise, and converge under a pre-set rule. Fable chairs by default and is not a member. With `-astra`, GPT-6 Astra chairs and Sol replaces it as a member. `-opus` uses the in-session Opus chair. `-sol` uses the legacy GPT-5.6 chair and Terra. |
 | [llm-calibration-logprobs](plugin/skills/llm-calibration-logprobs/SKILL.md) | Both | `/oss:llm-calibration-logprobs` | Turn token log-probabilities into per-decision confidence. Measure calibration against human labels with ECE, Brier scores, and reliability diagrams. |
 
 ### Corpus Processing

@@ -1,7 +1,7 @@
 ---
 disable-model-invocation: true
 name: advisor
-description: Consult Fable 5.1 as an independent reviewer at maximum reasoning effort. The calling session is the main model, Opus 5 or Sonnet 5, and Fable is the advisor. Use before committing to an interpretation or substantial writing or analysis, when stuck with recurring errors or a non-converging approach, when changing approach, or when a task seems complete and needs a final check. Fallback when the native advisor tool is unavailable. Read-only advisory work that does not edit files.
+description: Consult Fable as an independent reviewer at maximum reasoning effort. The calling session is the main model, Opus or Sonnet, and Fable is the advisor. Use before committing to an interpretation or substantial writing or analysis, when stuck with recurring errors or a non-converging approach, when changing approach, or when a task seems complete and needs a final check. Fallback when the native advisor tool is unavailable. Read-only advisory work that does not edit files.
 allowed-tools:
 - Read
 - Write
@@ -10,20 +10,20 @@ allowed-tools:
 
 # advisor — an independent second reviewer
 
-`fable-advisor.sh` spawns an isolated Fable 5.1 session that reviews one decision point and returns. This is the fallback for when the native `advisor()` tool reports itself unavailable mid-session ("The advisor tool is unavailable. Do not try to use it again.").
+`fable-advisor.sh` spawns an isolated Fable session that reviews one decision point and returns. This is the fallback for when the native `advisor()` tool reports itself unavailable mid-session ("The advisor tool is unavailable. Do not try to use it again.").
 
-<p align="center"><img src="assets/architecture.svg" alt="advisor: the main model (Opus 5 or Sonnet 5) composes one self-contained briefing, sends it to an isolated Fable 5.1 advisor running at max reasoning effort, and receives one decisive read-only review in return" width="900"></p>
+<p align="center"><img src="assets/architecture.svg" alt="advisor: the main model (Opus or Sonnet) composes one self-contained briefing, sends it to an isolated Fable advisor running at max reasoning effort, and receives one decisive read-only review in return" width="900"></p>
 
 ## The two seats
 
 | Seat | Model | Role |
 |---|---|---|
-| Main | **Opus 5**, or Sonnet 5 for cheaper sustained work | Holds the task, the context, and the decision. Does the work. |
-| Advisor | **Fable 5.1**, always | Reads one briefing, returns one review. Never edits files. |
+| Main | **Opus**, or Sonnet for cheaper sustained work | Holds the task, the context, and the decision. Does the work. |
+| Advisor | **Fable**, always | Reads one briefing, returns one review. Never edits files. |
 
 The asymmetry is the design, and it is an **escalation**, not a peer review: a working model that holds the task reaches up to the premier model only when a decision point is worth it. The advisor seat is pinned to Fable and the script guards it — no silent fallback to another model family, since a same-family fallback would defeat the point of asking. The main seat is whichever *working* model the session is already running.
 
-**If the session is verifiably running Fable 5.1, do not run this skill.** There is no higher Claude model to escalate to, and a second, isolated Fable is the same family answering the same question — that is not a check. A Fable lead that wants an independent read goes cross-vendor instead: `orchestrate`'s Codex peer (GPT-6 Astra, `codex-peer.sh --mode cross-check`) or, for a full deliberation, `/model-committee`. Say so and stop rather than spawning the second Fable. Read the model line Claude Code injects into the session context ("You are powered by the model named …") to decide; do not infer it from the launch command. Nothing carries over from the caller except the working directory (`-C`) — not the conversation, and not the effort level. The consult also runs `--safe-mode`, which starts the advisor with **user and project customizations disabled**: no `CLAUDE.md`, no skills, no plugins, no user/project hooks, no MCP servers, no custom commands or agents. (Org-managed policy settings, where present, still apply — safe mode does not override managed configuration.) It sees the files in that directory and nothing else — not a normal session scoped to the directory, which would load `CLAUDE.md`.
+**If the session is verifiably running Fable, do not run this skill.** There is no higher Claude model to escalate to, and a second, isolated Fable is the same family answering the same question — that is not a check. A Fable lead that wants an independent read goes cross-vendor instead: `orchestrate`'s Codex peer (GPT-6 Astra, `codex-peer.sh --mode cross-check`) or, for a full deliberation, `/model-committee`. Say so and stop rather than spawning the second Fable. Read the model line Claude Code injects into the session context ("You are powered by the model named …") to decide; do not infer it from the launch command. Nothing carries over from the caller except the working directory (`-C`) — not the conversation, and not the effort level. The consult also runs `--safe-mode`, which starts the advisor with **user and project customizations disabled**: no `CLAUDE.md`, no skills, no plugins, no user/project hooks, no MCP servers, no custom commands or agents. (Org-managed policy settings, where present, still apply — safe mode does not override managed configuration.) It sees the files in that directory and nothing else — not a normal session scoped to the directory, which would load `CLAUDE.md`.
 
 When this skill is called from inside an orchestration (`orchestrate`), the orchestrating lead is the main seat and Fable's consult is one bounded advisory call — not a delegation.
 

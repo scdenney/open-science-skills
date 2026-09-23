@@ -1,11 +1,11 @@
 ---
 name: model-committee
-description: Run one consequential, contestable decision through a deliberative committee of GPT-6 Astra and Claude Opus 5, chaired by fable (default), astra, opus, or sol. Not for factual lookups, brainstorming, routine implementation, independent-coder reliability, or final professional judgment. Use when several options are defensible and the two model families should propose, critique, revise, and cross-rank under a predeclared rubric.
+description: Run one consequential, contestable decision through a deliberative committee of GPT-6 Astra and Claude Opus, chaired by fable (default), astra, opus, or sol. Not for factual lookups, brainstorming, routine implementation, independent-coder reliability, or final professional judgment. Use when several options are defensible and the two model families should propose, critique, revise, and cross-rank under a predeclared rubric.
 ---
 
 # Model Committee
 
-Run a GPT-6 Astra member and a Claude Opus 5 member as a deliberating committee, then chair the result. Keep the line to `$model-council-voting` sharp: a council measures independent disagreement, while this committee deliberately exposes each member to the other's argument and returns one decision.
+Run a GPT-6 Astra member and a Claude Opus member as a deliberating committee, then chair the result. Keep the line to `$model-council-voting` sharp: a council measures independent disagreement, while this committee deliberately exposes each member to the other's argument and returns one decision.
 
 Read [`references/protocol.md`](references/protocol.md) completely before running a committee. It carries the use-case gate, the brief template, the three round contracts, the decision rule, and the `decision.md` schema.
 
@@ -15,10 +15,10 @@ One skill, four chairs. Use `$model-committee` with `chair: fable` (the default)
 
 | chair | GPT member | Claude member | Chair pin | Use |
 |---|---|---|---|---|
-| `fable` (default) | `gpt-6-astra`, `xhigh` | `claude-opus-5`, `high` | `claude-fable-5-1`, `high` | Fable synthesizes from outside both member models. |
-| `astra` | `gpt-5.6-sol`, `xhigh` | `claude-opus-5`, `high` | `gpt-6-astra`, `xhigh` | Astra chairs; Sol supplies the GPT member's deliberation. |
-| `opus` | `gpt-6-astra`, `xhigh` | `claude-opus-5`, `high` | `claude-opus-5`, `high` | Retains the cheaper in-session option where Opus is already running; it shares the Claude member's model. |
-| `sol` | `gpt-5.6-terra`, `xhigh` | `claude-opus-5`, `high` | `gpt-5.6-sol`, `xhigh` | Legacy Sol chair with a distinct GPT member tier. |
+| `fable` (default) | `gpt-6-astra`, `xhigh` | `opus`, `high` | `fable`, `high` | Fable synthesizes from outside both member models. |
+| `astra` | `gpt-5.6-sol`, `xhigh` | `opus`, `high` | `gpt-6-astra`, `xhigh` | Astra chairs; Sol supplies the GPT member's deliberation. |
+| `opus` | `gpt-6-astra`, `xhigh` | `opus`, `high` | `opus`, `high` | Retains the cheaper in-session option where Opus is already running; it shares the Claude member's model. |
+| `sol` | `gpt-5.6-terra`, `xhigh` | `opus`, `high` | `gpt-5.6-sol`, `xhigh` | Legacy Sol chair with a distinct GPT member tier. |
 
 Default to Fable when no chair is named. Fable and Astra provide chairs distinct from both member models; Opus is the explicit same-model exception. No chair adds a third vote. Separate models or tiers do not establish statistical independence.
 
@@ -76,7 +76,7 @@ Invoke each member through the bundled read-only driver, passing the GPT model t
   --prompt-file <prompt.md> --out <output.md> --model gpt-6-astra --effort xhigh -C <working-directory>
 
 "$SKILL_DIR/scripts/claude-member.sh" \
-  --prompt-file <prompt.md> --out <output.md> --model claude-opus-5 --effort high -C <working-directory>
+  --prompt-file <prompt.md> --out <output.md> --model opus --effort high -C <working-directory>
 ```
 
 For `chair: astra`, pass `--model gpt-5.6-sol` on every GPT member call; for `chair: sol`, pass `--model gpt-5.6-terra`.
@@ -88,9 +88,9 @@ Launch both calls in a round concurrently when the runtime supports it. Sequenti
 Chair after round 3. Chair directly only when current runtime metadata verifies both the selected chair model and its specified effort. In Codex this can be Astra or Sol; an Astra lead using another effort keeps that setting and delegates the chair step at `xhigh`. A skill must not claim it changed the running model or effort. Otherwise bundle the brief and all round outputs into `chair.prompt.md`, then delegate the selected row:
 
 ```bash
-# Default Fable chair; Opus uses --model claude-opus-5 with the same effort.
+# Default Fable chair; Opus uses --model opus with the same effort.
 "$SKILL_DIR/scripts/claude-member.sh" \
-  --prompt-file chair.prompt.md --out decision.md --model claude-fable-5-1 --effort high -C <working-directory>
+  --prompt-file chair.prompt.md --out decision.md --model fable --effort high -C <working-directory>
 
 # Astra chair; the legacy Sol chair uses --model gpt-5.6-sol.
 "$SKILL_DIR/scripts/codex-member.sh" \

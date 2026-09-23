@@ -5,7 +5,7 @@ description: Orchestrate complex work from an active gpt-6-astra or gpt-5.6-sol 
 
 # Orchestrate
 
-<p align="center"><img src="assets/architecture.svg" alt="orchestrate (Codex): an active GPT-6 Astra or GPT-5.6 Sol session leads; Astra keeps the hardest reasoning in the lead, Sol escalates unusually difficult units to Astra, and both route bounded work to lower tiers and can reach a Fable 5.1 cross-vendor peer" width="900"></p>
+<p align="center"><img src="assets/architecture.svg" alt="orchestrate (Codex): an active GPT-6 Astra or GPT-5.6 Sol session leads; Astra keeps the hardest reasoning in the lead, Sol escalates unusually difficult units to Astra, and both route bounded work to lower tiers and can reach a Fable cross-vendor peer" width="900"></p>
 
 ## Preflight the lead runtime first
 

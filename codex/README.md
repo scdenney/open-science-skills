@@ -58,7 +58,7 @@ Every skill is on demand. None matches implicitly, so invoke one directly as `$s
 
 ## Variant notes
 
-**`$model-committee` and its chairs.** The default members are Astra/xhigh and Claude Opus 5/high, chaired by Fable 5.1/high. Use `chair: astra` for an Astra/xhigh chair with Sol/xhigh as the GPT member; `chair: opus` for the explicit Opus chair; or `chair: sol` for the legacy Sol chair with a Terra member. Claude’s `-astra`, `-opus`, `-fable`, and `-sol` command aliases map to these parameters in Codex. Chairs aggregate under the predeclared rule without adding a third vote; different tiers do not establish independence.
+**`$model-committee` and its chairs.** The default members are Astra/xhigh and Claude Opus/high, chaired by Fable/high. Use `chair: astra` for an Astra/xhigh chair with Sol/xhigh as the GPT member; `chair: opus` for the explicit Opus chair; or `chair: sol` for the legacy Sol chair with a Terra member. Claude’s `-astra`, `-opus`, `-fable`, and `-sol` command aliases map to these parameters in Codex. Chairs aggregate under the predeclared rule without adding a third vote; different tiers do not establish independence.
 
 Member drivers need authentication and the network/process access permitted by the parent. Restricted sandboxes have blocked earlier nested calls; headless execution or approval `never` alone does not prohibit them. Report real errors and never fabricate a member response.
 

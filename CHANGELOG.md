@@ -2,6 +2,13 @@
 
 Versions are the `version` field shared by `plugin/.claude-plugin/plugin.json` and `.claude-plugin/marketplace.json`; `plugin/scripts/check.sh` fails if they differ or if this file has no entry for the current version. Earlier history is in commit subjects and in `AUDITS.md`.
 
+## [2.33.0] — 2026-09-23
+
+- **Claude models are named by alias, not version, so Opus 5.5 takes effect everywhere.** `model-committee`'s `claude-member.sh` defaulted to `claude-opus-5` on both platforms, which kept the Claude member on Opus 5 after Opus 5.5 shipped at a lower price. It now defaults to `opus`, and the chair table uses `opus` and `fable`. Claude Code resolves these aliases to the current release (`opus` → `claude-opus-5-5` on 2026-09-23). The committee skill says how to record the resolved version, and `MODEL-POLICY.md` states the alias rule.
+- `orchestrate` mapped only "Claude Opus 5" to Opus-lead mode, so an Opus 5.5 session fell to the "cannot identify" branch and printed a misleading notice. Any Opus version now takes Opus-lead mode, and any Fable version Fable-lead mode.
+- Version numbers are removed from model names in the advisor, journal-review, paper-review-lite, model-council-voting, and orchestrate prose and diagrams, the committee commands, the README, and the plugin and marketplace descriptions. `journal-review` no longer quotes Opus 5 pricing. Opus 5.5 needs no other change: no skill disables thinking, sets `budget_tokens`, forces `tool_choice`, or uses the retired computer-use tool.
+- Correction to 2.27.0: that entry credited "six months of invocation evidence" for the on-demand set. A later count of Skill-tool invocations showed `orchestrate`, which 2.27.0 hid, was the most-invoked skill. The set rested on side effects and on docs that already required explicit invocation.
+
 ## [2.32.2] — 2026-09-18
 
 - **`spawn` now pins the peer's model and effort.** A peer starts on the user's configured default model, not the lead's, and the skill mentioned the `--model` flag only in a gotcha, so leads skipped it and a Fable lead would spawn a Sonnet peer. The skill now takes `--model` and `--effort` in its argument hint, resolves them in a fixed order (the user's request, else the lead's own model), and shows the flags on the herdr, tmux, and `claude --bg` launch lines. Codex peers take `-m <model>` and `model_reasoning_effort`. The gotcha is rewritten as a recovery step: read the status line, stop, restart with the flags.

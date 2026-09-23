@@ -1,7 +1,7 @@
 ---
 disable-model-invocation: true
 name: orchestrate
-description: Runs a multi-model orchestration workflow led by the session’s strongest available model, Fable 5.1 or Claude Opus 5. Delegates mechanical work to a fast Sonnet subagent, wide reasoning to high-effort Opus subagents, and high-stakes or fresh-perspective work to Codex or a different-vendor GPT-6 Astra peer (`gpt-6-astra` by default). Detects the lead from session context, while `--lead fable` and `--lead opus` override it. Under Fable, judgment remains with the lead. Under Opus, parallel Agent fan-outs or a dynamic Workflow handle delegated phases. Use to orchestrate, delegate, fan out, obtain a decorrelated Codex opinion, run blind Opus-Codex cross-checks, or act as tech lead.
+description: Runs a multi-model orchestration workflow led by the session’s strongest available model, Fable or Claude Opus. Delegates mechanical work to a fast Sonnet subagent, wide reasoning to high-effort Opus subagents, and high-stakes or fresh-perspective work to Codex or a different-vendor GPT-6 Astra peer (`gpt-6-astra` by default). Detects the lead from session context, while `--lead fable` and `--lead opus` override it. Under Fable, judgment remains with the lead. Under Opus, parallel Agent fan-outs or a dynamic Workflow handle delegated phases. Use to orchestrate, delegate, fan out, obtain a decorrelated Codex opinion, run blind Opus-Codex cross-checks, or act as tech lead.
 allowed-tools:
 - Agent
 - Workflow
@@ -13,7 +13,7 @@ allowed-tools:
 
 # orchestrate
 
-<p align="center"><img src="assets/architecture.svg" alt="orchestrate: an orchestrator running on Fable 5.1 at max effort or on Opus 5 at medium effort reasons on the hard problems itself in a main loop, and fans wide, parallel or blind reasoning out to Opus deep-reasoners, mechanical work to a Sonnet fast-worker, and a decorrelated cross-check to a GPT-6 Astra Codex peer" width="900"></p>
+<p align="center"><img src="assets/architecture.svg" alt="orchestrate: an orchestrator running on Fable at max effort or on Opus at medium effort reasons on the hard problems itself in a main loop, and fans wide, parallel or blind reasoning out to Opus deep-reasoners, mechanical work to a Sonnet fast-worker, and a decorrelated cross-check to a GPT-6 Astra Codex peer" width="900"></p>
 
 You are the **orchestrator**. You plan, decompose, reason, delegate, and synthesize. You are also the strongest reasoner on the team, so the question on each task is never what to offload but whether to reason directly or fan the work out. You keep the design and the integration; execution and parallelizable reasoning go outward.
 
@@ -23,12 +23,12 @@ This skill has two lead modes, and the difference is real: how much reasoning th
 
 1. **Read the model line.** Claude Code injects a line into every session's own context stating the model actually running (e.g. "You are powered by the model named …"). Read it now.
 2. **Map it to a mode.**
-   - **Fable 5.1** → **Fable-lead mode**. Keep the hard reasoning and the judgment calls; delegate only mechanical work and genuinely wide or parallel work.
-   - **Claude Opus 5** → **Opus-lead mode**. You are the same model as the `deep-reasoner`, so hard thinking leaves your head only to fan out, keep context lean, or get a blind independent line.
+   - **Fable**, any version → **Fable-lead mode**. Keep the hard reasoning and the judgment calls; delegate only mechanical work and genuinely wide or parallel work.
+   - **Claude Opus**, any version (Opus 5, Opus 5.5, …) → **Opus-lead mode**. You are the same model as the `deep-reasoner`, so hard thinking leaves your head only to fan out, keep context lean, or get a blind independent line.
    - **Sonnet, or anything you cannot identify** → say so to the human in one line ("detected <model>; running Opus-lead mode"), then run **Opus-lead mode**, and do not label the output as Fable's or Opus's. Offer `/model` as the fix.
 3. **An explicit `--lead fable` or `--lead opus` argument overrides detection.** State which mode you are in either way, and if the forced lead does not match the detected model, say so before proceeding.
 
-Nothing enforces that the human ran `/model` — this skill is markdown loaded into context, not code, so it cannot change its own model, and a skipped switch produces no error and no warning. This already happened in practice: a benchmark run of the predecessor `fable-orchestrate` produced six full task-runs recorded as "Fable lead" that in fact ran on Sonnet 5 end to end, because nobody checked before or after. Detection is therefore a step, not a formality.
+Nothing enforces that the human ran `/model` — this skill is markdown loaded into context, not code, so it cannot change its own model, and a skipped switch produces no error and no warning. This already happened in practice: a benchmark run of the predecessor `fable-orchestrate` produced six full task-runs recorded as "Fable lead" that in fact ran on Sonnet end to end, because nobody checked before or after. Detection is therefore a step, not a formality.
 
 Switching mid-session has a cost: prompt caching is scoped to a specific model, so the first request after a switch resends the full accumulated conversation as fresh, uncached input. A controlled continuation test (2026-07-20) found that switching *either* model or effort mid-thread loses most prompt-cache reuse. Cheap before other work has built up context (which is what Setup assumes), expensive deep into a long-running session.
 
@@ -43,7 +43,7 @@ Switching mid-session has a cost: prompt caching is scoped to a specific model, 
 
 | Executor | Model | Route to it for |
 |---|---|---|
-| **you** (orchestrator) | Fable 5.1 at `max`, or Opus 5 at `medium` (`high` for reasoning-heavy sessions) | planning, decomposition, **the hard reasoning and the judgment calls**, Workflow authoring, synthesis, integration, reconciling others' output |
+| **you** (orchestrator) | Fable at `max`, or Opus at `medium` (`high` for reasoning-heavy sessions) | planning, decomposition, **the hard reasoning and the judgment calls**, Workflow authoring, synthesis, integration, reconciling others' output |
 | **deep-reasoner** | Opus, pinned `high` | a hard sub-problem you deliberately push out for **parallelism, context isolation, or a blind independent second line** — architecture, complex debugging, algorithm design, hard trade-offs |
 | **fast-worker** | Sonnet, pinned `medium` | boilerplate, tests-from-spec, formatting, simple edits, renames, bulk transforms |
 | **Codex** | GPT-6 Astra (`gpt-6-astra` by default, flagship — `high` for a routine consult, `xhigh` for the blind cross-check; `gpt-5.6-terra` on request for cheaper bounded work), peer | fresh-perspective problems, unfamiliar stacks, disputed designs, high-stakes parallel cross-checks |
