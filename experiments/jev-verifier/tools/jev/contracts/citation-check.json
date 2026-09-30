@@ -1,0 +1,20 @@
+{
+  "schema_version": "jev-contract-v1",
+  "contract": "citation-check",
+  "questions_version": "citation-check-v1",
+  "model": "jev-1.13.0",
+  "thresholds": {"pass_min": 0.8, "fail_max": 0.2, "calibration": "prototype_uncalibrated"},
+  "required_checks": ["retrieval_provenance", "retrieved_evidence", "deterministic_identity"],
+  "questions": {
+    "ambiguous_identity_matches": {
+      "type": "noul",
+      "instructions": "The caller has already retrieved a record and marked identity ambiguous. Comparing only the supplied bibliographic entry, retrieved structured metadata, and hash-verified excerpts, are they the same intellectual work? Do not guess whether a source exists and do not treat a live identifier alone as a match.",
+      "criteria": {"true": "The supplied authorship, title, date, and identifier evidence coherently indicate the same work.", "false": "The supplied evidence does not establish that these are the same work."}
+    },
+    "version_relationship_coherent": {
+      "type": "noul",
+      "instructions": "If the entry and retrieved record appear to be different versions, does the supplied metadata establish a coherent preprint, working-paper, accepted-manuscript, or published-version relationship? A differing DOI alone is not evidence of a different work.",
+      "criteria": {"true": "The supplied evidence supports a coherent version relationship or no version difference is material.", "false": "The version relationship is incompatible or is not established by the supplied evidence."}
+    }
+  }
+}

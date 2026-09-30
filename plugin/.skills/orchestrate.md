@@ -82,9 +82,61 @@ Invoke `"$SKILL_DIR/codex-peer.sh"` from the installed skill rather than selecti
 
 Then set `/model` and `/effort` for the lead you want, per Effort calibration. The mechanics below work under any main model; a Fable or Opus lead is what puts the strongest available reasoner on the calls that decide the answer, with the delegates taking execution and parallel work off its plate.
 
+## Optional Jev routing (--route)
+
+`/oss:orchestrate --route <task>` asks experimental Jev routing to propose a plan before any work starts: which lead and effort, and which parts go to a fast worker, a deep reasoner, a `Workflow` fan-out, a spawned peer, or a Codex cross-check. `/oss:orchestrate --route jev <task>` is the explicit equivalent. Jev is the default and only supported provider in this prototype. Parse `--route`, `--verify`, optional provider names, `--model`, and `--effort` from the invocation prefix before the task. Thus `/oss:orchestrate --route --verify <task>` enables both against one shared task. Without either Jev option, make **no** Jev call — naming these options while discussing this section is not itself a request to route or verify. These are skill arguments, not flags to any executable.
+
+`--route` and `--verify` are independent and composable. Either alone behaves exactly as its own section says; together they are two separate runs with two separate result files and two separate claims. A routing recommendation is never evidence that work was completed.
+
+When routing is requested, finish the lead detection and Setup above first, then read `${JEV_VERIFIER_HOME:-$HOME/.local/share/oss-experiments/jev-verifier/current}/ROUTE.md` and follow its checkpoint instructions alongside this skill. That shared runtime file is authoritative for the route state schema, the `verify.py route` invocation, the question set, the executor table, and the outcome vocabulary; do not restate or re-derive it here. Installation and credentials are covered by `${JEV_VERIFIER_HOME:-$HOME/.local/share/oss-experiments/jev-verifier/current}/README.md` in the same bundle; if that bundle is not present, the runtime is not installed and routing is blocked.
+
+**Jev profiles the task; the plan is built locally.** One request carries the task's objective, acceptance criteria, and scope constraints, and asks six questions about the work itself — how hard its hardest judgment is, how much of it is mechanical, whether it parallelizes, whether it is reading-heavy, whether it outlasts the session, and how costly an undetected error would be. No model name leaves the machine. The runtime maps the answers through a fixed executor table that uses the `fable`/`opus`/`sonnet` aliases, so a new model release needs no change to the questions.
+
+**You declare what this session can launch.** Report the running lead exactly as the model line states it, and mark each executor available only where Setup or question 7 of the topology decision confirmed it this session. An executor the plan needs but you did not confirm comes back `unavailable`; never launch one under another executor's name.
+
+**Show the plan, then apply it.** Record your own plan before reading the result. Then put the proposed lead and each item — executor, model, effort, purpose, triggering signal — beside your own plan and let the user change it before anything launches. Apply `proposed` items; decide `review` items yourself; for `NOT_CHECKED`, run your own plan and say Jev did not shape it.
+
+Explicit user model and effort constraints (including `--model <id>` and `--effort <level>`) take precedence over any recommendation and pin the lead. `--effort auto` is implicit only while routing. Your own lead model and effort are session settings that only `/model` and `/effort` change: a recommendation cannot switch the model this session is already running on, and reporting otherwise would be false. If the plan suggests a different lead or effort, say so and let the user decide.
+
+If the shared runtime is missing or unhealthy, or `TYPESAFE_API_KEY` cannot be resolved from the environment or the platform keychain, report the requested routing as **blocked**, plan the work yourself, and continue. Never substitute a mock, and never describe a simulated or failed call as a Jev route — a mock proposes no plan at all. The opt-in permits one documented, minimized Jev request: the task fields above. Tell the user what goes and that transient failures can retry up to three attempts. Routing is advisory and uncalibrated, and you retain integration responsibility.
+
+## Optional Jev verification (--verify)
+
+`/oss:orchestrate --verify <task>` adds experimental Jev verification; `/oss:orchestrate --verify jev <task>` is the explicit equivalent. Jev is the default and only supported provider in this prototype. Without one of those forms, run the ordinary loop and make **no** Jev call — naming the option while discussing this section is not itself a request to verify a task. Treat the text after a bare `--verify` as the task; only a literal `jev` is consumed as a provider name. These are skill arguments, not flags to any executable.
+
+This is a post-work completion check, and it is a separate state, contract, and checkpoint from `--route`. A routing recommendation never satisfies it.
+
+When verification is requested, finish the lead detection and Setup above first, then read `${JEV_VERIFIER_HOME:-$HOME/.local/share/oss-experiments/jev-verifier/current}/ORCHESTRATE.md` and follow its checkpoint instructions alongside this skill. That shared runtime file is authoritative for the evidence manifest, the `verify.py` invocation, and shadow versus advisory mode; do not restate or re-derive it here. Installation and credentials are covered by `${JEV_VERIFIER_HOME:-$HOME/.local/share/oss-experiments/jev-verifier/current}/README.md` in the same bundle; if that bundle is not present, the runtime is not installed and verification is blocked.
+
+If the shared runtime is missing or unhealthy, or `TYPESAFE_API_KEY` cannot be resolved from the environment or the platform keychain, report the requested verification as **blocked** and continue the ordinary workflow. Never substitute a mock, and never describe a simulated or failed call as a Jev pass. The opt-in permits the documented, minimized Jev API requests only — not arbitrary data export, automated repair, or rerouting of agents. Jev is advisory: record your own `PASS` / `REWORK` / `ESCALATE` judgment before reading its assessment, keep integration ownership, and do not let a positive score overrule a deterministic failure or a check you did not run.
+
 ## Run (the orchestration loop)
 
 **Show the plan first.** Before delegating or fanning out anything, state your decomposition, which piece routes where, and — when you will fan out — the shape of the fan-out (its phases, what each stage does, what verifies). Then execute.
+
+### Decide the topology, then the executor
+
+Every task gets a deliberate topology decision, stated in the plan in one line. The default is the cheapest shape that works — **the work stays with you** — and each step up is taken only when a signal below actually fires. Nothing here is automatic: a worktree is not the starting point, and most tasks never reach one.
+
+| Topology | Take it when | What it costs |
+|---|---|---|
+| **stays with the lead** | compact, sequential, and coupled to context you already hold | nothing beyond your own context budget |
+| **native subagent(s)** — `Agent` | independent units that can run at once, width that would bloat your context, or a blind second line; the work dies happily with your turn | briefing cost, and a fan-in barrier you enforce by hand |
+| **dynamic `Workflow`** | the same signals, plus enough stages that deterministic control flow, a concurrency cap, and `{isolation: "worktree"}` earn their keep | gated per session; a script that fails to compile costs a whole turn |
+| **one-shot peer** — `codex-peer.sh` | one bounded question whose value is a decorrelated prior | latency and usage for a peer that has none of your repo context |
+| **spawned peer session** — `/oss:spawn` | the work must outlive this session, run long beside it, stay steerable in its own pane, or needs its own worktree and permission surface | the most expensive shape: a worktree, a branch, a pane, and a merge you own |
+
+Seven questions decide it, in this order:
+
+1. **Coupling** — does the work depend on context you are already holding? Tightly coupled work stays with you; work you can hand over as a written contract can leave.
+2. **Duration** — does it finish inside this turn? Long-running work goes to the background, as a subagent or a peer, rather than stalling the loop.
+3. **Persistence** — must it survive this session? Only yes sends you to `/oss:spawn`.
+4. **Parallelism** — are there two or more genuinely independent units? One unit needs no fan-out at all.
+5. **Isolation** — would concurrent writes collide? `{isolation: "worktree"}` inside a Workflow covers in-session write isolation.
+6. **Steerability** — does the user need to watch and redirect this work in its own pane? Only a spawned peer gives that.
+7. **Harness support** — does this session actually have the mechanism? `Workflow` is gated per session, a named subagent needs its def installed *and* a reload, and Codex needs the CLI plus a login. Check first; if the mechanism is absent, fall back to the next shape down and say so in one line.
+
+**Isolation alone is not a reason to spawn** — that is what a Workflow's worktree isolation is for. Persistence and steerability are the reasons, and they are the two a subagent cannot give you at all.
 
 ### Routing rule — first match wins, top to bottom
 

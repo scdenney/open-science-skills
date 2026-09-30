@@ -1,0 +1,30 @@
+{
+  "schema_version": "jev-contract-v1",
+  "contract": "orchestrate",
+  "questions_version": "orchestrate-v1",
+  "model": "jev-1.13.0",
+  "thresholds": {"pass_min": 0.8, "fail_max": 0.2, "calibration": "prototype_uncalibrated"},
+  "required_checks": ["requested_outputs_present", "targeted_tests_passed", "scope_preserved", "claims_traceable"],
+  "questions": {
+    "work_complete": {
+      "type": "noul",
+      "instructions": "Given the task objective, acceptance criteria, scope constraints, worker claim, and selected artifact evidence, does the evidence establish that every requested output exists and the work is complete?",
+      "criteria": {"true": "The evidence directly supports completeness against the stated task.", "false": "The evidence shows missing work or does not establish completeness against the stated task."}
+    },
+    "verification_sufficient": {
+      "type": "noul",
+      "instructions": "Do the selected hash-verified artifact excerpts establish that relevant targeted checks passed and meaningfully cover the changed behavior?",
+      "criteria": {"true": "Relevant checks passed and the excerpts support the claim.", "false": "Checks failed, were not run, or the excerpts do not support the claim."}
+    },
+    "scope_respected": {
+      "type": "noul",
+      "instructions": "Does the evidence establish that the work obeyed the stated scope constraints and preserved unrelated work?",
+      "criteria": {"true": "The evidence supports that scope and preservation requirements were met.", "false": "The evidence indicates scope drift, damage, or cannot establish preservation."}
+    },
+    "handoff_traceable": {
+      "type": "noul",
+      "instructions": "Is the worker claim traceable to the task acceptance criteria and selected artifact evidence without unsupported assertions?",
+      "criteria": {"true": "Each material claim is backed by specific supplied evidence.", "false": "A material claim is unsupported, contradicted, or untraceable."}
+    }
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "schema_version": "jev-citation-check-state-v1",
+  "contract": "citation-check",
+  "run_id": "synthetic-citation-example",
+  "bibliographic_entry": {
+    "rendered": "Rivera, A. (2023). Participation and Local Meetings. Working paper.",
+    "title": "Participation and Local Meetings",
+    "authors": "Ana Rivera",
+    "year": "2023",
+    "doi": "10.5555/example.preprint",
+    "version": "working paper"
+  },
+  "retrieved_record": {
+    "title": "Participation and Local Meetings",
+    "authors": "Ana Rivera",
+    "year": "2024",
+    "doi": "10.5555/example.published",
+    "version": "published article",
+    "deterministic_identity": "ambiguous",
+    "retrieval": {
+      "provider": "Synthetic Crossref fixture",
+      "url": "https://api.example.invalid/works/synthetic",
+      "retrieved_at": "2026-09-20T12:00:00Z",
+      "status": "success"
+    },
+    "artifacts": [{
+      "path": "citation-check-record.json",
+      "sha256": "823f29cae4742c58cbc07b6f897cea8898460a5d04f637103f89b848cf879865",
+      "excerpt": "{\"title\":\"Participation and Local Meetings\",\"authors\":[\"Ana Rivera\"],\"year\":2024,\"doi\":\"10.5555/example.published\",\"version\":\"published article\"}"
+    }]
+  },
+  "blind_baseline": {"label": "AMBIGUOUS"}
+}

@@ -50,6 +50,16 @@ for name in helpers:
     else:
         subprocess.run([sys.executable, "-m", "py_compile", name], check=True)
 print(f"helper syntax and executable modes ok: {len(helpers)} scripts")
+# The Jev verifier bundle lives outside the globs above, but its installer
+# refuses a bundle whose verify.py is not executable -- and with core.fileMode
+# false a local chmod hides the tracked mode. Assert the mode in the index.
+jev = Path("experiments/jev-verifier/tools/jev/verify.py")
+if jev.exists():
+    entry = subprocess.check_output(["git", "ls-files", "-s", "--", str(jev)], text=True)
+    assert entry.startswith("100755 "), f"jev runtime must be tracked executable: {jev}"
+    subprocess.run([sys.executable, "-m", "py_compile", str(jev)], check=True)
+    print("jev verifier runtime ok: tracked executable")
+
 tool = Path("plugin/tools/deliverable")
 if tool.is_dir():
     for sub in ("scripts", "kinds"):

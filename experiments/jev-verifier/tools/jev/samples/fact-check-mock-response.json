@@ -1,0 +1,12 @@
+{
+  "model": "jev-1.13.0",
+  "answers": {
+    "source_supports_claim": {"type": "noul", "noul": 0.92},
+    "source_contradicts_claim": {"type": "noul", "noul": 0.04},
+    "scope_matches": {"type": "noul", "noul": 0.91},
+    "strength_matches": {"type": "noul", "noul": 0.9},
+    "direction_magnitude_matches": {"type": "noul", "noul": 0.88},
+    "material_omission_absent": {"type": "noul", "noul": 0.86}
+  },
+  "usage": {"input_tokens": 112, "output_tokens": 18}
+}

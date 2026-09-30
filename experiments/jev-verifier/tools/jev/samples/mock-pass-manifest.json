@@ -1,0 +1,18 @@
+{
+  "schema_version": "jev-evidence-v1",
+  "contract": "orchestrate",
+  "run_id": "sample-pass",
+  "task": {
+    "objective": "Demonstrate the offline verifier routing with bundled fixtures.",
+    "acceptance_criteria": ["All four deterministic checks pass."],
+    "scope_constraints": ["Use bundled sample artifacts only."]
+  },
+  "worker_claim": "The bundled sample evidence reports successful completion.",
+  "lead_decision": {"label": "PASS"},
+  "evidence": [
+    {"check_id": "requested_outputs_present", "result": "pass", "observation": "The lead inspected the output record.", "artifacts": [{"path": "evidence.txt", "sha256": "537a90d6bef7a8a226e33b93e3d84c57ee45161bfe0ac06ce11a120b8655e2e9", "excerpt": "requested outputs inspected: present"}]},
+    {"check_id": "targeted_tests_passed", "result": "pass", "observation": "The lead inspected the test record.", "artifacts": [{"path": "evidence.txt", "sha256": "537a90d6bef7a8a226e33b93e3d84c57ee45161bfe0ac06ce11a120b8655e2e9", "excerpt": "targeted tests: pass"}]},
+    {"check_id": "scope_preserved", "result": "pass", "observation": "The lead inspected the scope record.", "artifacts": [{"path": "evidence.txt", "sha256": "537a90d6bef7a8a226e33b93e3d84c57ee45161bfe0ac06ce11a120b8655e2e9", "excerpt": "scope review: authorized files only"}]},
+    {"check_id": "claims_traceable", "result": "pass", "observation": "The lead inspected the handoff record.", "artifacts": [{"path": "evidence.txt", "sha256": "537a90d6bef7a8a226e33b93e3d84c57ee45161bfe0ac06ce11a120b8655e2e9", "excerpt": "handoff claims: traced to artifacts"}]}
+  ]
+}

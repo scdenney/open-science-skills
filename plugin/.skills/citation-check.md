@@ -152,6 +152,14 @@ Severity:
 - **Recommended:** missing likely DOI, stale working paper, author-year mismatch that is fixable, uncited important reference, incomplete metadata.
 - **Minor:** punctuation, capitalization, inconsistent initials, style-only issues.
 
+## Optional Jev verification (--verify)
+
+`/oss:citation-check --verify <task>` opts into experimental Jev verification; `/oss:citation-check --verify jev <task>` is identical. Plain `/oss:citation-check` is unchanged and makes no Jev call. It may assist only with an ambiguity left over after an actual fetched record — work identity, version relationship, or otherwise ambiguous metadata. It never replaces the inventory, DOI resolution, existence and fabrication checks, provider lookups, the style audit, or a report label.
+
+Use it only after the ordinary workflow has retrieved the relevant record, one entry at a time. Do not infer existence or fabrication from model knowledge. A deterministic wrong DOI remains `DOI RESOLVES TO DIFFERENT WORK`; `NOT CHECKED` remains `NOT CHECKED`; a DOI difference alone can be a preprint/publication or other version relationship rather than proof of a wrong work. A lead may manually reuse a prior result only for the same complete evaluation input and model/contract version; there is no automatic cache and no batch mode.
+
+Only on opt-in, read `${JEV_VERIFIER_HOME:-$HOME/.local/share/oss-experiments/jev-verifier/current}/CITATION-CHECK.md` and follow it; that shared runtime file is authoritative for the state manifest, the `verify.py` call, and the disclosure you owe the user before a live call. Installation and credentials are covered by `${JEV_VERIFIER_HOME:-$HOME/.local/share/oss-experiments/jev-verifier/current}/README.md` in the same bundle; if that bundle is not present, the runtime is not installed and verification is blocked. Record the entry's report status before reading any Jev result, and treat the result as an advisory annotation only. A missing runtime, an unresolvable `TYPESAFE_API_KEY`, or a failed call means the requested check is **blocked**, never verified and never mocked.
+
 ## Quality checks
 
 - [ ] In-text inventory and reference inventory were built before findings were listed.
@@ -166,3 +174,4 @@ Severity:
 - [ ] Data/code/material citations were included when relevant.
 - [ ] The report distinguishes integrity errors from style issues.
 - [ ] ARS-derived workflow ideas are attributed when this skill's structure is reused outside this repository.
+- [ ] If requested, Jev was limited to unresolved fetched-metadata ambiguity and did not turn model knowledge into existence, DOI, or fabrication evidence.

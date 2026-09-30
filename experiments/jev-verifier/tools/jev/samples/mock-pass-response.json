@@ -1,0 +1,10 @@
+{
+  "model": "jev-1.13.0",
+  "answers": {
+    "work_complete": {"type": "noul", "noul": 0.91},
+    "verification_sufficient": {"type": "noul", "noul": 0.88},
+    "scope_respected": {"type": "noul", "noul": 0.93},
+    "handoff_traceable": {"type": "noul", "noul": 0.9}
+  },
+  "usage": {"input_tokens": 100, "output_tokens": 20}
+}

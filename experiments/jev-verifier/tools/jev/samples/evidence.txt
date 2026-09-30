@@ -1,0 +1,4 @@
+requested outputs inspected: present
+targeted tests: pass
+scope review: authorized files only
+handoff claims: traced to artifacts

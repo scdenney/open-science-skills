@@ -1,0 +1,24 @@
+{
+  "schema_version": "jev-fact-check-state-v1",
+  "contract": "fact-check",
+  "run_id": "synthetic-fact-insufficient",
+  "claim": {
+    "text": "The effect was exactly 12 percentage points in every municipality.",
+    "kind": "empirical",
+    "strength_applicable": true,
+    "direction_magnitude_applicable": true,
+    "omission_applicable": true
+  },
+  "source": {
+    "identity": "Rivera (2024), Participation and Local Meetings (synthetic summary)",
+    "kind": "summary",
+    "knowledge_base_status": "available"
+  },
+  "evidence": {
+    "readiness": "ready",
+    "citation_integrity": "valid",
+    "sufficiency": "insufficient",
+    "artifacts": []
+  },
+  "blind_baseline": {"label": "SOURCE INSUFFICIENT"}
+}

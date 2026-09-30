@@ -1,0 +1,18 @@
+{
+  "schema_version": "jev-evidence-v1",
+  "contract": "orchestrate",
+  "run_id": "sample-deterministic-fail",
+  "task": {
+    "objective": "Demonstrate deterministic failure overriding a positive mock response.",
+    "acceptance_criteria": ["The deterministic failure routes to REWORK internally."],
+    "scope_constraints": ["Use bundled sample artifacts only."]
+  },
+  "worker_claim": "The bundled mock model response is positive, but one local check failed.",
+  "lead_decision": {"label": "REWORK"},
+  "evidence": [
+    {"check_id": "requested_outputs_present", "result": "pass", "observation": "The lead inspected the output record.", "artifacts": [{"path": "evidence.txt", "sha256": "537a90d6bef7a8a226e33b93e3d84c57ee45161bfe0ac06ce11a120b8655e2e9", "excerpt": "requested outputs inspected: present"}]},
+    {"check_id": "targeted_tests_passed", "result": "fail", "observation": "The lead marks this check failed for routing demonstration.", "artifacts": [{"path": "evidence.txt", "sha256": "537a90d6bef7a8a226e33b93e3d84c57ee45161bfe0ac06ce11a120b8655e2e9", "excerpt": "targeted tests: pass"}]},
+    {"check_id": "scope_preserved", "result": "pass", "observation": "The lead inspected the scope record.", "artifacts": [{"path": "evidence.txt", "sha256": "537a90d6bef7a8a226e33b93e3d84c57ee45161bfe0ac06ce11a120b8655e2e9", "excerpt": "scope review: authorized files only"}]},
+    {"check_id": "claims_traceable", "result": "pass", "observation": "The lead inspected the handoff record.", "artifacts": [{"path": "evidence.txt", "sha256": "537a90d6bef7a8a226e33b93e3d84c57ee45161bfe0ac06ce11a120b8655e2e9", "excerpt": "handoff claims: traced to artifacts"}]}
+  ]
+}

@@ -150,6 +150,12 @@ Severity:
 - **Recommended:** missing likely DOI, stale working paper, author-year mismatch that is fixable, uncited important reference, incomplete metadata.
 - **Minor:** punctuation, capitalization, inconsistent initials, style-only issues.
 
+## Optional Jev verification
+
+`$citation-check --verify <task>` opts into experimental Jev verification; `$citation-check --verify jev <task>` is identical. Plain `$citation-check` is unchanged. It may assist only with an ambiguity left after actual, fetched metadata: work identity, version relationship, or otherwise ambiguous metadata. It never replaces the inventory, DOI resolution, existence checks, provider lookups, style audit, or a lead's report label.
+
+Use it only after the ordinary citation-check workflow has retrieved the relevant record. A lead may manually refer to a prior result only for the same complete evaluation input and model/contract version; this is not automatic caching. A deterministic wrong DOI remains `DOI RESOLVES TO DIFFERENT WORK`; `NOT CHECKED` remains `NOT CHECKED`. A DOI difference alone can be a preprint/publication or other version relationship, not proof of a wrong work. Only on opt-in, read `${JEV_VERIFIER_HOME:-$HOME/.local/share/oss-experiments/jev-verifier/current}/CITATION-CHECK.md`.
+
 ## Quality checks
 
 - [ ] In-text inventory and reference inventory were built before findings were listed.
@@ -164,3 +170,4 @@ Severity:
 - [ ] Data/code/material citations were included when relevant.
 - [ ] The report distinguishes integrity errors from style issues.
 - [ ] ARS-derived workflow ideas are attributed when this skill's structure is reused outside this repository.
+- [ ] If requested, Jev was limited to unresolved fetched-metadata ambiguity and did not turn model knowledge into existence, DOI, or fabrication evidence.

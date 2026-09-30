@@ -1,0 +1,8 @@
+{
+  "model": "jev-1.13.0",
+  "answers": {
+    "ambiguous_identity_matches": {"type": "noul", "noul": 0.91},
+    "version_relationship_coherent": {"type": "noul", "noul": 0.87}
+  },
+  "usage": {"input_tokens": 96, "output_tokens": 9}
+}

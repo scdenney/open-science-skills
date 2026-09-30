@@ -139,6 +139,12 @@ Severity:
 - **Recommended:** overclaiming or partial support fixable by rewording or rescoping; misattribution where the correct source is known.
 - **Minor:** a background citation that could be tightened; a summary-only source worth re-checking against its PDF before submission.
 
+## Optional Jev verification
+
+`$fact-check --verify <task>` opts into experimental Jev verification; `$fact-check --verify jev <task>` is identical. Plain `$fact-check` is unchanged. This is an advisory check of one already-adjudicated claim/source pair, never a replacement for this workflow or its report labels.
+
+Run this skill's pre-flight gate **before any Jev call**, then run `citation-check` first as usual. Refer to that report rather than repeating provider checks or sending duplicate claim-support evidence. A lead may manually reuse a prior result only for the same complete evaluation input and model/contract version; this is not automatic caching. If source identity remains genuinely ambiguous, fact-check may request `citation-check --verify`, reusing the citation inventory and fetched records. Only on opt-in, read `${JEV_VERIFIER_HOME:-$HOME/.local/share/oss-experiments/jev-verifier/current}/FACT-CHECK.md`.
+
 ## Quality checks
 
 - [ ] The pre-flight gate ran first; the skill refused (with a remediation checklist) rather than fact-checking against an absent, unconverted, or low-coverage knowledge base.
@@ -149,3 +155,4 @@ Severity:
 - [ ] Claim direction, magnitude, scope, and hedging were checked — not just topical overlap.
 - [ ] Background and framing citations were not treated as evidentiary claims.
 - [ ] No claim was marked supported on plausibility alone.
+- [ ] If requested, Jev verification was opt-in, post-preflight and post-citation-check, and did not replace the lead's report verdict or source quotation.

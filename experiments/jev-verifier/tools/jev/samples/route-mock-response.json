@@ -1,0 +1,33 @@
+{
+  "model": "jev-1.13.0",
+  "answers": {
+    "task_needs_deep_judgment": {
+      "type": "noul",
+      "noul": 0.07
+    },
+    "task_mostly_mechanical": {
+      "type": "noul",
+      "noul": 0.94
+    },
+    "task_parallelizable": {
+      "type": "noul",
+      "noul": 0.12
+    },
+    "task_context_heavy": {
+      "type": "noul",
+      "noul": 0.1
+    },
+    "task_outlives_session": {
+      "type": "noul",
+      "noul": 0.03
+    },
+    "task_high_stakes": {
+      "type": "noul",
+      "noul": 0.91
+    }
+  },
+  "usage": {
+    "input_tokens": 410,
+    "output_tokens": 14
+  }
+}

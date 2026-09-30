@@ -21,3 +21,7 @@ jobs:
       - run: bash plugin/scripts/check.sh
       - run: python3 plugin/scripts/test-codex-wrappers.py
       - run: python3 plugin/scripts/test-install-codex.py
+      - run: python3 plugin/scripts/test-codex-orchestrate-routing.py
+      - run: python3 plugin/scripts/test-jev-verifier-integration.py
+      - run: python3 -m unittest discover -s experiments/jev-verifier/tools/jev/tests
+      - run: python3 -m unittest discover -s experiments/jev-verifier/tests

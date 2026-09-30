@@ -24,6 +24,18 @@ Act as the lead orchestrator: own decomposition, coupled decisions, integration,
 
 The mode is detected, not claimed. Plain `$orchestrate` works from either supported session; it cannot change the running model.
 
+## Optional Jev routing (`--route`)
+
+`$orchestrate --route <task>` asks Jev for an experimental pre-work plan: which lead and effort, and which workstreams go to Terra workers, Sol reasoners, a `$spawn` peer, or a Claude cross-check. Jev is the default and only supported provider (`--route jev <task>` is equivalent). `--effort auto` is implicit for routing; a user-specified effort or model pins the lead and takes precedence. Parse `--route`, `--verify`, optional provider names, `--model`, and `--effort` from the invocation prefix before the task, so `$orchestrate --route --verify <task>` enables both against the same task. Without `--route`, follow this skill's normal routing rules and make no Jev route call.
+
+After the lead-runtime preflight, when routing is requested, read `${JEV_VERIFIER_HOME:-$HOME/.local/share/oss-experiments/jev-verifier/current}/ROUTE.md` and follow its availability, disclosure, and checkpoint instructions, with `harness: codex`. Use advisory mode for this explicit route request. One request sends only the task's objective, acceptance criteria, and scope constraints; Jev answers six questions about the task, and the runtime maps them to executors locally, so no model name is sent. Report the lead exactly as the preflight verified it, and mark an executor available only where this session can launch it with the requested permissions — inspect the live `spawn_agent` schema and the availability of any CLI or Herdr path. Record your own plan first, then show the proposed plan beside it and let the user change it before dispatch. Apply `proposed` items; decide `review` items yourself; never launch an `unavailable` item under another executor. For `NOT_CHECKED`, run your own plan and say Jev did not shape it. The recommendation never changes the current lead's model or effort; a different lead requires a new session. Jev routing is an uncalibrated experiment, not proof the plan is optimal.
+
+## Optional Jev verification (`--verify`)
+
+`$orchestrate --verify <task>` adds Jev completion verification; `$orchestrate --verify jev <task>` is an explicit equivalent. Jev is the default and only supported provider. Without this option, do not run Jev verification. `--route` and `--verify` are independent and composable: route first, execute, then verify. Neither option is a flag to the Codex executable.
+
+After the lead-runtime preflight, when verification is requested, read `${JEV_VERIFIER_HOME:-$HOME/.local/share/oss-experiments/jev-verifier/current}/ORCHESTRATE.md` and follow its checkpoint instructions alongside this skill. If the shared verifier is missing or credentials are unavailable, report that verification is blocked; never silently substitute a mock or claim a Jev check passed. This opt-in permits the documented, minimized Jev API requests, not arbitrary data export or automated repair.
+
 ## Model and effort calibration
 
 Inspect the actual `spawn_agent` schema and session permissions before selecting a route. If model and reasoning overrides are exposed, use them with a self-contained brief and the supported `fork_turns` value (`"none"` where available). Full-history forks may require inheritance. If overrides are unavailable, native workers inherit the lead; use explicit CLI one-shots for other tiers only when the environment permits them.
@@ -57,6 +69,17 @@ Use subagents only when the user explicitly invokes `$orchestrate` or requests o
 ## Show the route
 
 Before spawning work, publish a compact plan that names each workstream, owner role, dependency, expected artifact, and acceptance check. Update it as dependencies or evidence change.
+
+## Choose the execution topology
+
+For each workstream, choose both its owner/model/effort and the execution form before dispatch. Normal `$orchestrate` uses the rules below; `--route` adds Jev's independent recommendation but does not bypass runtime capability checks or user constraints.
+
+- Keep work in the lead when it is tightly coupled, trivial, or cheaper to complete directly.
+- Use native `spawn_agent` workers for bounded work that benefits from model/effort overrides or parallelism and can safely share the current checkout. Inspect the live tool schema and permissions; only request controls the runtime actually exposes.
+- Use a one-shot CLI call for a brief, self-contained task that needs another model but no follow-up, persistent context, or editable worktree.
+- Use `$spawn` for a full peer session when it must survive this session, remain user-steerable in a pane, run for a while, or needs isolated worktree writes. A different model alone does not require a worktree if a native worker or one-shot supports it.
+
+Never create nested agent cascades solely because a router named more models. Add delegation depth only when the work decomposes into independently contractable units and the coordination cost is justified. If a requested model/effort cannot be applied, do not relabel an inherited-default worker as a routed choice.
 
 ## Route by first match
 

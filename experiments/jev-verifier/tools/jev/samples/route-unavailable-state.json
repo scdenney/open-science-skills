@@ -1,0 +1,36 @@
+{
+  "schema_version": "jev-route-state-v2",
+  "contract": "route",
+  "run_id": "route-unavailable-sample",
+  "task": {
+    "objective": "Re-estimate the main models after recoding the treatment variable, and update the results section of the submitted manuscript.",
+    "acceptance_criteria": [
+      "Every reported estimate matches the new model output.",
+      "The recoding is documented in the analysis log."
+    ],
+    "scope_constraints": [
+      "Do not change the pre-registered specification."
+    ]
+  },
+  "harness": "claude",
+  "lead": {
+    "model": "claude-opus-5-5",
+    "effort": "medium"
+  },
+  "available": {
+    "premier_lead": false,
+    "fast_worker": true,
+    "deep_reasoner": true,
+    "workflow": false,
+    "spawn_peer": true,
+    "cross_vendor_peer": false
+  },
+  "constraints": {
+    "model": null,
+    "effort": null,
+    "topology": null
+  },
+  "blind_baseline": {
+    "lead_choice": "lead re-runs the models; deep-reasoner audits the recode"
+  }
+}

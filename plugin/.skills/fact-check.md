@@ -141,6 +141,14 @@ Severity:
 - **Recommended:** overclaiming or partial support fixable by rewording or rescoping; misattribution where the correct source is known.
 - **Minor:** a background citation that could be tightened; a summary-only source worth re-checking against its PDF before submission.
 
+## Optional Jev verification (--verify)
+
+`/oss:fact-check --verify <task>` opts into experimental Jev verification; `/oss:fact-check --verify jev <task>` is identical. Plain `/oss:fact-check` is unchanged and makes no Jev call. This is an advisory second look at one already-adjudicated claim/source pair — never a fact source, never a replacement for this workflow, and never a replacement for the report labels. An audit that finds errors is already complete without it.
+
+Run the pre-flight gate (step 1) before **any** Jev action, then run `citation-check` first as usual and carry its findings forward. Refer to that report rather than repeating provider checks or sending duplicate claim-support evidence. If source identity is still genuinely ambiguous, request `/oss:citation-check --verify` for that entry, reusing the citation inventory and fetched records. A lead may manually reuse a prior result only for the same complete evaluation input and model/contract version; nothing here caches automatically.
+
+Only on opt-in, read `${JEV_VERIFIER_HOME:-$HOME/.local/share/oss-experiments/jev-verifier/current}/FACT-CHECK.md` and follow it; that shared runtime file is authoritative for the state manifest, the `verify.py` call, and the disclosure you owe the user before a live call. Installation and credentials are covered by `${JEV_VERIFIER_HOME:-$HOME/.local/share/oss-experiments/jev-verifier/current}/README.md` in the same bundle; if that bundle is not present, the runtime is not installed and verification is blocked. Do not call Jev for a failed pre-flight, an absent knowledge base, invalid or unchecked citation integrity, or insufficient or unchecked evidence. Record your own report label and verbatim source passage first, either way. A missing runtime, an unresolvable `TYPESAFE_API_KEY`, or a failed call means the requested check is **blocked**, never verified and never mocked.
+
 ## Quality checks
 
 - [ ] The pre-flight gate ran first; the skill refused (with a remediation checklist) rather than fact-checking against an absent, unconverted, or low-coverage knowledge base.
@@ -151,3 +159,4 @@ Severity:
 - [ ] Claim direction, magnitude, scope, and hedging were checked — not just topical overlap.
 - [ ] Background and framing citations were not treated as evidentiary claims.
 - [ ] No claim was marked supported on plausibility alone.
+- [ ] If requested, Jev verification was opt-in, post-preflight and post-citation-check, and did not replace the lead's report verdict or source quotation.

@@ -1,0 +1,66 @@
+{
+  "schema_version": "jev-contract-v1",
+  "contract": "route",
+  "questions_version": "route-v3-task-profile-experimental",
+  "model": "jev-1.13.0",
+  "thresholds": {
+    "pass_min": 0.8,
+    "fail_max": 0.2,
+    "calibration": "prototype_uncalibrated_routing"
+  },
+  "required_checks": [
+    "task_supplied",
+    "executor_availability_confirmed",
+    "user_constraints_respected"
+  ],
+  "questions": {
+    "task_needs_deep_judgment": {
+      "type": "noul",
+      "instructions": "The state describes one task: an objective, acceptance criteria, and scope constraints. Judge the task as described, not any particular way of carrying it out. Does the hardest part of this task require open-ended expert judgment, such as choosing among designs, identification strategies, architectures, or interpretations where the specification does not settle the right answer?",
+      "criteria": {
+        "true": "The hardest part requires open-ended judgment that the specification does not settle.",
+        "false": "Every part of the task can be completed by following the stated specification and checking the result."
+      }
+    },
+    "task_mostly_mechanical": {
+      "type": "noul",
+      "instructions": "The state describes one task: an objective, acceptance criteria, and scope constraints. Judge the task as described, not any particular way of carrying it out. Is most of the work fully specified, so that it can be carried out without design decisions and its output checked objectively? Examples are renames, formatting, boilerplate, tests written from a specification, and bulk transforms.",
+      "criteria": {
+        "true": "Most of the work is fully specified and objectively checkable.",
+        "false": "Most of the work involves decisions the specification leaves open, or its output cannot be checked objectively."
+      }
+    },
+    "task_parallelizable": {
+      "type": "noul",
+      "instructions": "The state describes one task: an objective, acceptance criteria, and scope constraints. Judge the task as described, not any particular way of carrying it out. Does the task split into two or more substantial units that can be carried out at the same time, without one unit needing another unit's intermediate results?",
+      "criteria": {
+        "true": "The task splits into two or more substantial units that can run concurrently.",
+        "false": "The task is one coupled piece of work, or its units depend on each other's intermediate results."
+      }
+    },
+    "task_context_heavy": {
+      "type": "noul",
+      "instructions": "The state describes one task: an objective, acceptance criteria, and scope constraints. Judge the task as described, not any particular way of carrying it out. Does carrying out the task require reading a large body of material, such as many files, long documents, or extensive logs, whose details the person integrating the result would not need to retain?",
+      "criteria": {
+        "true": "The task requires reading a large body of material that the integrator only needs summarized.",
+        "false": "The material involved is small enough, or central enough, that the integrator must hold it directly."
+      }
+    },
+    "task_outlives_session": {
+      "type": "noul",
+      "instructions": "The state describes one task: an objective, acceptance criteria, and scope constraints. Judge the task as described, not any particular way of carrying it out. Does the task need to keep running beyond a single working session, or need its own isolated copy of the workspace to write in while other work continues in the main copy?",
+      "criteria": {
+        "true": "The task must outlast one session or needs its own isolated workspace.",
+        "false": "The task fits in one session and can write in the shared workspace."
+      }
+    },
+    "task_high_stakes": {
+      "type": "noul",
+      "instructions": "The state describes one task: an objective, acceptance criteria, and scope constraints. Judge the task as described, not any particular way of carrying it out. Would an undetected error in the result be costly or hard to reverse? Examples are an irreversible action, production systems, credentials, money, and claims that go into a submission, a publication, or a shared record.",
+      "criteria": {
+        "true": "An undetected error would be costly or hard to reverse.",
+        "false": "An error would be cheap to detect and reverse."
+      }
+    }
+  }
+}

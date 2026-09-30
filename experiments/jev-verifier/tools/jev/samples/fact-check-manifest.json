@@ -1,0 +1,28 @@
+{
+  "schema_version": "jev-fact-check-state-v1",
+  "contract": "fact-check",
+  "run_id": "synthetic-fact-example",
+  "claim": {
+    "text": "Meeting attendance was positively associated with later participation in the sampled municipalities.",
+    "kind": "empirical",
+    "strength_applicable": true,
+    "direction_magnitude_applicable": true,
+    "omission_applicable": true
+  },
+  "source": {
+    "identity": "Rivera (2024), Participation and Local Meetings (synthetic example)",
+    "kind": "fulltext",
+    "knowledge_base_status": "available"
+  },
+  "evidence": {
+    "readiness": "ready",
+    "citation_integrity": "valid",
+    "sufficiency": "sufficient",
+    "artifacts": [{
+      "path": "fact-check-source.txt",
+      "sha256": "53c38c439cee90da7962ec8a61d2e35c18007e884d2558170b2288131b1e157b",
+      "excerpt": "In the synthetic municipal survey, the estimated association between meeting attendance and later participation was positive. The estimate applies only to sampled municipalities and is reported with substantial uncertainty."
+    }]
+  },
+  "blind_baseline": {"label": "SUPPORTED"}
+}

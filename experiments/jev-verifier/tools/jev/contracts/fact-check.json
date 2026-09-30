@@ -1,0 +1,40 @@
+{
+  "schema_version": "jev-contract-v1",
+  "contract": "fact-check",
+  "questions_version": "fact-check-v1",
+  "model": "jev-1.13.0",
+  "thresholds": {"pass_min": 0.8, "fail_max": 0.2, "calibration": "prototype_uncalibrated"},
+  "required_checks": ["readiness", "citation_integrity", "knowledge_base", "evidence_sufficiency"],
+  "questions": {
+    "source_supports_claim": {
+      "type": "noul",
+      "instructions": "Considering only the supplied claim, source identity and hash-verified passage excerpts, does the source passage directly support or entail the claim? Do not infer support from topical similarity, and do not treat an omitted statement as proof that the source rejects it.",
+      "criteria": {"true": "The supplied passage directly supports the claim.", "false": "The supplied passage does not establish support for the claim."}
+    },
+    "source_contradicts_claim": {
+      "type": "noul",
+      "instructions": "Does the supplied passage explicitly contradict the claim by reporting the opposite or a materially incompatible result? Absence, silence, or weak support is not contradiction.",
+      "criteria": {"true": "The passage contains explicit materially contrary evidence.", "false": "No explicit material contradiction is established by the passage."}
+    },
+    "scope_matches": {
+      "type": "noul",
+      "instructions": "Does the claim stay within the population, place, period, design, and inferential scope established by the supplied passage?",
+      "criteria": {"true": "The claim's scope is no broader than the supplied evidence.", "false": "The claim materially exceeds or differs from the supplied evidence's scope."}
+    },
+    "strength_matches": {
+      "type": "noul",
+      "instructions": "When strength_applicable is true, does the claim preserve the source's degree of certainty and causal or associational strength? When false, answer true because this dimension is explicitly not applicable.",
+      "criteria": {"true": "The applicable strength and hedging match, or the dimension is not applicable.", "false": "The claim materially overstates the source's applicable strength or certainty."}
+    },
+    "direction_magnitude_matches": {
+      "type": "noul",
+      "instructions": "When direction_magnitude_applicable is true, do direction, sign, magnitude, and quantitative values in the claim match the supplied passage? When false, answer true because this dimension is explicitly not applicable.",
+      "criteria": {"true": "The applicable direction and magnitude match, or the dimension is not applicable.", "false": "An applicable direction, magnitude, sign, or value materially differs."}
+    },
+    "material_omission_absent": {
+      "type": "noul",
+      "instructions": "When omission_applicable is true, does the claim avoid omitting a qualification in the supplied passage that would materially change its meaning? When false, answer true because this dimension is explicitly not applicable. Do not infer an omission from material outside the supplied excerpts.",
+      "criteria": {"true": "No supplied material qualification is omitted, or the dimension is not applicable.", "false": "The claim omits a supplied qualification that materially changes its meaning."}
+    }
+  }
+}

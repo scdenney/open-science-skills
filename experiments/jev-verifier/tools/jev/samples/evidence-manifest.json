@@ -1,0 +1,40 @@
+{
+  "schema_version": "jev-evidence-v1",
+  "contract": "orchestrate",
+  "run_id": "replace-with-local-run-id",
+  "task": {
+    "objective": "Replace with the task objective supplied to the worker.",
+    "acceptance_criteria": ["Replace with one concrete acceptance criterion."],
+    "scope_constraints": ["Replace with one concrete scope constraint."]
+  },
+  "worker_claim": "Replace with the worker's bounded completion claim.",
+  "lead_decision": {
+    "label": "ESCALATE"
+  },
+  "evidence": [
+    {
+      "check_id": "requested_outputs_present",
+      "result": "not_checked",
+      "observation": "Replace with a lead observation based on inspected artifacts.",
+      "artifacts": []
+    },
+    {
+      "check_id": "targeted_tests_passed",
+      "result": "not_checked",
+      "observation": "Replace with a lead observation based on a saved test transcript.",
+      "artifacts": []
+    },
+    {
+      "check_id": "scope_preserved",
+      "result": "not_checked",
+      "observation": "Replace with a lead observation based on an inspected diff artifact.",
+      "artifacts": []
+    },
+    {
+      "check_id": "claims_traceable",
+      "result": "not_checked",
+      "observation": "Replace with a lead observation based on the proposed handoff artifact.",
+      "artifacts": []
+    }
+  ]
+}
