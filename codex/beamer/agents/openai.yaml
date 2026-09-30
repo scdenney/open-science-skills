@@ -1,0 +1,6 @@
+interface:
+  display_name: "Beamer"
+  short_description: "Write, lay out, and QA LaTeX Beamer slide decks"
+  default_prompt: "Use $beamer to write or review this Beamer deck."
+policy:
+  allow_implicit_invocation: false

@@ -2,6 +2,11 @@
 
 Versions are the `version` field shared by `plugin/.claude-plugin/plugin.json` and `.claude-plugin/marketplace.json`; `plugin/scripts/check.sh` fails if they differ or if this file has no entry for the current version. Earlier history is in commit subjects and in `AUDITS.md`.
 
+## [2.34.0] — 2026-09-30
+
+- **New skill `beamer`**, on both platforms. It sets house rules for LaTeX Beamer decks (lectures, seminars, talks) and a build-and-QA loop, drawn from the author's own Overleaf edits to course decks and from published slide-design guidance: the Beamer user guide, Alley, Goldsmith-Pinkham, Head, Brown's Sheridan Center, and Mayer. It covers storyboarding before LaTeX, short titles, slide prose, frame and word budgets, roadmap times that add up, layout fixes for overfull boxes, fonts loaded by filename, Korean through xeCJK, colorblind-safe color, reproducible figures, Overleaf source hygiene, notes kept out of the deck source, and a contact-sheet check. Like every skill, it is on demand. A course skill supplies facts and structure, and `beamer` supplies the craft.
+- **Experimental Jev verification and routing, opt-in only.** `citation-check`, `fact-check`, and `orchestrate` take `--verify`, and `orchestrate` also takes `--route`. Without these arguments the skills behave as before and make no Jev call. The runtime is a separate bundle under `experiments/jev-verifier/`, installed with its own `install.py`, and it is not part of the plugin. A missing runtime or API key reports the check as blocked and never falls back to a mock. `orchestrate` also gains a topology table for choosing between the lead, subagents, a Workflow, a one-shot peer, and a spawned peer. Setup is in `docs/jev-verifier-claude-code.md`. CI now runs the Jev tests and the Codex routing test.
+
 ## [2.33.0] — 2026-09-23
 
 - **Claude models are named by alias, not version, so Opus 5.5 takes effect everywhere.** `model-committee`'s `claude-member.sh` defaulted to `claude-opus-5` on both platforms, which kept the Claude member on Opus 5 after Opus 5.5 shipped at a lower price. It now defaults to `opus`, and the chair table uses `opus` and `fable`. Claude Code resolves these aliases to the current release (`opus` → `claude-opus-5-5` on 2026-09-23). The committee skill says how to record the resolved version, and `MODEL-POLICY.md` states the alias rule.

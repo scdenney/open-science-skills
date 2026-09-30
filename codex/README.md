@@ -1,10 +1,10 @@
 <p align="center">
-  <img src="https://img.shields.io/badge/OpenAI_Codex-42_open--science_skills-111111?style=for-the-badge&logo=openai&logoColor=white" alt="OpenAI Codex — 42 open-science skills">
+  <img src="https://img.shields.io/badge/OpenAI_Codex-43_open--science_skills-111111?style=for-the-badge&logo=openai&logoColor=white" alt="OpenAI Codex — 43 open-science skills">
 </p>
 
 # Codex skills
 
-This directory contains 42 Codex-native Open Science Skills. They mirror the Claude Code library with two intentional differences:
+This directory contains 43 Codex-native Open Science Skills. They mirror the Claude Code library with two intentional differences:
 
 - `presubmit` is omitted.
 - [`orchestrate`](orchestrate/SKILL.md) is the Codex-native version of the plugin's lead-detecting `orchestrate`. It runs from an active `gpt-6-astra` or `gpt-5.6-sol` session at the selected effort. Astra keeps compact hard reasoning in the lead; Sol escalates unusually difficult units to Astra. Both modes route bounded work to Terra and reserve Luna for tightly specified mechanical work. It was named `46-orchestrate` before v2.25.0.
@@ -51,7 +51,7 @@ Every skill is on demand. None matches implicitly, so invoke one directly as `$s
 | Research design | [`conjoint-cleaning`](conjoint-cleaning/SKILL.md), [`conjoint-design`](conjoint-design/SKILL.md), [`conjoint-diagnostics`](conjoint-diagnostics/SKILL.md), [`cross-national-design`](cross-national-design/SKILL.md), [`list-experiment`](list-experiment/SKILL.md), [`qualtrics-ops`](qualtrics-ops/SKILL.md), [`research-wayfinder`](research-wayfinder/SKILL.md), [`survey-data-audit`](survey-data-audit/SKILL.md), [`survey-design`](survey-design/SKILL.md) |
 | Analysis | [`llm-calibration-logprobs`](llm-calibration-logprobs/SKILL.md), [`model-committee`](model-committee/SKILL.md), [`model-council-voting`](model-council-voting/SKILL.md), [`text-classification`](text-classification/SKILL.md), [`topic-modeling`](topic-modeling/SKILL.md) |
 | Corpus processing | [`doc-to-markdown`](doc-to-markdown/SKILL.md), [`vlm-ocr`](vlm-ocr/SKILL.md) |
-| Writing and reporting | [`hypothesis-building`](hypothesis-building/SKILL.md), [`literature-review`](literature-review/SKILL.md), [`methods-reporting`](methods-reporting/SKILL.md), [`narrative-building`](narrative-building/SKILL.md), [`paper-tex`](paper-tex/SKILL.md), [`pre-registration-writing`](pre-registration-writing/SKILL.md) |
+| Writing and reporting | [`hypothesis-building`](hypothesis-building/SKILL.md), [`literature-review`](literature-review/SKILL.md), [`methods-reporting`](methods-reporting/SKILL.md), [`narrative-building`](narrative-building/SKILL.md), [`paper-tex`](paper-tex/SKILL.md), [`beamer`](beamer/SKILL.md), [`pre-registration-writing`](pre-registration-writing/SKILL.md) |
 | Figures and tables | [`figure-table-audit`](figure-table-audit/SKILL.md), [`figures`](figures/SKILL.md), [`tables`](tables/SKILL.md) |
 | Manuscript QA | [`citation-check`](citation-check/SKILL.md), [`fact-check`](fact-check/SKILL.md), [`replication-package`](replication-package/SKILL.md) |
 | Review and submission | [`journal-review`](journal-review/SKILL.md), [`paper-review-lite`](paper-review-lite/SKILL.md), [`referee-response`](referee-response/SKILL.md) |
