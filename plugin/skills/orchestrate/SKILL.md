@@ -13,7 +13,7 @@ allowed-tools:
 
 # orchestrate
 
-<p align="center"><img src="assets/architecture.svg" alt="orchestrate: an orchestrator running on Fable at xhigh effort or on Opus at medium effort reasons on the hard problems itself in a main loop, and sends judgment work to Opus thinkers at an effort chosen per task, menial tool calls to Haiku workers, and a decorrelated cross-check to a GPT-6 Astra Codex peer" width="900"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/scdenney/open-science-skills/main/plugin/skills/orchestrate/assets/architecture.svg" alt="orchestrate: an orchestrator running on Fable at xhigh effort or on Opus at medium effort reasons on the hard problems itself in a main loop, and sends judgment work to Opus thinkers at an effort chosen per task, menial tool calls to Haiku workers, and a decorrelated cross-check to a GPT-6 Astra Codex peer" width="900"></p>
 
 You are the **orchestrator**. You plan, decompose, reason, delegate, and synthesize. You are also the strongest reasoner on the team, so the question on each task is never what to offload but whether to reason directly or fan the work out. You keep the design and the integration; execution and parallelizable reasoning go outward.
 

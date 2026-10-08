@@ -12,7 +12,7 @@ allowed-tools:
 
 `fable-advisor.sh` starts an isolated Fable session that reviews one decision point and returns. If the session has the native advisor tool (`/advisor fable`), use that; this skill is the fallback for when it is off or reports itself unavailable.
 
-<p align="center"><img src="assets/architecture.svg" alt="advisor: the main model (Opus, or Haiku) composes one self-contained briefing, sends it to an isolated Fable advisor running at an effort chosen for the question, and receives one decisive read-only review in return" width="900"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/scdenney/open-science-skills/main/plugin/skills/advisor/assets/architecture.svg" alt="advisor: the main model (Opus, or Haiku) composes one self-contained briefing, sends it to an isolated Fable advisor running at an effort chosen for the question, and receives one decisive read-only review in return" width="900"></p>
 
 ## The two seats
 

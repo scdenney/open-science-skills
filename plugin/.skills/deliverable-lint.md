@@ -14,9 +14,9 @@ allowed-tools:
 
 # Deliverable lint
 
-<p align="center"><img src="../deliverable-open/assets/pipeline.svg" alt="The deliverable pipeline: eight steps over three layers (one wiki per piece of research, one manifest per deliverable, a shared commons)" width="900"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/scdenney/open-science-skills/main/plugin/skills/deliverable-open/assets/pipeline.svg" alt="The deliverable pipeline: eight steps over three layers (one wiki per piece of research, one manifest per deliverable, a shared commons)" width="900"></p>
 
-Full guide: [`docs/deliverable-pipeline.md`](../../../docs/deliverable-pipeline.md).
+Full guide: [`docs/deliverable-pipeline.md`](https://github.com/scdenney/open-science-skills/blob/main/docs/deliverable-pipeline.md) in the repository.
 
 Detection is parallel; revision is serial. This skill finds and writes only under `checks/`; source files and the wiki stay untouched. The author (or `sci-edit`, one section at a time under its guard) revises afterwards.
 

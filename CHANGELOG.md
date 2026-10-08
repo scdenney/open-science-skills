@@ -2,6 +2,11 @@
 
 Versions are the `version` field shared by `plugin/.claude-plugin/plugin.json` and `.claude-plugin/marketplace.json`; `plugin/scripts/check.sh` fails if they differ or if this file has no entry for the current version. Earlier history is in commit subjects and in `AUDITS.md`.
 
+## [2.35.1] — 2026-10-08
+
+- `conjoint-design` gave a Type S risk of about 1 in 18 and an exaggeration ratio of 1.5 at 50% power. Gelman and Carlin's design calculation puts the sign risk at 50% power near zero and the exaggeration at about 1.4 times; the bullet now gives the calculation at 50%, 17%, and 8% power and asks for the design analysis to rest on a plausible effect size rather than a pilot estimate.
+- Links that broke outside the skill's own folder are fixed. The `reference/` links in `conjoint-diagnostics`, `diverge`, `hypothesis-building`, and `methods-reporting` are now plain-text paths in the skill's directory; the three deliverable skills link the pipeline guide on GitHub, since `docs/` does not ship with the plugin; and the architecture and pipeline diagrams load from absolute URLs, so they render from the flat mirrors too.
+
 ## [2.35.0] — 2026-10-08
 
 - **Orchestration uses Haiku for menial work and Opus at a per-task effort for judgment.** `orchestrate` now sends search, collection, extraction, lookups, and bulk edits from a frozen spec to Haiku at `medium` (`low` only for a single lookup, since Anthropic notes `low` makes Haiku 5.5 more likely to skip a search or a check), and anything needing judgment to Opus at an effort chosen per unit (`low`, `medium`, `high`, or `xhigh` for the blind high-stakes line). Sonnet leaves the default routing. A Fable lead runs at `xhigh` (was `max`), following Anthropic's guidance to start Fable 5.1 at `high` and step up for capability-sensitive work. Model and effort are set per call on `Agent` and in Workflow `agent()` options, so the bundled `deep-reasoner`/`fast-worker` definitions and the Setup copy step are gone. The skill was also cut for clarity (306 → about 230 lines). The Jev route map, its tests, and its docs propose Haiku workers and an `xhigh` Fable lead to match.

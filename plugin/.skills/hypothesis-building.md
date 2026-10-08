@@ -81,4 +81,4 @@ argument-hint: '[describe your theory or research question]'
 
 ## Example
 
-> **Worked example:** see [reference/example.md](reference/example.md).
+> **Worked example:** see `reference/example.md` in this skill's directory.
