@@ -27,24 +27,24 @@ Not a long exhaustive issue list, and not a takedown.
 3. Copy the manuscript PDF into the slug folder as `manuscript.pdf`. If the editor's invitation letter or the user's notes are available, save them as `context.md` in the same folder.
 4. Read the manuscript yourself once before writing agent prompts. Determine: empirical or theoretical or qualitative; design family (conjoint, list experiment, observational, RCT, ethnography); whether SI / replication archive exists; rough page count and section structure. This shapes which agents will produce useful output (see "When to skip a finder agent" below).
 
-**Orchestration lead.** This referee draft is orchestrated by whatever model you are running — Claude Opus or Fable — at medium reasoning effort by default (raise to high for the recommendation call and for verifying every quoted passage against the PDF — a bounded judgment call, not the sustained orchestration role). The orchestrator reads the manuscript, spawns the five finders, the Blue Team, the Chief Reviewer, and Tone Guard, then owns the last-mile checklist; the sub-agents do the finding and drafting. If the `Workflow` tool is listed among your tools this session, express Phase 1 (five finders) → Phase 2 (Blue Team) → Phase 3 (Chief Reviewer) → Phase 4 (Tone Guard) as a `Workflow`; otherwise — the common case, since dynamic Workflows are gated per session by org policy, the launch gate, or the "Dynamic workflows" setting in `/config`, and invoking a skill does not grant them — launch each phase's agents with parallel `Agent` calls in a single message and start the next phase once their outputs land. The fallback is the default, not a degraded mode; branch on tool availability, not on which model is leading.
+**Orchestration lead.** Whatever model you are running — Claude Opus or Fable — orchestrates at medium effort, raising to high for the recommendation call and for verifying every quoted passage against the PDF. The orchestrator reads the manuscript, spawns the five finders, the Blue Team, the Chief Reviewer, and Tone Guard, then owns the last-mile checklist; the sub-agents do the finding and drafting. If the `Workflow` tool is listed this session, express Phase 1 → Phase 4 as a `Workflow`. Otherwise (the common case; invoking a skill does not grant Workflows) launch each phase's agents as parallel `Agent` calls in one message and start the next phase once their outputs land.
 
-**Sub-agent model routing.** Unlike a single-model pipeline, each role below is pinned to the model tier its difficulty warrants — Opus for open-ended argument-level judgment, Fable for the synthesis role that most rewards the strongest reasoning, Sonnet for mechanical or checklist-bound verification. Fable is the *most* expensive tier here, not a cheaper one ($10/$50 per MTok, more than twice Opus's per-token price), so it is pinned only where its reasoning is what the role needs. Each finder's heading states its `Model:` / `Effort:`; use these as the `opts.model` / `opts.effort` passed to `agent()` in the Workflow (or the `model` param on a plain `Agent` call, noting the standalone `Agent` tool has no effort field — fold the effort instruction into the prompt text itself in that case). The tier ladder, strongest first, is **Fable → Opus → Sonnet → Haiku**. If a pinned tier is unavailable in your environment, fall back one step down that ladder rather than skipping the role. See [`orchestrate`](../orchestrate/SKILL.md) for the general routing patterns this borrows from.
+**Sub-agent model routing.** Each role is pinned to the tier its difficulty warrants: Opus for argument-level judgment, Fable for the decision-making synthesis, Haiku for pattern-matching against a fixed list. Fable costs 2.5 times Opus per token ($10/$50 against $4/$20 per MTok), so it is pinned only where its reasoning is what the role needs. Pass each role's `model` and `effort` on its `Agent` call (or in `opts` on `agent()` inside a `Workflow`). If a pinned model is unavailable, substitute the nearest available tier rather than skipping the role: the Chief Reviewer falls back to Opus at `high`, a Haiku role to Opus at `low`. The `orchestrate` skill describes the general routing pattern.
 
 | Role | Model | Effort | Why |
 |---|---|---|---|
 | Breaker | Opus | high | foundational/argument validity — the hardest open-ended judgment call |
 | Situator | Opus | high | literature placement — "the most important assessment for a disciplinary journal" |
-| Butcher | Sonnet | high | table-tracing and empirical-machinery checks — detail-heavy but bounded |
-| Shredder | Sonnet | medium | procedural/documentation cross-checking against the PDF — mechanical |
+| Butcher | Opus | medium | design-question fit, table tracing, claim alignment — detail-heavy judgment, bounded by the manuscript |
+| Shredder | Opus | low | procedural and documentation cross-checking against the PDF — mostly bounded, with calls on what is conventionally expected |
 | Void | Opus | high | absence detection is open-ended judgment — what *should* be here and is not |
-| Blue Team | Sonnet | medium | classification against a fixed A–G taxonomy, not novel judgment |
-| Chief Reviewer | Fable | high | the actual decision-making synthesis — the strongest reasoner on the team, and the one role where its premium is worth paying |
-| Tone Guard | Sonnet | low–medium | pattern-matching against a fixed phrase list |
+| Blue Team | Opus | medium | catching finder misreads (misinterpreted coefficients, wrong specifications) is judgment, and this filter decides what the Chief Reviewer sees |
+| Chief Reviewer | Fable | high | the decision-making synthesis — the one role where Fable's premium is worth paying |
+| Tone Guard | Haiku | medium | pattern-matching against a fixed phrase list |
 
 ## Phase 1 — Five parallel finder agents
 
-Spawn agents 1–5 in a **single message with five Agent tool calls** so they execute concurrently. Each agent's prompt is the role block below, with `{{MANUSCRIPT}}` replaced by the manuscript path and `{{CONTEXT}}` replaced by the target-journal name plus any editor's-letter excerpts and reviewer notes. Each agent writes its raw findings to `<slug>/agent_<n>_<name>.md`.
+Spawn agents 1–5 as five parallel `Agent` calls in one message. Each agent's prompt is the role block below, with `{{MANUSCRIPT}}` replaced by the manuscript path and `{{CONTEXT}}` replaced by the target-journal name plus any editor's-letter excerpts and reviewer notes. Each agent writes its raw findings to `<slug>/agent_<n>_<name>.md`.
 
 ### Agent 1 — The Breaker (Opus, high effort)
 
@@ -72,7 +72,7 @@ Spawn agents 1–5 in a **single message with five Agent tool calls** so they ex
 > ```
 > Quality over quantity. **Guards:** No figure interpretation. Critique the work, not the author. Do not use "fabricated", "deceptive", "deliberately", "lied".
 
-### Agent 2 — The Butcher (Sonnet, high effort)
+### Agent 2 — The Butcher (Opus, medium effort)
 
 > You are **The Butcher**. You dissect the empirical machinery of the attached manuscript: the design choices, the measures, the analytical decisions. You ask not just whether it was executed cleanly, but whether it was capable of answering the question posed.
 >
@@ -91,7 +91,7 @@ Spawn agents 1–5 in a **single message with five Agent tool calls** so they ex
 >
 > Output 5–10 issues in the same format as The Breaker. **Guards:** No figure interpretation. Verify table readings coordinate-style: list the exact column headers, trace each datapoint row → column, and check for narrative inversion (text says "A high, B low" but table shows reverse).
 
-### Agent 3 — The Shredder (Sonnet, medium effort)
+### Agent 3 — The Shredder (Opus, low effort)
 
 > You are **The Shredder**. Forensic procedural auditor. You verify what was claimed to have been done is actually documented. You work only with what's in the PDF — no external lookups. If it's not documented, that itself is a finding.
 >
@@ -167,7 +167,7 @@ Spawn agents 1–5 in a **single message with five Agent tool calls** so they ex
 - **Pure ethnography or interpretive qualitative work** — Butcher and Void checklists assume quantitative social science. Use as scaffolding only; expect to write more of the report yourself.
 - **Outside your expertise** — the Situator cannot replace field knowledge. If you do not know the literature, decline the review rather than running this skill.
 
-## Phase 2 — Blue Team filter (Sonnet, medium effort)
+## Phase 2 — Blue Team filter (Opus, medium effort)
 
 Spawn after all five finders have written their files.
 
@@ -253,7 +253,7 @@ Spawn after Blue Team has written its file.
 > - Do not impute intent. Never write "fabricated," "lied," "fraud," "deceptive," "dishonest," "deliberately."
 > - Total length: 1,200–2,000 words. Shorter is better than longer if the critique is tight.
 
-## Phase 4 — Tone Guard sanitization (Sonnet, low–medium effort)
+## Phase 4 — Tone Guard sanitization (Haiku, medium effort)
 
 Spawn on the Chief Reviewer's draft.
 
@@ -281,6 +281,7 @@ After Tone Guard the report is legally clean but may still read as machine-draft
 - **Otherwise apply this inline pass yourself** and say in the final summary that no external linter ran. Read the Major Concerns and Suggestions paragraphs once each and fix: hedge stacks (keep one hedge per claim); negative parallelism ("not X but Y") and triadic lists used for rhythm rather than content; em dashes (replace with a period or a comma); colons and semicolons where a period would do; sentence-initial connectives (Moreover, Furthermore, Therefore, Notably); template phrases ("it is worth noting", "this raises the question", "the real question is"); significance inflation (crucial, critical, pivotal, underscore, delve, multifaceted, robust used as praise); synonym cycling of a key term; and any sentence that describes the paper instead of stating a concern. Keep the referee's claims, page citations, and quoted passages untouched.
 
 Either route leaves the report in the reviewer's own measured register: short declarative sentences, one concern per paragraph, no rhetorical questions.
+
 ## Phase 6 — Optional confidential editor note
 
 After the main report is final, ask the user whether to also generate the confidential editor note. If yes, single-pass:

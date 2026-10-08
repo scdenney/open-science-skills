@@ -1,12 +1,12 @@
 ---
 name: referee-response
-description: Organizes and formats an author's response to peer review — extracts every distinct point from the referee reports and the editor's letter, tags severity and type, maps the dependencies so the revision runs in the right order, flags which points the author may want to push back on, and builds the response-to-reviewers letter as a numbered comment → response → location table with the substantive answers left for the author to write. It formats and checks the response; it never writes the scientific content of an answer. Use when the user has referee or reviewer reports, a revise-and-resubmit decision, or an editor's letter and says "respond to reviewers", "plan the revision", "map the referee comments", "draft the response letter", or "check I addressed everything". The reviewer-side twin is journal-review; prose polish afterwards goes to sci-edit.
+description: "Organize an author's response to peer review: extract every referee point, order the revision by dependency, flag possible pushbacks, and build the response-letter skeleton the author fills in. Use for revise-and-resubmit planning, response letters, or checking every point was answered."
 argument-hint: "[paths to the referee reports and editor letter, plus the manuscript; optionally: plan | letter | check]"
 ---
 
 # Referee Response
 
-Turns scattered reviewer comments into an ordered revision plan and a response letter the author fills in. The author writes every substantive answer; this skill makes sure each point is found, ordered, answered somewhere, and formatted the way editors expect.
+Turns scattered reviewer comments into an ordered revision plan and a response letter the author fills in. The author writes every substantive answer, including the interpretation of a result and the reason a request is declined; this skill makes sure each point is found, ordered, answered somewhere, and formatted the way editors expect.
 
 **Related skills.** `$journal-review` writes a referee report for someone else's manuscript; this skill answers one written about yours. `$sci-edit` polishes the letter's prose after the author has written the answers. `$paper-review-lite` and `$citation-check` are useful before resubmission when a referee's point implies the manuscript needs a fresh audit.
 
@@ -75,6 +75,4 @@ Report the checks as a short list of what passed and what needs the author's att
 
 ## Notes
 
-- The skill never drafts scientific content: not a new analysis, not the interpretation of a result, not the reason a request is declined. It supplies structure, order, placeholders, and checks.
-- Keep the manuscript's argument intact. Where a referee request would change a confirmatory claim, say so in step 2 and put the decision to the author.
 - Heritage: grown from a personal `referee-response` skill (2026-05) into a library skill on 2026-09-02.

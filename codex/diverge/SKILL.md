@@ -1,6 +1,6 @@
 ---
 name: diverge
-description: Generate 3-5 conceptually distinct approaches labeled by creativity dimension (Novel, Surprising, Diverse, Conventional) and hold for selection instead of implementing the first idea; the --codex mode delegates the brainstorm to a fresh Codex subagent for a clean, unanchored context and hands it the selected approach to implement. Use when a task has more than one non-obvious solution — creative, architectural, or analytical work — and before committing to an approach; use --codex when the user explicitly asks for a subagent, an independent context, or a delegated brainstorm.
+description: Generates 3-5 conceptually distinct approaches (Novel, Surprising, Diverse, Conventional) and holds for selection before implementing. Use before committing to an approach when a task has more than one non-obvious solution; --codex delegates the brainstorm to a fresh subagent.
 ---
 
 # Diverge
@@ -15,9 +15,9 @@ Read the background note only when the user asks for the rationale or when refin
 
 Use it wherever more than one non-obvious solution exists — creative, architectural, or analytical work — and not for rote tasks with one correct answer (fix this syntax error).
 
-When the task itself is still underspecified (goal, constraints, success criteria unsettled), interview before diverging. For research tasks, `research-grill` resolves the decision tree the approaches must answer to; it descends from Matt Pocock's `grill-me` (see [`RECOMMENDED.md`](../../RECOMMENDED.md)). Grilling settles the question, and diverge generates genuinely distinct answers to a settled one.
+When the task itself is still underspecified (goal, constraints, success criteria unsettled), interview before diverging. For research tasks, `research-grill` resolves the decision tree the approaches must answer to; it descends from Matt Pocock's `grill-me` (see `RECOMMENDED.md` in the library repository). Grilling settles the question, and diverge generates genuinely distinct answers to a settled one.
 
-**Model.** The default mode runs in the current session. For a demanding `--codex` brainstorm, use `gpt-6-astra` at `xhigh` for the fresh worker if the tool exposes model and effort overrides; pass a self-contained brief with `fork_turns="none"` where supported. Otherwise the worker inherits the lead, and the report must name that limitation. A routine brainstorm can retain the current model. A fresh context reduces anchoring but does not establish independent model-family evidence. Claude Code's `/oss:diverge --codex` explicitly launches Astra through the CLI.
+**Model.** The default mode runs in the current session. For a demanding `--codex` brainstorm, use `gpt-6-astra` at `high` for the fresh worker if the tool exposes model and effort overrides (`xhigh` for the write-capable implementation turn); pass a self-contained brief with `fork_turns="none"` where supported. Otherwise the worker inherits the lead, and the report must name that limitation. A routine brainstorm can retain the current model. A fresh context reduces anchoring but does not establish independent model-family evidence. Claude Code's `/oss:diverge --codex` explicitly launches Astra through the CLI.
 
 ## Behavior
 
@@ -41,8 +41,6 @@ For each approach provide:
 2. How it works — two to three sentences on the mechanism and what makes it distinct
 3. Main tradeoff — one sentence
 
-No markdown header per approach — keep the list scannable.
-
 ### Step 3 — Hold
 
 Do not implement. Present all approaches, then ask:
@@ -59,7 +57,7 @@ A fresh subagent reduces anchoring from the lead agent's conversation history. T
 
 ### Gate the delegation
 
-Delegate only when the user explicitly passes `--codex` or asks for a subagent, an independent context, or a delegated brainstorm. If the skill was loaded implicitly without such a request, run the ordinary local workflow.
+Delegate only when the user passes `--codex` or asks for a subagent, an independent context, or a delegated brainstorm; otherwise run the local workflow.
 
 ### Phase 1: brief the brainstormer
 
@@ -89,7 +87,7 @@ Send the selected approach, original task, constraints, and acceptance checks ba
 
 The lead agent owns integration. Inspect the resulting diff and verification output, fix integration defects, and report the final outcome.
 
-Codex-plugin result-handling guidance (stop after presenting review findings) applies to code-review handoffs, not here: Phase 3 begins only after the user has selected an approach, and the selected approach is meant to be implemented and integrated, not merely reported.
+The user's selection authorizes Phase 3; the Codex-plugin guidance to stop after presenting review findings covers code-review handoffs, not this step.
 
 ### Fallbacks
 

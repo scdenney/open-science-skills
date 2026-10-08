@@ -1,49 +1,37 @@
 ---
 disable-model-invocation: true
 name: figures
-description: Designs and formats publication-quality figures for social-science manuscripts. Covers chart type, scales, color, legend order, self-contained captions, and script-based reproducibility. Use when the user is making, revising, or critiquing a figure for a paper, including coefficient plots, small multiples, distributions, trends, maps, and networks, or asks about labels, colorblind-safe palettes, legend order, direct labels, or captions. Prefer this for manuscript, working-paper, and journal-submission figures. Send finished sets to figure-table-audit for end-stage QA.
+description: Designs publication figures for social-science manuscripts. Covers chart choice, axes and scales, color and accessibility, legend order, captions that carry the title, and script-based reproducibility. Use when making, revising, or critiquing a figure for a paper, such as a coefficient plot, small multiples, a distribution, a trend, a map, or a network. Finished figure sets go to figure-table-audit for end-stage QA.
 argument-hint: '[describe the figure you are building, the data, the claim it supports, and the target venue]'
 ---
 
 # Figure Designer
 
-## Heritage and scope
+Applies to any figure type in a social-science manuscript. For figures whose interpretation depends on method-specific standards, also consult the relevant sibling skill (`conjoint-design`, `conjoint-diagnostics`, `list-experiment`, `topic-modeling`, `text-classification`, `vlm-ocr`). For end-stage QA on a finished figure set, hand off to `figure-table-audit`.
 
-This is an original Open Science Skills workflow for figure production in social-science manuscripts. It is general — apply to any figure type (line, bar, point, density, map, network, small multiples). For figures whose interpretation depends on method-specific standards, also consult the relevant sibling skill (`conjoint-design`, `conjoint-diagnostics`, `list-experiment`, `topic-modeling`, `text-classification`, `vlm-ocr`). For end-stage QA on a finished figure set, hand off to `figure-table-audit`.
-
-A good figure earns its place in the manuscript: it makes a single comparison legible, it can be read without the surrounding text, and it can be regenerated from a script. If a figure cannot do all three, it is not yet ready.
+A figure is ready when it makes one comparison legible, can be read without the surrounding text, and can be regenerated from a script.
 
 ## Instructions
 
 ### 1. State the comparison before drawing
 
-Write down, in one sentence, what the figure is supposed to let the reader see. Examples:
-
-- "Treatment effect is larger among low-information respondents than among high-information respondents."
-- "Vote share for Party A declines monotonically with district urbanization."
-- "Topic 7 prevalence rises sharply after the 2024 election."
-
-If you cannot state the comparison in one sentence, the figure has too many goals — split it into multiple panels or multiple figures.
+Write down, in one sentence, what the figure should let the reader see (for example, "The treatment effect is larger among low-information respondents"). If the comparison does not fit in one sentence, the figure has too many goals; split it into panels or separate figures.
 
 ### 2. Choose the chart type from the comparison
 
-Match the geometry to the comparison, not to the data type:
+Match the geometry to the comparison, not to the data type. Two defaults that are often missed:
 
-- **Comparing magnitudes across a small number of categories**: bar chart (or dot/lollipop for many categories).
-- **Tracking a quantity over a continuous variable**: line chart for ordered/continuous x; point + ribbon for uncertainty.
-- **Showing distribution**: histogram (single), density (compare a few), boxplot/violin (compare many).
-- **Showing relationship between two continuous variables**: scatter, with trend line + uncertainty band if a model is implied.
-- **Showing effect estimates**: coefficient plot (point + CI), preferred over tables for visual comparison across models.
-- **Showing many small comparisons**: small multiples (faceting) on a shared scale, not multiple separate figures.
+- Effect estimates compared across models or subgroups go in a coefficient plot (point and interval), not a regression table.
+- Many small comparisons go in small multiples on a shared scale, not in separate figures.
 
-Avoid pie charts, 3D anything, dual-axis, and donut charts in academic figures.
+Pie, donut, 3D, and dual-axis charts do not belong in academic figures.
 
 ### 3. Pick scales and axes deliberately
 
-- Always label both axes with the quantity AND the units. "Income" is wrong; "Household income (USD, 2020)" is right.
+- Label both axes with the quantity and its units: "Household income (USD, 2020)", not "Income".
 - For percentages, write `0.00–1.00` or `0%–100%` consistently — do not mix within a figure.
-- Use a log scale when the data span more than two orders of magnitude OR when a multiplicative effect is the substantive story; label the scale as log.
-- Anchor axes at zero ONLY when the zero is meaningful for the comparison (counts, proportions). For deviations, differences, and z-scores, do not force a zero baseline.
+- Use a log scale when the data span more than two orders of magnitude or when a multiplicative effect is the substantive story, and label the scale as log.
+- Anchor axes at zero only when zero is meaningful for the comparison (counts, proportions). Deviations, differences, and z-scores need no zero baseline.
 - Use the same y-axis range across panels of small multiples unless the claim is explicitly about within-panel scale.
 - Reverse the y-axis only when the substantive direction demands it (e.g., rank where 1 is "best") and label the reversal in the caption.
 
@@ -53,25 +41,23 @@ Avoid pie charts, 3D anything, dual-axis, and donut charts in academic figures.
 - **Diverging** (red ↔ blue, etc.): for variables with a meaningful midpoint (effect sign, deviation from baseline).
 - **Categorical**: for unordered groups; use a colorblind-safe palette (Okabe-Ito, viridis discrete, ColorBrewer Set2/Dark2).
 - Test grayscale: convert the figure and check that the comparison still reads. If it does not, add shape, line type, or direct labels.
-- Do not encode the same variable in both color and shape unless reinforcing for accessibility — that is fine; just keep the legend honest.
-- Default `rainbow` / `jet` ramps are a publication smell; replace them.
+- Encoding one variable in both color and shape is fine as an accessibility aid; keep the legend consistent with it.
+- Replace default `rainbow` / `jet` ramps, which are not perceptually uniform.
 
 ### 5. Match legend order to the visual order in the chart
 
-Legends are read alongside the plot, so the legend order must mirror the data's visual order — readers should never have to scan back and forth to decode a series:
+Legend order mirrors the data's visual order, so the reader can match series without scanning back and forth:
 
 - For lines, areas, or stacked elements arranged top-to-bottom in the plot at the rightmost x-value, list legend entries in the same top-to-bottom order.
 - For bars or categories arranged left-to-right, use a horizontal legend listed left-to-right in the same order.
 - For panels (small multiples), follow the panel grid: rows top-to-bottom, columns left-to-right.
-- Do NOT alphabetize the legend when the data have a natural order (time, magnitude, treatment intensity, ordinal scale). Alphabetical legends are a frequent cause of misreading.
-- Prefer **direct labeling** at the line end / bar end when there are five or fewer series — a labelled line beats any legend.
-- When a legend is unavoidable, place it where it does not occlude data, and match colors and line styles between figure and legend exactly.
-
-The rule of thumb: *the eye should be able to walk from chart to legend in the same direction it reads.* Top-to-bottom on the chart maps to top-to-bottom in a vertical legend, and to left-to-right in a horizontal legend.
+- Do not alphabetize a legend when the data have a natural order (time, magnitude, treatment intensity, ordinal scale). ggplot2 and similar libraries sort character variables alphabetically by default, and the result is a frequent cause of misreading.
+- With five or fewer series, label lines or bars directly at their ends instead of using a legend.
+- When a legend is needed, place it where it does not cover data.
 
 ### 6. Put the title in the caption, not inside the figure
 
-**Do not bake a title or subtitle into the plotting area.** The figure's title, and any explanatory note, belong in the document as the caption beneath the figure, set in the manuscript's font and editable alongside the prose. A title rendered inside the image duplicates the caption, sets in a mismatched typeface, and cannot be changed without regenerating the plot. Strip `ggtitle()`, `labs(title=, subtitle=)`, `plt.title()`, and `plt.suptitle()` from the figure script and let the caption carry the title. (Panel tags such as "A" and "B" inside a multi-panel figure are fine; a descriptive title is not.)
+**Keep titles and subtitles out of the plotting area.** The figure's title, and any explanatory note, belong in the document as the caption beneath the figure, set in the manuscript's font and editable alongside the prose. A title rendered inside the image duplicates the caption, sets in a mismatched typeface, and cannot be changed without regenerating the plot. Strip `ggtitle()`, `labs(title=, subtitle=)`, `plt.title()`, and `plt.suptitle()` from the figure script and let the caption carry the title. (Panel tags such as "A" and "B" inside a multi-panel figure are fine; a descriptive title is not.)
 
 The caption must be self-contained: a reader who skims should understand the figure from the caption alone. Include:
 
@@ -86,7 +72,7 @@ Keep abbreviations defined and units explicit.
 
 ### 7. Make it reproducible
 
-- Generate the figure from a script (R, Python, Stata, Julia) checked into the replication archive — never hand-edit final figures in Illustrator or Inkscape unless the manual step is documented.
+- Generate the figure from a script (R, Python, Stata, Julia) in the replication archive. Hand edits in Illustrator or Inkscape are acceptable only when the manual step is documented.
 - Save with the script: input data path, package versions, random seed (for jittered or sampled plots), output dimensions.
 - Export vector (PDF, SVG) for plots with text and lines; export raster (PNG at ≥300 dpi) only for raster-native content (heatmaps with thousands of cells, photographs, maps with imagery).
 - Use a single ggplot/matplotlib theme across the manuscript so figures are visually consistent.
@@ -95,10 +81,8 @@ Keep abbreviations defined and units explicit.
 ### 8. Accessibility and production sanity
 
 - Axis label and tick text ≥ 8pt at print size.
-- No reliance on color alone (pair with shape, line type, or direct labels).
 - Alt text for journals that require it (a one-sentence description of what the figure shows).
 - Consistent figure dimensions and fonts across the manuscript.
-- No title text inside the plotting area (see step 6); the caption beneath the figure carries the title.
 
 ## Output
 
@@ -118,16 +102,3 @@ Open issues: <anything that needs author input — denominator choice, sample re
 ```
 
 When asked to produce code, default to a single ggplot2 (R) or matplotlib + seaborn (Python) script with the theme, palette, and figure dimensions explicit at the top.
-
-## Quality checks
-
-- [ ] One-sentence comparison was stated before the chart was chosen.
-- [ ] Chart geometry matches the comparison.
-- [ ] Axes are labeled with quantity AND units.
-- [ ] Color encoding is intentional and grayscale-tested.
-- [ ] Legend order mirrors the visual order in the chart (no surprise alphabetical sort).
-- [ ] Caption is self-contained: quantity, sample, uncertainty, panels, transformations.
-- [ ] No title or subtitle baked into the figure image; the title lives in the caption (panel tags A/B are fine).
-- [ ] Figure is generated by a script, not hand-edited.
-- [ ] Vector format used unless the content is raster-native.
-- [ ] Final QA pass deferred to `figure-table-audit` once the figure set is stable.

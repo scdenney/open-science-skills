@@ -5,11 +5,9 @@ description: "Design and format publication-quality tables. Use for column order
 
 # Table Designer
 
-## Heritage and scope
+Applies to descriptive, regression, balance, and summary tables under any method. For tables whose interpretation depends on method-specific standards, also consult the relevant sibling skill (`conjoint-design`, `conjoint-diagnostics`, `list-experiment`, `topic-modeling`, `text-classification`, `vlm-ocr`). For end-stage QA on a finished table set, hand off to `figure-table-audit`.
 
-This is an original Open Science Skills workflow for table production in social-science manuscripts. It is general — apply to descriptive tables, regression tables, balance tables, and summary tables across any method. For tables whose interpretation depends on method-specific standards, also consult the relevant sibling skill (`conjoint-design`, `conjoint-diagnostics`, `list-experiment`, `topic-modeling`, `text-classification`, `vlm-ocr`). For end-stage QA on a finished table set, hand off to `figure-table-audit`.
-
-Tables are for precise reading. A good table is one where the relevant comparison can be made without arithmetic, and where every number that appears in the manuscript text can be traced back to a specific cell. If readers have to do mental subtraction to recover the substantive quantity, the table is the wrong shape.
+Tables are for precise reading. A table is the right shape when the relevant comparison can be made without arithmetic and every number quoted in the text traces to a specific cell. If readers must subtract to recover the substantive quantity, reshape the table.
 
 ## Instructions
 
@@ -40,12 +38,12 @@ Columns should mirror how the text walks the reader through the result:
 - **Regression tables**: baseline / minimal-controls → preferred specification → robustness checks. Place the preferred model in a clearly labeled column, not necessarily the rightmost; readers focus on the column that the text says is preferred.
 - **Comparison tables**: control / treatment 1 / treatment 2 / contrast(s), or pre / post / difference.
 - **Descriptive tables**: full sample → analytic sample → by treatment arm; or order subgroups by substantive logic, not alphabetically.
-- Do not let `stargazer`/`modelsummary` defaults dictate the order if it obscures the comparison — pass models in argument order that matches the manuscript.
+- Pass models to `stargazer`/`modelsummary` in the order the manuscript discusses them rather than accepting the package's default order.
 
 ### 4. Group rows and structure panels
 
 - Group covariate blocks: treatment(s) at the top, then primary moderators, then controls, then fixed-effect indicators, then fit statistics.
-- Use horizontal rules (or panel breaks) to separate blocks; do not let regression output run as a flat list.
+- Separate blocks with horizontal rules or panel breaks rather than letting regression output run as a flat list.
 - Suppress controls in the main table when there are many — show "Controls: yes" and put the full coefficient set in SI.
 - For multi-panel tables, use a clear panel header (e.g., "Panel A. Full sample / Panel B. Eligible voters only") and keep column structure identical across panels.
 - Order rows within a block by substantive interest, not alphabetically — readers expect the headline coefficient first.
@@ -56,7 +54,7 @@ Columns should mirror how the text walks the reader through the result:
 - Be consistent across tables in the manuscript: same precision for the same quantity.
 - Show uncertainty as standard errors `(in parentheses)` OR confidence intervals `[in brackets]` — pick one convention and use it everywhere. Note the convention in the table notes.
 - Significance stars (`*`, `**`, `***`) are conventional but not required; if used, define thresholds in the notes consistently across tables.
-- Always report N per column. Always report a fit statistic appropriate to the model (R² for OLS, pseudo-R² or log-likelihood for non-linear, ICC for multilevel).
+- Report N per column and a fit statistic appropriate to the model (R² for OLS, pseudo-R² or log-likelihood for non-linear, ICC for multilevel).
 
 ### 6. Write self-contained titles and notes
 
@@ -79,14 +77,13 @@ Notes should specify:
 - Use `modelsummary`, `stargazer`, `gt`, `huxtable`, or `kable` (R); `stargazer` or `pystout` (Python); `esttab` (Stata) — whichever fits the workflow.
 - Write the table-generating code so that re-running it after a model update updates the manuscript automatically. Hand-typed tables are a rich source of post-revision errors.
 - Round in the formatting layer, not in the analysis — keep raw model output at full precision and round only when rendering.
-- Insert exact numbers into the manuscript text using `\Sexpr{}` (knitr/Sweave), inline R/Python in Quarto, or LaTeX `\input{}` of generated `.tex` fragments. Do not retype numbers from tables into prose.
+- Insert numbers into the manuscript text programmatically (`\Sexpr{}` in knitr/Sweave, inline R/Python in Quarto, or LaTeX `\input{}` of generated `.tex` fragments) rather than retyping them from tables.
 
 ### 8. Production sanity
 
 - Check that the compiled table fits the page (column count, font size). Wide tables should rotate (landscape) or move to SI.
 - Check column alignment: numbers right-aligned or decimal-aligned, text left-aligned, headers per convention.
-- Check that booktabs (`\toprule`, `\midrule`, `\bottomrule`) or equivalent rules are used — no vertical rules between columns in academic tables.
-- Confirm that significance stars and SE conventions are identical across tables in the manuscript.
+- Use booktabs (`\toprule`, `\midrule`, `\bottomrule`) or equivalent rules, with no vertical rules between columns.
 - Confirm that the same coefficient appears with the same row label across tables (no `Treat` here and `Treatment_1` there).
 
 ## Output
@@ -108,15 +105,3 @@ Open issues: <anything that needs author input>
 ```
 
 When asked to produce code, default to a `modelsummary` or `gt` script (R) or `stargazer`/`pystout` (Python), with model objects passed in the order the manuscript discusses them.
-
-## Quality checks
-
-- [ ] One-sentence comparison was stated before the table was laid out.
-- [ ] A table is the right format (vs. a figure or coefficient plot).
-- [ ] Column order mirrors the argument; preferred specification is labeled.
-- [ ] Rows are grouped (treatment / covariates / FE / fit stats), not flat.
-- [ ] Decimal precision and uncertainty convention are consistent.
-- [ ] Title names the estimand or model family.
-- [ ] Notes specify DV, coding, controls, FE, clustering, weights, N, significance markers.
-- [ ] Table is generated by code; numbers in text are programmatically inserted.
-- [ ] Final QA pass deferred to `figure-table-audit` once the table set is stable.

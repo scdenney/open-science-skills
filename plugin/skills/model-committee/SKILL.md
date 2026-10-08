@@ -1,7 +1,7 @@
 ---
 disable-model-invocation: true
 name: model-committee
-description: Runs a deliberative two-model committee with GPT-6 Astra and Claude Opus under a selectable chair. Fable is the default chair. `/model-committee-astra` selects Astra with a Sol member, `/model-committee-opus` selects Opus, and `/model-committee-sol` retains the Sol chair with a Terra member. Use when a consequential decision has several defensible options and model families should independently propose, critique, revise, and cross-rank against a predeclared rubric before convergence. Fits architecture, research design, interpretation, manuscript strategy, ambiguous diagnosis, evaluation design, plan reconciliation, and policy or standards tradeoffs. Excludes factual lookups, independent-coder reliability, brainstorming, routine implementation, and final professional judgment.
+description: Runs a deliberative two-model committee of GPT-6 Astra and Claude Opus under a selectable chair, Fable by default, with `/model-committee-astra`, `/model-committee-opus`, and `/model-committee-sol` selecting the others. Use when a consequential decision has several defensible options and two model families should propose, critique, revise, and cross-rank them against a predeclared rubric before converging, as in research design, interpretation, architecture, manuscript strategy, or evaluation design. Not for factual lookups, independent-coder reliability, brainstorming, routine implementation, or final professional judgment.
 argument-hint: '[decision or problem for the committee to deliberate; optionally name the chair]'
 allowed-tools:
 - Read
@@ -13,33 +13,33 @@ allowed-tools:
 
 # Model Committee
 
-Run GPT-6 Astra and Claude Opus as a deliberating committee under a chair that is chosen per run. Keep the line to `model-council-voting` sharp: a council measures independent disagreement, while this committee deliberately exposes each member to the other's argument and returns one decision.
+Run GPT-6 Astra and Claude Opus as a deliberating committee under a chair that is chosen per run. This is not an inter-rater reliability design: independent blind raters measure disagreement, while this committee deliberately exposes each member to the other's argument and returns one decision.
 
-Read [`reference/protocol.md`](reference/protocol.md) completely before running a committee. It carries the use-case gate, the brief template, the three round contracts, the decision rule, and the `decision.md` schema.
+Read `reference/protocol.md` in this skill's directory completely before running a committee. It carries the use-case gate, the brief template, the three round contracts, the decision rule, and the `decision.md` schema.
 
 ## Pick the chair
 
-The chair is a parameter, not a separate workflow. Five slash commands select it; the protocol, the drivers, and all three rounds are identical whichever chair runs. A GPT-family chair uses a different GPT member tier. Fable and Astra are distinct from both member models; the explicitly selected Opus chair is the same-model exception. That is the only thing that changes between rows besides the chair itself.
+The chair is a parameter, not a separate workflow. `/model-committee` and three chair commands select it; the protocol, the drivers, and all three rounds are identical whichever chair runs. The only other thing that changes between rows is the GPT member under a GPT-family chair, which steps down a tier so the chair is not also a member. Fable and Astra are distinct from both members; the explicitly selected Opus chair is the same-model exception.
 
 | Chair | Invoked by | Chair pin | Chair effort | GPT member | Chair invocation |
 | --- | --- | --- | --- | --- | --- |
 | Fable (default) | `/model-committee` | `fable` | `high` | `gpt-6-astra` | `claude-member.sh --model fable --effort high` |
 | Opus | `/model-committee-opus` | `opus` | `high` | `gpt-6-astra` | `claude-member.sh --model opus --effort high` |
-| Astra | `/model-committee-astra` | `gpt-6-astra` | `xhigh` | `gpt-5.6-sol` | `codex-member.sh --model gpt-6-astra --effort xhigh` |
-| Sol | `/model-committee-sol` | `gpt-5.6-sol` | `xhigh` | `gpt-5.6-terra` | `codex-member.sh --model gpt-5.6-sol --effort xhigh` |
+| Astra | `/model-committee-astra` | `gpt-6-astra` | `xhigh` | `gpt-6.1-sol` | `codex-member.sh --model gpt-6-astra --effort xhigh` |
+| Sol | `/model-committee-sol` | `gpt-6.1-sol` | `xhigh` | `gpt-6-sol` | `codex-member.sh --model gpt-6.1-sol --effort xhigh` |
 
-If the user did not name a chair, use Fable. The premier models orchestrate: a committee is chaired by a frontier model that sits outside both members, and the two premier chairs — Fable on the Claude side, Astra on the GPT side — are the ones to reach for on a consequential call.
+If the user did not name a chair, use Fable. On a consequential call, reach for a premier chair that sits outside both members: Fable on the Claude side, Astra on the GPT side.
 
 Score aggregation and the tie rule are mechanical whoever chairs; schema validation and compatible-component synthesis carry the chair's own judgment, which is what the choice of chair buys.
 
-- **Fable** (default) is the premier Claude model and is neither member, so it cannot vote its own prior a third time and it brings the strongest synthesis to the one step that needs judgment rather than arithmetic. Its cost is one external Fable call per committee, unless the session is verifiably running Fable already. Its arithmetic still needs checking (below) — a strong chair is not exempt from the mechanical audit.
+- **Fable** (default) is the premier Claude model and is neither member, so it cannot vote its own prior a third time and it brings the strongest synthesis to the one step that needs judgment rather than arithmetic. Its cost is one external Fable call per committee, unless the session is verifiably running Fable already.
 - **Opus** is normally the model already running in-session, so the chair step usually costs no extra external call — that is the reason to choose it. Its cost is dependence: the chair is the *same model* as the Claude member, which is precisely why it must not vote a third time. Prefer it for a cheap committee on a decision that is consequential but not close.
-- **Astra** is the premier GPT model chairing from outside the Claude-family member. Because a chair identical to a member would defeat the point, under an Astra chair the GPT member steps down one tier to `gpt-5.6-sol` — still near-frontier, so the GPT side of the deliberation stays strong. This is the GPT-side mirror of the Fable default, and the row to use when the deliberation should be adjudicated by the *other* vendor's premier model.
-- **Sol** is cross-family to the Opus member and a distinct 5.6 tier from the Terra member. It is *not* independent of the GPT-family member. Under a Sol chair the GPT member uses `gpt-5.6-terra` — the *balanced* 5.6 tier. Kept for continuity now that Astra is the GPT flagship; prefer the Astra chair for new work.
+- **Astra** is the premier GPT model chairing from outside the Claude-family member. Under an Astra chair the GPT member steps down to `gpt-6.1-sol`, still near-frontier, so the GPT side of the deliberation stays strong. This is the GPT-side mirror of the Fable default, and the row to use when the deliberation should be adjudicated by the other vendor's premier model.
+- **Sol** (`gpt-6.1-sol`) is cross-family to the Opus member and a distinct tier from its `gpt-6-sol` member, but it is *not* independent of the GPT family. It is the cheaper GPT-side chair; prefer Astra for a close or high-stakes call.
 
 ## Gate the workflow
 
-Run only when the user invokes one of the five commands or asks for the two model families to deliberate. Six external member calls draw plan credits or API spend on both providers — seven when the chair step is delegated rather than run in-session. Surface that and get confirmation unless the user has already accepted it. Apply the protocol's use-case gate first; if the task does not qualify, name the right alternative and call no model.
+Run only when the user invokes this skill or one of its chair commands, or asks for the two model families to deliberate. Six external member calls draw plan credits or API spend on both providers — seven when the chair step is delegated rather than run in-session. Surface that and get confirmation unless the user has already accepted it. Apply the protocol's use-case gate first; if the task does not qualify, name the right alternative and call no model.
 
 Before the first call:
 
@@ -58,10 +58,10 @@ Resolve `SKILL_DIR` as the directory containing this `SKILL.md`, then run:
 
 Default member pins:
 
-- GPT member: `gpt-6-astra` (reasoning effort: `xhigh`) — `gpt-5.6-sol` under an Astra chair and `gpt-5.6-terra` under a Sol chair, per the table above
+- GPT member: `gpt-6-astra` (reasoning effort: `xhigh`) — `gpt-6.1-sol` under an Astra chair and `gpt-6-sol` under a Sol chair, per the table above
 - Claude member: `opus` (reasoning effort: `high`)
 
-The Claude IDs are the CLI aliases `opus` and `fable`, which follow the current release; to record which version ran, rerun one call with `--output-format json` and read `modelUsage`. The GPT IDs are explicit model IDs, not necessarily immutable snapshots. `--check` above only confirms the CLI is installed; whether a specific pin such as `gpt-5.6-sol` is actually available surfaces on the first real call, not at preflight — the chair pin in particular is untested until the chair step runs. If a pin is unavailable, report it and ask whether to stop or use a named replacement — never substitute silently. If `gpt-5.6-sol` is missing on this machine, stop and ask rather than falling back to `gpt-5.6-terra` for the chair.
+The Claude IDs are the CLI aliases `opus` and `fable`, which follow the current release; to record which version ran, rerun one call with `--output-format json` and read `modelUsage`. The GPT IDs are explicit model IDs, not necessarily immutable snapshots. `--check` above only confirms the CLI is installed; whether a specific pin such as `gpt-6.1-sol` is available surfaces on the first real call, and the chair pin is untested until the chair step runs. If a pin is unavailable, report it and ask whether to stop or use a named replacement rather than substituting silently. In particular, do not fall back from a `gpt-6.1-sol` chair to `gpt-6-sol`, which is that row's member.
 
 ## Run the committee
 
@@ -88,13 +88,13 @@ Invoke each member through the bundled read-only driver:
   --prompt-file <prompt.md> --out <output.md> --effort high -C <working-directory>
 ```
 
-Under an Astra chair, pass `--model gpt-5.6-sol` on every GPT member call; under a Sol chair, pass `--model gpt-5.6-terra`.
+Under an Astra chair, pass `--model gpt-6.1-sol` on every GPT member call; under a Sol chair, pass `--model gpt-6-sol`.
 
 Launch both calls in a round concurrently when the runtime supports it. Sequential execution is acceptable only if the second prompt was frozen before the first result arrived — otherwise round 1 stops being blind.
 
 ## Chair without becoming a third debater
 
-Chair in-session only when the session is verifiably running the chair model; otherwise delegate. Verify rather than assume: Claude Code injects a line into every session's context naming the model actually running (e.g. "You are powered by the model named …"); read it before picking a branch. This is fail-closed — if the running model is not the selected chair, or you cannot confirm it, take the delegate branch and do not label the output as chaired by that model. The failure is not hypothetical: a sibling orchestration skill (`orchestrate`, then named `fable-orchestrate`) recorded benchmark runs as one model that had silently executed under another, because nothing checked.
+Chair in-session only when the session is verifiably running the chair model; otherwise delegate. Claude Code injects a line into every session's context naming the model actually running (e.g. "You are powered by the model named …"); read it before picking a branch. This is fail-closed: if the running model is not the selected chair, or you cannot confirm it, delegate and do not label the output as chaired by that model. Earlier benchmark runs in this library were recorded as one model while silently executing under another, because nothing checked.
 
 - Fable chair (default), session verified as Fable: chair directly at `/effort` high. Aggregation and the tie rule are mechanical, but the compatible-component synthesis and the escalate-or-synthesize call are where the effort earns its cost.
 - Opus chair, session verified as Opus: chair directly at `/effort` high.
@@ -113,7 +113,7 @@ Delegation covers **only** the post-round-3 chair step — the members stay at t
 # Astra chair: "$SKILL_DIR/scripts/codex-member.sh" \
 #                --prompt-file chair.prompt.md --out decision.md --model gpt-6-astra --effort xhigh -C <working-directory>
 # Sol chair:   "$SKILL_DIR/scripts/codex-member.sh" \
-#                --prompt-file chair.prompt.md --out decision.md --model gpt-5.6-sol --effort xhigh -C <working-directory>
+#                --prompt-file chair.prompt.md --out decision.md --model gpt-6.1-sol --effort xhigh -C <working-directory>
 ```
 
 The Codex plugin's result-handling guidance (stop after presenting review findings, change nothing) applies to code-review handoffs, not to the Codex member or the Astra and Sol chairs here: the chair step below is instructed to aggregate and synthesize per the protocol, and its output is a decision record, not an applied change.

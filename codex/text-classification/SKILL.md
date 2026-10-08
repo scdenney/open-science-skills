@@ -1,129 +1,124 @@
 ---
 name: text-classification
-description: "Designs and validates LLM-based text classification for research data — codebook construction, choice of learning regime, model selection and reproducibility, prompt construction, pilot validation against human coding with agreement statistics (kappa, F1), hybrid human-LLM workflows, and reporting model-coded data. Also carries a resumable batch pipeline with a rule-based baseline for coding large sets of repeated free-text values against a closed codebook — occupation, institution, and registry text, and open-text survey responses — with a frozen input set, incremental output, residual buckets, stratified hand validation, a regex or dictionary comparison, and a published lookup table. Use when the user asks to classify, code, or label text at scale. Discovering categories rather than applying them goes to topic-modeling."
+description: "Advises on setting up and validating LLM text classification: codebook, learning regime and model choice, prompts, validation against human coding (kappa, F1), hybrid review, measurement error, and reporting, plus a short resumable batch pattern with a rule-based baseline. Use to classify, code, or label text at scale; category discovery goes to topic-modeling."
 ---
 
 # LLM-Based Text Classification for Social Science Research
 
 ## Instructions
 
+Treat the classifier as a measurement instrument the user is designing, not a script to write. Work through the decisions below with the user in this order, explain the trade-off and the governing standard at each, and record the choice and its rationale. Code comes after the codebook, regime, model, and validation plan are settled. If the categories are not yet known and finding them is the goal, this is discovery — route to `$topic-modeling`.
+
 ### 1. Codebook Design
 
-- Before drafting the codebook, specify the population, sampling frame, and (for experimental data) the treatment condition each response is drawn from. These constrain which categories can plausibly exist and which demographic subgroups any bias assessment must cover. LLM classification extends, rather than replaces, the longer open-ended coding tradition in survey methodology (Geer 1988; Lupia 2018).
-- Treat codebook design as the most consequential decision in the classification pipeline. LLMs struggle with loose instructions and revert to general-purpose definitions rather than following researcher-specific operationalizations (Halterman & Keith 2025).
-- Structure each code with the following components (adapted from Halterman & Keith 2025):
-  - **Label**: The exact output string the model should return
-  - **Definition**: A single-sentence operationalization of the construct
-  - **Clarification**: What IS included — boundary cases that belong in this category
-  - **Negative clarification**: What is NOT included — common confusions and adjacent categories
-  - **Examples**: 2-3 positive examples (correctly classified) and 2-3 negative examples (common misclassifications)
-- Keep the number of codes small (3-6) for initial classification. Larger coding schemes increase ambiguity and reduce inter-annotator agreement for both humans and LLMs (Chae & Davidson 2025).
-- Allow multi-label assignment when responses may reflect more than one construct. Specify this explicitly in the prompt — models default to single-label output unless instructed otherwise.
-- Include a residual category (e.g., `none_of_above` or `uncodeable`) for responses that are too vague, too short, or off-topic. Define this category as precisely as the substantive codes (Halterman & Keith 2025).
-- Iterate the codebook through pilot testing. Examine disagreements between LLM output and hand-coding to identify ambiguous definitions, then revise. Most codebook problems are definition problems, not model problems (Halterman & Keith 2025).
-- For a fully-worked example of a codebook with all five components filled in for a realistic three-category classification task, plus a matching system prompt that operationalizes it, see `references/example-codebook-and-prompt.md`.
+- Start from the population, sampling frame, and (for experimental data) the treatment condition each response comes from. These constrain which categories can plausibly exist and which subgroups any bias assessment must cover. LLM classification extends the open-ended coding tradition in survey methodology rather than replacing it (Geer 1988; Lupia 2018).
+- The codebook is the most consequential decision in the pipeline. LLMs given loose instructions fall back on general-purpose definitions instead of the researcher's operationalization (Halterman & Keith 2025).
+- Give each code five components (adapted from Halterman & Keith 2025):
+  - **Label**: the exact output string
+  - **Definition**: a one-sentence operationalization of the construct
+  - **Clarification**: boundary cases that belong in the category
+  - **Negative clarification**: common confusions and adjacent categories that do not
+  - **Examples**: 2-3 positive and 2-3 negative (common misclassifications)
+- Start with a small code set (3-6). Larger schemes increase ambiguity and lower agreement for humans and LLMs alike (Chae & Davidson 2025).
+- Decide single- versus multi-label explicitly and say so in the prompt; models default to single-label.
+- Include a residual category (`none_of_above`, `uncodeable`) for vague, short, or off-topic responses, defined as precisely as the substantive codes (Halterman & Keith 2025).
+- Iterate the codebook through pilot disagreements. Most codebook problems are definition problems, not model problems (Halterman & Keith 2025).
+- A fully worked three-category codebook with all five components, plus a matching system prompt, is in `references/example-codebook-and-prompt.md`.
 
 ### 2. Choosing a Learning Regime
 
-- Follow the decision framework from Chae & Davidson (2025), which maps document characteristics and available resources to the appropriate approach:
+Chae & Davidson (2025) map document characteristics and available resources to a regime. The model names below are the ones they tested; carry the comparative finding forward, not the specific models.
 
-  **Zero-shot prompting**: Use when classifying short documents with a large decoder model (GPT-4o, Llama3-70B+) and no labeled training data. Best for rapid prototyping and tasks where constructs are well-defined. GPT-4o achieves the best zero-shot performance across tasks (Chae & Davidson 2025).
+- **Zero-shot prompting**: short documents, a large decoder model, no labeled data. Good for prototyping and well-defined constructs; the strongest proprietary model performed best zero-shot in their tests.
+- **Few-shot prompting**: results are inconsistent — examples help some models and hurt others. Compare few-shot against zero-shot on a held-out sample before committing, and choose diverse examples that cover edge cases.
+- **Fine-tuning**: effective with as few as ~100 hand-coded examples; fine-tuned smaller models matched GPT-4o zero-shot. Prefer it when labeled data exists and cost at scale matters.
+- **Instruction-tuning**: detailed prompting combined with fine-tuning on instruction-output pairs. The most accurate regime for complex tasks (instruction-tuned Llama3-70B beat GPT-4o zero-shot on stance detection), at the cost of more infrastructure.
+- **Encoder-only fine-tuning** (BERT, DeBERTa, SBERT; ~86-110M parameters, laptop hardware): often matches or beats zero-shot generative LLMs at a fraction of the cost, with deterministic output (Chae & Davidson 2025, Table 1; Ziems et al. 2024 find fine-tuned RoBERTa rarely underperforms larger generative models across 20 tasks). Prefer it when the label set is fixed, labeled data exists, and reproducibility outweighs generative flexibility.
 
-  **Few-shot prompting**: Add labeled examples to the prompt. Results are inconsistent — adding examples helps some models but degrades others (Chae & Davidson 2025). Always compare few-shot against zero-shot on a held-out sample before committing. Select diverse examples covering edge cases, not just prototypical instances.
-
-  **Fine-tuning**: Train a model on labeled data. Effective with as few as 100 hand-coded examples for smaller models (Chae & Davidson 2025). Fine-tuned smaller models (Llama3-8B, GPT-3 Davinci) can match GPT-4o zero-shot performance. Prefer this when you have labeled data and need cost-effective classification at scale.
-
-  **Instruction-tuning**: Combine detailed prompting with fine-tuning on paired instruction-output examples. Most powerful regime for complex tasks — instruction-tuned Llama3-70B surpasses GPT-4o zero-shot on stance detection (Chae & Davidson 2025). Requires more technical infrastructure but yields the highest accuracy.
-
-  **Encoder-only fine-tuning**: A distinct fourth regime often omitted from generative-LLM discussions. Fine-tuning a smaller encoder-only model (BERT, DeBERTa, SBERT; ~86–110M parameters, personal-computer hardware) on modest labeled data can match or exceed zero-shot generative LLMs on many classification tasks at a fraction of the cost and with fully reproducible (deterministic) output (Chae & Davidson 2025, Table 1; Ziems et al. 2024 find fine-tuned RoBERTa rarely under-performs larger generative models across 20 tasks). Prefer encoder fine-tuning when the label set is fixed, labeled data exists, and reproducibility matters more than generative flexibility.
-
-- When resources permit, test multiple regimes on the same pilot sample and select based on empirical performance, not assumptions.
+When resources permit, test several regimes on the same pilot sample and choose on measured performance.
 
 ### 3. Model Selection and Reproducibility
 
-- Prefer open-weight models (Llama 3, Gemma, Mistral) for publishable research. Open-weight models run locally produce substantially lower and more predictable variance across runs, while proprietary models (GPT-4, Gemini) show high and unpredictable variance even with temperature=0 (Barrie, Palmer & Spirling 2025).
-- Choose the least expensive model that meets the human-validated quality target. For new OpenAI pipelines, prefer the Responses API and verify the chosen model's current structured-output, reasoning, and logprob support. Astra is appropriate for difficult adjudication; do not move an established high-volume classifier or frozen study to it without a representative validation pass. Preserve the prompt, model ID, parameters, and run date for every batch.
-- If using proprietary models, document the exact model identifier (e.g., `gpt-4o-2024-08-06`), not the model family name. Commercial models are modified or deprecated without notice — GPT-3 was withdrawn from OpenAI's API entirely (Barrie, Palmer & Spirling 2025; Chae & Davidson 2025).
-- Set temperature to 0 for classification tasks. This reduces but does not eliminate stochastic variation in proprietary models (Barrie, Palmer & Spirling 2025).
-- Run the same ~50 responses through the classifier twice, with meaningful separation (e.g., two weeks apart, or across a model-version change), and report the agreement rate between runs as a variance metric. These specific numbers (N = 50, ≥ 95% agreement as a "stable" threshold) are house defaults consistent with field conventions, not values established in a single cited study; Barrie, Palmer & Spirling (2025) motivate the test but do not fix the thresholds.
-- When classifying across multiple languages or cultural contexts, validate per-language against hand-coded native-language ground truth. LLM classification accuracy is high across non-English settings but not uniform: GPT-4 tracks English accuracy (~90%) on Italian, German, and Chilean political tweets (Heseltine & Clemm von Hohenberg 2024), and remains above all supervised comparators across 11 countries on party-identification tasks, though absolute accuracy drops outside the United States (Tornberg 2025). Do not assume English-language validation carries over.
-- Be aware that commercial models may refuse to classify politically sensitive content. Chae & Davidson (2025) found GPT-4o refused to process some Facebook comments about political candidates due to content moderation filters. For sensitive topics (immigration attitudes, extremism, hate speech), test for refusal rates before full deployment.
-- Consider data privacy: survey responses sent to commercial APIs may be absorbed into training data (Chae & Davidson 2025). For data containing personally identifying information, use locally hosted open-weight models or confirm the API provider's data retention policy.
+- Prefer open-weight models run locally for publishable research. They show lower, more predictable run-to-run variance; proprietary models show high and unpredictable variance even at temperature 0 (Barrie, Palmer & Spirling 2025).
+- Choose the least expensive model that meets the human-validated quality target. For new OpenAI pipelines, prefer the Responses API and check the chosen model's current structured-output, reasoning, and logprob support. Astra suits difficult adjudication; move an established high-volume classifier or a frozen study to it only after a representative validation pass.
+- Record the exact model identifier (e.g., `gpt-4o-2024-08-06`), not the family name. Commercial models are changed or withdrawn without notice — GPT-3 was removed from OpenAI's API entirely (Barrie, Palmer & Spirling 2025; Chae & Davidson 2025).
+- Use temperature 0. It reduces but does not eliminate variation in proprietary models (Barrie, Palmer & Spirling 2025).
+- Variance test: classify the same ~50 responses twice with meaningful separation (two weeks apart, or across a model-version change) and report the agreement rate. N = 50 and a ≥ 95% "stable" threshold are house defaults; Barrie, Palmer & Spirling (2025) motivate the test but do not fix the numbers.
+- For multiple languages or cultural contexts, validate per language against native-language hand coding. Accuracy is high outside English but not uniform: GPT-4 matched English accuracy (~90%) on Italian, German, and Chilean political tweets (Heseltine & Clemm von Hohenberg 2024) and beat supervised comparators across 11 countries, though absolute accuracy fell outside the United States (Tornberg 2025). English validation does not carry over.
+- Commercial models may refuse politically sensitive content (Chae & Davidson 2025 saw GPT-4o refuse some comments about candidates). For sensitive topics, measure the refusal rate before full deployment.
+- Responses sent to commercial APIs may be retained or used for training (Chae & Davidson 2025). Data containing personal identifiers goes to a locally hosted model unless the provider's retention policy has been checked; sending it off-machine is the user's decision.
 
 ### 4. Prompt Construction
 
-- Place the codebook in the system prompt. Include all components for each code (label, definition, clarification, negative clarification, examples).
-- Specify the exact output format: code labels only, comma-separated if multi-label. Instruct the model to return no additional text. Smaller models in particular generate conversational preamble unless explicitly constrained (Chae & Davidson 2025).
-- For structured or complex inputs, use JSON formatting for both input and expected output. LLMs trained on code corpora parse JSON reliably and produce more consistent structured output (Chae & Davidson 2025).
-- Include the response text in the user message, separated clearly from instructions. Use a consistent delimiter (e.g., `"Code this response:\n\n{text}"`).
-- Do not include information in the prompt that the classifier should not use. If country of origin should not influence coding, do not include it in the input — models will use any available signal.
+- Put the full codebook (all five components per code) in the system prompt.
+- Specify the exact output: labels only, comma-separated if multi-label, nothing else. Smaller models add conversational preamble unless constrained (Chae & Davidson 2025).
+- For structured or complex inputs, use JSON for input and output; it parses more reliably (Chae & Davidson 2025).
+- Put the response text in the user message behind a consistent delimiter (e.g., `"Code this response:\n\n{text}"`).
+- Include only information the classifier is meant to use. If country should not influence coding, leave it out of the input — models use any available signal.
 
-### 5. Pilot Testing and Validation
+### 5. Pilot Testing and Validation Against Human Coding
 
-- Before hand-labeling, run Halterman & Keith's (2025) Stage 1 label-free behavioral tests on the candidate LLM and codebook. These are cheap screens that require no ground truth: (I) **legal labels** — does the LLM only return labels defined in the codebook? (II) **definition recovery** — given a verbatim class definition as input, does it return the correct label? (III) **in-context example classification** — does it correctly label verbatim examples from the codebook? (IV) **codebook order invariance** — are predictions stable when the category order is reversed or shuffled? Failure on I–III indicates the model cannot follow basic instructions or recall codebook content; failure on IV indicates attention or ordering artifacts that will compromise downstream classification. Use these to screen out unsuitable models before committing to hand-coding.
-- Hand-code 50-100 responses as ground truth before any LLM classification. This sample serves dual purposes: validating the codebook and benchmarking LLM performance.
-- Use two independent human coders for the pilot sample. Report inter-coder reliability using Cohen's κ (Krippendorff's α is preferable for ordinal labels or >2 coders, and is the measure Tornberg 2025 and Benoit et al. 2025 report). The κ ≥ 0.7 threshold used here is a house default aligned with the "substantial agreement" band in Landis & Koch (1977); Halterman & Keith (2025) treat codebook revision as warranted when human agreement is low, without fixing a specific numeric cutoff. If human agreement falls below this band, the codebook needs revision before LLM testing — the problem is the coding scheme, not the model.
-- Consider a **self-coding** diagnostic alongside inter-coder κ: pipe the open-ended response back to the respondent and ask them to assign it to the same categories. Agreement between respondent self-codes and researcher codes is a direct test of the codebook's semantic validity (Krippendorff's concept), and systematic disagreement correlated with demographic variables reveals demographic bias in the coding scheme (Glazier, Boydstun & Feezell 2021). This is particularly valuable for cross-national or cross-demographic work where a single researcher codebook may systematically mis-read some groups.
-- Compare LLM output against the human-coded ground truth. Report per-category precision, recall, and F1. Halterman & Keith (2025) treat F1 ≥ 0.7 as adequate and recommend iteration when per-category F1 is low; the "below 0.5, consider fine-tuning" bright line is a house operationalization rather than a cited threshold.
-- For error analysis, prompt the LLM to **motivate its label** ("explain briefly why this response fits this category") on misclassified and boundary cases. The justification often reveals whether the model is using the codebook's definition or a background concept, and it surfaces the kind of contextual reasoning that distinguishes LLM output from word-association-based classifiers (Tornberg 2025). This is a diagnostic, not a production setting — do not use chain-of-thought output as the classification itself.
-- Examine the confusion matrix for systematic error patterns. If the model consistently confuses two categories, either merge them or sharpen the negative clarification in the codebook.
-- If zero-shot F1 is inadequate, iterate in this order: (1) revise codebook definitions, (2) add few-shot examples, (3) fine-tune on labeled data. Do not skip to fine-tuning before testing whether the codebook is the problem (Halterman & Keith 2025).
+This is the evidence that the classifier measures the construct. It is not optional.
 
-### 6. Hybrid Human-LLM Workflows
+- Before hand-labeling, run Halterman & Keith's (2025) Stage 1 label-free behavioral tests: (I) **legal labels** — does the model return only codebook labels? (II) **definition recovery** — given a verbatim definition, does it return the right label? (III) **in-context examples** — does it label the codebook's own examples correctly? (IV) **order invariance** — are predictions stable when category order is shuffled? Failing I-III means the model cannot follow the codebook; failing IV means ordering artifacts. Use these to screen models out before investing in hand coding.
+- Hand-code 50-100 responses as ground truth before any LLM classification. The sample validates the codebook and benchmarks the model.
+- Use two independent human coders. Report Cohen's κ (Krippendorff's α for ordinal labels or more than two coders, as Tornberg 2025 and Benoit et al. 2025 report). κ ≥ 0.7 is a house default aligned with Landis & Koch's (1977) "substantial agreement" band; Halterman & Keith (2025) call for revision when human agreement is low without fixing a cutoff. Below that band, revise the codebook before testing models — the scheme is the problem.
+- Consider a **self-coding** diagnostic: ask respondents to assign their own answer to the categories. Agreement with researcher codes tests the codebook's semantic validity, and disagreement correlated with demographics reveals bias in the scheme (Glazier, Boydstun & Feezell 2021). Especially useful in cross-national or cross-demographic work.
+- Compare LLM output to the human ground truth with per-category precision, recall, and F1. Halterman & Keith (2025) treat F1 ≥ 0.7 as adequate and recommend iteration when it is low; "below 0.5, consider fine-tuning" is a house operationalization.
+- For error analysis, ask the model to justify its label on misclassified and boundary cases. The justification shows whether it is applying the codebook definition or a background concept (Tornberg 2025). This is a diagnostic; the justification is not the classification.
+- Read the confusion matrix. If two categories are consistently confused, merge them or sharpen the negative clarification.
+- If F1 is inadequate, iterate in this order: (1) revise definitions, (2) add few-shot examples, (3) fine-tune. Test whether the codebook is the problem before fine-tuning (Halterman & Keith 2025).
 
-- Implement a hybrid workflow: LLM classifies all responses, then human reviewers adjudicate uncertain cases. This achieves 93%+ accuracy at a fraction of full manual coding cost (Heseltine & Clemm von Hohenberg 2024).
-- Flag responses for human review using one or more of: (a) token-level confidence from the model's own log-probabilities — see `$llm-calibration-logprobs` for per-decision confidence, calibration (ECE, Brier) and triage thresholds, which is better calibrated than the verbalized HIGH/MEDIUM/LOW self-rating it replaces, (b) disagreement across multiple model runs (Heseltine & Clemm von Hohenberg 2024), (c) responses assigned to the residual category, (d) responses near decision boundaries (e.g., coded with two competing labels). (a), (c), and (d) are plausible defaults consistent with the hybrid-workflow literature but are not each individually cited.
-- Expect roughly 10–15% of responses to require human review, with anything over ~25% signaling codebook or model problems that warrant returning to pilot testing. These review-rate bands are house defaults for planning purposes, not thresholds established in any single cited study.
-- Use human review not only for quality assurance but also for codebook refinement. Patterns in flagged cases often reveal systematic ambiguities that can be resolved with better definitions.
-- For **ensemble approaches**, run a matrix of models rather than a single pair. Benoit, De Marchi & Laver (2025) use a 3×3 design — three summarizer models (Claude, GPT, Gemini) × three scorer models × zero/few-shot — and aggregate by taking the ensemble **mean** of the per-item scores. This ensemble mean correlates with expert-survey benchmarks on party positioning at or near the upper bound set by inter-expert agreement (~0.90 Pearson). Treat **NAs as informative missingness**: instruct models to return NA when the input lacks sufficient information rather than forcing a label, and report per-model NA rates — systematic NA differences between summarizers (e.g., GPT inferring content, Claude/Gemini declining to) are substantive findings about what the text contains, not just noise (Benoit et al. 2025). For multi-model panels — consensus rules, chance-corrected agreement, and correlated-error diagnostics — see `$model-council-voting`, which is the ensemble design this bullet gestures at.
+### 6. Hybrid Human-LLM Review
 
-### 7. Analysis and Interpretation
+- Have the LLM classify everything and humans adjudicate uncertain cases. This reached 93%+ accuracy at a fraction of full manual cost (Heseltine & Clemm von Hohenberg 2024).
+- Flag for review on one or more of: (a) token-level confidence from the model's log-probabilities — `$llm-calibration-logprobs` covers per-decision confidence, calibration (ECE, Brier), and triage thresholds, and is better calibrated than a verbalized HIGH/MEDIUM/LOW rating; (b) disagreement across repeated runs or models (Heseltine & Clemm von Hohenberg 2024); (c) residual-category assignments; (d) boundary cases coded with two competing labels. (a), (c), and (d) are defaults consistent with the hybrid-workflow literature, not individually cited.
+- Plan for roughly 10-15% of responses needing review; above ~25% points to codebook or model problems and a return to piloting. These bands are house planning defaults.
+- Feed patterns in flagged cases back into the codebook.
+- **Multi-model ensembles.** Benoit, De Marchi & Laver (2025) run a matrix rather than a pair — three summarizer models × three scorer models × zero/few-shot — and take the ensemble mean of per-item scores, which correlates with expert-survey party positions near the inter-expert ceiling (~0.90 Pearson). Instruct models to return NA when the input lacks information rather than forcing a label, and report per-model NA rates: systematic NA differences between models are findings about the text, not noise (Benoit et al. 2025). When several models act as independent coders, treat them like human coders — report chance-corrected agreement (κ or α) across them, and remember that models trained on similar data make correlated errors, so model-model agreement is not a substitute for agreement with human coding. If labels come from a consensus rule (k of N models agreeing, with a per-model confidence floor), state the rule before looking at outputs and report a sensitivity analysis over both k and the floor.
 
-- Report code prevalence overall and by relevant subgroups (e.g., country, treatment condition). Present as proportions with confidence intervals.
-- Cross-tabulate codes to assess co-occurrence. For construct validation, the joint prevalence of related codes (e.g., recognition of a cue + positive interpretation) is more informative than marginal prevalence alone.
-- When using LLM classifications as variables in downstream analysis (regression, causal inference), acknowledge measurement error. Classification errors can attenuate or bias effect estimates. Even highly accurate LLM labels can induce severe bias and coverage problems when used as proxies in downstream estimation; the appropriate response is a design-based correction rather than ignoring the noise (Egami et al. 2023; Knox, Lucas & Cho 2022, via Halterman & Keith 2025; Chae & Davidson 2025). Distinguish classifier-as-outcome from classifier-as-treatment-check, and plan the correction procedure up front rather than post hoc. If the classification is part of a pre-registered design, register which codes map to which hypotheses; see `pre-registration-writing`.
-- LLMs can outperform human coders on tasks requiring contextual reasoning — interpreting implicit references, handling sarcasm, drawing on background knowledge (Tornberg 2025). But LLMs are not oracles. Treat LLM classifications as one measurement instrument, not ground truth.
+### 7. Downstream Use and Interpretation
+
+- Report code prevalence overall and by relevant subgroups (country, treatment arm) as proportions with confidence intervals.
+- Cross-tabulate codes. For construct validation, joint prevalence of related codes (recognizing a cue and interpreting it positively) says more than marginals.
+- When LLM labels become variables in regression or causal analysis, plan for measurement error up front. Even highly accurate labels can produce severe bias and poor coverage when used as proxies; the remedy is a design-based correction, not ignoring the noise (Egami et al. 2023; Knox, Lucas & Cho 2022, via Halterman & Keith 2025; Chae & Davidson 2025). Distinguish classifier-as-outcome from classifier-as-treatment-check. In a pre-registered design, register which codes map to which hypotheses (`$pre-registration-writing`).
+- LLMs can beat human coders on tasks needing context — implicit references, sarcasm, background knowledge (Tornberg 2025) — but they remain one measurement instrument, not ground truth.
 
 ### 8. Reporting
 
-- Document the full classification pipeline: model name and exact version, temperature and other generation parameters, complete prompt text, codebook, date of classification runs.
-- Report validation metrics: per-category precision, recall, F1 against human-coded ground truth. Report overall accuracy and Cohen's Kappa.
-- Report the variance test: agreement rate between repeated runs on the same subset.
-- Report the human review rate: what proportion of responses were flagged and adjudicated.
-- Archive the complete prompt, codebook, and classification code. If using a proprietary model, note the risk of future deprecation and specify whether results can be reproduced (Barrie, Palmer & Spirling 2025).
-- State explicitly whether the LLM was used for discovery (exploring what codes might apply) or confirmation (applying pre-specified codes). If the codebook was revised after seeing LLM output, report the revision history. Iterative codebook refinement after inspecting LLM labels is a researcher degree of freedom that can silently inflate positive findings if left undocumented (Simmons, Nelson & Simonsohn 2011); transparent reporting of the revision trajectory, together with pre-specification of confirmatory categories, is the standard remedy (Nosek et al. 2018).
-- When citing LLM-classified data in results, present representative examples for each code category. Readers need to assess whether the classification matches their substantive understanding (Glazier, Boydstun & Feezell 2021).
-- For CONSORT/JARS-style flow reporting when classifications feed a sampled experiment, and for DA-RT compliance on archived prompts and classifier code, see `methods-reporting`. When the underlying category set is not fixed in advance and discovery of categories is itself the goal, unsupervised approaches may be more appropriate — see `topic-modeling`.
+- The full pipeline: exact model version, temperature and other generation parameters, complete prompt, codebook, and run dates.
+- Validation: human inter-coder reliability; per-category precision, recall, and F1 against human ground truth; overall accuracy and κ; the variance-test agreement rate; the human review rate.
+- Archive prompt, codebook, and classification code. For proprietary models, state the deprecation risk and whether results can be reproduced (Barrie, Palmer & Spirling 2025).
+- State whether the LLM was used for discovery or confirmation. If the codebook was revised after seeing LLM output, report the revision history: undocumented post-hoc refinement is a researcher degree of freedom that can inflate findings (Simmons, Nelson & Simonsohn 2011), and transparent revision plus pre-specified confirmatory categories is the remedy (Nosek et al. 2018).
+- Present representative examples for each code so readers can judge whether the labels match their understanding (Glazier, Boydstun & Feezell 2021).
+- For CONSORT/JARS flow reporting and DA-RT archiving, see `$methods-reporting`.
 
-### 9. Resumable Batch Pipeline and Rule-Based Baseline
+### 9. Running at Scale: Batch Pattern With a Rule-Based Baseline
 
-For a large set of repeated free-text values against a closed codebook (occupation, institution, or residence coding from registry text; open-text survey responses; affiliation taxonomies), run classification as a resumable batch job with an audit trail, not as a one-off prompt.
+Once the design above is validated, a large set of repeated free-text values against a closed codebook (occupation or institution strings from registries, open-text survey answers, affiliation taxonomies) runs best as a resumable batch job. Adapt this pattern to the project:
 
-1. **Freeze the input set.** Deduplicate the raw strings; keep a frequency count and a stable input ID per unique string. Record the exact codebook, model name, prompt version, seed, and date.
-2. **Classify unique strings in batches.** Request JSON; keep the code set closed (the model chooses only among allowed codes); save incremental output so an interrupted run resumes; capture a short rationale and a confidence signal or log-probability when available (`$llm-calibration-logprobs`).
-3. **Normalize and defend against drift.** Map out-of-vocabulary outputs to explicit residual buckets and log every normalization. Keep original string, predicted label, and rationale in one table.
-4. **Validate a stratified sample by hand.** Over-represent rare classes and known failure modes; add human correctness flags and a note column; score overall and class-level accuracy and calibration by confidence bin (Section 5 covers the agreement statistics).
-5. **Compare against the existing baseline.** Run the regex or dictionary classifier on the same unique strings; measure agreement, collisions, and known false positives; decide which rules to tighten, replace, or keep as fallback.
-6. **Publish the lookup table, not only the narrative.** One row per unique string with final code, validation signals, and reproducibility metadata, and an explicit stable join key back to the analytic frame.
+- Freeze the input: deduplicate strings, keep a frequency count and stable ID per unique string, and record codebook, model, prompt version, seed, and date.
+- Classify unique strings in batches with JSON output and a closed code set; write output incrementally so an interrupted run resumes; keep a short rationale and a logprob confidence where available.
+- Map out-of-vocabulary outputs to explicit residual buckets and log every normalization.
+- Hand-validate a stratified sample that over-represents rare classes and known failure modes; score overall and per-class accuracy and calibration by confidence bin (Section 5 statistics).
+- If a regex or dictionary classifier already exists, run it on the same strings and compare agreement, collisions, and known false positives to decide which rules to keep as fallback.
+- Publish the lookup table — one row per unique string with final code, validation signals, run metadata, and a stable join key to the analytic frame.
 
-Do not use this for one-off qualitative coding with no stable codebook, for tasks where a human must read every item anyway, or where a supervised model with an evaluation harness already exists.
+This pattern does not fit one-off qualitative coding without a stable codebook, tasks where a human reads every item anyway, or cases where a supervised model with an evaluation harness already exists.
 
 ## Quality Checks
 
-- [ ] Codebook includes all components per code: label, definition, clarification, negative clarification, examples (adapted from Halterman & Keith 2025)
-- [ ] Learning regime (zero-shot, few-shot, fine-tuning, instruction-tuning, or encoder-only fine-tuning) chosen based on data characteristics and available resources, not convenience
-- [ ] Exact model version documented (not just model family name)
-- [ ] Stage 1 label-free behavioral tests (legal labels, definition recovery, in-context examples, codebook order invariance) run before hand-coding (Halterman & Keith 2025)
-- [ ] Pilot sample of 50-100 responses hand-coded by two independent coders before LLM classification
-- [ ] Inter-coder reliability reported (Cohen's κ, or Krippendorff's α for ordinal / >2 coders); codebook revised if agreement falls below the Landis & Koch "substantial" band
-- [ ] Per-category precision, recall, and F1 reported against human ground truth
-- [ ] Variance test conducted: same responses classified twice, agreement rate reported
-- [ ] For multi-language or multi-country data, per-language validation against native-language ground truth (Heseltine & Clemm von Hohenberg 2024; Tornberg 2025)
-- [ ] Hybrid workflow implemented: uncertain cases flagged and human-reviewed
-- [ ] Human review rate reported (planning target: 10-15% of responses; >25% signals codebook/model problems)
-- [ ] Complete prompt, codebook, and classification code archived for replication
-- [ ] Reproducibility risk acknowledged if using proprietary models (Barrie, Palmer & Spirling 2025)
-- [ ] Data privacy addressed: PII not sent to commercial APIs without policy review (Chae & Davidson 2025)
-- [ ] Downstream analysis acknowledges measurement error from classification; if classifier labels feed causal estimation, design-based correction planned up front (Egami et al. 2023; Knox, Lucas & Cho 2022)
-- [ ] Discovery vs. confirmation framing made explicit; codebook revision history documented if applicable
-- [ ] Batch runs: unique-value set frozen, codebook and prompt version recorded, run resumable, out-of-vocabulary outputs mapped explicitly, stratified human sample scored, baseline agreement measured, lookup table joinable.
+- [ ] Codebook has all five components per code, including a defined residual category (Halterman & Keith 2025)
+- [ ] Learning regime chosen from data characteristics and resources, ideally compared on a pilot (Chae & Davidson 2025)
+- [ ] Exact model version recorded, not the family name
+- [ ] Stage 1 label-free tests run before hand coding (Halterman & Keith 2025)
+- [ ] 50-100 pilot responses hand-coded by two independent coders; κ (or α) reported and codebook revised if below the Landis & Koch "substantial" band
+- [ ] Per-category precision, recall, and F1 against human ground truth reported
+- [ ] Variance test run and agreement rate reported
+- [ ] Per-language validation against native-language ground truth for multilingual data (Heseltine & Clemm von Hohenberg 2024; Tornberg 2025)
+- [ ] Uncertain cases flagged and human-reviewed; review rate reported
+- [ ] Prompt, codebook, and code archived; proprietary-model reproducibility risk stated (Barrie, Palmer & Spirling 2025)
+- [ ] PII kept off commercial APIs unless the retention policy was reviewed (Chae & Davidson 2025)
+- [ ] Measurement-error correction planned up front if labels feed downstream estimation (Egami et al. 2023; Knox, Lucas & Cho 2022)
+- [ ] Discovery vs. confirmation stated; codebook revision history documented
+- [ ] Batch runs: input set frozen, versions recorded, run resumable, out-of-vocabulary outputs mapped, stratified sample scored, baseline compared, lookup table joinable

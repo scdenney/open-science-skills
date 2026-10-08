@@ -1,6 +1,6 @@
 ---
 name: survey-data-audit
-description: "Audit fielded survey response data for registered elements, data quality, bot and AI-automation screening, and sample integrity. Emits an appendix-ready quality report."
+description: "Audit fielded survey response data for registered elements, data quality, bot and AI-automation screening, and sample integrity, and emit an appendix-ready quality report. Use at soft launch or after fielding, before outcomes are analyzed."
 ---
 
 # Survey Data Audit
@@ -49,9 +49,9 @@ header shows what was captured; a field whose collector never fired is invisible
 exactly the failure worth catching. Diff manifest against export and report missing, unexpected,
 and present-but-always-empty separately.
 
-- **Paradata grammar parses.** Packed paradata (a delimited `key:value` string per page) must be
-  parsed strictly, with parse failures counted as their own category. Present-but-unparseable is a
-  collector bug and must never silently coerce to zero.
+- **Paradata grammar parses.** Parse packed paradata (a delimited `key:value` string per page)
+  strictly and count parse failures as their own category. Present-but-unparseable is a collector
+  bug, not a zero.
 - **Unavailable is not zero.** Treat a missing field, or an initialization marker that is false, as
   *telemetry unavailable*. Report the unavailable share by country/arm and device class. On mobile
   browsers and in privacy modes this share is often large and structural, and reading it as
@@ -82,12 +82,12 @@ known false-positive mode that must be scanned before the composite is interpret
 1. **Honeypot** - a hidden field, non-empty after whitespace trim, on any instrumented page.
    False-positive mode: aggressive autofill, password managers, accessibility extensions.
 2. **Automation surface** - the driver property (`navigator.webdriver`) recorded as Boolean true.
-   Unknown or absent is not true, and must not trigger. False-positive mode: legitimate testing
+   Unknown or absent is not true and does not trigger. False-positive mode: legitimate testing
    stacks and kiosk builds.
 3. **Zero interaction** - on at least one instrumented page with a submitted response *and*
    initialized telemetry, mousemove + click + keypress + touch events sum to zero.
    False-positive mode: assistive input and collector failure, which is why the
-   telemetry-initialized condition is non-negotiable.
+   telemetry-initialized condition is required.
 
 Nothing scored or graded enters the composite. The moment a continuous score becomes a gate, the
 study owns a cutoff it chose after seeing data. Fraud scores, untrusted-event counts, repeat-task
@@ -129,7 +129,7 @@ the current vendor documentation before leaning on any of them.
 - **GeoIP out-of-country share**, and IP/geo disagreement with the sampling frame.
 - **Speeders.** Compute from the realized duration distribution. Apply a cutoff only if one was
   pre-specified; otherwise report the distribution and treat any exclusion as an explicitly post hoc
-  sensitivity. Never invent a cutoff after seeing outcomes.
+  sensitivity.
 - **Straightlining and non-differentiation** on multi-item batteries (zero within-battery variance,
   low SD, long identical runs). Note whether the battery contains reverse-coded items, because
   without them a flat pattern is genuinely ambiguous.
@@ -201,8 +201,8 @@ numbers describe respondents who were turned away and which describe respondents
 
 ## Ethics and reporting guardrails
 
-- The composite estimates **automation**, not AI prevalence, and not respondent dishonesty. Never
-  label it as any of those.
+- The composite estimates **automation** — not AI prevalence and not respondent dishonesty — and
+  is labeled that way everywhere it appears.
 - Self-reported AI or LLM use is a separate estimand with a separate denominator. Do not merge it
   into the composite or report the two as one number.
 - Retain flagged respondents by default. Excluding on a probabilistic quality score is itself a

@@ -1,7 +1,7 @@
 ---
 disable-model-invocation: true
 name: research-wayfinder
-description: Plans a research project as a decision map that persists across sessions. The destination is a defensible, pre-registerable design reached by resolving four kinds of decision tickets one at a time. Adapted for research from Matt Pocock’s wayfinder. The map lives as repository Markdown, each session claims one frontier ticket, literature sweeps run as parallel research tickets, and the resolved map compiles into a pre-analysis plan. Use at project start, when a design has more open decisions than one conversation can hold, or when planning restarts each session. Not for executing analyses or writing the paper.
+description: Plans a research project as a decision map that persists across sessions, resolving one ticket per session until the design is defensible and pre-registerable. The map lives as Markdown in the repository, literature sweeps run as parallel research tickets, and the resolved map compiles into a pre-analysis plan. Use at project start, when a design has more open decisions than one conversation can hold, or when planning restarts each session. Not for executing analyses or writing the paper.
 argument-hint: '[describe the research idea or project to chart, or name the ticket to work]'
 allowed-tools:
 - Read
@@ -15,9 +15,9 @@ allowed-tools:
 
 ## Heritage and scope
 
-Adapted from Matt Pocock's **wayfinder** (MIT, [mattpocock/skills](https://github.com/mattpocock/skills); see [`RECOMMENDED.md`](../../../RECOMMENDED.md)). His insight carries over whole: give up on the session as the unit of work. The map lives in the repository, any future session picks it up, and the context window stops being the source of truth. What changes here is the destination and the ticket taxonomy. Wayfinder charts a route to a shippable spec. Research-wayfinder charts a route to a **defensible, pre-registerable research design**, and its decisions are the ones experimental methodology actually forces: estimand before estimator, theory before if-then, power before fielding.
+Adapted from Matt Pocock's **wayfinder** (MIT, [mattpocock/skills](https://github.com/mattpocock/skills); see `RECOMMENDED.md` in the library repository). His insight carries over whole: give up on the session as the unit of work. The map lives in the repository, any future session picks it up, and the context window stops being the source of truth. What changes here is the destination and the ticket taxonomy. Wayfinder charts a route to a shippable spec. Research-wayfinder charts a route to a **defensible, pre-registerable research design**, and its decisions are the ones experimental methodology actually forces: estimand before estimator, theory before if-then, power before fielding.
 
-Use it early. Vagueness is not a reason to wait; it is what the map eats. The map ends where `pre-registration-writing` begins — this skill does not run analyses or draft the paper.
+Start it early: a vague idea is the input the map is built to resolve. The map ends where `pre-registration-writing` begins — this skill does not run analyses or draft the paper.
 
 ## The map
 
@@ -47,7 +47,7 @@ Decisions live in their tickets — one file each in `planning/tickets/`, claime
 
 | Type | Driver | Research meaning | Resolve with |
 |---|---|---|---|
-| `research` | agent, runs while you are away | literature sweep, measure inventory, prior effect sizes, dataset scouting | `literature-review`; parallelizable — fan out subagents, or `/oss:spawn` a peer session per sweep |
+| `research` | agent, runs while you are away | literature sweep, measure inventory, prior effect sizes, dataset scouting | `literature-review`; parallelizable — one subagent per sweep |
 | `decision` | you + the researcher, live | a design decision only the researcher can make — estimand, population, trade-offs | the frontier-question interview below; the default type |
 | `prototype` | you + the researcher | raise fidelity with something concrete — power simulation, mock instrument, pilot analysis on simulated data | `conjoint-design`, `survey-design`, `figures`, simulation code |
 | `task` | either | unblocking logistics — IRB, data access, funding, panel quotes | plain work; close with the artifact |
@@ -71,7 +71,7 @@ Seed the first charting pass from the decision families experimental methodology
 1. Name the destination — interview the researcher grill-style (below) until "done" is concrete.
 2. Sweep the frontier breadth-first: list every decision now visible; sort into tickets (specifiable) versus Not-yet-specified fog.
 3. Write `planning/map.md` and the ticket files; add the blocked-by lines.
-4. Fire the `research` tickets in parallel — subagents, or spawned peer sessions, one sweep each.
+4. Fire the `research` tickets in parallel, one subagent per sweep.
 5. Stop. Charting is one session's work; resolving starts next session.
 
 ## Work the map (every later session)
@@ -80,7 +80,7 @@ Seed the first charting pass from the decision families experimental methodology
 2. Claim one frontier ticket: open, unblocked, unclaimed.
 3. Resolve it with the matching skill or interview. Write the resolution into the ticket — the decision, the rationale, and what would change it.
 4. Close it: check it off under Decisions-so-far with a one-line gist. Graduate any fog it clarified into new tickets, and add the new blocked-by lines.
-5. Stop after **one** non-`research` ticket. The discipline is the point — small, durable, resumable steps. Sessions are cheap; re-derived context is not.
+5. Stop after **one** non-`research` ticket. Small resumable steps keep every decision in the files rather than in a context window that has to be rebuilt.
 
 ## The grilling interview (live tickets)
 

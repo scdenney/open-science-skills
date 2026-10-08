@@ -1,7 +1,7 @@
 ---
 disable-model-invocation: true
 name: diverge
-description: Generate 3-5 conceptually distinct approaches labeled by creativity dimension, Novel, Surprising, Diverse, Conventional, and hold for selection before implementation. The --codex mode runs the brainstorm on GPT-6 Astra via codex exec, then has Codex implement the selected approach. Use when a task has more than one non-obvious solution in creative, architectural, or analytical work, and before committing to an approach. Use --codex when another model family should widen the range.
+description: Generates 3-5 conceptually distinct approaches labeled Novel, Surprising, Diverse, or Conventional, and holds for the user's selection before implementing. The --codex mode runs the brainstorm on GPT-6 Astra via codex exec, then has Codex implement the selected approach. Use before committing to an approach when a creative, architectural, or analytical task has more than one non-obvious solution; use --codex when another model family should widen the range.
 argument-hint: '[describe the task, problem, or design question to diverge on] [--codex]'
 allowed-tools:
 - Bash
@@ -23,9 +23,9 @@ An original Open Science Skills workflow grounded in **Creative Preference Optim
 
 Use it wherever more than one non-obvious solution exists — creative, architectural, or analytical work — and not for rote tasks with one correct answer (fix this syntax error).
 
-When the task itself is still underspecified (goal, constraints, success criteria unsettled), interview before diverging. For research tasks, `research-grill` resolves the decision tree the approaches must answer to; it descends from Matt Pocock's `grill-me` (see [`RECOMMENDED.md`](../../../RECOMMENDED.md)). Grilling settles the question, and diverge generates genuinely distinct answers to a settled one.
+When the task itself is still underspecified (goal, constraints, success criteria unsettled), interview before diverging. For research tasks, `research-grill` resolves the decision tree the approaches must answer to; it descends from Matt Pocock's `grill-me` (see `RECOMMENDED.md` in the library repository). Grilling settles the question, and diverge generates genuinely distinct answers to a settled one.
 
-**Model.** The default mode makes no external model call: it runs in whatever model and reasoning effort the session is already using, not a fixed pin. `--codex` is the exception — it shells out to a genuinely separate model, pinned to `gpt-6-astra` at `xhigh` effort.
+**Model.** The default mode makes no external model call: it runs in whatever model and reasoning effort the session is already using, not a fixed pin. `--codex` is the exception — it shells out to a separate model family, pinned to `gpt-6-astra`: `high` effort for the brainstorm (a fresh-perspective consult whose output the user selects from) and `xhigh` for the write-capable implementation run.
 
 ## Behavior
 
@@ -49,8 +49,6 @@ For each approach provide:
 2. How it works — two to three sentences on the mechanism and what makes it distinct
 3. Main tradeoff — one sentence
 
-No markdown header per approach — keep the list scannable.
-
 ### Step 3 — Hold
 
 Do not implement. Present all approaches, then ask:
@@ -69,8 +67,8 @@ With `--codex`, the specification above is unchanged — Codex generates the app
 
 Plain Claude Code has no native `codex:codex-rescue` subagent. Every "ask Codex" step means calling `codex exec` through the `Bash` tool (the same mechanism `paper-review-lite --codex` uses):
 
-- **`--model gpt-6-astra -c model_reasoning_effort=xhigh`** — pins Codex explicitly rather than relying on `codex exec`'s own implicit default, which can drift upstream.
-- **`< /dev/null`** — closes stdin. Without it, `codex exec` hangs on "Reading additional input from stdin…" even when the prompt is passed as a CLI argument. This is the single most common failure mode.
+- **`--model gpt-6-astra -c model_reasoning_effort=<effort>`** — pins Codex explicitly (`high` to brainstorm, `xhigh` to implement) rather than relying on `codex exec`'s implicit default, which can drift upstream.
+- **`< /dev/null`** — closes stdin. Without it, `codex exec` hangs on "Reading additional input from stdin…" even when the prompt is passed as a CLI argument; this is the most common failure.
 - **`--skip-git-repo-check`** so it runs regardless of git state, and **`--sandbox`** set per phase: `read-only` for brainstorming, `workspace-write` for implementation.
 - **`timeout: 600000`** (10 min) on the Bash call as a backstop.
 
@@ -83,7 +81,7 @@ The result returns on stdout — read it directly from the Bash output. Treat a 
 2. **Brainstorm via Codex**, substituting `TASK` with the user's request verbatim and adding none of your own implementation preferences:
 
    ```bash
-   codex exec --model gpt-6-astra -c model_reasoning_effort=xhigh --sandbox read-only --skip-git-repo-check "$(cat <<'CODEXEOF'
+   codex exec --model gpt-6-astra -c model_reasoning_effort=high --sandbox read-only --skip-git-repo-check "$(cat <<'CODEXEOF'
    <brainstorm prompt template below, with TASK substituted>
    CODEXEOF
    )" < /dev/null
@@ -91,7 +89,7 @@ The result returns on stdout — read it directly from the Bash output. Treat a 
 
 3. **Present the approaches** to the user verbatim — do not paraphrase, filter, or reorder them. Ask which to pursue, or whether to synthesize.
 
-4. **Implement via Codex** only after selection, switching the sandbox to `workspace-write` and setting `-C` to the project directory. The Codex plugin's result-handling guidance (stop after presenting findings, apply nothing) applies to code-review handoffs, not here — this step runs only on an explicit user selection, which is the same consent that guidance exists to protect:
+4. **Implement via Codex** only after selection, switching the sandbox to `workspace-write` and setting `-C` to the project directory. The user's selection is the authorization for this write; the Codex plugin's "stop after presenting findings" guidance covers code-review handoffs, not this step:
 
    ```bash
    codex exec --model gpt-6-astra -c model_reasoning_effort=xhigh --sandbox workspace-write --skip-git-repo-check -C "<project dir>" "$(cat <<'CODEXEOF'

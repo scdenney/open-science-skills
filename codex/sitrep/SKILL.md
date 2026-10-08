@@ -1,6 +1,6 @@
 ---
 name: sitrep
-description: Start-of-session situational report for a research or code repository. Reads whatever handoff, log, or status artifacts the project actually keeps, checks live git state, and reports the current objective, verified baseline, open tasks, blockers, and next actions. Use when resuming work in a repository after time away, or when you need to know where a project stands before changing anything. Its end-of-session twin is finished.
+description: Start-of-session report on where a repository stands. Reads the project's own handoff and log files, checks live git state, and reports objective, verified baseline, open tasks, blockers, and next actions. Use when resuming work. Twin of finished.
 ---
 
 # Situational report
@@ -15,7 +15,7 @@ Answer one question: **where does this project actually stand right now?** The v
 
 Read `AGENTS.md` and `CLAUDE.md` if present; they usually state the handoff or logging convention. Fall back to `README.md` for orientation. Then find the project's own memory: `HANDOFF.md`, `CODEX_HANDOFF.md`, `STATUS.md`, `SESSION_LOG.md`, `NOTES.md`, or a `logs/` directory with dated entries.
 
-Use what the project has. If it keeps none, say so plainly — do not invent a format it does not use.
+Use what the project has. If it keeps none, say so rather than inventing a format.
 
 ## 2. Check live state
 
@@ -30,7 +30,7 @@ Two failure modes are worth the extra commands. **A detached or behind branch:**
 
 ## 3. Confirm load-bearing artifacts, only if the project names them
 
-If `AGENTS.md` or `README.md` names specific data files, build outputs, or directories as load-bearing, spot-check that they exist. Skip this entirely when the project states no such convention.
+If `AGENTS.md` or `README.md` names specific data files, build outputs, or directories as load-bearing, spot-check that they exist.
 
 ## 4. Report
 
@@ -39,9 +39,5 @@ Order by priority, not by discovery order. Cite concrete paths and commands.
 - **Current objective** — from the handoff document if one exists, otherwise inferred from recent commits and `README.md`. Say which.
 - **Completed baseline** — what is done *and verified*. Distinguish "committed" from "verified"; they are not the same claim.
 - **Open tasks** — what is queued, with the file or command each would start from.
-- **Risks and blockers** — anything stale, missing, half-finished, or contradicted by what the repository shows.
+- **Risks and blockers** — anything stale, missing, half-finished, or contradicted by what the repository shows. When a handoff names commits, branches, artifacts, or versions the repository no longer matches, say so and propose the exact fix.
 - **Immediate next actions** — a short numbered list the user can approve in one line.
-
-## 5. Flag staleness explicitly
-
-If a handoff file references commits, artifacts, branches, or versions the live repository no longer matches, say so and propose the exact fix. A sitrep that repeats an outdated document is worse than no sitrep, because it converts a stale claim into an apparently fresh one.

@@ -1,7 +1,7 @@
 ---
 disable-model-invocation: true
 name: literature-review
-description: Builds or audits a literature review. Produces an evidence map, closest prior work, source clusters, a gap verdict, and a synthesis plan for the introduction. Use when the user asks whether a contribution is novel, who has studied a question, what the literature establishes, how to organize or restructure a review, or wants a reading list, Zotero export, or paper pile turned into a review. Produces a systematic-review protocol scaffold and directs PRISMA or meta-analysis requests to registration, PROSPERO or OSF, and screening tools.
+description: Builds or audits a literature review, producing an evidence map, the closest prior work, source clusters, a gap verdict, and a synthesis plan for the introduction. Use when the user asks whether a contribution is novel, who has studied a question, what the literature establishes, or how to organize a review, or wants a reading list, Zotero export, or pile of papers turned into one. For systematic reviews or meta-analyses it produces the protocol scaffold and routes registration (PROSPERO or OSF) and screening to dedicated tools.
 argument-hint: '[topic, draft literature review, paper list, Zotero export, or claimed contribution]'
 ---
 
@@ -9,13 +9,13 @@ argument-hint: '[topic, draft literature review, paper list, Zotero export, or c
 
 ## Heritage and scope
 
-This is an original Open Science Skills workflow for experimental and computational social science. It remixes high-level ideas from Cheng-I Wu's *Academic Research Skills for Claude Code* (CC BY-NC 4.0), especially evidence mapping, source verification, and mode separation between narrative literature review and formal systematic review. It is not a full ARS pipeline and should not copy ARS prose.
+This is an original Open Science Skills workflow for experimental and computational social science. It remixes high-level ideas from Cheng-I Wu's *Academic Research Skills for Claude Code* (CC BY-NC 4.0), especially evidence mapping, source verification, and the separation between narrative literature review and formal systematic review. It is not a full ARS pipeline.
 
 ## Instructions
 
 ### 1. Classify the review task
 
-Decide what the user needs:
+Decide which of these the user needs:
 
 - **Narrative/theory review:** organize concepts, mechanisms, and debates for an introduction.
 - **Design precedent review:** identify prior treatments, measures, samples, estimands, or analysis strategies.
@@ -25,7 +25,7 @@ Decide what the user needs:
 
 Default to a narrative/evidence-map review unless the user explicitly asks for a systematic review, meta-analysis, or PRISMA-compliant output.
 
-If the user does want a systematic review, be explicit about what this skill can and cannot do: steps 2-7 below produce the **protocol scaffold** -- question, boundaries, search strings, inclusion/exclusion criteria, and the evidence-map structure -- but exhaustive multi-database screening, dual-coder risk-of-bias assessment, and PRISMA flow accounting require dedicated tooling and human coders. Deliver the protocol scaffold, recommend registering it (PROSPERO or OSF), and point the user at screening tools (e.g., Covidence, ASReview) for the systematic phase.
+For a systematic review, tell the user what this skill covers: steps 2-7 produce the **protocol scaffold** (question, boundaries, search strings, inclusion/exclusion criteria, evidence-map structure), but exhaustive multi-database screening, dual-coder risk-of-bias assessment, and PRISMA flow accounting need dedicated tooling and human coders. Deliver the scaffold, recommend registering it (PROSPERO or OSF), and point to screening tools (e.g., Covidence, ASReview) for the systematic phase.
 
 ### 2. Define the question and boundaries
 
@@ -63,7 +63,7 @@ For each important source, record:
 - **Boundary condition:** where the finding may fail.
 - **Use in the user's paper:** background, theory, design precedent, measurement precedent, competing explanation, or gap support.
 
-Do not produce chronological "Author A says X, Author B says Y" prose unless chronology is theoretically important.
+Organize by claim, not by author; chronological "Author A says X, Author B says Y" prose belongs only where chronology is theoretically important.
 
 ### 5. Cluster the literature
 

@@ -1,6 +1,6 @@
 ---
 name: research-repo
-description: Scaffold or audit an entire research project repository organized around its source library. Use when starting, structuring, organizing, or reviewing a research repo. Build sources/{og,md,unprocessed}, references.bib, a PDF-to-Markdown converter, a repo-local process-source skill, AGENTS.md, .gitignore, .venv, and the relevant analysis/manuscript/review folders; or audit an existing layout. Not for one-PDF intake or publication replication packages.
+description: "Scaffold or audit a research-project repository organized around its source library (PDFs, Markdown conversions, bibliography, intake pipeline) plus the analysis, manuscript, and review folders it needs. Use when starting or auditing a research repo. Not for one-PDF intake or publication replication packages."
 ---
 
 # Research Repository Scaffold & Audit
@@ -17,10 +17,10 @@ Everything else — `data/`, analysis `scripts/`, `manuscript/` or `paper/`, `re
 
 ### Step 1. Resolve the target and decide the mode
 
-Use the path supplied with the invocation; otherwise default to the current working directory and confirm once before writing into it. Then decide the mode from what is there:
+Use the path supplied with the invocation; otherwise use the current working directory. Then decide the mode from what is there:
 
 - **Scaffold mode** — the directory is empty, is not yet a git repo, or has no `sources/` and no manuscript. You will build the spine and the outward folders.
-- **Audit mode** — the directory already has research content (a `sources/` tree, a manuscript, analysis scripts, a bib). You will read what exists, compare it against the convention, and report present / partial / missing. **Never overwrite an existing file without explicit confirmation**; offer to create only what is missing.
+- **Audit mode** — the directory already has research content (a `sources/` tree, a manuscript, analysis scripts, a bib). You will read what exists, compare it against the convention, and report present / partial / missing. Overwrite an existing file only with the user's confirmation; offer to create only what is missing.
 
 If a repo is half-built (e.g. PDFs exist but no `md/`, or an `og/` with no convert script), that is audit mode with scaffolding gaps — report the gaps and offer to fill them.
 
@@ -62,19 +62,19 @@ For any project that reads and archives a literature, this is the core. (For a c
 └── .venv/                  # python env for opendataloader-pdf (created in setup)
 ```
 
-**First, make sure the repo is under version control** — the whole tracked/gitignored split (`og/` ignored, `md/` tracked) only takes effect once git exists:
+Make sure the repo is under version control first; the tracked/gitignored split (`og/` ignored, `md/` tracked) only takes effect once git exists:
 
 ```bash
 git rev-parse --git-dir >/dev/null 2>&1 || git init
 ```
 
-Write the templates from the **Templates** section below. A newly written file is mode 0644, so **make the conversion script executable immediately after writing it** — otherwise `./scripts/convert-sources.sh` fails with "permission denied", both in the smoke test below and in the two places the generated scaffold tells the user to run it (`sources/README.md` step 2 and the repo-local `process-source` skill's step 3):
+Write the templates from the **Templates** section below. A newly written file is mode 0644, so make the conversion script executable right after writing it; otherwise the smoke test and every `./scripts/convert-sources.sh` instruction in the scaffold fail with "permission denied":
 
 ```bash
 chmod +x scripts/convert-sources.sh
 ```
 
-Then set up the conversion environment — but verify the toolchain first, because `convert-sources.sh` runs under `set -euo pipefail` and will abort opaquely if the Java backend is missing:
+Then set up the conversion environment, checking the toolchain first: `convert-sources.sh` runs under `set -euo pipefail` and aborts opaquely if the Java backend is missing.
 
 ```bash
 command -v python3 && python3 --version
@@ -104,7 +104,7 @@ Create only the outward folders the archetype calls for (Step 2). Leave them emp
 - **`review/`** + **`codebook/`** (review projects) — the inventory CSV (one row per source), per-source prose annotations, and the coding protocol that governs them. This is where the `sources/md/` corpus gets turned into structured evidence.
 - **`manuscript/`** or **`paper/`** — the draft. Cites `sources/references.bib`. Hand this to `paper-tex` to typeset.
 - **`figures/`**, **`tables/`** — generated outputs. Pair with the `figures` / `tables` skills.
-- **`replication/`** — the public reproducibility package. **Do not hand-build this here** — when the paper is ready, call `replication-package` to scaffold it properly.
+- **`replication/`** — the public reproducibility package. Leave it empty here; when the paper is ready, `replication-package` scaffolds it.
 - **`logs/`**, **`meetings/`** — session logs and notes; usually local-only (gitignored).
 
 ### Step 5. Document the intake pipeline

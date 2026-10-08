@@ -1,13 +1,11 @@
 ---
 name: fact-check
-description: "Fact-check manuscript claims against cited sources in a per-source Markdown knowledge base. Use to audit claim support, overclaiming, direction, scope, and misattribution after source intake is complete."
+description: "Fact-check manuscript claims against their cited sources in a per-source Markdown knowledge base. Use to audit claim support, overclaiming, direction, scope, and misattribution after source intake is complete."
 ---
 
 # Claim–Source Fact Checker
 
-## Heritage and scope
-
-This is an original Open Science Skills workflow. It extends `citation-check` (which verifies a citation *exists*, resolves, and is formatted) to the next question: does the cited *source* actually support the *claim* it is attached to? It checks claims against the project's **per-source Markdown knowledge base** — one Markdown file per cited source, each converted or summarized to `sources/md/<author>-<year>-<slug>.md` by whatever intake workflow the project uses. This is local-source verification, not open-web fact-checking: it audits whether a manuscript's sentences are backed by the documents the author has actually read and filed. Run once a draft has citations and a populated knowledge base.
+This skill extends `citation-check` (which verifies a citation *exists*, resolves, and is formatted) to the next question: does the cited *source* actually support the *claim* it is attached to? It checks claims against the project's **per-source Markdown knowledge base** — one Markdown file per cited source, each converted or summarized to `sources/md/<author>-<year>-<slug>.md` by whatever intake workflow the project uses. This is local-source verification, not open-web fact-checking: it audits whether a manuscript's sentences are backed by the documents the author has actually read and filed. Run once a draft has citations and a populated knowledge base.
 
 ## Instructions
 
@@ -20,26 +18,24 @@ This is an original Open Science Skills workflow. It extends `citation-check` (w
 - **Knowledge base:** the project's per-source Markdown directory. Search in order: `sources/md/`, `knowledge_base/md/`, `sources/`, `knowledge_base/`, then any chapter-local `*/sources/`. Also read any index or crosswalk file (`sources/inventory.md`, `notes/source_map.md`, `*source*crosswalk*`, `*source*matrix*`) that maps bib keys or titles to files.
 - **Scope:** whole manuscript, one section, the literature review/theory sections, or a supplied list of claims.
 
-**Pre-flight gate (hard stop).** This skill verifies claims against *local* Markdown source files; it does not fact-check from memory or the open web. A fact-check run against an absent or half-built knowledge base produces false reassurance, which is worse than no check. So before doing anything else, decide readiness and **refuse to run** — return a `Pre-flight: NOT READY` notice instead of a report — when any of the following holds:
+**Pre-flight gate.** Claims are verified against *local* Markdown source files, not from memory or the open web. A fact-check run against an absent or half-built knowledge base gives false reassurance, which is worse than no check. Return a `Pre-flight: NOT READY` notice instead of a report when any of the following holds:
 
 1. **No knowledge base.** No per-source Markdown corpus exists: `sources/md/`, `knowledge_base/md/`, or an equivalent is missing or empty.
 2. **Unconverted sources (not cleaned up).** Raw documents — `.pdf`, `.docx`, `.epub`, or scanned images — sit in the sources area (a drop-zone, `sources/`, `sources/pdf/`, `*/source_pdfs/`) without a corresponding `.md`. The base is not clean: every source must be converted to Markdown first (or, if long, to a Markdown summary).
 3. **Coverage too low.** The available Markdown does not cover the cited works in scope. Compute coverage = matched source files ÷ cited non-background works; below roughly two-thirds, treat as not ready.
 
-Do not partially fact-check around the gap, and do not fall back to memory or web lookups for missing sources. Stop and report. The user may rerun after fixing it, or *explicitly* rescope the run to the already-covered subset; only then proceed with that subset.
+Do not fact-check around the gap or fill missing sources from memory or the web. The user can fix the knowledge base and rerun, or explicitly rescope the run to the covered subset; in that case proceed with the subset and state the rescoping in the report.
 
 **Remediation to print on refusal:**
 
 - Build a per-source Markdown knowledge base — one file per cited source, e.g. produced by `scripts/convert-sources.sh` in a repo laid out by `$research-repo`, or by your own source-intake workflow. Each raw source becomes `sources/md/<author>-<year>-<slug>.md`, summarized if long.
 - Populate any cited work that has no file yet: locate the PDF, then run it through the same intake step.
 - Re-run `fact-check` once `sources/md/` covers the cited set and no raw files remain unconverted.
-- Best practices: the per-source Markdown knowledge base and intake conventions are documented in the Open Science Skills repo (`github.com/scdenney/open-science-skills`) and in `$research-repo`; the Codex skill-authoring guidance is linked from that README.
+- The knowledge-base layout and intake conventions are documented in the Open Science Skills repo (`github.com/scdenney/open-science-skills`) and in `$research-repo`.
 
-Only when the gate passes — knowledge base present, clean, and covering the cited set in scope — continue to step 2.
+### 2. Run citation-check first
 
-### 2. Run citation-check first (always)
-
-Before judging support, run the `citation-check` skill on the same inputs and consume its report. A claim cannot be evaluated against a source that is missing, fabricated, or mis-keyed. Carry its findings forward: any `LIKELY FABRICATED`, `DOI RESOLVES TO DIFFERENT WORK`, or in-text/reference parity break makes the dependent claim `UNVERIFIABLE — citation problem`, not a clean support check. Do not silently repeat citation-check's work; cite its result and build on it.
+Before judging support, run the `citation-check` skill on the same inputs and consume its report. A claim cannot be evaluated against a source that is missing, fabricated, or mis-keyed. Carry its findings forward: any `LIKELY FABRICATED`, `DOI RESOLVES TO DIFFERENT WORK`, or in-text/reference parity break makes the dependent claim `UNVERIFIABLE — citation problem`, not a clean support check. Cite its result rather than repeating its checks.
 
 ### 3. Build the claim inventory
 
@@ -84,7 +80,7 @@ Actively watch for:
 - **Stale quantitative values** — numbers, point estimates, or sample sizes that do not match the source.
 - **Definitional drift** — a concept attributed to a source that defines or uses it differently.
 
-### 6. Do not over-flag
+### 6. Calibrate the verdicts
 
 - A faithful summary that simply omits a detail is `SOURCE INSUFFICIENT`, not `UNSUPPORTED`.
 - Background and framing citations are not evidentiary claims; do not demand data from them.
@@ -93,7 +89,7 @@ Actively watch for:
 
 ## Output
 
-**If the pre-flight gate failed, return this instead — do not fact-check anything:**
+If the pre-flight gate failed, return only this notice:
 
 ```
 # Fact-Check — Pre-flight: NOT READY
@@ -144,15 +140,3 @@ Severity:
 `$fact-check --verify <task>` opts into experimental Jev verification; `$fact-check --verify jev <task>` is identical. Plain `$fact-check` is unchanged. This is an advisory check of one already-adjudicated claim/source pair, never a replacement for this workflow or its report labels.
 
 Run this skill's pre-flight gate **before any Jev call**, then run `citation-check` first as usual. Refer to that report rather than repeating provider checks or sending duplicate claim-support evidence. A lead may manually reuse a prior result only for the same complete evaluation input and model/contract version; this is not automatic caching. If source identity remains genuinely ambiguous, fact-check may request `citation-check --verify`, reusing the citation inventory and fetched records. Only on opt-in, read `${JEV_VERIFIER_HOME:-$HOME/.local/share/oss-experiments/jev-verifier/current}/FACT-CHECK.md`.
-
-## Quality checks
-
-- [ ] The pre-flight gate ran first; the skill refused (with a remediation checklist) rather than fact-checking against an absent, unconverted, or low-coverage knowledge base.
-- [ ] `citation-check` was run first and its findings were carried into the claim verdicts.
-- [ ] Every SUPPORTED / PARTIAL / CONTRADICTED verdict quotes a verbatim source passage, not a paraphrase from memory.
-- [ ] "Source not in knowledge base" was kept separate from "source does not support the claim."
-- [ ] Summary-only sources were labeled SOURCE INSUFFICIENT rather than UNSUPPORTED.
-- [ ] Claim direction, magnitude, scope, and hedging were checked — not just topical overlap.
-- [ ] Background and framing citations were not treated as evidentiary claims.
-- [ ] No claim was marked supported on plausibility alone.
-- [ ] If requested, Jev verification was opt-in, post-preflight and post-citation-check, and did not replace the lead's report verdict or source quotation.

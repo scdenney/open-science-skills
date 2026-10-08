@@ -1,5 +1,9 @@
 # Audits
 
+## 2026-10-08 — model recalibration, archive, and clarity pass (v2.35.0)
+
+Evidence for the release: Anthropic's effort page and the Haiku 5.5, Opus 5.5, and Fable 5.1 prompting guides; Claude Code's best-practices, subagent, and advisor docs; OpenAI's GPT-6 guide, reasoning guide, Codex models page, and "Rethinking skills and prompts for GPT-6 Astra". Skill usage was counted from Skill-tool invocations in the transcripts on both hosts (about one month retained) plus GitHub traffic: `orchestrate` (~60) and `advisor` (~19) lead; `qualtrics-ops` and `paper-review-lite` follow; `citation-check`, `fact-check`, `pre-registration-writing`, and the Codex `advisor` are the most-viewed files. The owner chose to archive `spawn` and `model-council-voting` and keep the rest. The clarity pass ran as six parallel Opus reviewers on disjoint batches against one rubric, each editing the Claude skill, its mirror, and its Codex twin; the lead read every change log and diff before release.
+
 ## 2026-08-08 — full library audit and Opus 5 upgrade (v2.22.0)
 
 Full best-practices audit and upgrade of every installed skill: 41 plugin + 39 codex + 13 personal

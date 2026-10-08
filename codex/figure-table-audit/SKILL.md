@@ -1,15 +1,13 @@
 ---
 name: figure-table-audit
-description: End-stage QA on a finished figure and table set — an inventory with in-text callouts and producing scripts, cross-reference and numbering checks, text-to-evidence consistency between claims and plotted or tabulated values, captions and statistical notes that stand alone, accessibility and production quality, and SI and replication-package linkage. Marks anything requiring values read off an image as needing author verification rather than inventing them. Use when the user is preparing a submission and asks to check figures, tables, captions, cross-references, or table notes, or asks whether the numbers in the text match the exhibits. Design guidance during drafting lives in figures and tables.
+description: "End-stage QA for a finished figure and table set (callouts, numbering, cross-references, text-to-exhibit consistency, captions and notes, accessibility, SI and replication linkage). Use when preparing a submission."
 ---
 
 # Figure and Table Auditor
 
-## Heritage and scope
+The end-stage auditor for a stable figure and table set, run before submission. Design and production guidance during drafting lives in `figures` and `tables`. When a claim depends on values plotted in an image, check it against the source data, or mark it for author verification; do not estimate values by eye.
 
-This is an original Open Science Skills workflow for manuscript QA. It remixes general figure/table and citation-compliance ideas from Cheng-I Wu's *Academic Research Skills for Claude Code* (CC BY-NC 4.0), but is rewritten for open-science social-science manuscripts. It is not a visual hallucination engine: when a claim requires reading plotted values from an image, prefer source data or mark the issue as needing author verification.
-
-This is the **end-stage** auditor. For figure design and production guidance during drafting, use the `figures` skill; for table design, use the `tables` skill. Run `figure-table-audit` once the figure and table set is stable and you are preparing for submission.
+Adapted for open-science social-science manuscripts from figure, table, and citation-compliance ideas in Cheng-I Wu's *Academic Research Skills for Claude Code* (CC BY-NC 4.0).
 
 ## Instructions
 
@@ -48,13 +46,13 @@ Check:
 
 For each figure/table used to support a substantive claim:
 
-- Match the in-text claim to the exact row, column, panel, model, or plotted quantity.
+- Match the in-text claim to the exact row, column, panel, model, or plotted quantity, and name it in the finding.
 - Verify direction, magnitude, uncertainty, subgroup, and denominator.
 - Check whether text overstates non-significant or imprecise estimates.
 - Check whether figure/table notes disclose model specification, N, weights, fixed effects, clustering, and missing-data handling.
 - For experimental papers, check ITT vs per-protocol labeling, attrition-by-arm, baseline balance, and CONSORT/sample-flow consistency.
 
-Do not infer exact values by eyeballing a plot unless the figure encodes labeled values. If source data are unavailable, write `VISUAL READ ONLY - AUTHOR VERIFY`.
+Read exact values from a plot only when the figure labels them. If source data are unavailable, write `VISUAL READ ONLY - AUTHOR VERIFY`.
 
 ### 4. Audit captions and notes
 
@@ -128,12 +126,3 @@ Severity:
 - **Blocking:** missing figure/table, wrong referenced value, denominator mismatch, unresolved label, table contradicts text, missing sample-flow evidence for experimental paper, or non-reproducible main result output.
 - **Recommended:** incomplete notes, unclear captions, missing units, missing source script, accessibility problem, imprecise uncertainty reporting.
 - **Minor:** style, spacing, decimal precision, typography, cosmetic consistency.
-
-## Quality checks
-
-- [ ] Figure/table inventory was built before findings were listed.
-- [ ] Every substantive text-to-table finding names the row/column/panel/model checked.
-- [ ] Visual-only readings are flagged for author verification unless exact values are labeled.
-- [ ] Captions and notes were checked for sample, units, uncertainty, and model details.
-- [ ] SI and replication links were checked when files were available.
-- [ ] Method-specific figures/tables triggered the relevant sibling skill when needed.

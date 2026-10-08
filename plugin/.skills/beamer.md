@@ -1,7 +1,7 @@
 ---
 disable-model-invocation: true
 name: beamer
-description: House rules and craft for LaTeX Beamer slide decks (lectures, seminars, talks), built from the author's own Overleaf edits and published slide-design guidance. Covers storyboarding before LaTeX, frame titles, slide prose, word and frame budgets, layout that avoids overfull boxes, XeLaTeX fonts and Korean (xeCJK), color, figures and screenshots, Overleaf source hygiene, speaker notes, and the build and QA loop with a contact sheet. Use whenever a .tex deck, a beamer theme (.sty), a storyboard, slides, frames, overfull boxes in a deck, or an Overleaf slide repo is being written, edited, reviewed, or built, even without the word Beamer. A course skill (for example ba3-skills) supplies that course's facts, schedule and frame skeleton, and this skill supplies the craft alongside it. Not for HTML or PowerPoint decks, posters, or papers.
+description: House rules and craft for LaTeX Beamer slide decks (lectures, seminars, talks), drawn from the author's own Overleaf edits and published slide-design guidance. Covers storyboarding, frame titles, slide prose, word and frame budgets, layout without overfull boxes, XeLaTeX fonts and Korean (xeCJK), color, figures and screenshots, Overleaf source hygiene, speaker notes, and a build-and-QA loop with a contact sheet. Use when writing, editing, reviewing, or building a Beamer deck, theme, or storyboard. A course skill supplies course facts and the frame skeleton; this skill supplies the craft. Not for HTML or PowerPoint decks, posters, or papers.
 license: CC-BY-NC-4.0
 metadata:
   author: Steven Denney
@@ -14,13 +14,13 @@ A deck is read from the back of a room, then posted as a PDF. Every rule below s
 
 ## Division of labor
 
-- A **course or project skill** owns facts and structure: dates, deadlines, objectives, checklists, the frame skeleton, the corpus, release rules. Read it first when one applies, and never type a fact it generates.
+- A **course or project skill** owns facts and structure: dates, deadlines, objectives, checklists, the frame skeleton, the corpus, release rules. Read it first when one applies, and take any fact it generates from its output rather than retyping it.
 - **This skill** owns craft: wording, density, layout, type, figures, source hygiene, and QA.
 - Prose beyond slide text (handouts, READMEs, site pages) goes to the house editing skill (`sci-edit` where installed).
 
 ## Workflow
 
-1. **Pull first.** The author edits on Overleaf between sessions. `git pull --rebase` before touching a deck, and treat every wording change they made as a decision. Keep their text verbatim unless asked to change it. Never re-apply a rule from this file to wording they wrote.
+1. **Pull first.** The author edits on Overleaf between sessions. `git pull --rebase` before touching a deck, and treat every wording change they made as a decision. Keep their text verbatim unless asked to change it; the rules in this file do not override wording they wrote.
 2. **Storyboard before LaTeX.** One file with the teaching claim (two to four sentences), a minute budget that sums to the slot, one running example, and a frame table listing each frame's number, title, and evidence (the figure, output, excerpt, or table that makes the frame's point). Read the titles top to bottom. If the story does not hold, fix the storyboard.
 3. **Get the numbers from the data.** Every count, score, or example in a deck comes from the dataset the audience will use, computed by a script kept next to the deck. Numbers from older decks built on other corpora are recomputed, never carried over.
 4. **Write** one frame per storyboard row.
@@ -60,7 +60,7 @@ A deck is read from the back of a room, then posted as a PDF. Every rule below s
 ## Density and pacing
 
 - About one frame per minute of talk at most (Beamer user guide). For 105 minutes with a survey and a live demonstration, 20–30 frames. A live demonstration needs one frame (the exported workflow), not a screenshot per click.
-- One idea per frame. When a frame is crowded, split it. Never shrink the font to make it fit. `\small` is the floor, and only for code, trees, or tables.
+- One idea per frame. Split a crowded frame rather than shrinking the font. `\small` is the floor, and only for code, trees, or tables.
 - When content overflows, fix the layout (wider or equal columns, a smaller image, a table with `p{}` columns). Do not reword the author's text to fit.
 - Cut decoration. Every block, rule, and color has a meaning or goes (Mayer's coherence principle).
 - On-screen text does not repeat the narration word for word (Mayer's redundancy principle).
@@ -102,7 +102,7 @@ A deck is read from the back of a room, then posted as a PDF. Every rule below s
 - **Fonts** are loaded by filename through fontspec, so the build does not depend on the system font cache:
   - use static font files (Regular, SemiBold, Bold). XeTeX cannot embolden a variable font.
   - a deck never sets its own fonts over the theme's. A deck-level `\setsansfont` silently replaces the theme and is the usual cause of Latin Modern or missing Hangul.
-  - never switch to another font to get a build through. Install the missing font instead.
+  - install a missing font rather than switching fonts to get a build through.
 - **Korean:**
   - load xeCJK after the Latin fonts with Noto Sans CJK KR (fall back to NanumGothic) and `CJKspace=true`
   - type Hangul directly, with no wrapper macro
@@ -111,7 +111,7 @@ A deck is read from the back of a room, then posted as a PDF. Every rule below s
   - xeCJK may break a line between two Hangul syllables, splitting a word such as 국민 across lines. Wrap a word that must stay whole in `\mbox{}`.
 - **Color:**
   - 2–3 colors in regular use, colorblind-safe (Okabe–Ito or Paul Tol)
-  - never red against green, or color as the only cue
+  - no red against green, and color is not the only cue
   - a muted palette: saturated full-width title bars and bright accents made decks feel busy and were replaced
   - use the deep brand color for cue frames only
   - blocks use dark text on a pale fill, never white on a mid-tone fill

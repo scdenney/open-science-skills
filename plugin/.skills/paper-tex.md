@@ -1,7 +1,7 @@
 ---
 disable-model-invocation: true
 name: paper-tex
-description: Typesets a working paper or journal submission in house-style LaTeX from Markdown, Word (.docx), TeX, ODT, RTF, or HTML. Converts with pandoc, wraps the document in an EB Garamond template, builds the PDF with latexmk, and prepares journal-specific spacing, page limits, anonymization, disclosures, and citation style. Use for "format/typeset/convert my paper to LaTeX", "make a working paper", or "prepare this for submission to <journal>".
+description: Typesets a working paper or journal submission in house-style LaTeX from Markdown, Word (.docx), TeX, ODT, RTF, or HTML. Converts with pandoc, wraps the body in an EB Garamond template, builds the PDF with latexmk, and sets journal-specific spacing, page limits, anonymization, disclosures, and citation style. Use to format or convert a paper to LaTeX, make a working paper, or prepare a submission to a named journal.
 argument-hint: '[path to the draft, and the target journal (or ''working paper'')]'
 ---
 
@@ -17,9 +17,9 @@ Paths below are relative to this skill directory — the folder containing this 
 SKILL=/path/to/.../skills/paper-tex   # the directory this SKILL.md lives in
 ```
 
-## Step 0 — Ask for the journal specifics first
+## Step 0 — Settle the journal parameters
 
-Formatting is journal-dependent, and the defaults are not always what you want. **Before converting, confirm the parameters** (use `AskUserQuestion` for anything not already stated). The ones that change the output:
+Formatting is journal-dependent. Take the parameters below from the request and the journal's current author guide, and ask only for a value that changes the output and cannot be inferred (usually the target journal itself). With no journal named, use the working-paper profile and list the defaults applied in the report. Running the driver, building into `build/`, and cleaning build byproducts there need no confirmation. The parameters that change the output:
 
 | Parameter | Driver flag | Default | Notes |
 |---|---|---|---|
@@ -92,7 +92,7 @@ Keep the affiliation in the footnote, not under the name. Use the institutional 
 
 ## House-finishing (by hand, after the driver)
 
-The driver gets the structure right; these four steps make it house style. Do them in `build/body.tex` (and `si_body.tex`), then rebuild with `latexmk -pdf -bibtex main.tex` in `build/`.
+The driver gets the structure right; these five steps make it house style. Do them in `build/body.tex` (and `si_body.tex`), then rebuild with `latexmk -pdf -bibtex main.tex` in `build/`.
 
 1. **Captions → `\figcap{title}{note}`.** Replace every plain `\caption{...}` with a title and a note that makes the exhibit self-contained. Put confidence-interval, N, and source details **in the note only** — never baked into the figure image, and never stated in both the figure and the note. Example:
    ```latex
@@ -115,7 +115,7 @@ The driver gets the structure right; these four steps make it house style. Do th
 3. **Thread SI cross-references.** With `--si`, `\externaldocument{si}` is already set, so plain `\ref{}` reaches SI labels (the preamble does not load `cleveref`, so do not write `\Cref`). Make sure the main text actually points readers to the supplementary tables and figures where they support a claim.
 4. **Remove bold-period run-in subheaders.** Convert `\textbf{Multi-group CFA.}`-style leads into a real `\subsection{}` (or spell the point into the sentence). Bold-text-with-period headings are banned house style; the formatter does not auto-catch them.
 
-5. **Leave the folder clean.** Hand rebuilds recreate the latexmk byproducts the driver cleaned. When the PDF is final, remove them (this is mandatory — a working-paper folder must hold only sources, staged assets, and PDFs):
+5. **Leave the folder clean.** Hand rebuilds recreate the latexmk byproducts the driver cleaned. When the PDF is final, remove them so the folder holds only sources, staged assets, and PDFs:
    ```bash
    python3 "$SKILL/scripts/format_paper.py" --clean --out build
    ```
@@ -131,24 +131,11 @@ Two more house rules the formatter cannot enforce for you: tables get a title an
 
 - **Figures from pandoc overflow the margin unless `\pandocbounded` is real.** Pandoc emits width-less `\includegraphics` wrapped in `\pandocbounded` and, for a body fragment, does *not* emit the macro's definition. The preamble defines the genuine scaling version; a no-op `\providecommand{\pandocbounded}[1]{#1}` lets wide figures run off the page.
 - **`.docx` tables need `calc`.** Word tables carry explicit column widths, so pandoc writes `p{(\columnwidth - ...) * \real{0.5}}`. Without `\usepackage{calc}` this throws `! Missing number, treated as zero.` The preamble loads it.
-- **Extracted media must be out-relative.** The driver runs pandoc with `cwd=build/` and `--extract-media=media`, so the image path is `media/...` and resolves at build time. Running pandoc elsewhere writes a path that breaks when latexmk runs from `build/`.
-- **Stage assets before building.** `--build` needs the bibliography and any local figures in `build/`. The driver auto-copies a sibling `references.bib` and any figure referenced by a relative path; supply `--bib NAME` if the file is named differently, and copy figures in by hand if they live elsewhere.
+- **Extracted media must be out-relative.** The driver runs pandoc with `cwd=build/` and `--extract-media=media`, so the image path is `media/...` and resolves at build time. Running pandoc elsewhere writes a path that breaks when latexmk runs from `build/` (`File 'media/...png' not found`).
+- **Stage assets before building.** `--build` needs the bibliography and any local figures in `build/`; a missing `.bib` shows up as `Citation 'x' undefined`. The driver auto-copies a sibling `references.bib` and any figure referenced by a relative path; supply `--bib NAME` if the file is named differently, and copy figures in by hand if they live elsewhere.
 - **EB Garamond builds with pdflatex** — no xelatex required. Use `--engine xelatex` only if you switch to an OpenType font or need CJK (below).
 - **`apsr.bst`** lives in the texlive `harvard` collection (`bibtex/bst/harvard/apsr.bst`); basictex users install it with `tlmgr`.
 - **`apsr.bst` emits URLs through `\harvardurl`, which is undefined by default** and tokenizes its argument with normal catcodes, so a URL with `_` or `~` throws `! Missing $ inserted.` Alias it with `\let` (not a wrapper) so `\url` rescans verbatim: `\AtBeginDocument{\let\harvardurl\url}`. And **never put a literal `%` in a bib `url`/`doi` field** — it starts a comment mid-`.bbl` and produces a runaway `\harvardurl`; truncate the URL to its directory or drop the query string instead.
 - **Non-Latin scripts belong in romanization in the body, with the script in an SI glossary.** Do not mix Korean/Chinese/Cyrillic glyphs into the main prose. Use a scholarly romanization (McCune-Reischauer for Korean, italicized on first use with an English gloss) and collect the script in a glossary appendix (English term / romanization / script). This keeps the body in one font and confines CJK to one place. When the glossary (or any exhibit) does carry script, build with **`--engine xelatex`** and load `xeCJK` conditionally so hosts without the CJK font still compile: `\IfFontExistsTF{Noto Serif CJK KR}{\usepackage{xeCJK}\setCJKmainfont{Noto Serif CJK KR}}{}`. M-R diacritics (ŏ ŭ, breves, apostrophes) render in EB Garamond under XeLaTeX.
 - **Cross-references that run both ways need three passes.** When the main text cites SI sections *and* the SI cites main tables, neither `.aux` exists on the other's first build. Build `si → main → si` (the last SI pass picks up `main.aux`); a plain `main; si` leaves `??` in the SI. Encode this in the Makefile's `all` target.
 - **SI float and section numbering.** Letter the appendices and prefix the floats: `\renewcommand{\thesection}{\Alph{section}}`, `\numberwithin{figure}{section}`, `\numberwithin{table}{section}` give sections A, B, C and floats A.1, B.1 (roc-natid-cbc house style; the `si.template.tex` uses the `SI-A` variant — pick one and keep it consistent within a project).
-
-## Troubleshooting
-
-| Symptom | Fix |
-|---|---|
-| `! Missing number, treated as zero.` after a table | a Word/HTML table needs `calc` — it is in the preamble; confirm `\input{preamble}` is present |
-| Figure runs past the right margin | `\pandocbounded` is a no-op — use the preamble's real definition |
-| `File 'media/...png' not found` | run via the driver (it sets pandoc's cwd) rather than calling pandoc by hand |
-| `Citation 'x' undefined` after build | the `.bib` was not staged — pass `--bib NAME` or copy it into `build/`; the driver auto-copies a sibling `references.bib` |
-| Over a hard page limit | switch to `--spacing single`, then add `\setlength{\bibsep}{4pt}` before cutting content |
-| Author name leaks in a double-anonymous build | pass `--anon`; move funding/acknowledgments/ORCID to a separate title page |
-| SI cross-references print `??` in `main.pdf` | `si.aux` is missing — build `si.tex` before `main.tex` (the driver does this) |
-| Folder cluttered with `.log`/`.fls`/`.blg`/`.aux` files | the driver cleans these after its own builds; after hand `latexmk` runs, `format_paper.py --clean --out build` (house-finishing step 5) |

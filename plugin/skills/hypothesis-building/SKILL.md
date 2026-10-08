@@ -1,32 +1,27 @@
 ---
 disable-model-invocation: true
 name: hypothesis-building
-description: Turns theory into falsifiable, pre-registerable hypotheses. Covers DAGs and backdoor closure, design resolution of the FPCI, SATE versus PATE, counterfactual and directional framing, named theoretical and empirical estimands, justified SESOIs, NHST, interval, equivalence (TOST), and minimum-effect tests, scope conditions, and primary, secondary, and exploratory tiers across multi-experiment designs. Use when the user asks to turn a research question or theory into hypotheses, asks whether a prediction is falsifiable or testable, what the estimand is, or how to predict a null. Framing goes to narrative-building, planning to pre-registration-writing.
+description: Turns a theory into falsifiable, pre-registerable hypotheses, covering the DGP and DAG, identification, SATE versus PATE, counterfactual and directional framing, named estimands, justified SESOIs, the choice among NHST, equivalence, interval, and minimum-effect tests, scope conditions, and primary, secondary, and exploratory tiers. Use when the user asks to turn a research question or theory into hypotheses, whether a prediction is falsifiable, what the estimand is, or how to predict a null. Framing goes to narrative-building, the plan to pre-registration-writing.
 argument-hint: '[describe your theory or research question]'
 ---
 
 # Causal Hypothesis Architect
 
-## Instructions
-
 ### 1. The Identification Challenge
-- **Verify FPCI Resolution:** Confirm that random assignment (or the identification strategy) solves the Fundamental Problem of Causal Inference for this design (Druckman 2022).
-- **Three Prerequisites for Experiments:** Before proceeding, verify that the design meets the three prerequisites for causal inference from experiments: (1) *random assignment* to conditions, (2) *exclusion restriction* (the only difference between conditions is the treatment itself), and (3) *SUTVA* (the Stable Unit Treatment Value Assumption, i.e. noninterference -- one subject's treatment does not affect another's outcome) (Druckman 2022, following Gerber & Green 2012).
-- **Define the Data Generating Process (DGP):** Before drafting the hypothesis, describe the set of rules that governs how the data is created. What are the underlying mechanics of the world being studied?
-- **Map the Causal Diagram:** Where appropriate, draw a DAG. Identify backdoor paths and confirm whether randomization closes them (Mutz 2011).
-- **Close the Backdoors:** State which variables must be controlled for to isolate the treatment effect. If using an experiment, explain how random assignment closes these paths (Mutz 2011).
+- **Define the Data-Generating Process First:** Before drafting the hypothesis, describe the rules that govern how the data are created — the mechanics of the world being studied.
+- **Map the Causal Diagram:** Where appropriate, draw a DAG, identify backdoor paths, and state which variables would have to be controlled to isolate the treatment effect. In an experiment, explain how random assignment closes these paths (Mutz 2011).
+- **Resolve the FPCI:** Show how random assignment (or the identification strategy) solves the Fundamental Problem of Causal Inference for this design (Druckman 2022). An experiment needs three prerequisites: (1) *random assignment* to conditions, (2) the *exclusion restriction* (the treatment is the only difference between conditions), and (3) *SUTVA* (noninterference: one subject's treatment does not affect another's outcome) (Druckman 2022, following Gerber & Green 2012).
 - **SATE vs. PATE:** Distinguish between the Sample Average Treatment Effect (SATE) and the Population Average Treatment Effect (PATE). A convenience-sample experiment estimates a SATE; a population-based experiment on a representative sample estimates the PATE directly by design, without requiring statistical modeling or extrapolation (Mutz 2011; Druckman 2022).
 
 ### 2. Hypothesis Formulation
-- **Popperian Falsifiability:** Frame the hypothesis as a "basic statement", or a specific observation that, if found to be false, would invalidate the theory.
+- **Popperian Falsifiability:** Frame the hypothesis as a "basic statement": a specific observation that, if found to be false, would invalidate the theory. Then state concretely which pattern of results would count as evidence *against* it. For example, in a group-threat paradigm: "If the interaction coefficients are jointly significant and indicate that procedural effects vanish when group threat is activated, this would favor group-centric accounts over the normative baseline model."
 - **The Counterfactual Logic:** Every hypothesis must specify a comparison. Define the "untreated" world. If the hypothesis is that X causes Y, what is the specific state of the world where X is absent? Note that in many survey experiments there may be no "pure control" -- each condition provides information, just different information (Druckman 2022). Distinguish between *active* control groups (which receive different information on the same topic, controlling for the act of receiving information) and *passive* control groups (no information), as this choice defines the counterfactual and thus the estimand (Stantcheva 2023).
-- **Directional Clarity:** Avoid "existence" claims (e.g., "there is an effect"). Use "ordinal" claims that specify the direction (higher/lower) and, where possible, the expected functional form.
+- **Directional Clarity:** Replace "existence" claims ("there is an effect") with ordinal claims that specify the direction (higher/lower) and, where possible, the expected functional form.
 - **Beat Credible Competitors:** The goal of a hypothesis test is not merely to reject the null of "no effect" but to beat credible alternative explanations. Design experiments that adjudicate between competing theories -- "the point of the experiment is explication, not demonstration" (Sniderman 2018). A hypothesis is stronger when it specifies which competing theoretical account would be undermined by the predicted result.
 - **Null-by-Design Thinking:** If the theory predicts no effect below a threshold of treatment intensity, specify (a) the intensity threshold, (b) expert-panel review of treatment strength before fielding, and (c) the equivalence bounds for the statistical test. Route such designs to the equivalence test in §3 (Sniderman 2018).
 - **Estimand Specification:** Every hypothesis must map to a specific estimand -- the statistical quantity that, if estimated, would test the hypothesis. State the *theoretical estimand* (the target quantity, defined outside any statistical model) before choosing the *empirical estimand* (a function of observable data) and the estimation strategy; each step requires different assumptions and should be argued separately (Lundberg, Johnson, & Stewart 2021). For experimental designs, this typically means specifying: (a) the treatment contrast (what is compared to what), (b) the outcome metric (probability, scale score, etc.), and (c) the model that produces the estimate (e.g., AMCE from a conjoint, ATE from a vignette experiment). A hypothesis without a named estimand is not pre-registrable. Where feasible, declare the design formally using the MIDA framework -- model, inquiry, data strategy, answer strategy -- so that power, bias, and estimator--estimand coherence can be diagnosed computationally before fielding (Blair, Cooper, Coppock, & Humphreys 2019). For information/pedagogical experiments, distinguish between *first-stage* estimands (the belief or knowledge the treatment shifts) and *second-stage* estimands (the policy views influenced by those beliefs), with the causal chain explicit (Stantcheva 2023).
 - **Information Equivalence:** In survey experiments, the exclusion restriction manifests as "information equivalence" -- the assumption that a manipulation only affects the intended construct and not background beliefs. If a treatment shifts respondents' perceptions of multiple constructs simultaneously, the estimand becomes ambiguous. Name the information equivalence assumption for each treatment contrast and discuss what would violate it (Stantcheva 2023).
 - **SESOI Requirement:** For every hypothesis test, state the Smallest Effect Size of Interest (SESOI) -- the smallest effect that would be theoretically or practically meaningful. Justify the SESOI based on (a) theoretical predictions, (b) practical significance thresholds, or (c) benchmarks from the literature. A hypothesis without a SESOI cannot be rigorously evaluated (Lakens 2025).
-- **Disconfirming Evidence:** Beyond falsifiability in the abstract, specify concretely what pattern of results would constitute evidence *against* the hypothesis. For illustration, in a group-threat paradigm: "If the interaction coefficients are jointly significant and indicate that procedural effects vanish when group threat is activated, this would favor group-centric accounts over the normative baseline model."
 - **Three-Level Specification:** Specify each hypothesis at three levels (Lakens 2025): (1) *conceptual* (the theoretical claim in plain language), (2) *operationalized* (the specific measures and contrasts), and (3) *statistical* (the exact test, estimand, and decision rule). The pre-analysis plan should bridge all three levels.
 
 ### 3. Hypothesis Testing Logic
@@ -65,7 +60,8 @@ argument-hint: '[describe your theory or research question]'
 - For the theoretical "Why" that grounds the counterfactual "If-Then," see `narrative-building`.
 
 ## Quality Checks
-- [ ] **Falsifiability:** Can I describe a specific data result that would force the rejection of this theory?
+- [ ] **DGP:** Is the data-generating process described before the hypothesis?
+- [ ] **Falsifiability:** Is there a specific data pattern that would force rejection of the theory?
 - [ ] **FPCI:** Have I identified how the design solves the Fundamental Problem of Causal Inference?
 - [ ] **Identifying Assumptions:** Have I stated what must be true (random assignment, exclusion restriction, SUTVA) for this comparison to be interpreted as causal?
 - [ ] **Counterfactual:** Is the point of comparison (the control group) clearly defined?
@@ -74,7 +70,6 @@ argument-hint: '[describe your theory or research question]'
 - [ ] **SESOI:** Is the smallest effect size of interest stated and justified?
 - [ ] **Three-Level Specification:** Is each hypothesis stated at the conceptual, operationalized, and statistical levels?
 - [ ] **Test Type:** Is the appropriate test type identified (NHST, equivalence, minimum effect, or interval)?
-- [ ] **Disconfirming Pattern:** Is the specific data pattern that would undermine the theory described?
 - [ ] **Competitor Theories:** Does the design test the hypothesis against a credible alternative, not just the null?
 - [ ] **Three-Tier Classification:** Are hypotheses classified as primary, secondary, or exploratory?
 - [ ] **Scope Conditions:** Are context-dependent expectations framed as scope conditions rather than confirmatory hypotheses?

@@ -1,21 +1,18 @@
 ---
 disable-model-invocation: true
 name: conjoint-diagnostics
-description: Reviews an existing conjoint study for inferential threats and returns prioritized findings across design integrity, estimation, measurement error, external validity and behavioral benchmarking, and interpretation. Covers attributes, restrictions, task count, satisficing, randomization, power, estimands, reference levels, subgroups, clustered errors, multiple testing, and the guardrail against reading an AMCE as majority preference. Use when the user asks whether a conjoint design or analysis holds up, has referee comments on a conjoint, or wants a second opinion on estimation or interpretation. New designs go to conjoint-design, reshaping to conjoint-cleaning.
+description: Reviews an existing conjoint study for threats to inference and returns severity-ranked findings on design integrity, estimation, measurement error, external validity, and interpretation, including the guardrail against reading an AMCE as majority preference. Use when the user asks whether a conjoint design or analysis holds up, has referee comments on a conjoint, or wants a second opinion on estimation or interpretation. New designs go to conjoint-design, reshaping to conjoint-cleaning.
 argument-hint: '[describe your conjoint study or paste analysis code]'
 ---
 
 # Conjoint Experiment Diagnostics
 
-## Instructions
+Assess each item below as addressed adequately, partially, or not at all, and rank the resulting findings by severity (see the Example Finding for the expected form).
 
-Work through each section below for the conjoint study under review. Assess whether the study addresses each item adequately, partially, or not at all. Flag items that pose threats to inference and prioritize recommendations by severity.
+- **Paper or manuscript:** give a verdict for each of Sections 1–5.
+- **Analysis code or data:** audit the implementation, not just what the paper claims: (a) the clustering specification, (b) whether the estimand matches the reported quantity, and (c) if IRR is unmeasured, within-respondent task-pair agreement as a function of attribute-level differences (Clayton et al. 2023 §3.3 method 2 / `projoint`).
 
-Branch on input:
-- **If a paper or manuscript is provided**, proceed through Sections 1–5 sequentially and produce a verdict per section.
-- **If analysis code or data is provided**, verify the actual implementation rather than just what the paper claims: (a) confirm clustering specification, (b) confirm the estimand matches the reported quantity, (c) if IRR is unmeasured, compute within-respondent task-pair agreement as a function of attribute-level differences (Clayton et al. 2023 §3.3 method 2 / `projoint`).
-
-For neighboring concerns, invoke sibling skills: `conjoint-design` (design choices), `conjoint-cleaning` (Qualtrics exports → long format), `hypothesis-building` (linking estimands to "If-Then" predictions), `methods-reporting` (full JARS/DA-RT compliance and replication archive), `cross-national-design` (multi-country / multilingual conjoints).
+Sibling skills for neighboring concerns: `conjoint-design` (design choices), `conjoint-cleaning` (Qualtrics exports → long format), `hypothesis-building` (linking estimands to "If-Then" predictions), `methods-reporting` (full JARS/DA-RT compliance and replication archive), `cross-national-design` (multi-country / multilingual conjoints).
 
 ---
 
@@ -47,7 +44,7 @@ For neighboring concerns, invoke sibling skills: `conjoint-design` (design choic
 
 ### 1.5 Sample and Power
 - Is the sample size justified with a power analysis? (Schuessler & Freitag 2020 cjpowR; Stefanelli & Lukac 2020)
-- What is the effective sample size (N respondents x T tasks)?
+- What is the effective sample size (respondents × tasks × profiles)?
 - Are Type S (sign) and Type M (magnitude/exaggeration) errors considered?
 - For subgroup analyses, is there adequate power within each subgroup?
 
@@ -106,7 +103,7 @@ Worry about measurement error whenever the study draws subgroup comparisons, rep
 - Does the forced-choice format accurately reflect the decision context? (Visconti & Yang 2024)
 - Should an abstention/neither option be offered? (Miller & Ziegler 2024: preferential abstention can produce different-sign AMCEs)
 - Is there a rating outcome alongside forced choice? (Treger 2025: forced-choice and rating elicit distinct preferences)
-- **Outcome-type robustness**: If both forced-choice and rating were collected, do AMCEs/MMs agree in sign and ranking across outcome types? Divergence is substantive, not a nuisance.
+- **Outcome-type robustness:** If both forced-choice and rating were collected, do AMCEs/MMs agree in sign and ranking across outcome types? Divergence is substantive, not a nuisance.
 
 ### 4.4 Attention and Salience
 - Does the conjoint format artificially inflate attention to attributes that respondents would ignore in real decisions? (Fu & Li 2024)
@@ -139,7 +136,7 @@ Worry about measurement error whenever the study draws subgroup comparisons, rep
 - If interactions are examined, are AMIEs used rather than conditional AMCEs? (Egami & Imai 2019)
 - Are interaction coefficients from dummy-coded regressions interpreted? If so, flag: these are baseline-dependent artifacts (Egami & Imai 2019).
 - Is there a test for whether a factor matters at all? (Ham et al. 2024 CRTConjoint: conditional randomization test)
-- **Configural vs additive claims:** If the paper argues that one attribute's effect is fundamentally interactive with the rest of the profile ("the effect of X depends on the full bundle"), check whether the analysis reports the *range* of focal-attribute effects across the context space — $\theta(\vec{x}_{Max})$ and $\theta(\vec{x}_{Min})$ in the sense of Gosciak, Molitor, and Lundberg (2026) — rather than only an AMCE that marginalizes over context. AMIE captures low-order interactions and CRT detects whether *any* heterogeneity exists, but neither localizes the contexts at which the focal attribute matters most or least. With non-adaptive data, this surface is recoverable observationally from cell means at the cost of thin cells in rare context combinations; flag the substantive coarsening choices and the cell-size distribution. With an adaptive design, audit the warm-up/adaptive/validation phase allocations, the choice of focal attribute (must be ex ante), and the two-signal construction for each context value.
+- **Configural vs additive claims:** If the paper argues that one attribute's effect depends on the full profile, does it report the *range* of focal-attribute effects across contexts — $\theta(\vec{x}_{Max})$ and $\theta(\vec{x}_{Min})$ (Gosciak, Molitor, and Lundberg 2026) — rather than only an AMCE that marginalizes over context? AMIEs and the CRT detect heterogeneity but do not localize it. With non-adaptive data, the surface comes from cell means; flag the coarsening choices and thin cells. With an adaptive design, audit the warm-up/adaptive/validation allocations, the ex ante choice of focal attribute, and the two-signal construction per context value.
 
 ---
 
@@ -168,5 +165,4 @@ A HIGH-severity finding should name the rule violated, cite the source, and reco
 
 ## Software
 
-The skill references several R packages; the one whose use is strictly load-bearing for the skill is `projoint` (Clayton et al. 2023) for IRR estimation and bias correction. Others that may appear in a conjoint workflow: `cjoint` (Strezhnev et al., AMCE estimation), `cregg` (Leeper, MMs and diff-in-MMs), `cjbart` (Robinson & Duch 2024, BART-based heterogeneity), `FactorHet` (Goplerud-Imai-Pashley 2025, principled heterogeneity detection), `CRTConjoint` (Ham-Imai-Janson 2024, conditional randomization tests and assumption tests), `cjRank` (Dill-Howlett-Müller-Crépon 2024, nested MMs for lexicographic preferences), and `cjpowR` (Schuessler & Freitag 2020, power analysis).
-
+`projoint` (Clayton et al. 2023) is the package this review depends on, for IRR estimation and bias correction. Others that appear in conjoint workflows: `cjoint` (Strezhnev et al., AMCE estimation), `cregg` (Leeper, MMs and diff-in-MMs), `cjbart` (Robinson & Duch 2024, BART-based heterogeneity), `FactorHet` (Goplerud-Imai-Pashley 2025, principled heterogeneity detection), `CRTConjoint` (Ham-Imai-Janson 2024, conditional randomization tests and assumption tests), `cjRank` (Dill-Howlett-Müller-Crépon 2024, nested MMs for lexicographic preferences), and `cjpowR` (Schuessler & Freitag 2020, power analysis).

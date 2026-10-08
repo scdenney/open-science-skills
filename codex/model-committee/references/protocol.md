@@ -17,7 +17,7 @@ Choose the instrument before calling a model.
 | Task shape | Route |
 |---|---|
 | A fact, calculation, or behavior can be settled by an authoritative source, proof, test, or experiment | Verify directly with one agent |
-| Disagreement itself is the measurement and must remain interpretable | `$model-council-voting` with independent members |
+| Disagreement itself is the measurement and must remain interpretable | Independent, blind members whose judgments are scored for agreement (e.g., Krippendorff's alpha) without deliberation, not this committee |
 | The goal is several creative approaches for user selection | `$diverge` or `$diverge --codex` |
 | The specification is fixed and work is primarily execution | One suitable implementation agent |
 | One consequential choice is required among defensible alternatives, with shared evidence and an explicit rubric | Model committee |

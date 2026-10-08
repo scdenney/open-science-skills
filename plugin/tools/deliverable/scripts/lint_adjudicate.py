@@ -126,7 +126,7 @@ fast_state = "skipped" if fast.get("skipped") else RUN.get("fast_gate") or ("fai
 may_ship = fast_state == "passed" and complete and not stale and p0 == 0
 meta = {"id": RUN.get("id"), "input_hash": RUN.get("input_hash"), "input_hash_now": h_now, "stale": stale, "started": RUN.get("started"),
         "finished": dt.datetime.now(dt.timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z"), "mode": RUN.get("mode"), "models": MODELS,
-        "cost": {"allowance_usd": round(sum(1 for s in index if s.get("selected", True)) * 0.10 + 1.0 + 0.5, 2), "reported_usd": None, "budget_usd": RUN.get("budget_usd")},
+        "cost": {"allowance_usd": round(sum(1 for s in index if s.get("selected", True)) * (0.15 if RUN.get("knowledge_base") else 0.01) + 0.80 + 0.40, 2), "reported_usd": None, "budget_usd": RUN.get("budget_usd")},
         "verdict": {"may_ship": may_ship, "fast_gate": fast_state, "coverage_complete": complete, "stale": stale, "open_p0": p0}}
 cov = {"fast_gate": fast_state, "build_checked": bool(RUN.get("build_checked")), "sections": coverage, "global": gcov,
        "dimensions": REQ + ["order", "spec", "repetition", "release"], "dropped_unanchored": dropped}

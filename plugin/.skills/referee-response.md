@@ -1,7 +1,7 @@
 ---
 disable-model-invocation: true
 name: referee-response
-description: Organizes and formats an author’s response to peer review. Extracts every distinct point from referee reports and the editor’s letter, tags severity and type, maps dependencies to sequence revisions, flags potential pushback, and builds a numbered comment → response → location table with substantive responses left to the author. It formats and checks the response without writing scientific content. Use when the user has reports, a revise-and-resubmit decision, or an editor’s letter and says "respond to reviewers", "plan the revision", "map the referee comments", "draft the response letter", or "check I addressed everything". The reviewer-side twin is journal-review. Prose polish goes to sci-edit.
+description: Organizes an author’s response to peer review. Extracts every referee and editor point, tags severity and type, orders the revision by dependency, flags defensible pushbacks as questions, and builds a numbered comment → response → location letter whose substantive answers the author writes. Use when the user has referee reports, a revise-and-resubmit decision, or an editor’s letter and wants to plan the revision, draft the response letter, or check that every point was addressed. The reviewer-side twin is journal-review.
 argument-hint: '[paths to the referee reports and editor letter, plus the manuscript; optionally: plan | letter | check]'
 allowed-tools:
 - Read
@@ -14,7 +14,7 @@ allowed-tools:
 
 # Referee Response
 
-Turns scattered reviewer comments into an ordered revision plan and a response letter the author fills in. The author writes every substantive answer; this skill makes sure each point is found, ordered, answered somewhere, and formatted the way editors expect.
+Turns scattered reviewer comments into an ordered revision plan and a response letter the author fills in. The author writes every substantive answer, including the interpretation of a result and the reason a request is declined; this skill makes sure each point is found, ordered, answered somewhere, and formatted the way editors expect.
 
 **Related skills.** `journal-review` writes a referee report for someone else's manuscript; this skill answers one written about yours. `sci-edit` polishes the letter's prose after the author has written the answers. `paper-review-lite` and `citation-check` are useful before resubmission when a referee's point implies the manuscript needs a fresh audit.
 
@@ -83,6 +83,4 @@ Report the checks as a short list of what passed and what needs the author's att
 
 ## Notes
 
-- The skill never drafts scientific content: not a new analysis, not the interpretation of a result, not the reason a request is declined. It supplies structure, order, placeholders, and checks.
-- Keep the manuscript's argument intact. Where a referee request would change a confirmatory claim, say so in step 2 and put the decision to the author.
 - Heritage: grown from a personal `referee-response` skill (2026-05) into a library skill on 2026-09-02.

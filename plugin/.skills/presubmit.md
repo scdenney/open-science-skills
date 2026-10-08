@@ -9,7 +9,7 @@ argument-hint: '[path to your draft to review, or describe the setup task]'
 
 A launcher and setup wizard for the [`presubmit`](https://github.com/scdenney/presubmit) Python CLI — the standalone, API-driven adversarial peer-review pipeline that writes a consolidated review report to disk. The review itself happens in the CLI against the Anthropic API (~30 stages, ~$5–10 per full run on a typical manuscript); this skill verifies the install and the key, settles where output lands, launches the run, and reports where the report ended up.
 
-This is for self-audit of your own drafts pre-submission. Peer-reviewing other people's manuscripts goes through the separate `reviews/` workflow with its own agents-based `CLAUDE.md` — not here.
+This is for self-audit of your own drafts pre-submission. Refereeing someone else's manuscript goes to `journal-review`.
 
 ## Setup phase (run once per machine)
 
@@ -87,17 +87,17 @@ Write the choice to `~/.config/presubmit/config.json`:
 }
 ```
 
-That config file is the source of truth for this skill. Also *offer* to write `export PRESUBMIT_OUTPUT_BASE=…` to `~/.zshrc` so the bare CLI picks up the same default — ask first, never write to `.zshrc` silently.
+That config file is the source of truth for this skill. Also offer to write `export PRESUBMIT_OUTPUT_BASE=…` to `~/.zshrc` so the bare CLI picks up the same default; edit the shell rc only on a yes.
 
 ## Per-paper run phase
 
 ### Step 1 — Slug
 
-Derive a default slug from the input filename: extension and path stripped, lowercased, runs of non-alphanumerics collapsed to single hyphens (underscores preserved), leading/trailing hyphens and underscores trimmed. Target shape is `<lastname>_<year>_<short-title>` — e.g. `Denney_2026_What-Were-They-Thinking.pdf` → `denney_2026_what-were-they-thinking`. Confirm the proposed slug with the user (`AskUserQuestion`); allow override.
+Derive a default slug from the input filename: extension and path stripped, lowercased, runs of non-alphanumerics collapsed to single hyphens (underscores preserved), leading/trailing hyphens and underscores trimmed. Target shape is `<lastname>_<year>_<short-title>` — e.g. `Denney_2026_What-Were-They-Thinking.pdf` → `denney_2026_what-were-they-thinking`. Use it unless the user named one, and state it in the launch message so they can redirect.
 
 ### Step 2 — Mode
 
-Ask which run mode (`AskUserQuestion`):
+Each mode spends API credit, so ask which one to run (`AskUserQuestion`) unless the user already said:
 
 - **Smoke** — `--stop-stage 2.0`. Metadata extraction + Red Team + numbers auditor. ~15–25 min on a 70-page paper, ~$1–2. Useful for verifying setup or catching show-stoppers fast.
 - **Standard** — full pipeline. ~30–90 min, ~$2–4 on a 70–80-page paper (a short article of a few thousand words runs well under $2). The default for a real audit.

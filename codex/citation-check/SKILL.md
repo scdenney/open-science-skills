@@ -1,13 +1,13 @@
 ---
 name: citation-check
-description: Audits the citation layer of a manuscript — in-text and reference-list parity, fabricated or nonexistent sources, DOIs that resolve to a different work, style and completeness against APA 7 or a named journal style, and whether each cited work actually supports the claim attached to it. Verifies against Crossref, OpenAlex, DataCite, and Semantic Scholar, drives LaTeX audits off the keys actually cited, and marks anything it cannot check as NOT CHECKED rather than guessing. Use when the user asks to check citations or references, suspects an AI-invented source, wants a .bib checked against the text, or asks whether the DOIs are right. Figures and tables go to figure-table-audit.
+description: "Audit a manuscript's citations for fabricated sources, DOIs that resolve to the wrong work, in-text and reference-list mismatches, style, and claim support, verified against Crossref and OpenAlex. Use to check citations, references, a .bib file, or DOIs."
 ---
 
 # Citation Integrity Auditor
 
-## Heritage and scope
+Checks that every cited work exists, that its identifier points to that work, that the text and the reference list agree, and that each source can bear the claim attached to it. Verification comes from bibliographic indexes, not from model memory: a lookup that was not run is reported as `NOT CHECKED`, never filled in by plausibility.
 
-This is an original Open Science Skills workflow adapted for experimental social science. It remixes general citation-check and source-verification ideas from Cheng-I Wu's *Academic Research Skills for Claude Code* (CC BY-NC 4.0), especially the separation between citation formatting, existence checks, DOI checks, and uncertainty reporting. Do not copy ARS prose into reports; apply the workflow below.
+Adapted for social science from the source-verification workflow in Cheng-I Wu's *Academic Research Skills for Claude Code* (CC BY-NC 4.0), in particular its separation of formatting, existence, DOI, and uncertainty checks. Credit ARS when reusing this structure elsewhere, and keep its prose out of reports.
 
 ## Instructions
 
@@ -47,16 +47,16 @@ Report:
 - Ambiguous citations where two reference entries could satisfy one in-text citation.
 - Broken cross-references caused by LaTeX/BibTeX key drift.
 
-Do not "fix" ambiguous cases silently. List the likely match and the evidence.
+List the likely match and the evidence for ambiguous cases rather than resolving them silently.
 
 ### 4. Verify source existence and identifiers
 
-This is the highest-stakes check: confirm each cited work actually exists and that its identifier points to *that* work. Hallucinated citations — a real author with a plausible but nonexistent title, or a DOI that resolves to a different paper — are the failure mode that ends careers. Use programmatic indexes first; they are near-deterministic and resist hallucination.
+This is the highest-stakes check. The two common fabrication patterns are a real author attached to a plausible but nonexistent title, and a DOI that resolves to a different real paper. Query the programmatic indexes first: their answers are deterministic and do not depend on what the model remembers.
 
 **Concrete lookups (via web fetch):**
 
 - Crossref bibliographic search: `https://api.crossref.org/works?rows=5&query.bibliographic=<URL-encoded "title first-author year">`. Compare returned title/authors/year/DOI. Append `&mailto=<email>` for the polite pool. On HTTP 429, fall back to OpenAlex.
-- DOI resolution: `https://api.crossref.org/works/<doi>` (or `https://doi.org/<doi>`). Confirm the resolved title **and** authors match *this* entry. A DOI that resolves to a *different* real work is the single most common LLM-fabrication signature — never treat "DOI resolves" as "DOI correct."
+- DOI resolution: `https://api.crossref.org/works/<doi>` (or `https://doi.org/<doi>`). Confirm the resolved title **and** authors match *this* entry. A DOI that resolves to a *different* real work is the most common LLM-fabrication signature, so **a DOI that resolves is not thereby correct**.
 - OpenAlex: `https://api.openalex.org/works?search=<URL-encoded title>` or `?filter=doi:<doi>`. Independent index; use when Crossref is rate-limited or for abstracts.
 - Exact-title test: search the title in quotation marks. Zero hits anywhere is a strong fabrication signal.
 - Author-corpus cross-check (catches the "fabricated title grafted onto a real author" pattern): query the real author's works (`...query.author=<name>`) and confirm the cited title appears in their corpus. A real author + nonexistent title + invented co-authors/venue is the classic hallucination.
@@ -82,12 +82,12 @@ This is the highest-stakes check: confirm each cited work actually exists and th
 - `NEEDS AUTHOR VERIFICATION`: no programmatic match, but plausibly real grey literature.
 - `LIKELY FABRICATED`: no trace after identifier, exact-title, **and** author-corpus searches. Reserve for genuine non-existence, but do not shy away from it when the evidence is clear.
 
-**Do NOT over-flag these as fabricated:**
+**Not fabrications:**
 
 - Double-blind anonymization placeholders (e.g. `title={Article withheld for review}`, author `{Author}`) — intentional blinding stubs, not citations.
-- The author's own work (self-citations) — flag metadata conflicts for the author to reconcile (their CV vs the canonical published record) rather than silently overwriting; the author is the authority on their own paper.
+- The author's own work (self-citations). Flag metadata conflicts between their CV and the published record for the author to reconcile; the author is the authority on their own paper.
 
-**High-stakes audits (publication or public posting):** run a second, independent verification pass with different framing, defaulting to "fabricated until independently confirmed" for any suspect. A single pass misses real items; independent passes catch each other's gaps. When remediating rather than only reporting, never invent a replacement — substitute only a real, verified source (ideally the one the author intended), confirm any new DOI resolves to the right work before writing it, and re-verify the fix renders as expected.
+**High-stakes audits (publication or public posting):** run a second, independent verification pass with different framing, treating any suspect as fabricated until independently confirmed. A single pass misses real problems, and independent passes catch each other's gaps. If no second pass was run, say so in the report. When remediating rather than only reporting, substitute only a real, verified source (ideally the one the author intended), confirm any new DOI resolves to the right work before writing it, and check that the fix renders in the compiled output.
 
 ### 5. Check style and completeness
 
@@ -155,19 +155,3 @@ Severity:
 `$citation-check --verify <task>` opts into experimental Jev verification; `$citation-check --verify jev <task>` is identical. Plain `$citation-check` is unchanged. It may assist only with an ambiguity left after actual, fetched metadata: work identity, version relationship, or otherwise ambiguous metadata. It never replaces the inventory, DOI resolution, existence checks, provider lookups, style audit, or a lead's report label.
 
 Use it only after the ordinary citation-check workflow has retrieved the relevant record. A lead may manually refer to a prior result only for the same complete evaluation input and model/contract version; this is not automatic caching. A deterministic wrong DOI remains `DOI RESOLVES TO DIFFERENT WORK`; `NOT CHECKED` remains `NOT CHECKED`. A DOI difference alone can be a preprint/publication or other version relationship, not proof of a wrong work. Only on opt-in, read `${JEV_VERIFIER_HOME:-$HOME/.local/share/oss-experiments/jev-verifier/current}/CITATION-CHECK.md`.
-
-## Quality checks
-
-- [ ] In-text inventory and reference inventory were built before findings were listed.
-- [ ] For BibTeX, the audit covered the actually-cited keys, not just the easy-to-find entries.
-- [ ] Every "DOI resolves" was confirmed to resolve to the *cited* work, not merely to resolve.
-- [ ] Suspected fabrications were tested with exact-title and author-corpus searches before labeling.
-- [ ] Double-blind placeholders, grey literature, and self-citations were not mislabeled as fabricated.
-- [ ] For high-stakes audits, an independent second pass was run, or its absence was noted.
-- [ ] Every DOI mismatch was based on resolved metadata, not intuition.
-- [ ] Unverified sources are labeled as unresolved, not fabricated.
-- [ ] Existing author-year suffixes were checked for consistency.
-- [ ] Data/code/material citations were included when relevant.
-- [ ] The report distinguishes integrity errors from style issues.
-- [ ] ARS-derived workflow ideas are attributed when this skill's structure is reused outside this repository.
-- [ ] If requested, Jev was limited to unresolved fetched-metadata ambiguity and did not turn model knowledge into existence, DOI, or fabrication evidence.

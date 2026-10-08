@@ -1,7 +1,7 @@
 ---
 disable-model-invocation: true
 name: research-grill
-description: Interviews a researcher in rounds until a research idea, design, or draft has no unexamined decision. Numbers every question, explains "why this matters", recommends an answer, fetches facts rather than asking for them, and records settled decisions. Three stages cover idea, a topic or hunch to a falsifiable question and contribution claim, design, a question to estimand, identification, sample and power, measurement, pre-registration, analysis plan, and venue, and defend, reviewer objections to a finished design or draft. Use when the user says "grill me", "grill this", "stress-test my idea/design/plan", "interview me about this project", "poke holes in this", "what am I assuming", or brings an idea that is not yet a design. Use `--plan` for software or process plans.
+description: Interviews a researcher in rounds until an idea, design, or draft has no unexamined decision — numbered questions, each with why it matters and a recommended answer, facts looked up rather than asked, and settled decisions written to a file. Stages are idea (topic or hunch to a falsifiable question and contribution claim), design (estimand, identification, sample and power, measurement, analysis plan, pre-registration, venue), and defend (reviewer objections to a finished design or draft). Use when the user says "grill me", asks to stress-test or poke holes in an idea, design, or plan, asks what they are assuming, or brings an idea that is not yet a design. --plan grills software or process plans.
 argument-hint: '[describe the idea, design, or draft to grill; optionally: idea | design | defend | --plan]'
 allowed-tools:
 - Read
@@ -68,13 +68,13 @@ Rules for a round:
 - **Recommend every time.** A question with no recommended answer is homework, not an interview. The recommendation cites the method skill or the source it rests on.
 - **Plain language first.** A student must be able to answer without looking anything up. Give the technical term after the plain version, glossed once, and use it consistently afterward.
 - **One round, one frontier.** A question whose answer depends on another question still open in this round belongs to the next round.
-- **Facts are yours to find.** When a question needs a fact from the world (has this been done, what does the literature say the effect size is, does a dataset exist, what does the registry require), fetch it: `literature-review` or `WebSearch` for prior work and current tools, `Explore` or `Grep` for repository state, `WebFetch` for a registry or a journal's requirements. Dispatch the lookup and keep asking the rest of the frontier while it runs; only the questions downstream of that fact wait. Never ask the researcher for something you could look up, and never answer from memory about a name, tool, or dataset you do not confidently recognize.
-- **Decisions are theirs.** Put every decision to the researcher and wait. Do not fill in a decision because the answer seems obvious. Do not answer the research question for them at any stage; the skill sharpens a claim, it does not supply one.
+- **Facts are yours to find.** When a question needs a fact from the world (has this been done, what does the literature say the effect size is, does a dataset exist, what does the registry require), fetch it: `literature-review` or `WebSearch` for prior work and current tools, `Explore` or `Grep` for repository state, `WebFetch` for a registry or a journal's requirements. Dispatch the lookup and keep asking the rest of the frontier while it runs; only the questions downstream of that fact wait. Ask the researcher only for what they alone know, and look up any name, tool, or dataset you do not confidently recognize rather than answering from memory.
+- **Decisions are theirs.** Put every decision to the researcher and wait for the answer, including the ones whose answer seems obvious. The skill sharpens the researcher's claim; it never supplies the research question or the claim itself.
 - **Recompute after every round.** Settled decisions push the frontier outward and unblock what depended on them. A decision the researcher reverses later reopens its subtree.
 
 ## Writing it down
 
-The interview is worthless if it lives only in the chat.
+Decisions that exist only in the chat are lost at the end of the session, so write them to a file.
 
 - If the project has a `research-wayfinder` map (`planning/map.md`), write each settled decision into the matching ticket and add new tickets for what the interview surfaced.
 - Otherwise write and maintain `decisions.md` in the project root (or the path the researcher names): one entry per settled decision, with the decision, the rationale in the researcher's words, what would change it, and the round it was settled in. Update the file after every round, not at the end.
@@ -86,6 +86,6 @@ The session is done when the frontier is empty for the chosen stage and the file
 
 ## Notes
 
-- Do not soften the questions for a student and do not sharpen them for a professor; the tree is the same. What changes is the gloss, not the rigour.
+- The tree and its rigour are the same for a student and a professor; only the gloss changes.
 - A researcher who cannot answer a frontier question has found the open decision the interview exists to find. Offer the recommended answer, mark it as provisional in the file, and move on; do not stall the round on it.
 - Heritage: the frontier-rounds mechanic is Matt Pocock's `grill-me` (MIT, [mattpocock/skills](https://github.com/mattpocock/skills)); see `RECOMMENDED.md`. This skill adds the research design tree, the plain-language and recommended-answer rules, the fetch-not-ask routing through the library's method skills, the thesis rubric as done criteria, and the written decision record.

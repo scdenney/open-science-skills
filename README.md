@@ -6,15 +6,15 @@
 
 [![Claude Code](https://img.shields.io/badge/Claude_Code-plugin-D97757?logo=anthropic&logoColor=white)](https://code.claude.com/docs/en/skills)
 [![OpenAI Codex](https://img.shields.io/badge/OpenAI_Codex-library-111111?logo=openai&logoColor=white)](codex/README.md)
-[![version](https://img.shields.io/badge/version-2.29.1-blue)](https://github.com/scdenney/open-science-skills/releases)
+[![version](https://img.shields.io/badge/version-2.35.0-blue)](https://github.com/scdenney/open-science-skills/releases)
 [![license](https://img.shields.io/badge/license-CC%20BY--NC%204.0-lightgrey)](LICENSE)
-[![Claude skills](https://img.shields.io/badge/Claude_skills-44-D97757?logo=anthropic&logoColor=white)](#skills)
-[![Codex skills](https://img.shields.io/badge/Codex_skills-43-111111?logo=openai&logoColor=white)](#skills)
-[![updated](https://img.shields.io/badge/updated-September%202026-green)](https://github.com/scdenney/open-science-skills/commits/main)
+[![Claude skills](https://img.shields.io/badge/Claude_skills-42-D97757?logo=anthropic&logoColor=white)](#skills)
+[![Codex skills](https://img.shields.io/badge/Codex_skills-41-111111?logo=openai&logoColor=white)](#skills)
+[![updated](https://img.shields.io/badge/updated-October%202026-green)](https://github.com/scdenney/open-science-skills/commits/main)
 [![sources](https://img.shields.io/badge/sources-150%2B-purple)](SOURCES.md)
 [![PRs welcome](https://img.shields.io/badge/PRs-welcome-brightgreen)](#contributing)
 
-Open Science Skills is a library of 44 agentic skills for Claude Code, with a parallel 43-skill library for OpenAI Codex, written for computational social scientists and digital humanists. Each skill is meant to work the way the field expects. Identify the data-generating process before proposing an estimator, and design experiments and instruments to a standard. Drafts are held to established reporting norms.
+Open Science Skills is a library of 42 agentic skills for Claude Code, with a parallel 41-skill library for OpenAI Codex, written for computational social scientists and digital humanists. Each skill is meant to work the way the field expects. Identify the data-generating process before proposing an estimator, and design experiments and instruments to a standard. Drafts are held to established reporting norms.
 
 The library follows the research lifecycle. It covers survey design, list experiments, topic modeling, LLM text classification, VLM-based OCR pipelines, manuscript QA, multi-model orchestration, and transparent reporting under APSA, JARS, DA-RT, TOP, and FAIR expectations. Every skill is grounded in published methods sources and based on best practices for writing skills. See [SOURCES.md](SOURCES.md) for the bibliography of 150+ works consulted.
 
@@ -22,10 +22,10 @@ This is the toolkit I use in my own research, and it grows as I add sources and 
 
 | Platform | Skills | Invoke |
 |---|---|---|
-| [Claude Code](https://code.claude.com/docs/en/skills) | 44, as the [`oss` plugin](plugin/skills) | `/oss:skill-name` |  
-| [OpenAI Codex](https://developers.openai.com/codex/skills) | 43, as the [`codex/` library](codex/README.md) | `$skill-name` |  
+| [Claude Code](https://code.claude.com/docs/en/skills) | 42, as the [`oss` plugin](plugin/skills) | `/oss:skill-name` |  
+| [OpenAI Codex](https://developers.openai.com/codex/skills) | 41, as the [`codex/` library](codex/README.md) | `$skill-name` |  
 
-The two libraries differ only in invocation and tooling. The Codex side omits `presubmit`; its `orchestrate` is the Codex-native version led by the active GPT-6 Astra or GPT-5.6 Sol session, with mode-aware routing between them. See [`codex/README.md`](codex/README.md).
+The two libraries differ only in invocation and tooling. The Codex side omits `presubmit`; its `orchestrate` is the Codex-native version led by the active GPT-6 Astra or GPT-6.1 Sol session, with mode-aware routing between them. See [`codex/README.md`](codex/README.md).
 
 Model selection and reusable migration practices are documented in [MODEL-POLICY.md](MODEL-POLICY.md).
 
@@ -58,7 +58,7 @@ On Codex there is no plugin. Install the skills library instead (see [Codex](#co
 
 No skill loads on its own. Name one, with `/oss:skill-name` in Claude Code or `$skill-name` in Codex, and it reads into context and runs. Nothing is suggested unprompted, so the library costs an idle session nothing.
 
-The orchestration and delegated-review skills (`orchestrate`, `spawn`, `advisor`, `model-committee` and its chair variants, `diverge --codex`, and `paper-review-lite --codex`) start subagents, full peer sessions, or an external model. Every skill is on demand (see [Skills](#skills)), but for these the rule is load-bearing rather than economical.
+The orchestration and delegated-review skills (`orchestrate`, `advisor`, `model-committee` and its chair variants, `diverge --codex`, and `paper-review-lite --codex`) start subagents or an external model. Every skill is on demand (see [Skills](#skills)), but for these the rule is load-bearing rather than economical.
 
 ---
 
@@ -66,7 +66,7 @@ The orchestration and delegated-review skills (`orchestrate`, `spawn`, `advisor`
 
 ### Claude Code
 
-The recommended install is the plugin, shown in [Quick start](#quick-start). It registers the marketplace and installs all 44 skills, each of which registers as its own `/oss:` slash command, plus the alias commands for retired names and preset modes. The command prefix is `oss:`, for open science skills. The marketplace and the repository are both named `open-science-skills`.
+The recommended install is the plugin, shown in [Quick start](#quick-start). It registers the marketplace and installs all 42 skills, each of which registers as its own `/oss:` slash command, plus the alias commands for retired names and preset modes. The command prefix is `oss:`, for open science skills. The marketplace and the repository are both named `open-science-skills`.
 
 To try the plugin for one session without installing:
 
@@ -128,7 +128,7 @@ A copied skill is invoked by its own name. The `/oss:` namespace and the alias c
 
 ### Codex
 
-Codex discovers skills under `.agents/skills` (repository) and `~/.agents/skills` (user-wide). From this repository's root, preview and install all 43 Codex skills without replacing existing paths:
+Codex discovers skills under `.agents/skills` (repository) and `~/.agents/skills` (user-wide). From this repository's root, preview and install all 41 Codex skills without replacing existing paths:
 
 ```bash
 python3 plugin/scripts/install-codex.py --all --dry-run
@@ -164,9 +164,8 @@ Skills are grouped by their role in a research project. Unless the Platform colu
 
 | Skill | Platform | Command | What it does |
 |---|---|---|---|
-| [orchestrate](plugin/skills/orchestrate/SKILL.md) | Both | `/oss:orchestrate` · `$orchestrate` | Run a multi-model workflow. Claude selects Fable or Opus. Codex selects GPT-6 Astra or GPT-5.6 Sol. Astra leads hard reasoning, while Sol escalates difficult work to Astra. Both route bounded work to lower GPT-5.6 tiers and can use a Claude peer. |
-| [spawn](plugin/skills/spawn/SKILL.md) | Both | `/oss:spawn` | Spawn peer sessions in new terminal panes, each in its own git worktree with a directed task and contract brief. Detects herdr, tmux, or a plain terminal. The lead monitors and merges branches. |
-| [advisor](plugin/skills/advisor/SKILL.md) | Both | `/oss:advisor` / `$advisor` | Escalate one decision to an independent second reviewer before committing to an interpretation or completing a task. Your session leads on Opus or Sonnet. The Fable advisor uses max reasoning. A Fable lead uses `orchestrate`'s Astra peer or the committee. The [Codex counterpart](codex/advisor/SKILL.md) uses Astra/xhigh. |
+| [orchestrate](plugin/skills/orchestrate/SKILL.md) | Both | `/oss:orchestrate` · `$orchestrate` | Run a multi-model workflow. Claude leads on Fable or Opus and sends menial tool calls to Haiku and judgment work to Opus at an effort chosen per task. Codex leads on GPT-6 Astra or GPT-6.1 Sol and routes bounded work to Sol and mechanical work to Luna. Both can call a cross-vendor peer for high-stakes checks. |
+| [advisor](plugin/skills/advisor/SKILL.md) | Both | `/oss:advisor` / `$advisor` | Escalate one decision to an independent second reviewer before committing to an interpretation or completing a task. Your session leads on Opus (or Haiku) and picks the Fable advisor's effort for the question: high by default, xhigh for design decisions or stuck work, max for high-stakes calls. A Fable lead uses `orchestrate`'s Astra peer or the committee. The [Codex counterpart](codex/advisor/SKILL.md) uses Astra with the same ladder. |
 
 ### Ideation
 
@@ -195,8 +194,7 @@ Skills are grouped by their role in a research project. Unless the Platform colu
 |---|---|---|---|
 | [topic-modeling](plugin/skills/topic-modeling/SKILL.md) | Both | `/oss:topic-modeling` | Fit structural topic models. Choose topic count by coherence and exclusivity. Covers covariates and reporting. |
 | [text-classification](plugin/skills/text-classification/SKILL.md) | Both | `/oss:text-classification` | Classify text with LLMs. Covers codebook design, human-in-the-loop workflows, validation, and agreement statistics. |
-| [model-council-voting](plugin/skills/model-council-voting/SKILL.md) | Both | `/oss:model-council-voting` | Use a model panel as independent coders under a pre-stated consensus rule. Assess disagreement with chance-corrected kappa and alpha statistics. Checks correlated juror errors. |
-| [model-committee](plugin/skills/model-committee/SKILL.md) | Both | `/oss:model-committee`, `/oss:model-committee-astra`, `/oss:model-committee-opus`, `/oss:model-committee-sol` | Have GPT-6 Astra and Claude Opus deliberate toward one decision. They propose independently, critique, revise, and converge under a pre-set rule. Fable chairs by default and is not a member. With `-astra`, GPT-6 Astra chairs and Sol replaces it as a member. `-opus` uses the in-session Opus chair. `-sol` uses the legacy GPT-5.6 chair and Terra. |
+| [model-committee](plugin/skills/model-committee/SKILL.md) | Both | `/oss:model-committee`, `/oss:model-committee-astra`, `/oss:model-committee-opus`, `/oss:model-committee-sol` | Have GPT-6 Astra and Claude Opus deliberate toward one decision. They propose independently, critique, revise, and converge under a pre-set rule. Fable chairs by default and is not a member. With `-astra`, GPT-6 Astra chairs and Sol replaces it as a member. `-opus` uses the in-session Opus chair. `-sol` uses a GPT-6.1 Sol chair with a GPT-6 Sol member. |
 | [llm-calibration-logprobs](plugin/skills/llm-calibration-logprobs/SKILL.md) | Both | `/oss:llm-calibration-logprobs` | Turn token log-probabilities into per-decision confidence. Measure calibration against human labels with ECE, Brier scores, and reliability diagrams. |
 
 ### Corpus Processing
@@ -280,6 +278,10 @@ these skills only worked on the author's own machines.
 
 ---
 
+## Archived skills
+
+Retired skills stay in [`archive/`](archive) and no longer ship with either library: `spawn` (full peer sessions in git worktrees and terminal panes) and `model-council-voting` (a model panel as independent coders with agreement statistics), both archived in 2.35.0.
+
 ## Recommended companion skills
 
 Third-party skills this library recommends and builds on, credited, not claimed, and not counted in the badges. From [Matt Pocock's skills](https://github.com/mattpocock/skills) (MIT): **grill-me** (a frontier-rounds design interview, the seed of `research-grill`, and pairs with `diverge`), **wayfinder** (decision-map planning for software work, the source concept for `research-wayfinder`), and **handoff / claude-handoff** (handoff documents for a successor session, the seed of `spawn`). See [RECOMMENDED.md](RECOMMENDED.md) for the full write-up and [`third-party/mattpocock/`](third-party/mattpocock) for pinned, unmodified reference copies.
@@ -305,4 +307,4 @@ The `citation-check`, `literature-review`, `figures`, `tables`, and `figure-tabl
 
 The `replication-package` skill adapts the structural conventions in [Yusaku Horiuchi's replication-package-guide](https://github.com/yhoriuchi/replication-package-guide) (the source for single-entry-point, compact vs. build/analyze layouts, figure/table crosswalk, paper-consistency check, correction workflow, and pre-release checklist). FAIR-principle integration and Claude Code/Codex skill packaging are added on top. Harvard Dataverse and other platform-specific upload mechanics are not included. Cite Horiuchi's guide if you publish a package built with this skill.
 
-The `spawn` and `research-wayfinder` skills adapt concepts from [Matt Pocock's skills](https://github.com/mattpocock/skills) (MIT): `spawn` generalizes his `claude-handoff` from one background successor to managed multi-session peers, and `research-wayfinder` reworks his `wayfinder` decision map from software specs to experimental design. Unmodified reference copies of the originals are vendored under [`third-party/mattpocock/`](third-party/mattpocock) with his MIT license; see [RECOMMENDED.md](RECOMMENDED.md).
+The `research-wayfinder` skill adapts [Matt Pocock's skills](https://github.com/mattpocock/skills) (MIT): it reworks his `wayfinder` decision map from software specs to experimental design. (The archived `spawn` skill generalized his `claude-handoff`.) Unmodified reference copies of the originals are vendored under [`third-party/mattpocock/`](third-party/mattpocock) with his MIT license; see [RECOMMENDED.md](RECOMMENDED.md).

@@ -1,6 +1,6 @@
 ---
 name: doc-to-markdown
-description: "Read or convert any document a research workflow hands you — PDF, Word, PowerPoint, Excel, OpenDocument, RTF, EPUB, or CSV. Use whenever a document has to be read, opened, quoted, summarized, searched, extracted, or added to a source library. Decides whether to read the file directly or convert it, picks the converter from the document's actual structure, and decides whether the resulting Markdown is a tracked artifact or a scratch file to delete."
+description: "Read or convert documents (PDF, Office, OpenDocument, RTF, EPUB, CSV) in a research workflow: read directly or convert, pick the converter from document structure, and decide whether the Markdown is tracked or scratch. Use when a document must be read, quoted, summarized, searched, extracted, or added to a source library; scans go to $vlm-ocr."
 ---
 
 # Reading and Converting Documents
@@ -44,8 +44,15 @@ If the repo already ships a conversion script — `scripts/convert-sources.sh` a
 
 These are measured on the library's own corpus of political-science PDFs, not vendor claims:
 
-- **`opendataloader-pdf` leaves typographic ligatures intact.** One 30-page article carried 426 raw `ﬁ`/`ﬀ`/`ﬃ` characters, so `grep significant` silently misses every hit. Normalize every conversion: `python3 -c "import sys,unicodedata; sys.stdout.write(unicodedata.normalize('NFKC', open(sys.argv[1]).read()))" in.md > out.md`. Verify with `grep -c 'ﬁ\|ﬂ\|ﬀ\|ﬃ'` — the answer must be 0.
-- **`opendataloader-pdf` fails silently on scanned PDFs.** A 28-page image-only article produced 2.5 KB of noise and exit code 0. Always run the chars-per-page probe first; never trust a short output.
+- **`opendataloader-pdf` leaves typographic ligatures intact.** One 30-page article carried 426 raw `ﬁ`/`ﬀ`/`ﬃ` characters, so `grep significant` silently misses every hit. Expand them on every conversion:
+
+  ```bash
+  sed -i.bak 's/ﬀ/ff/g; s/ﬁ/fi/g; s/ﬂ/fl/g; s/ﬃ/ffi/g; s/ﬄ/ffl/g; s/ﬅ/ft/g; s/ﬆ/st/g' out.md && rm out.md.bak
+  grep -c 'ﬀ\|ﬁ\|ﬂ\|ﬃ\|ﬄ' out.md   # must be 0
+  ```
+
+  Full `unicodedata.normalize('NFKC', ...)` fixes ligatures too, but it also flattens superscripts, so footnote markers merge into the body text as ordinary digits. On documents whose footnote numbering matters, expand the ligatures and leave the rest alone.
+- **`opendataloader-pdf` fails silently on scanned PDFs.** A 28-page image-only article produced 2.5 KB of noise and exit code 0. The chars-per-page probe catches this; treat a short output as a failure until shown otherwise.
 - **`opendataloader-pdf` under-detects section headings** on some layouts, emitting the title as the only `#`. Check the heading count before relying on the Markdown for structure-aware chunking.
 - **`anydoc` invents tables out of two-column prose and footnote blocks**, shredding sentences into pipe cells. On the same article it emitted 24 table rows where the PDF has no tables at all. Grep the output for `^|` and read what it caught before trusting it on a prose document.
 - **`anydoc` merges a whole page into one line**, running headers and footnotes into the middle of body paragraphs — fine for retrieval, wrong for quotation and for anything that reads paragraph structure.
@@ -71,23 +78,23 @@ Make this call yourself, then say which way you went and where the file is.
 - The request is transient — "what does this say about X", "check this number".
 - The document is third-party copyrighted material and the repo does not already track converted sources. Repos that keep originals gitignored and conversions tracked have made that call deliberately; a repo with no such convention has not.
 
-When in doubt, persist inside the project and tell the user, since a stray Markdown file is cheap and a re-run of a 40-minute OCR job is not. Two rules hold either way: never write into a git-tracked directory without saying so, and never delete or move the source document.
+When in doubt, persist inside the project and tell the user, since a stray Markdown file is cheap and a re-run of a 40-minute OCR job is not. Either way, say so when writing into a git-tracked directory, and leave the source document where it is.
 
 ### 5. Record what produced the file
 
 A converted document is derived data, and a reader six months on cannot tell a clean extraction from a mangled one. For anything persisted, note the converter and version — in the file's front matter, in `sources/README.md`, or in the conversion log the repo already keeps. When a document needed OCR, that fact travels with it; downstream text analysis has to know it is working from OCR output.
 
-Bulk intake of many sources at once is `$research-repo`'s job, not this skill's. Cleaning OCR output is `$vlm-ocr` (clean phase)'s.
+Bulk intake of many sources at once is `$research-repo`'s job, not this skill's. Cleaning OCR output belongs to `$vlm-ocr` (clean phase).
 
 ## Quality Checks
 
-- [ ] **Read-versus-convert decided explicitly** and stated, not defaulted to conversion
-- [ ] **Structure probed before routing:** page count and chars-per-page checked, image-only documents caught before a text extractor ran
-- [ ] **Repo's own conversion script used** when the project ships one
-- [ ] **Ligatures normalized:** `grep -c 'ﬁ\|ﬂ\|ﬀ\|ﬃ'` returns 0
-- [ ] **Output spot-checked** at head, tail, and one middle page against the original
-- [ ] **Tables inspected** if the output contains any, and confirmed to correspond to tables in the source
-- [ ] **Persist-or-discard decided, stated, and acted on** — scratch files actually deleted
-- [ ] **Naming convention followed** for anything written into a source library
-- [ ] **Provenance recorded** for persisted conversions, including whether OCR was involved
-- [ ] **Source document untouched**
+- [ ] Read-versus-convert decided explicitly and stated, not defaulted to conversion
+- [ ] Structure probed before routing: page count and chars-per-page checked, image-only documents caught before a text extractor ran
+- [ ] Repo's own conversion script used when the project ships one
+- [ ] Ligatures expanded: `grep -c 'ﬀ\|ﬁ\|ﬂ\|ﬃ\|ﬄ'` returns 0
+- [ ] Output spot-checked at head, tail, and one middle page against the original
+- [ ] Tables inspected if the output contains any, and confirmed to correspond to tables in the source
+- [ ] Persist-or-discard decided, stated, and acted on — scratch files actually deleted
+- [ ] Naming convention followed for anything written into a source library
+- [ ] Provenance recorded for persisted conversions, including whether OCR was involved
+- [ ] Source document untouched

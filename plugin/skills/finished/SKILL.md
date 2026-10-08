@@ -1,7 +1,7 @@
 ---
 disable-model-invocation: true
 name: finished
-description: End-of-session closure for a research or code repository. Records what actually changed into the project's own handoff and log files, distinguishing verified work from work merely attempted, and reports what was left uncommitted. Use when wrapping up a work session so the next one can resume without re-deriving state. Its start-of-session twin is sitrep.
+description: End-of-session closure for a research or code repository. Records what changed into the project's own handoff and log files, separating verified work from work merely attempted, and reports what is left uncommitted. Use when wrapping up a session so the next one can resume without re-deriving state. Its start-of-session twin is sitrep.
 argument-hint: '[optional: note anything the session should record that the diff would not show]'
 ---
 
@@ -15,7 +15,7 @@ Write down what the next session would otherwise have to rediscover. The record 
 
 ## 1. Learn the project's conventions
 
-Read `CLAUDE.md` and `AGENTS.md` for the stated handoff or logging convention, then locate the artifacts the project actually keeps: `HANDOFF.md`, `CODEX_HANDOFF.md`, `STATUS.md`, `SESSION_LOG.md`, `NOTES.md`, or a dated `logs/` directory. Match the structure already in the file. If the project keeps none, summarize in the reply and ask **once** whether to start a durable file — do not create one unprompted.
+Read `CLAUDE.md` and `AGENTS.md` for the stated handoff or logging convention, then locate the artifacts the project actually keeps: `HANDOFF.md`, `CODEX_HANDOFF.md`, `STATUS.md`, `SESSION_LOG.md`, `NOTES.md`, or a dated `logs/` directory. Match the structure already in the file. Updating these existing files is the job and needs no approval. If the project keeps none, summarize in the reply and offer once to start a durable file, since that sets a convention for the repository.
 
 ## 2. Establish what changed
 
@@ -34,10 +34,8 @@ Ground every claim in one of these outputs. For each item, classify it:
 
 ## 3. Update the project's artifacts
 
-- **Handoff file** — refresh "last updated", the current objective, completed work, and next actions, inside whatever section structure the file already uses. Overwrite the state; do not append a second competing account.
-- **Session log** — append a dated entry **at the top**. Never rewrite earlier entries. Concise bullets: work completed, notable outputs, commit hashes, next actions.
-
-Keep both terse. A handoff that has to be skimmed is a handoff that gets skipped.
+- **Handoff file** — refresh "last updated", the current objective, completed work, and next actions, inside whatever section structure the file already uses. Overwrite the state rather than appending a second competing account, and keep it terse.
+- **Session log** — add a dated entry at the top. **Leave earlier entries as written.** Terse bullets: work completed, notable outputs, commit hashes, next actions.
 
 ## 4. Commit, only if asked
 
@@ -45,4 +43,4 @@ If the user asked for a commit or push, run it and record the resulting hash in 
 
 ## 5. Report
 
-State exactly which files were updated, with paths, and list anything left uncommitted or unresolved. If any part of the session's work is unverified, say so here rather than letting the log imply otherwise.
+List the files updated, with paths, anything left uncommitted or unresolved, and any work that is done but unverified.

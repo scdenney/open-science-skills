@@ -5,20 +5,20 @@ description: Run one consequential, contestable decision through a deliberative 
 
 # Model Committee
 
-Run a GPT-6 Astra member and a Claude Opus member as a deliberating committee, then chair the result. Keep the line to `$model-council-voting` sharp: a council measures independent disagreement, while this committee deliberately exposes each member to the other's argument and returns one decision.
+Run a GPT-6 Astra member and a Claude Opus member as a deliberating committee, then chair the result. This is not an inter-rater reliability design: independent blind raters measure disagreement, while this committee deliberately exposes each member to the other's argument and returns one decision.
 
 Read [`references/protocol.md`](references/protocol.md) completely before running a committee. It carries the use-case gate, the brief template, the three round contracts, the decision rule, and the `decision.md` schema.
 
 ## Pick the chair
 
-One skill, four chairs. Use `$model-committee` with `chair: fable` (the default), `chair: astra`, `chair: opus`, or `chair: sol`. The Claude slash-command suffixes `-astra`, `-opus`, `-fable`, and `-sol` select these same rows; in Codex they are parameters, not additional skill names. Keep the protocol and the three rounds unchanged. Select the GPT member from the table before creating any member prompt.
+One skill, four chairs. Use `$model-committee` with `chair: fable` (the default), `chair: astra`, `chair: opus`, or `chair: sol`. The Claude slash commands `/model-committee-astra`, `-opus`, and `-sol` select these same rows; in Codex they are parameters, not additional skill names. Keep the protocol and the three rounds unchanged. Select the GPT member from the table before creating any member prompt.
 
 | chair | GPT member | Claude member | Chair pin | Use |
 |---|---|---|---|---|
 | `fable` (default) | `gpt-6-astra`, `xhigh` | `opus`, `high` | `fable`, `high` | Fable synthesizes from outside both member models. |
-| `astra` | `gpt-5.6-sol`, `xhigh` | `opus`, `high` | `gpt-6-astra`, `xhigh` | Astra chairs; Sol supplies the GPT member's deliberation. |
+| `astra` | `gpt-6.1-sol`, `xhigh` | `opus`, `high` | `gpt-6-astra`, `xhigh` | Astra chairs; Sol supplies the GPT member's deliberation. |
 | `opus` | `gpt-6-astra`, `xhigh` | `opus`, `high` | `opus`, `high` | Retains the cheaper in-session option where Opus is already running; it shares the Claude member's model. |
-| `sol` | `gpt-5.6-terra`, `xhigh` | `opus`, `high` | `gpt-5.6-sol`, `xhigh` | Legacy Sol chair with a distinct GPT member tier. |
+| `sol` | `gpt-6-sol`, `xhigh` | `opus`, `high` | `gpt-6.1-sol`, `xhigh` | Cheaper GPT-side chair with a distinct GPT member tier; not independent of the GPT family. |
 
 Default to Fable when no chair is named. Fable and Astra provide chairs distinct from both member models; Opus is the explicit same-model exception. No chair adds a third vote. Separate models or tiers do not establish statistical independence.
 
@@ -50,7 +50,7 @@ Resolve `SKILL_DIR` as the directory containing this `SKILL.md`, then run:
 
 `--check` only confirms the CLI is installed and prints its version. It does not verify that the pinned model or effort level is available to this account, so treat a passing check as necessary, not sufficient.
 
-The model IDs in the chair table are explicit, but are not necessarily immutable snapshots, and they hold for every chair value. If one is unavailable, report it and ask whether to stop or use a named replacement — never substitute silently. This preflight is fail-closed: if either `--check` fails, do not start the committee and do not simulate a member's response.
+The model IDs in the chair table are explicit, but are not necessarily immutable snapshots, and they hold for every chair value. If one is unavailable, report it and ask whether to stop or use a named replacement rather than substituting silently; a Sol chair never falls back to `gpt-6-sol`, its own member. This preflight is fail-closed: if either `--check` fails, do not start the committee and do not simulate a member's response.
 
 ## Run the committee
 
@@ -79,7 +79,7 @@ Invoke each member through the bundled read-only driver, passing the GPT model t
   --prompt-file <prompt.md> --out <output.md> --model opus --effort high -C <working-directory>
 ```
 
-For `chair: astra`, pass `--model gpt-5.6-sol` on every GPT member call; for `chair: sol`, pass `--model gpt-5.6-terra`.
+For `chair: astra`, pass `--model gpt-6.1-sol` on every GPT member call; for `chair: sol`, pass `--model gpt-6-sol`.
 
 Launch both calls in a round concurrently when the runtime supports it. Sequential execution is acceptable only if the second prompt was frozen before the first result arrived — otherwise round 1 stops being blind.
 
@@ -92,7 +92,7 @@ Chair after round 3. Chair directly only when current runtime metadata verifies 
 "$SKILL_DIR/scripts/claude-member.sh" \
   --prompt-file chair.prompt.md --out decision.md --model fable --effort high -C <working-directory>
 
-# Astra chair; the legacy Sol chair uses --model gpt-5.6-sol.
+# Astra chair; the Sol chair uses --model gpt-6.1-sol.
 "$SKILL_DIR/scripts/codex-member.sh" \
   --prompt-file chair.prompt.md --out decision.md --model gpt-6-astra --effort xhigh -C <working-directory>
 ```

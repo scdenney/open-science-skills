@@ -1,7 +1,7 @@
 ---
 disable-model-invocation: true
 name: deliverable-open
-description: Opens a deliverable, such as a talk, course module, paper, book chapter, or referee report, for AI-assisted work across sessions. Interviews the author until the manifest is written, then scaffolds deliverable.yml, append-only HANDOFF.md, a numbered planning/ wiki with index and open questions, inbox/ for dictated braindumps, gitignored checks/, and the house deck template for talks. Use when the user says "open a deliverable", "set up this talk/paper/module for the pipeline", "make a manifest", or starts deadline-driven work that spans sessions. Not for one-off tasks.
+description: Opens a deliverable (talk, course module, paper, book chapter, or referee report) for AI-assisted work across sessions. Interviews the author for the manifest, then scaffolds deliverable.yml, an append-only HANDOFF.md, a numbered planning/ wiki with open questions, an inbox/ for dictated braindumps, a gitignored checks/, and the house deck template for talks. Use when starting deadline-driven work that spans sessions, or when asked to open a deliverable, set up a talk, paper, or module for the pipeline, or make a manifest. Not for one-off tasks.
 argument-hint: '[path to the deliverable directory; optionally --kind talk|course|paper|chapter|review]'
 allowed-tools:
 - Read
@@ -23,7 +23,7 @@ A deliverable gets the pipeline when it has a deadline, an audience, and more th
 
 ## Where the tooling lives
 
-- **Resolve the toolchain once, before any path below.** `$DTOOL` is the deliverable toolchain, which now ships with this library at `plugin/tools/deliverable`. Take the first that exists: `$DELIVERABLE_TOOLS`, `${CLAUDE_PLUGIN_ROOT}/tools/deliverable` (Claude Code sets that variable for a plugin skill), the `plugin/tools/deliverable` directory of an `open-science-skills` checkout, then a legacy `project_hygiene/scripts` checkout for installations that predate the move. Scripts are at `$DTOOL/scripts/` and kind profiles at `$DTOOL/kinds/`, and the two must stay siblings because `lint_prepare.py` resolves profiles relative to its own directory. If none exists, stop, name the paths you tried, and never continue with a degraded run.
+- **Resolve the toolchain once, before any path below.** `$DTOOL` is the deliverable toolchain shipped with this library at `plugin/tools/deliverable`. Take the first that exists: `$DELIVERABLE_TOOLS`; the newest installed plugin copy, `$(ls -d ~/.claude/plugins/cache/open-science-skills/oss/*/ 2>/dev/null | sort -V | tail -1)tools/deliverable`; the `plugin/tools/deliverable` directory of an `open-science-skills` checkout; then a legacy `project_hygiene/scripts` checkout. Scripts are at `$DTOOL/scripts/` and kind profiles at `$DTOOL/kinds/`; keep them siblings, because `lint_prepare.py` resolves profiles relative to its own directory. If none exists, stop and name the paths you tried.
 
 - Gate script: `$DTOOL/scripts/check_deliverable.py` (or `$DELIVERABLE_CHECK`). Its docstring is the manifest reference; read it before writing a manifest.
 - Hook installer: `$DTOOL/scripts/install-hooks.sh <repo>`.
@@ -32,7 +32,7 @@ A deliverable gets the pipeline when it has a deadline, an audience, and more th
 
 ## Kind profiles
 
-One file per kind at `$DTOOL/kinds/<kind>.md` (talk, paper, module, chapter, review): the interview questions beyond the common five, the manifest defaults, the lint questions `lint_prepare.py` appends, the ship step, and the related skills. Read the profile for the deliverable's kind before round 1 and let it drive rounds 2 and 3; never load more than one profile. One piece of research has one wiki: a paper's talk and referee response declare the paper's `planning/` as their `planning_dir` and add their own numbered files to it, rather than opening a second wiki.
+One file per kind at `$DTOOL/kinds/<kind>.md` (talk, paper, module, chapter, review): the interview questions beyond the common five, the manifest defaults, the lint questions `lint_prepare.py` appends, the ship step, and the related skills. Read the profile for the deliverable's kind before round 1 and let it drive rounds 2 and 3; read only that one. One piece of research has one wiki: a paper's talk and referee response declare the paper's `planning/` as their `planning_dir` and add their own numbered files to it, rather than opening a second wiki.
 
 ## Rounds
 
@@ -75,12 +75,12 @@ At the deliverable root:
 - `checks/.gitignore` containing `*` and `!.gitignore` and `!release.json` and `!citations.json`.
 - For `--kind talk` with no `src/` present: copy the deck template's `src/`, `content.md`, `notes.md`, and `README.md`, then set `build.command` and `sources_of_truth` in the manifest accordingly.
 
-Then:
+Then offer each of the following, and do it only on a yes, since each writes outside the deliverable:
 
-- If the repo has no `.githooks/pre-commit`, offer `install-hooks.sh`; install only on a yes.
-- Offer to append the deliverable's proper nouns (people, places, named theories, project names) to `~/.config/macwhspr/vocab.md` so dictation renders them correctly; append only on a yes, one term per line, under a heading naming the deliverable.
-- Offer to add the manifest path to `~/.claude-assistant/config/deliverables.yml` (the night-shift registry). Listing is not enabling.
-- If the repo root has no `AGENTS.md`, say so and stop; do not create one here. If it has one and lacks a `## Deliverable pipeline` section, offer to append the canonical paragraph from `$DTOOL/notes/agents-pipeline-paragraph.md` (it is what tells either vendor when to invoke which on-demand skill, and what lets Codex, which has no hooks, start from the same context).
+- `install-hooks.sh`, if the repo has no `.githooks/pre-commit`.
+- Appending the deliverable's proper nouns (people, places, named theories, project names) to `~/.config/macwhspr/vocab.md` so dictation renders them correctly: one term per line, under a heading naming the deliverable.
+- Adding the manifest path to `~/.claude-assistant/config/deliverables.yml` (the night-shift registry). Listing is not enabling.
+- Appending the canonical paragraph from `$DTOOL/notes/agents-pipeline-paragraph.md` to the repo-root `AGENTS.md` when it lacks a `## Deliverable pipeline` section. That paragraph tells either vendor when to invoke which on-demand skill, and lets Codex, which has no hooks, start from the same context. If the repo has no `AGENTS.md`, say so and leave it; creating one is outside this skill.
 
 ## Exit
 

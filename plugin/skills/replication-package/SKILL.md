@@ -1,7 +1,7 @@
 ---
 disable-model-invocation: true
 name: replication-package
-description: Scaffolds or audits a social-science replication package and evaluates the manuscript and archived research objects against FAIR principles. Scaffold mode writes folder structure, README, master.R, figure-table crosswalk, codebook template, LICENSE placeholder, .gitignore, and a pre-release checklist. Audit mode grades the package and audits data, code, materials, prompts, preregistrations, DOIs, metadata, licenses, access restrictions, and availability statements. Use when setting up or repairing a package, checking one before submission, auditing FAIR, Findable, Accessible, Interoperable, Reusable, or drafting availability statements. Adapted from Yusaku Horiuchi’s replication-package-guide. Platform-neutral across Harvard Dataverse, OSF, Zenodo, GitHub releases, and institutional archives.
+description: Scaffolds or audits a social-science replication package and evaluates the manuscript and archived research objects against FAIR principles. Scaffold mode writes the folder structure, README, master.R, figure-table crosswalk, codebook, LICENSE placeholder, and .gitignore; audit mode grades the package against a pre-release checklist and audits data, code, materials, identifiers, licenses, access restrictions, and availability statements. Use when setting up or repairing a package, checking one before submission, auditing FAIR compliance, or drafting availability statements. Adapted from Yusaku Horiuchi’s replication-package-guide.
 argument-hint: '[path to replication folder, plus manuscript path or availability statements when auditing; package path defaults to ./replication]'
 allowed-tools:
 - AskUserQuestion
@@ -31,29 +31,20 @@ The FAIR principles are the second standard, applied to every research object th
 
 ### Step 1. Resolve the target directory
 
-Use `$ARGUMENTS` if provided. Treat the argument as the path to the replication folder (relative or absolute). If the argument is empty, ask the user once for a path. If they decline, default to `./replication` relative to the current working directory.
-
-Normalize the path. Confirm whether the directory exists and whether it is empty.
-
-If the user also supplied a manuscript, a repository URL, or pasted availability statements, note them — the audit mode's FAIR block needs them.
+Treat `$ARGUMENTS` as the path to the replication folder; with no argument, use `./replication`. Note whether it exists and is empty. If the user also supplied a manuscript, a repository URL, or availability statements, keep them for the FAIR block.
 
 ### Step 2. Choose scaffold or audit
 
 - Target directory is empty or does not exist → **scaffold mode**. Go to Step 3.
 - Target directory contains files, or the user asked for a FAIR check, a pre-submission audit, or a review of an existing package → **audit mode**. Go to Step 6.
 
-In audit mode, never overwrite an existing file without explicit user confirmation. Offer to fill in only the missing scaffolding — files that do not yet exist.
+In audit mode, overwrite an existing file only with the user's confirmation; offer to create only the scaffolding files that do not yet exist.
 
 ## Scaffold mode
 
 ### Step 3. Decide on structure
 
-Ask the user one question. Is data construction complex (restricted sources, scraping, API pulls, or expensive upstream work that produces analysis-ready data)?
-
-- **No** → use **compact**.
-- **Yes** → use **build/analyze**.
-
-When in doubt, choose compact. Build/analyze is justified only when the build stage creates real complexity for users.
+The one decision is whether data construction is complex (restricted sources, scraping, API pulls, or expensive upstream work that produces analysis-ready data). If yes, use **build/analyze**; otherwise use **compact**. Ask only when the context does not settle it, and when in doubt choose compact: build/analyze is justified only when the build stage creates real complexity for users.
 
 ### Step 4. Scaffold the tree
 
@@ -107,11 +98,7 @@ Use the templates in the **Templates** section below. Fill in placeholder fields
 
 The templates are written for the **compact** layout. When scaffolding **build/analyze**, adapt the paths as you write them: `code/` → `build/scripts/` and `analyze/scripts/`, `outputs/` → `analyze/`, `docs/` → `analyze/docs/` — in the README's file descriptions and in every `source()` line of `master.R`.
 
-Then output a short report with:
-
-1. The directory tree created.
-2. A list of placeholder fields the user must fill in.
-3. The next three actions the user should take (typically: fill in README placeholders, drop data into `data/`, add scripts under `code/` or `build/scripts/` and `analyze/scripts/`).
+Then report the tree created, the placeholder fields the user must fill in, and the next three actions (typically: fill in README placeholders, drop data into `data/`, add scripts under `code/` or `build/scripts/` and `analyze/scripts/`).
 
 ## Audit mode
 
@@ -127,7 +114,7 @@ Grading a package by reading it cannot establish whether it reproduces. `scripts
 
 **Static tier, safe to run unasked.** `python3 scripts/verify_package.py --root <dir>` reads files only. It reports whether a seed is set, whether session or environment information is recorded, whether a dependency lockfile exists, whether any absolute path will fail on another machine, whether anything credential-shaped is committed, and a sha256 manifest of the data directory. Fold each result into the Pre-Release Checklist rather than restating it separately.
 
-**Execution tier, never without authorization.** `--run` copies the package to a temporary directory, executes its master script there, and compares what appeared against the figure-table crosswalk. That executes code the package's author wrote, on this machine. Ask with the `AskUserQuestion` tool rather than in prose, so the choice is a real prompt and not a line that is easy to scroll past. One question, headed `Clean-room run`, naming the master script you found. Offer `Run it now` (state the timeout) and `Skip, record NOT CHECKED`; the tool's own free-text option covers the user who wants to discuss it first. Execute only on an explicit choice to run. A long or failing run is the normal case on a package that was never portable, so say that in the question rather than after the fact. If the user declines, if no master script exists, or if the interpreter is not installed, record the clean-room run as **NOT CHECKED** in the audit report and say so plainly. A request for an audit is not authorization to execute.
+**Execution tier, only on an explicit choice to run.** `--run` copies the package to a temporary directory, executes its master script there, and compares what appeared against the figure-table crosswalk. That executes the package author's code on this machine, and a request for an audit is not authorization to do so. Ask with `AskUserQuestion` (headed `Clean-room run`, naming the master script), offering `Run it now` (state the timeout) and `Skip, record NOT CHECKED`, and say up front that a long or failing run is normal for a package that was never made portable. If the user declines, no master script exists, or the interpreter is missing, record the clean-room run as **NOT CHECKED** in the report.
 
 Report the script's verdict rather than re-deriving it. A failure on `crosswalk` means the package claims outputs its own code did not produce, which is a blocking issue.
 
@@ -258,17 +245,6 @@ Severity:
 - **Recommended:** DOI pending, metadata thin, README incomplete, codebook missing details, crosswalk incomplete, proprietary format without fallback, no formal data/code citation.
 - **Minor:** inconsistent file names, weak tags, style problems in availability statements, minor README clarity issues.
 
-### Audit quality checks
-
-- [ ] The package was graded against the full Pre-Release Checklist, not a subset.
-- [ ] All research objects were inventoried before FAIR scoring.
-- [ ] FAIR was not treated as identical to open access.
-- [ ] Restricted or sensitive data were checked for transparent access conditions rather than forced open sharing.
-- [ ] Data, code, and materials were checked as separately licensable objects.
-- [ ] Persistent identifiers and repository metadata were checked when links were available.
-- [ ] Missing author knowledge was surfaced as explicit prompts.
-- [ ] Draft statements are specific enough to locate and reuse the objects.
-- [ ] No existing file was overwritten without confirmation.
 ## Templates
 
 ### `README.md`
@@ -432,39 +408,25 @@ N cols: <count>.
 ### `.gitignore`
 
 ```text
-# OS
+# OS and editors
 .DS_Store
 Thumbs.db
-
-# Editors
 .vscode/
 .idea/
-*~
-
 # R
 .Rhistory
 .RData
 .Ruserdata
 .Rproj.user/
-*.Rcheck/
-*.tar.gz
-
 # Python
 __pycache__/
-*.pyc
 .venv/
-venv/
-
 # Secrets and local config
 .env
 .env.*
 *.pem
 *.key
-
-# Logs from local runs that should not be committed
-*.tmp
-
-# Large generated artifacts; comment out if outputs should be tracked
+# Large generated artifacts; uncomment if outputs should not be tracked
 # outputs/figures/*.pdf
 # outputs/tables/*.tex
 ```
