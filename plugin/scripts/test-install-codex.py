@@ -36,13 +36,13 @@ class Installer(unittest.TestCase):
         marker = self.target / 'orchestrate/custom.md'
         marker.write_text('custom work')
         (self.target / 'advisor').symlink_to(self.target / 'missing-source')
-        (self.target / 'spawn').write_text('existing file')
-        result = self.run_install('--skill', 'orchestrate', 'advisor', 'spawn', 'model-committee')
+        (self.target / 'citation-check').write_text('existing file')
+        result = self.run_install('--skill', 'orchestrate', 'advisor', 'citation-check', 'model-committee')
         self.assertEqual(result.returncode, 1)
         self.assertEqual(marker.read_text(), 'custom work')
         self.assertTrue((self.target / 'advisor').is_symlink())
         self.assertFalse((self.target / 'advisor').exists())
-        self.assertEqual((self.target / 'spawn').read_text(), 'existing file')
+        self.assertEqual((self.target / 'citation-check').read_text(), 'existing file')
         self.assertTrue((self.target / 'model-committee/SKILL.md').is_file())
 
     def test_invalid_selection_is_rejected_before_writing(self):

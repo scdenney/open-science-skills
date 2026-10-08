@@ -165,7 +165,7 @@ class RouteSection(unittest.TestCase):
         plain = self.section.replace("*", "")
         self.assertIn("Jev profiles the task; the plan is built locally", plain)
         self.assertIn("No model name leaves the machine", plain)
-        self.assertIn("fable`/`opus`/`sonnet` aliases", plain)
+        self.assertIn("fable`/`opus`/`haiku` aliases", plain)
 
     def test_availability_is_the_harness_s_and_fails_closed(self):
         plain = self.section.replace("*", "")
@@ -198,13 +198,13 @@ class TopologyPolicy(unittest.TestCase):
     def setUp(self):
         text = read(ROOT / "plugin" / "skills" / "orchestrate" / "SKILL.md")
         self.section = section_of(
-            text.split("## Run (the orchestration loop)", 1)[1],
-            "### Decide the topology, then the executor",
+            text.split("## Run the loop", 1)[1],
+            "### Topology",
             "orchestrate",
         )
 
     def test_every_supported_topology_is_named(self):
-        for needle in ("stays with the lead", "Agent", "Workflow", "codex-peer.sh", "/oss:spawn"):
+        for needle in ("stays with the lead", "Agent", "Workflow", "codex-peer.sh"):
             with self.subTest(needle=needle):
                 self.assertIn(needle, self.section)
 
@@ -212,11 +212,11 @@ class TopologyPolicy(unittest.TestCase):
         plain = self.section.replace("*", "")
         self.assertIn("the work stays with you", plain)
         self.assertIn("a worktree is not the starting point", plain)
-        self.assertIn("Isolation alone is not a reason to spawn", plain)
+        self.assertIn("Isolation alone is not a reason to leave the session", plain)
 
     def test_the_stated_decision_dimensions_are_all_present(self):
-        for dimension in ("Coupling", "Duration", "Persistence", "Parallelism",
-                          "Isolation", "Steerability", "Harness support"):
+        for dimension in ("Coupling", "Duration", "Parallelism", "Isolation",
+                          "Persistence", "Harness support"):
             with self.subTest(dimension=dimension):
                 self.assertIn(f"**{dimension}**", self.section)
         self.assertIn("does this session actually have the mechanism", self.section)

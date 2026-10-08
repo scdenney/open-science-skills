@@ -85,8 +85,8 @@ ROUTE_BASELINE_FIELD = "lead_choice"
 # spawned peer runs on the lead's own model, which the caller reports.
 ROUTE_EXECUTOR_MAP: dict[str, dict[str, dict[str, str | None]]] = {
     "claude": {
-        "premier_lead": {"topology": "lead", "model": "fable", "effort": "max"},
-        "fast_worker": {"topology": "native_subagent", "model": "sonnet", "effort": "medium"},
+        "premier_lead": {"topology": "lead", "model": "fable", "effort": "xhigh"},
+        "fast_worker": {"topology": "native_subagent", "model": "haiku", "effort": "medium"},
         "deep_reasoner": {"topology": "native_subagent", "model": "opus", "effort": "high"},
         "workflow": {"topology": "native_workflow", "model": None, "effort": None},
         "spawn_peer": {"topology": "spawn_peer", "model": None, "effort": None},
@@ -94,8 +94,8 @@ ROUTE_EXECUTOR_MAP: dict[str, dict[str, dict[str, str | None]]] = {
     },
     "codex": {
         "premier_lead": {"topology": "lead", "model": "gpt-6-astra", "effort": "xhigh"},
-        "fast_worker": {"topology": "native_subagent", "model": "gpt-5.6-terra", "effort": "medium"},
-        "deep_reasoner": {"topology": "native_subagent", "model": "gpt-5.6-sol", "effort": "high"},
+        "fast_worker": {"topology": "native_subagent", "model": "gpt-6-luna", "effort": "medium"},
+        "deep_reasoner": {"topology": "native_subagent", "model": "gpt-6.1-sol", "effort": "high"},
         "workflow": {"topology": "native_workflow", "model": None, "effort": None},
         "spawn_peer": {"topology": "spawn_peer", "model": None, "effort": None},
         "cross_vendor_peer": {"topology": "one_shot", "model": "fable", "effort": "high"},

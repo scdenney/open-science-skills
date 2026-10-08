@@ -26,7 +26,7 @@
 #                   implement   workspace-write                                  (default effort: xhigh)
 #   -C DIR          working dir Codex sees (default: $PWD)
 #   --timeout SEC   hard kill after SEC seconds (default: 600)
-#   --model ID      default: gpt-6-astra; use gpt-5.6-terra for bounded routine work
+#   --model ID      default: gpt-6-astra; use gpt-6.1-sol for cheaper bounded work
 #   --effort LEVEL  low|medium|high|xhigh|max for Astra; overrides the mode default above
 #   --out FILE      also tee Codex's stdout+stderr here (for background reads)
 #   --prompt TEXT   prompt as a single argument

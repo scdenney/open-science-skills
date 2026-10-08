@@ -111,7 +111,7 @@ class RouteTests(unittest.TestCase):
         sent = seen[0]["state"]
         self.assertEqual(set(sent), {"contract", "run_id", "task"})
         text = json.dumps(sent)
-        for local_only in ("opus", "sonnet", "fable", "gpt-", "available", "lead_choice"):
+        for local_only in ("opus", "haiku", "fable", "gpt-", "available", "lead_choice"):
             with self.subTest(local_only=local_only):
                 self.assertNotIn(local_only, text)
 
@@ -121,7 +121,7 @@ class RouteTests(unittest.TestCase):
         outcome, _, detail = self.plan(task_mostly_mechanical=0.95)
         self.assertEqual(outcome, "PLAN_PROPOSED")
         worker = self.items(detail)["fast_worker"]
-        self.assertEqual((worker["model"], worker["effort"]), ("sonnet", "medium"))
+        self.assertEqual((worker["model"], worker["effort"]), ("haiku", "medium"))
         self.assertEqual(worker["status"], "proposed")
         self.assertEqual(detail["lead"], {"model": "claude-opus-5-5", "effort": "medium", "status": "keep"})
 
@@ -133,11 +133,11 @@ class RouteTests(unittest.TestCase):
 
     def test_deep_judgment_suggests_the_premier_lead_without_switching_it(self):
         _, reasons, detail = self.plan(task_needs_deep_judgment=0.92)
-        self.assertEqual(detail["lead"], {"model": "fable", "effort": "max", "status": "switch_suggested"})
+        self.assertEqual(detail["lead"], {"model": "fable", "effort": "xhigh", "status": "switch_suggested"})
         self.assertIn("lead_change_suggested", reasons)
 
     def test_a_premier_session_is_kept_by_family_not_exact_id(self):
-        state = self.state(lead_model="claude-fable-5-1", lead_effort="max")
+        state = self.state(lead_model="claude-fable-5-1", lead_effort="xhigh")
         _, _, detail = self.plan(state, task_needs_deep_judgment=0.92)
         self.assertEqual(detail["lead"]["status"], "keep")
 
@@ -156,7 +156,7 @@ class RouteTests(unittest.TestCase):
     def test_high_stakes_adds_a_cross_vendor_check_per_harness(self):
         _, _, detail = self.plan(task_high_stakes=0.9)
         self.assertEqual(self.items(detail)["cross_vendor_peer"]["model"], "gpt-6-astra")
-        _, _, detail = self.plan(self.state(harness="codex", lead_model="gpt-5.6-sol",
+        _, _, detail = self.plan(self.state(harness="codex", lead_model="gpt-6.1-sol",
                                             lead_effort="high"), task_high_stakes=0.9)
         self.assertEqual(self.items(detail)["cross_vendor_peer"]["model"], "fable")
 

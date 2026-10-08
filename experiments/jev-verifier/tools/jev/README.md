@@ -176,7 +176,7 @@ above `pass_min`, `no` at or below `fail_max`, and `unclear` between them;
 `jev.signals` records both.
 
 **The plan is local.** `ROUTE_EXECUTOR_MAP` maps each signal to an executor for
-the declared harness. Claude entries use the `fable`, `opus`, and `sonnet`
+the declared harness. Claude entries use the `fable`, `opus`, and `haiku`
 aliases, so they follow the current release; Codex entries use the explicit IDs
 its model policy requires. `recommendation.lead` suggests a lead and effort
 (`keep`, `change_effort`, `switch_suggested`, `unavailable`, `pinned`), and
@@ -257,7 +257,7 @@ under `jev.simulated_outcome`. The gate fixture is deterministically
 
 The route fixtures behave the same way: each proposes no plan. The mock profiles
 a mechanical, high-stakes task. Against the first state the hypothetical
-`jev.simulated_plan` keeps the Opus lead at `medium` and proposes a Sonnet fast
+`jev.simulated_plan` keeps the Opus lead at `medium` and proposes a Haiku fast
 worker and an Astra cross-check. The second state declares no Codex peer, so the
 same profile returns the cross-check as `unavailable` rather than substituting
 another executor.

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # sol-advisor.sh — legacy entrypoint for a separate Astra advisory session.
-# Defaults: gpt-6-astra, xhigh, read-only, ephemeral. Model and effort are overridable.
+# Defaults: gpt-6-astra, high, read-only, ephemeral. Model and effort are overridable.
 # Supply a self-contained brief; the child has no automatic parent conversation.
 # Parent sandbox and network permissions still apply to nested calls.
 # Requires Python 3 to enforce the timeout on macOS and Linux.
@@ -38,7 +38,7 @@ MODEL="gpt-6-astra"
 WORKDIR="$PWD"
 PROMPT_FILE=""
 OUT=""
-EFFORT="xhigh"
+EFFORT="high"
 TIMEOUT_SECONDS=900
 
 usage() {

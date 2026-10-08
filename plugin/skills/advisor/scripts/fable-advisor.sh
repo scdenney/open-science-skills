@@ -2,9 +2,9 @@
 # fable-advisor.sh — consult Fable as an independent second reviewer.
 #
 # Read-only advisory consult, not implementation. Spawns a fresh, isolated
-# `claude` session (--permission-mode plan: no edits) at `max` reasoning
-# effort — a fixed policy, not the caller's level: the point of the consult
-# is a stronger reviewer, and a cheap consult wastes the reason for asking.
+# `claude` session (--permission-mode plan: no edits). The caller chooses
+# Fable's effort per consult by the difficulty and stakes of the question
+# (high / xhigh / max; see SKILL.md); it is never inherited from the caller.
 # This is the fallback for when the native advisor() tool is unavailable;
 # unlike that tool, this spawns an ISOLATED session with no automatic
 # access to the calling conversation, so the caller must compose a
@@ -19,8 +19,9 @@
 #   --out FILE          where Fable's advice is written
 #   -C DIR              working dir Fable sees (default: $PWD)
 #   --model ID          model alias or full name (default: fable)
-#   --effort LEVEL      low|medium|high|xhigh|max (default: max — override
-#                        only to deliberately buy a cheaper consult)
+#   --effort LEVEL      low|medium|high|xhigh|max (default: high, Anthropic's
+#                        starting point for Fable; pass xhigh or max for
+#                        harder or higher-stakes questions)
 #   --timeout SEC        hard kill after SEC seconds (default: 900)
 set -euo pipefail
 
@@ -28,7 +29,7 @@ MODEL="fable"
 WORKDIR="$PWD"
 PROMPT_FILE=""
 OUT=""
-EFFORT="max"
+EFFORT="high"
 TIMEOUT_SECONDS=900
 
 usage() {

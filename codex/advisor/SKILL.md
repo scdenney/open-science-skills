@@ -1,23 +1,27 @@
 ---
 name: advisor
-description: Consult an independent, read-only GPT-6 Astra advisor before committing to a substantive interpretation, approach, or final result. Not for routine work, implementation, or file edits. Defaults to gpt-6-astra at xhigh for demanding reviews.
+description: Consult an independent, read-only GPT-6 Astra advisor before committing to a substantive interpretation, approach, or final result. Not for routine work, implementation, or file edits. Uses gpt-6-astra at an effort matched to the question.
 ---
 
 # Advisor (GPT-6 Astra)
 
 This is the Codex-native advisor maintained in this library. It is a single-turn, independent, read-only consult — not delegated implementation and not a substitute for the lead's judgment.
 
-<p align="center"><img src="assets/architecture.svg" alt="Codex advisor: the solver (any Codex lead) sends a self-contained briefing to an Astra xhigh advisor; the advisor returns one decisive read-only review" width="900"></p>
+<p align="center"><img src="assets/architecture.svg" alt="Codex advisor: the solver (any Codex lead) sends a self-contained briefing to an Astra advisor at an effort chosen for the question; the advisor returns one decisive read-only review" width="900"></p>
 
 Use a new output path or directory for each run; preserve earlier results and existing user edits.
 
-## Default
+## Choose the effort
 
-| Advisor | Effort | Use when |
-|---|---|---|
-| `gpt-6-astra` | `xhigh` (Extra high) | A substantive interpretation, approach, draft, analysis, or completion check needs an independent review. |
+The advisor is `gpt-6-astra`. Pick its effort per consult from the difficulty and stakes of the question, and tell the user the level and reason in one line:
 
-Use Astra at `xhigh` for demanding consults. For a routine question, lower the effort or explicitly choose Terra when the review remains adequate. Reserve `max` for a demonstrated need; Astra does not support `none`. A fresh Astra session is a separate review context, not an independent model family when the caller also uses Astra.
+| Effort | Use for |
+|---|---|
+| `high` (default) | a completion check, a bounded question with a checkable answer, a sanity read before writing |
+| `xhigh` | an interpretation or design decision, stuck or non-converging work, a change of approach |
+| `max` | rare: high-stakes and hard to verify, where a stronger read is worth the latency |
+
+OpenAI advises `xhigh` only where it clearly pays for its latency and cost, so `high` is the default. Astra does not support `none`. A fresh Astra session is a separate review context, not an independent model family when the caller also runs Astra.
 
 Luna is not an advisor tier. It is appropriate only for tightly specified mechanical work with objective acceptance checks, not for judgment or synthesis.
 
@@ -38,10 +42,10 @@ Do not consult for simple orientation or routine, cheaply verifiable work. On lo
 
 1. Write a self-contained briefing: task, key evidence and paths, current approach or claim, alternatives considered, exact question, and any irreversible or high-impact consequences. The advisor has no access to the original conversation.
 2. Make any deliverable durable before a completion review.
-3. Run the Astra/xhigh default:
+3. Run the consult at the effort you chose:
 
    ```bash
-   scripts/sol-advisor.sh --prompt-file <briefing-path> --out <output-path> -C "$PWD" --model gpt-6-astra --effort xhigh
+   scripts/sol-advisor.sh --prompt-file <briefing-path> --out <output-path> -C "$PWD" --effort <high|xhigh|max>
    ```
 
 4. Read the output, verify factual claims where possible, and record why you follow or decline any material recommendation.

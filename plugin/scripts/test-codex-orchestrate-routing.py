@@ -35,7 +35,7 @@ class CodexOrchestrateRoutingTests(unittest.TestCase):
 
     def test_normal_workflow_selects_topology_without_forcing_worktrees(self):
         self.assertIn("## Choose the execution topology", self.text)
-        for option in ("native `spawn_agent` workers", "one-shot CLI call", "`$spawn`", "Keep work in the lead"):
+        for option in ("native `spawn_agent` workers", "one-shot CLI call", "Keep work in the lead"):
             with self.subTest(option=option):
                 self.assertIn(option, self.text)
         self.assertIn("A different model alone does not require a worktree", self.text)

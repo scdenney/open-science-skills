@@ -13,8 +13,8 @@
 #   -C DIR          working dir Claude sees (default: $PWD)
 #   --timeout SEC   hard kill after SEC seconds (default: 600)
 #   --model ID      default: fable; select a different Claude model explicitly
-#   --effort LEVEL  reasoning effort, passed as CLAUDE_EFFORT=LEVEL in the child's
-#                   environment (default: high)
+#   --effort LEVEL  reasoning effort, passed to claude as --effort LEVEL
+#                   (default: high)
 #   --out FILE      also tee Claude's stdout+stderr here (for background reads)
 #   --prompt TEXT   prompt as a single argument
 #   --prompt-file P read prompt from file P
@@ -48,16 +48,17 @@ command -v claude >/dev/null 2>&1 || die "claude CLI not found on PATH"
 run() {
   cd "$DIR"
   local cmd=(claude -p "$PROMPT" --model "$MODEL" --output-format text)
+  if [ -n "$EFFORT" ]; then cmd+=(--effort "$EFFORT"); fi
   # `timeout` is not preinstalled on macOS (only via GNU coreutils) — guard
   # rather than assume, matching codex-peer.sh's own fix for the identical
   # problem (confirmed missing on this machine 2026-07-18: neither `timeout`
   # nor `gtimeout` is on PATH).
   if command -v timeout >/dev/null 2>&1; then
-    CLAUDE_EFFORT="$EFFORT" timeout "${TIMEOUT}s" "${cmd[@]}" < /dev/null
+    timeout "${TIMEOUT}s" "${cmd[@]}" < /dev/null
   elif command -v gtimeout >/dev/null 2>&1; then
-    CLAUDE_EFFORT="$EFFORT" gtimeout "${TIMEOUT}s" "${cmd[@]}" < /dev/null
+    gtimeout "${TIMEOUT}s" "${cmd[@]}" < /dev/null
   else
-    CLAUDE_EFFORT="$EFFORT" "${cmd[@]}" < /dev/null
+    "${cmd[@]}" < /dev/null
   fi
 }
 

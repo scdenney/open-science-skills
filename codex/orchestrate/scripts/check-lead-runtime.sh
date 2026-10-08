@@ -3,7 +3,7 @@
 set -euo pipefail
 
 ASTRA_MODEL="gpt-6-astra"
-SOL_MODEL="gpt-5.6-sol"
+SOL_MODEL="gpt-6.1-sol"
 CODEX_STATE_ROOT="${CODEX_HOME:-$HOME/.codex}"
 THREAD_ID="${CODEX_THREAD_ID:-}"
 

@@ -1,11 +1,11 @@
 ---
 name: orchestrate
-description: Orchestrate complex work from an active gpt-6-astra or gpt-5.6-sol Codex session. The detected lead owns decomposition, integration, and verification; Astra keeps the hardest reasoning in the lead, while Sol escalates unusually difficult units to Astra. Both route bounded work to cheaper GPT-5.6 tiers and can use a cross-vendor Claude peer. Not for routine single-context work. Use when the user explicitly asks to orchestrate, delegate, fan out, parallelize, assign subagents, obtain independent checks, or have Codex act as tech lead.
+description: Orchestrate complex work from an active gpt-6-astra or gpt-6.1-sol Codex session. The detected lead owns decomposition, integration, and verification; Astra keeps the hardest reasoning in the lead, while Sol escalates unusually difficult units to Astra. Both route bounded work to Sol at medium effort, mechanical work to Luna, and can use a cross-vendor Claude peer. Not for routine single-context work. Use when the user explicitly asks to orchestrate, delegate, fan out, parallelize, assign subagents, obtain independent checks, or have Codex act as tech lead.
 ---
 
 # Orchestrate
 
-<p align="center"><img src="assets/architecture.svg" alt="orchestrate (Codex): an active GPT-6 Astra or GPT-5.6 Sol session leads; Astra keeps the hardest reasoning in the lead, Sol escalates unusually difficult units to Astra, and both route bounded work to lower tiers and can reach a Fable cross-vendor peer" width="900"></p>
+<p align="center"><img src="assets/architecture.svg" alt="orchestrate (Codex): an active GPT-6 Astra or GPT-6.1 Sol session leads; Astra keeps the hardest reasoning in the lead, Sol escalates unusually difficult units to Astra, and both route bounded work to lower tiers and can reach a Fable cross-vendor peer" width="900"></p>
 
 ## Preflight the lead runtime first
 
@@ -15,7 +15,7 @@ Before reading the task brief, inspecting the workspace, planning, or delegating
 "$SKILL_DIR/scripts/check-lead-runtime.sh"
 ```
 
-This verifies the current thread through `CODEX_THREAD_ID`, its latest `turn_context`, and any recorded reroute. Proceed when it reports `gpt-6-astra` or `gpt-5.6-sol` and the actual effort. Preserve the user's selected effort; `xhigh` is not required. Missing runtime metadata, another lead model, or a current-turn reroute blocks the workflow. Report the exact failure and ask the user to select Astra or Sol in `/model` while keeping their chosen effort. Do not infer the current runtime from configuration defaults, the newest session file, or model self-identification.
+This verifies the current thread through `CODEX_THREAD_ID`, its latest `turn_context`, and any recorded reroute. Proceed when it reports `gpt-6-astra` or `gpt-6.1-sol` and the actual effort. Preserve the user's selected effort; `xhigh` is not required. Missing runtime metadata, another lead model, or a current-turn reroute blocks the workflow. Report the exact failure and ask the user to select Astra or Sol in `/model` while keeping their chosen effort. Do not infer the current runtime from configuration defaults, the newest session file, or model self-identification.
 
 Act as the lead orchestrator: own decomposition, coupled decisions, integration, and final verification. Use the mode reported by the gate:
 
@@ -26,9 +26,9 @@ The mode is detected, not claimed. Plain `$orchestrate` works from either suppor
 
 ## Optional Jev routing (`--route`)
 
-`$orchestrate --route <task>` asks Jev for an experimental pre-work plan: which lead and effort, and which workstreams go to Terra workers, Sol reasoners, a `$spawn` peer, or a Claude cross-check. Jev is the default and only supported provider (`--route jev <task>` is equivalent). `--effort auto` is implicit for routing; a user-specified effort or model pins the lead and takes precedence. Parse `--route`, `--verify`, optional provider names, `--model`, and `--effort` from the invocation prefix before the task, so `$orchestrate --route --verify <task>` enables both against the same task. Without `--route`, follow this skill's normal routing rules and make no Jev route call.
+`$orchestrate --route <task>` asks Jev for an experimental pre-work plan: which lead and effort, and which workstreams go to Luna or Sol workers, Astra reasoners, or a Claude cross-check. Jev is the default and only supported provider (`--route jev <task>` is equivalent). `--effort auto` is implicit for routing; a user-specified effort or model pins the lead and takes precedence. Parse `--route`, `--verify`, optional provider names, `--model`, and `--effort` from the invocation prefix before the task, so `$orchestrate --route --verify <task>` enables both against the same task. Without `--route`, follow this skill's normal routing rules and make no Jev route call.
 
-After the lead-runtime preflight, when routing is requested, read `${JEV_VERIFIER_HOME:-$HOME/.local/share/oss-experiments/jev-verifier/current}/ROUTE.md` and follow its availability, disclosure, and checkpoint instructions, with `harness: codex`. Use advisory mode for this explicit route request. One request sends only the task's objective, acceptance criteria, and scope constraints; Jev answers six questions about the task, and the runtime maps them to executors locally, so no model name is sent. Report the lead exactly as the preflight verified it, and mark an executor available only where this session can launch it with the requested permissions — inspect the live `spawn_agent` schema and the availability of any CLI or Herdr path. Record your own plan first, then show the proposed plan beside it and let the user change it before dispatch. Apply `proposed` items; decide `review` items yourself; never launch an `unavailable` item under another executor. For `NOT_CHECKED`, run your own plan and say Jev did not shape it. The recommendation never changes the current lead's model or effort; a different lead requires a new session. Jev routing is an uncalibrated experiment, not proof the plan is optimal.
+After the lead-runtime preflight, when routing is requested, read `${JEV_VERIFIER_HOME:-$HOME/.local/share/oss-experiments/jev-verifier/current}/ROUTE.md` and follow its availability, disclosure, and checkpoint instructions, with `harness: codex`. Use advisory mode for this explicit route request. One request sends only the task's objective, acceptance criteria, and scope constraints; Jev answers six questions about the task, and the runtime maps them to executors locally, so no model name is sent. Report the lead exactly as the preflight verified it, and mark an executor available only where this session can launch it with the requested permissions — inspect the live `spawn_agent` schema and the availability of any CLI path. Record your own plan first, then show the proposed plan beside it and let the user change it before dispatch. Apply `proposed` items; decide `review` items yourself; never launch an `unavailable` item under another executor. For `NOT_CHECKED`, run your own plan and say Jev did not shape it. The recommendation never changes the current lead's model or effort; a different lead requires a new session. Jev routing is an uncalibrated experiment, not proof the plan is optimal.
 
 ## Optional Jev verification (`--verify`)
 
@@ -42,17 +42,17 @@ Inspect the actual `spawn_agent` schema and session permissions before selecting
 
 | Role | Default | Use |
 |---|---|---|
-| Lead | active `gpt-6-astra` or `gpt-5.6-sol`, current session effort | Decomposition, coordination, integration, and final review. |
+| Lead | active `gpt-6-astra` or `gpt-6.1-sol`, current session effort | Decomposition, coordination, integration, and final review. |
 | Premier worker | `gpt-6-astra`, `high` or `xhigh` | Compact hard reasoning under a Sol lead, or an unusually difficult independent unit under either lead. |
-| Demanding worker | `gpt-5.6-sol`, `high` | Separable difficult reasoning, implementation, and review under an Astra lead; parallel width under a Sol lead. |
-| Bounded worker | `gpt-5.6-terra`, `medium` | Independently checkable research, diagnosis, implementation, or verification; raise effort for a difficult unit. |
-| Mechanical worker | `gpt-5.6-luna`, `low` | Fully specified tasks with objective checks. |
+| Demanding worker | `gpt-6.1-sol`, `high` | Separable difficult reasoning, implementation, and review under an Astra lead; parallel width under a Sol lead. |
+| Bounded worker | `gpt-6.1-sol`, `medium` | Independently checkable research, diagnosis, implementation, or verification; raise to `high` for a difficult unit. |
+| Mechanical worker | `gpt-6-luna`, `high` | Fully specified, high-volume tasks with objective checks: extraction, classification, structured summaries. OpenAI's starting effort for Luna is `high`. |
 | Cross-vendor peer | `scripts/claude-peer.sh` | A separate Claude review for difficult, consequential judgments. Different vendors can still share errors. |
 
-Prefer a native worker when it supports the required model and interaction. Use a self-contained brief with `fork_turns="none"`: choose Astra/high or xhigh for a premier worker, Sol/high for demanding or wide work, and Terra/medium or Luna/low for simpler work. Full-history forks inherit the lead in runtimes that prohibit overrides; do not use them for model routing. Keep routine work local when briefing and integration cost more than execution. Otherwise, a bounded read-only CLI call can use:
+Prefer a native worker when it supports the required model and interaction. Use a self-contained brief with `fork_turns="none"`: choose Astra/high or xhigh for a premier worker, Sol/high for demanding or wide work, Sol/medium for bounded work, and Luna/high for mechanical work. Full-history forks inherit the lead in runtimes that prohibit overrides; do not use them for model routing. Keep routine work local when briefing and integration cost more than execution. Otherwise, a bounded read-only CLI call can use:
 
 ```bash
-codex exec --model gpt-5.6-terra -c model_reasoning_effort=medium \
+codex exec --model gpt-6.1-sol -c model_reasoning_effort=medium \
   --sandbox read-only --skip-git-repo-check "<self-contained brief>" < /dev/null
 ```
 
@@ -76,8 +76,8 @@ For each workstream, choose both its owner/model/effort and the execution form b
 
 - Keep work in the lead when it is tightly coupled, trivial, or cheaper to complete directly.
 - Use native `spawn_agent` workers for bounded work that benefits from model/effort overrides or parallelism and can safely share the current checkout. Inspect the live tool schema and permissions; only request controls the runtime actually exposes.
-- Use a one-shot CLI call for a brief, self-contained task that needs another model but no follow-up, persistent context, or editable worktree.
-- Use `$spawn` for a full peer session when it must survive this session, remain user-steerable in a pane, run for a while, or needs isolated worktree writes. A different model alone does not require a worktree if a native worker or one-shot supports it.
+- Use a one-shot CLI call for a brief, self-contained task that needs another model but no follow-up, persistent context, or editable worktree. A different model alone does not require a worktree if a native worker or one-shot supports it.
+- Work that must outlive this session needs its own session, which this skill does not launch; tell the user rather than pretending a worker will survive.
 
 Never create nested agent cascades solely because a router named more models. Add delegation depth only when the work decomposes into independently contractable units and the coordination cost is justified. If a requested model/effort cannot be applied, do not relabel an inherited-default worker as a routed choice.
 
@@ -91,11 +91,10 @@ Apply the first matching row using the detected lead mode. Use native model over
 | 2 | trivial, single-step work where briefing costs more than execution | lead |
 | 3 | high blast radius **and** hard to verify | two blind lines: Claude plus Sol under an Astra lead; Claude plus Astra under a Sol lead; then the lead adjudicates the evidence (see the high-stakes path) |
 | 4 | compact hard reasoning — one architecture call, gnarly debug, or hard trade-off | Astra lead: keep it; Sol lead: send a self-contained premier-worker brief to Astra, then integrate and verify |
-| 5 | bounded research, inventory, or diagnosis with no overlapping writes | Terra worker; Sol for a difficult unit |
-| 5a | difficult reasoning that separates into independent units | Astra lead: Sol/high workers; Sol lead: Sol/high workers for width and Astra for the hardest unit; Terra for ordinary units |
-| 5b | a full peer session is the point — the work must **survive this session**, run long beside it, stay **user-steerable in its own pane**, or needs **its own worktree** | **`$spawn`** — a full peer session (Codex or Claude) in its own worktree pane; the sandbox gate applies (see the spawn subsection and Variant notes) |
-| 6 | fully specified implementation with objective acceptance checks | Terra worker; Luna only if the work is purely mechanical and carries no material judgment |
-| 7 | verification, tests, review, or adversarial challenge of an existing artifact | Terra for routine verification; Sol for demanding or adversarial review |
+| 5 | bounded research, inventory, or diagnosis with no overlapping writes | Sol/medium worker; Sol/high for a difficult unit |
+| 5a | difficult reasoning that separates into independent units | Astra lead: Sol/high workers; Sol lead: Sol/high workers for width and Astra for the hardest unit; Sol/medium for ordinary units |
+| 6 | fully specified implementation with objective acceptance checks | Sol/medium worker; Luna only if the work is purely mechanical and carries no material judgment |
+| 7 | verification, tests, review, or adversarial challenge of an existing artifact | Sol/medium for routine verification; Sol/high for demanding or adversarial review |
 | 8 | ambiguous or tightly coupled work that cannot be cleanly contracted | lead until separable |
 
 High blast radius includes security/authentication, destructive data operations, public API compatibility, concurrency, cryptography, production incidents, privacy, and externally visible irreversible changes. "Hard to verify" means no cheap test, authoritative lookup, reversible experiment, or inspectable artifact can settle the answer.
@@ -128,10 +127,6 @@ Respect the concurrency limit reported by the current runtime; batch additional 
 
 Use `wait_agent` to block on a spawned agent's result, `send_message` to pass it a message without triggering a new turn, `followup_task` to give an existing agent a new task and wake it if idle, `list_agents` to check what's active, and `interrupt_agent` to reclaim a stalled one.
 
-## Spawn a full peer session (cross-session delegation)
-
-When row 5b fires, delegate to a **full peer session**, not a `spawn_agent` child. `$spawn` creates a git worktree on `spawn/<slug>`, starts a peer (Codex or Claude) in a new herdr pane, and kicks it off against a `.spawn/brief.md` written with the same delegation contract below. The herdr socket sits outside the workspace, so under `workspace-write` the connect fails (verified 2026-08-06, `PermissionDenied`); an explicitly authorized `danger-full-access` session connects. Otherwise the lead prints the exact command sequence for the user to run. The peer commits to its branch and stops, and the lead reviews and merges — the worktree dissolves the write-collision problem, not the merge-discipline one.
-
 ## Write a delegation contract
 
 Every subagent brief (the `message` passed to `spawn_agent`) must specify:
@@ -155,7 +150,7 @@ Give each worker the minimum task-local context required. Do not leak another wo
 - Assign disjoint files or directories to concurrent implementers; never let two agents edit the same file concurrently.
 - Use read-only agents for overlapping analysis or review.
 - State that the shared workspace may change while an agent runs; require rereading before edits.
-- Out-of-band Terra one-shots that run `--sandbox workspace-write` edit the shared tree too; give them disjoint paths like any implementer, and never overlap a one-shot's write scope with a live spawn's.
+- Out-of-band CLI one-shots that run `--sandbox workspace-write` edit the shared tree too; give them disjoint paths like any implementer.
 - Preserve user changes and unrelated worktree modifications.
 - Keep commits, pushes, deployments, destructive operations, and external messages under the same authorization rules as the lead.
 
@@ -166,7 +161,7 @@ The lead owns shared configuration, interfaces between workstreams, and final in
 1. Inspect authoritative workspace state.
 2. Decompose work and identify dependencies.
 3. Publish the route and acceptance checks.
-4. Start all ready, independent workstreams concurrently using the detected mode — Astra when a Sol lead needs a premier reasoning shot, plus Sol/high, Terra/medium, or Luna/low workers as the task warrants — and a backgrounded `claude-peer.sh` call for any high-stakes line needing a cross-vendor check. Use CLI one-shots only when native routing is unavailable.
+4. Start all ready, independent workstreams concurrently using the detected mode — Astra when a Sol lead needs a premier reasoning shot, plus Sol/high, Sol/medium, or Luna/high workers as the task warrants — and a backgrounded `claude-peer.sh` call for any high-stakes line needing a cross-vendor check. Use CLI one-shots only when native routing is unavailable.
 5. Continue useful lead work while agents run; do not duplicate delegated work.
 6. Use `wait_agent` to consume each agent's final response and inspect its artifact directly.
 7. Send a focused `followup_task` to the same agent when its artifact is incomplete, rather than spawning a fresh one that repeats the briefing cost.

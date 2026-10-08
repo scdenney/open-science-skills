@@ -35,9 +35,9 @@ Each answer reads **yes** at or above `pass_min`, **no** at or below `fail_max`,
 
 ## How the plan is built
 
-The mapping is local arithmetic over a fixed executor table in `verify.py` (`ROUTE_EXECUTOR_MAP`). Claude entries are CLI aliases (`fable`, `opus`, `sonnet`), so they follow the current release; Codex entries are the explicit IDs its model policy requires.
+The mapping is local arithmetic over a fixed executor table in `verify.py` (`ROUTE_EXECUTOR_MAP`). Claude entries are CLI aliases (`fable`, `opus`, `haiku`), so they follow the current release; Codex entries are the explicit IDs its model policy requires.
 
-- **Lead.** `task_needs_deep_judgment` yes → the premier lead at its ceiling (Fable/`max`, or Astra/`xhigh` under Codex). Unclear → the current lead at `high`. No → the current lead at `medium`. The recommendation cannot change the running session: `switch_suggested` and `change_effort` are suggestions for the user, who changes the model with `/model` (or a new session) and the effort with `/effort`.
+- **Lead.** `task_needs_deep_judgment` yes → the premier lead at its ceiling (Fable/`xhigh`, or Astra/`xhigh` under Codex). Unclear → the current lead at `high`. No → the current lead at `medium`. The recommendation cannot change the running session: `switch_suggested` and `change_effort` are suggestions for the user, who changes the model with `/model` (or a new session) and the effort with `/effort`.
 - **Mechanical** yes → the fast worker carries out the specified work.
 - **Parallelizable** yes → fan out through `Workflow` when available, otherwise through deep reasoners (hard units) or fast workers (easy units).
 - **Context-heavy** yes → a subagent reads in its own context and reports back.

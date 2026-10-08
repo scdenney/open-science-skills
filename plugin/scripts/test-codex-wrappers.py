@@ -64,10 +64,11 @@ class Wrappers(unittest.TestCase):
     def test_defaults_overrides_and_literal_prompt(self):
         for wrapper in WRAPPERS:
             # codex-peer.sh derives its default effort from --mode (consult -> high,
-            # cross-check/implement -> xhigh); the member/advisor wrappers default to xhigh.
-            default_effort = 'high' if 'codex-peer' in wrapper else 'xhigh'
+            # cross-check/implement -> xhigh); the advisor defaults to high and the
+            # committee members to xhigh.
+            default_effort = 'high' if ('codex-peer' in wrapper or 'advisor' in wrapper) else 'xhigh'
             cases = [([], 'gpt-6-astra', default_effort),
-                     (['--model', 'gpt-5.6-terra', '--effort', 'medium'], 'gpt-5.6-terra', 'medium'),
+                     (['--model', 'gpt-6.1-sol', '--effort', 'medium'], 'gpt-6.1-sol', 'medium'),
                      (['--model', 'gpt-6-astra', '--effort', 'max'], 'gpt-6-astra', 'max')]
             if 'codex-peer' in wrapper:
                 cases.append((['--mode', 'cross-check'], 'gpt-6-astra', 'xhigh'))
@@ -129,16 +130,16 @@ class Wrappers(unittest.TestCase):
         env = dict(self.env, CODEX_HOME=str(self.work), CODEX_THREAD_ID='test-thread')
         for model, effort, reroute, success in [
             ('gpt-6-astra', 'xhigh', False, True),
-            ('gpt-5.6-sol', 'xhigh', False, True),
-            ('gpt-5.6-sol', 'medium', False, True),
+            ('gpt-6.1-sol', 'xhigh', False, True),
+            ('gpt-6.1-sol', 'medium', False, True),
             ('gpt-6-astra', 'low', False, True),
             ('gpt-6-astra', 'medium', False, True),
             ('gpt-6-astra', 'high', False, True),
             ('gpt-6-astra', 'max', False, True),
-            ('gpt-5.6-terra', 'medium', False, False),
+            ('gpt-6-luna', 'medium', False, False),
             ('gpt-6-astra', None, False, False),
             ('gpt-6-astra', 'xhigh', True, False),
-            ('gpt-5.6-sol', 'medium', True, False),
+            ('gpt-6.1-sol', 'medium', True, False),
         ]:
             with self.subTest(model=model, effort=effort, reroute=reroute):
                 events = [{'type': 'turn_context', 'payload': {'model': model, 'effort': effort}}]

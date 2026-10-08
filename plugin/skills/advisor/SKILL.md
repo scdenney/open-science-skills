@@ -1,56 +1,58 @@
 ---
 disable-model-invocation: true
 name: advisor
-description: Consult Fable as an independent reviewer at maximum reasoning effort. The calling session is the main model, Opus or Sonnet, and Fable is the advisor. Use before committing to an interpretation or substantial writing or analysis, when stuck with recurring errors or a non-converging approach, when changing approach, or when a task seems complete and needs a final check. Fallback when the native advisor tool is unavailable. Read-only advisory work that does not edit files.
+description: Consults Fable as an independent, read-only reviewer at an effort the caller matches to the question. The calling session (usually Opus, or Haiku) holds the task and escalates one decision point. Use before committing to an interpretation or a substantial piece of writing or analysis, when stuck or not converging, when changing approach, or as a final check on a finished task. Fallback for when the native advisor tool is unavailable. Not for a session already running Fable.
 allowed-tools:
 - Read
 - Write
 - Bash
 ---
 
-# advisor — an independent second reviewer
+# advisor — escalate a decision point to Fable
 
-`fable-advisor.sh` spawns an isolated Fable session that reviews one decision point and returns. This is the fallback for when the native `advisor()` tool reports itself unavailable mid-session ("The advisor tool is unavailable. Do not try to use it again.").
+`fable-advisor.sh` starts an isolated Fable session that reviews one decision point and returns. If the session has the native advisor tool (`/advisor fable`), use that; this skill is the fallback for when it is off or reports itself unavailable.
 
-<p align="center"><img src="assets/architecture.svg" alt="advisor: the main model (Opus or Sonnet) composes one self-contained briefing, sends it to an isolated Fable advisor running at max reasoning effort, and receives one decisive read-only review in return" width="900"></p>
+<p align="center"><img src="assets/architecture.svg" alt="advisor: the main model (Opus, or Haiku) composes one self-contained briefing, sends it to an isolated Fable advisor running at an effort chosen for the question, and receives one decisive read-only review in return" width="900"></p>
 
 ## The two seats
 
 | Seat | Model | Role |
 |---|---|---|
-| Main | **Opus**, or Sonnet for cheaper sustained work | Holds the task, the context, and the decision. Does the work. |
-| Advisor | **Fable**, always | Reads one briefing, returns one review. Never edits files. |
+| Main | **Opus**, or Haiku for cheap sustained work | Holds the task, the context, and the decision. Does the work. |
+| Advisor | **Fable** | Reads one briefing, returns one review. Never edits files. |
 
-The asymmetry is the design, and it is an **escalation**, not a peer review: a working model that holds the task reaches up to the premier model only when a decision point is worth it. The advisor seat is pinned to Fable and the script guards it — no silent fallback to another model family, since a same-family fallback would defeat the point of asking. The main seat is whichever *working* model the session is already running.
+This is an escalation, not a peer review: a working model reaches up to the premier model when a decision point is worth it. The script pins the advisor to Fable and never falls back to another family, since a same-family fallback defeats the point. Inside `orchestrate`, an Opus lead is the main seat and the consult is one bounded call, not a delegation.
 
-**If the session is verifiably running Fable, do not run this skill.** There is no higher Claude model to escalate to, and a second, isolated Fable is the same family answering the same question — that is not a check. A Fable lead that wants an independent read goes cross-vendor instead: `orchestrate`'s Codex peer (GPT-6 Astra, `codex-peer.sh --mode cross-check`) or, for a full deliberation, `/model-committee`. Say so and stop rather than spawning the second Fable. Read the model line Claude Code injects into the session context ("You are powered by the model named …") to decide; do not infer it from the launch command. Nothing carries over from the caller except the working directory (`-C`) — not the conversation, and not the effort level. The consult also runs `--safe-mode`, which starts the advisor with **user and project customizations disabled**: no `CLAUDE.md`, no skills, no plugins, no user/project hooks, no MCP servers, no custom commands or agents. (Org-managed policy settings, where present, still apply — safe mode does not override managed configuration.) It sees the files in that directory and nothing else — not a normal session scoped to the directory, which would load `CLAUDE.md`.
+**A session running Fable does not use this skill.** A second, isolated Fable is the same model answering the same question. A Fable session that wants an independent read goes cross-vendor: `orchestrate`'s Codex peer (`codex-peer.sh --mode cross-check`) or `/model-committee`. Decide from the model line Claude Code injects into the session ("You are powered by the model named …"), say so, and stop.
 
-When this skill is called from inside an orchestration (`orchestrate`), the orchestrating lead is the main seat and Fable's consult is one bounded advisory call — not a delegation.
+## Choose Fable's effort
 
-## Compose the briefing yourself
+The caller picks the effort for each consult and tells the user the level and the reason in one line ("advisor at xhigh: choosing between two identification strategies"). It is never inherited from the session.
 
-The native tool forwards your whole transcript automatically. This script cannot: it starts a brand-new `claude` process with no memory of this conversation. Everything the advisor needs has to be in the briefing — the task, what you have done, the current approach or the specific claim, and the precise question. File paths and line numbers, the actual claim, not "does this look right?"
+| Effort | Use for |
+|---|---|
+| `high` (default) | a completion check; a bounded question whose answer you can check; a sanity read before writing |
+| `xhigh` | an interpretation or design decision; stuck or non-converging work; a proposed change of approach |
+| `max` | high-stakes and hard to verify: an identification strategy, a publication-facing claim, an irreversible choice |
 
-- **Inline the standards the advice depends on.** Because of `--safe-mode` the advisor never reads the repository's `CLAUDE.md` or any installed skill, so a project convention, a methodological requirement, or a house style the answer turns on has to be quoted into the briefing. Asking "does this meet our reporting standard?" without stating the standard gets you a generic answer that looks confident.
+Anthropic recommends starting Fable 5.1 at `high` and stepping up to `xhigh` or `max` for the most capability-sensitive work; that is the basis for this ladder. A cheap session can still buy a `max` consult when the question warrants it.
 
-That is the only real difference from the native tool. Independent judgment, read-only scope, and the timing of the call are all meant to match.
+## Compose the briefing
+
+The script starts a new `claude` process with no memory of this conversation, so the briefing carries everything: the task, what has been done, the current approach or the exact claim, and the precise question, with file paths and line numbers.
+
+The consult runs with `--safe-mode`: no `CLAUDE.md`, skills, plugins, hooks, MCP servers, custom commands, or agents load (org-managed policy still applies). It sees the files in the `-C` directory and nothing else. Quote any project convention, methodological requirement, or house style the answer depends on into the briefing; asking "does this meet our reporting standard?" without stating the standard gets a confident generic answer.
 
 ## When to consult
 
-- **Before substantive work** — before writing, before committing to an interpretation, before building on an assumption. Orientation (finding files, reading a source) does not count; writing, editing, and declaring an answer do.
-- **When you believe a task is complete.** Make the deliverable durable first — a consult takes real time, and a written result survives a session that ends mid-consult.
+- **Before substantive work** — before writing, committing to an interpretation, or building on an assumption. Orientation does not count.
+- **When you believe a task is complete.** Make the deliverable durable first; a consult takes real time.
 - **When stuck** — recurring errors, an approach that will not converge, results that do not fit.
 - **When considering a change of approach.**
 
-On work longer than a few steps, consult once before the approach crystallizes and once before declaring done. On short reactive tasks, one consult or none.
+On work longer than a few steps, consult once before the approach sets and once before declaring done. On short tasks, once or not at all.
 
-Weigh the advice as evidence, not authority: primary-source evidence and empirical failure outrank it. But if your evidence points one way and Fable points another, one more consult stating the conflict plainly ("I found X, you suggest Y, which constraint breaks the tie?") is cheaper than committing to the wrong branch.
-
-## Effort
-
-Fable always runs at `max`. This is an owned policy, not an inherited setting: the consult exists to get a stronger read than the main seat can produce on its own, and a cheap consult under a hard question wastes the reason for asking. A `low`-effort session still gets a `max`-effort advisor.
-
-The script pins it, so there is nothing to pass. `--effort <level>` overrides it only if you deliberately want a cheaper consult on something routine.
+Weigh the advice as evidence, not authority: primary sources and empirical failure outrank it. If your evidence and Fable's advice conflict, one more consult stating the conflict plainly ("I found X, you suggest Y — which constraint breaks the tie?") is cheaper than committing to the wrong branch.
 
 ## Run a consult
 
@@ -59,16 +61,16 @@ OSS_ROOT=$(ls -d ~/.claude/plugins/cache/open-science-skills/oss/*/ 2>/dev/null 
 "${OSS_ROOT}skills/advisor/scripts/fable-advisor.sh" \
   --prompt-file <briefing-path> \
   --out <output-path> \
+  --effort <high|xhigh|max> \
   -C "$PWD"
 ```
 
-Use `timeout: 900000` on the Bash call as a backstop; the script has its own internal timeout. Then read the output file and integrate it — if you diverge from it, be able to say why. The Codex plugin's result-handling guidance (stop after presenting review findings, change nothing) applies to code-review handoffs, not here: this is an advisory consult, and acting on the advice in your own work is the point of running it.
+Give the Bash call `timeout: 900000` as a backstop; the script has its own timeout (`--timeout`, default 900 s — raise it for a `max` consult on a large briefing). Read the output and act on it; if you diverge from it, be able to say why. The Codex plugin's "stop after presenting findings" guidance applies to code-review handoffs, not here.
 
 ## Notes
 
-- `fable-advisor.sh --check` verifies the `claude` CLI is on PATH and reports the pinned effort — run it after install, or when a consult behaves unexpectedly. the resolved plugin root (`$OSS_ROOT`) resolves to the installed plugin directory at runtime; a hand-installed copy under `~/.claude/skills/` shadows the plugin's own and silently drifts out of date.
-- The spawned session runs `--permission-mode plan` and `--no-session-persistence`: advisory only, not resumable.
-- The script clears `ANTHROPIC_API_KEY`, so the consult bills the subscription plan even if the calling shell exports a live key.
-- Effort enum: `low, medium, high, xhigh, max`, matching `/effort`.
-- Model defaults to the `fable` alias. `--model <id>` pins a specific version. If the alias is ever unavailable, report it and ask — do not substitute another family.
-- Companion skill: `codex/advisor/` — the same pattern for a Codex-native session, with `gpt-6-astra` in the advisor seat at a fixed `xhigh`. Both libraries pin the advisor's effort rather than inheriting the caller's, for the same reason.
+- `fable-advisor.sh --check` confirms the `claude` CLI is on PATH and reports the default effort. A hand-installed copy under `~/.claude/skills/` shadows the plugin's and drifts out of date.
+- The consult runs `--permission-mode plan` and `--no-session-persistence`: advisory only, not resumable.
+- The script clears `ANTHROPIC_API_KEY`, so the consult bills the subscription even if the shell exports a key.
+- The model defaults to the `fable` alias; `--model <id>` pins a version. If the alias is unavailable, report it and ask rather than substituting another family.
+- Companion: `codex/advisor/` is the same pattern for a Codex session, with `gpt-6-astra` in the advisor seat and the same effort ladder.
