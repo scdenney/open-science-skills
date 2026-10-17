@@ -133,3 +133,46 @@ The Data Access and Research Transparency (DA-RT) framework treats reproducibili
 3. **Cleanly composable with the next phase.** The `clean` phase consumes `text`, `uncertain_spans`, and `flags` to route pages to the appropriate correction strategy (rule-based, constrained LLM decoding, or manual review) and records its own provenance in a parallel structure. `$methods-reporting` consumes the `pipeline` record directly into the methods section and replication archive. Without a structured schema, each downstream stage would need to re-parse free-text output and reconstruct provenance by hand, which is both error-prone and a barrier to pre-publication audit.
 
 The schema itself is not a standard — adapt field names and add domain-specific fields as needed — but the principle is: every piece of information a re-runner or auditor would need should be a named field, not a convention buried in a text file.
+
+---
+
+## (d) Book-Page Prompt with a Page-Type Tag and a Box Delimiter (production, 2026)
+
+This prompt pattern transcribed about 36,600 pages of South Korean school textbooks (1950s–2010s) with Qwen3.6-35B-A3B-FP8 in October 2026. The Korean text itself was arrived at in three rounds of a gate (SKILL.md, `evaluate` phase). It returns plain text with one tag line rather than JSON. The client (`scripts/ocr_client.py`) strips the tag into a `page_type` field and stores everything else per page, as in (b).
+
+```
+You are transcribing one page of a {LANGUAGE} {DOCUMENT TYPE}.
+
+Line 1: exactly one tag of the form [PAGE_TYPE: X], where X is one of
+- body: any page with content (running text, sidebars, source boxes, exercises, chapter openers, the preface)
+- toc: table of contents
+- front: cover, title page, author lists, editorial notes
+- back: colophon, index, bibliography, answer keys, back cover
+- blank: no text
+
+Then transcribe all text on the page exactly as printed. The text contains {SCRIPTS, e.g. "Korean (hangul) and classical Chinese characters (hanja)"}. Do not translate, summarize, or correct anything.
+
+This is a historical document, printed between {FIRST YEAR} and {LAST YEAR}. Reproduce the spelling character for character as printed, even where it differs from modern standard {LANGUAGE}: {6-10 REAL EXAMPLES FROM YOUR PAGES OF OLD SPELLINGS, NAMES, NUMERALS}. Never replace a printed spelling with its modern form, never correct what looks like a mistake, and never add characters that are not printed. Ignore letters from the facing page that show at the inner or outer edge of the image.
+
+Order:
+1. The main text column, in reading order. Headings printed in the margin beside a paragraph are headings of the main text: put each on its own line at the start of the paragraph it labels. Other marginal notes go after the BOXES line.
+2. A line containing only === BOXES ===
+3. Each sidebar, marginal note, source box, activity box, and figure or map caption, each as its own paragraph.
+If the page has no boxes or captions, omit the === BOXES === line.
+
+Omit running headers, running footers, and page numbers. For maps, diagrams and figures, transcribe only their title and caption; do not list place names, legend entries or labels. Transcribe tables as markdown tables. Use markdown headings only for headings printed on the page. Output only the transcription, with no commentary.
+```
+
+What each rule is for, and what it did not fix:
+
+| Rule | Why | Residue to clean or report |
+|---|---|---|
+| Page-type tag | Assembly keeps `body` pages only, so tables of contents, colophons and indexes do not enter the corpus text. A blank page without the tag invites invented text: a small model wrote four characters of an unrelated script on a blank Polish page. | Check the tag distribution per book (body share well under 80 % means a misread book). |
+| Main text, then `=== BOXES ===`, then boxes | A sidebar or caption never lands inside a main-text sentence. | Models sometimes emit a second delimiter; strip extras. |
+| Spell as printed, with real examples from the pages | Without it, the model rewrote 1957 loanword spellings in modern form (폴투갈 → 포르투갈, 이태리 → 이탈리아, 세째 → 셋째): 69 modern forms against 27 printed ones on 48 sample pages. With the rule and examples: 42 against 45, and most of the remaining "modern" hits were what the books print. CER against a modern reference text cannot see this error. | A few one-syllable slips per old book remain; state it as a limitation. |
+| Ignore the facing page | Single letters from the facing page bled into the box section. | A post-processing filter for single-letter lines at the page edge, audited so that it spares vertical quotations printed one character per line (SKILL.md, `clean` §2). |
+| Maps: title and caption only | Models list map labels as text and once invented a legend. | Drop box paragraphs that are lists of short labels. |
+| Margin-heading rule | 1970s–80s books set section headings in the margin; without the rule the model filed them as boxes. On one such book's sample pages it cut disagreement with a second reader from 0.18 to 0.04. | — |
+| Omit running heads and page numbers | Removes most of them. | They survived on 8 of 12 reviewed pages when not the first or last line; post-processing must remove recurring heads (see SKILL.md, `clean`). |
+
+Adapting it: name the scripts that occur, including secondary ones (telling a model the script raised its accuracy on Han characters by more than 20 points in GlotOCR Bench, arXiv 2604.12978). Take the spelling examples from your own sample pages, never from another period. Keep the page-type categories stable across prompt versions so the assembly code does not change. Store the prompt's hash with every page record.
