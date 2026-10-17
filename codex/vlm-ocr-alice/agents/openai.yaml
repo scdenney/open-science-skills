@@ -1,0 +1,6 @@
+interface:
+  display_name: "VLM OCR on ALICE"
+  short_description: "Run VLM-OCR jobs on Leiden's ALICE cluster"
+  default_prompt: "Use $vlm-ocr-alice to plan and run this OCR job on ALICE."
+policy:
+  allow_implicit_invocation: false

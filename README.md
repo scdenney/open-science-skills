@@ -8,13 +8,13 @@
 [![OpenAI Codex](https://img.shields.io/badge/OpenAI_Codex-library-111111?logo=openai&logoColor=white)](codex/README.md)
 [![version](https://img.shields.io/badge/version-2.35.1-blue)](https://github.com/scdenney/open-science-skills/releases)
 [![license](https://img.shields.io/badge/license-CC%20BY--NC%204.0-lightgrey)](LICENSE)
-[![Claude skills](https://img.shields.io/badge/Claude_skills-42-D97757?logo=anthropic&logoColor=white)](#skills)
-[![Codex skills](https://img.shields.io/badge/Codex_skills-41-111111?logo=openai&logoColor=white)](#skills)
+[![Claude skills](https://img.shields.io/badge/Claude_skills-43-D97757?logo=anthropic&logoColor=white)](#skills)
+[![Codex skills](https://img.shields.io/badge/Codex_skills-42-111111?logo=openai&logoColor=white)](#skills)
 [![updated](https://img.shields.io/badge/updated-October%202026-green)](https://github.com/scdenney/open-science-skills/commits/main)
 [![sources](https://img.shields.io/badge/sources-150%2B-purple)](SOURCES.md)
 [![PRs welcome](https://img.shields.io/badge/PRs-welcome-brightgreen)](#contributing)
 
-Open Science Skills is a library of 42 agentic skills for Claude Code, with a parallel 41-skill library for OpenAI Codex, written for computational social scientists and digital humanists. Each skill is meant to work the way the field expects. Identify the data-generating process before proposing an estimator, and design experiments and instruments to a standard. Drafts are held to established reporting norms.
+Open Science Skills is a library of 43 agentic skills for Claude Code, with a parallel 42-skill library for OpenAI Codex, written for computational social scientists and digital humanists. Each skill is meant to work the way the field expects. Identify the data-generating process before proposing an estimator, and design experiments and instruments to a standard. Drafts are held to established reporting norms.
 
 The library follows the research lifecycle. It covers survey design, list experiments, topic modeling, LLM text classification, VLM-based OCR pipelines, manuscript QA, multi-model orchestration, and transparent reporting under APSA, JARS, DA-RT, TOP, and FAIR expectations. Every skill is grounded in published methods sources and based on best practices for writing skills. See [SOURCES.md](SOURCES.md) for the bibliography of 150+ works consulted.
 
@@ -22,8 +22,8 @@ This is the toolkit I use in my own research, and it grows as I add sources and 
 
 | Platform | Skills | Invoke |
 |---|---|---|
-| [Claude Code](https://code.claude.com/docs/en/skills) | 42, as the [`oss` plugin](plugin/skills) | `/oss:skill-name` |  
-| [OpenAI Codex](https://developers.openai.com/codex/skills) | 41, as the [`codex/` library](codex/README.md) | `$skill-name` |  
+| [Claude Code](https://code.claude.com/docs/en/skills) | 43, as the [`oss` plugin](plugin/skills) | `/oss:skill-name` |  
+| [OpenAI Codex](https://developers.openai.com/codex/skills) | 42, as the [`codex/` library](codex/README.md) | `$skill-name` |  
 
 The two libraries differ only in invocation and tooling. The Codex side omits `presubmit`; its `orchestrate` is the Codex-native version led by the active GPT-6 Astra or GPT-6.1 Sol session, with mode-aware routing between them. See [`codex/README.md`](codex/README.md).
 
@@ -66,7 +66,7 @@ The orchestration and delegated-review skills (`orchestrate`, `advisor`, `model-
 
 ### Claude Code
 
-The recommended install is the plugin, shown in [Quick start](#quick-start). It registers the marketplace and installs all 42 skills, each of which registers as its own `/oss:` slash command, plus the alias commands for retired names and preset modes. The command prefix is `oss:`, for open science skills. The marketplace and the repository are both named `open-science-skills`.
+The recommended install is the plugin, shown in [Quick start](#quick-start). It registers the marketplace and installs all 43 skills, each of which registers as its own `/oss:` slash command, plus the alias commands for retired names and preset modes. The command prefix is `oss:`, for open science skills. The marketplace and the repository are both named `open-science-skills`.
 
 To try the plugin for one session without installing:
 
@@ -128,7 +128,7 @@ A copied skill is invoked by its own name. The `/oss:` namespace and the alias c
 
 ### Codex
 
-Codex discovers skills under `.agents/skills` (repository) and `~/.agents/skills` (user-wide). From this repository's root, preview and install all 41 Codex skills without replacing existing paths:
+Codex discovers skills under `.agents/skills` (repository) and `~/.agents/skills` (user-wide). From this repository's root, preview and install all 42 Codex skills without replacing existing paths:
 
 ```bash
 python3 plugin/scripts/install-codex.py --all --dry-run
@@ -201,7 +201,8 @@ Skills are grouped by their role in a research project. Unless the Platform colu
 
 | Skill | Platform | Command | What it does |
 |---|---|---|---|
-| [vlm-ocr](plugin/skills/vlm-ocr/SKILL.md) | Both | `/oss:vlm-ocr` · `/oss:vlm-ocr-evaluation` · `/oss:vlm-ocr-pipeline` · `/oss:post-ocr-cleanup` | OCR scanned material in three phases. `evaluate` compares systems on stratified ground truth with CER/WER by language and script. `run` builds the vision-language-model pipeline. `clean` corrects output with LLM and rule-based passes, diagnostics, and multilingual handling. The aliases select a phase. |
+| [vlm-ocr](plugin/skills/vlm-ocr/SKILL.md) | Both | `/oss:vlm-ocr` · `/oss:vlm-ocr-evaluation` · `/oss:vlm-ocr-pipeline` · `/oss:post-ocr-cleanup` | OCR scanned material in four phases. `triage` inventories the scans, identifies script and language, and shortlists models by script, hardware, and data terms. `evaluate` compares systems on ground truth (born-digital twins where they exist) and gates the bulk run with rules set in advance. `run` builds the vision-language-model pipeline. `clean` removes model artifacts, audits what each cleaning rule deletes, and corrects output with rule-based and LLM passes. Bundles a corpus triage script and a resumable OCR client. The aliases select a phase. |
+| [vlm-ocr-alice](plugin/skills/vlm-ocr-alice/SKILL.md) | Both | `/oss:vlm-ocr-alice` | Run the GPU part of a `vlm-ocr` pipeline on Leiden University's ALICE cluster: whether a corpus needs ALICE, which partition fits the model, storage, a pinned vLLM environment, a gate job with chained bulk jobs from a bundled SLURM template, and the cluster's failure modes. |
 | [doc-to-markdown](plugin/skills/doc-to-markdown/SKILL.md) | Both | `/oss:doc-to-markdown` | Read or convert any document in a research workflow. Selects direct reading or conversion, the right converter for the document structure, and whether Markdown is tracked or scratch. |
 
 ### Writing & Reporting

@@ -2,6 +2,23 @@
 
 Versions are the `version` field shared by `plugin/.claude-plugin/plugin.json` and `.claude-plugin/marketplace.json`; `plugin/scripts/check.sh` fails if they differ or if this file has no entry for the current version. Earlier history is in commit subjects and in `AUDITS.md`.
 
+## [2.36.0] — 2026-10-17
+
+- **`vlm-ocr` gains a `triage` phase and the lessons of a production run.** The skill now starts by inventorying the scans and establishing script and language before any model is compared. Its sources are a 2026 run of about 36,600 pages of Korean school textbooks (1950s–2010s) with Qwen3.6-35B-A3B-FP8 on Leiden's ALICE cluster, the earlier 9-model comparison, and a literature sweep of current models and per-script evidence.
+  - **`triage`** detects invisible earlier OCR layers, two-page spreads and `/Rotate` flags. It reads script and language from contact sheets, a Unicode script count and GlotLID, routes to a dated model shortlist by script, hardware and data terms, and searches for born-digital twins as free ground truth.
+  - **`evaluate`** scores twins on aligned spans with coverage, and gates the bulk run with decision rules written before the results. It adds a second reader from another model family and a spelling-modernization count. The gate found that the model rewrote 1950s spellings in modern form, which no CER figure showed.
+  - **`run`** switches to page-level resume, one server per GPU and deterministic decoding with one retry for loops. It also covers turning thinking off in hybrid models (Ollama's plain `qwen3-vl` tag is the thinking build), `/Rotate`-aware rendering, splitting spreads, and starting at 200 dpi.
+  - **`clean`** gains a section on auditing every rule that deletes text. A generic tag stripper, a positional running-head rule and a junk filter had each silently removed real text from the corpus. The section also covers removing model placeholders until a scan of the corpus finds none, storing NFC with CJK compatibility ideographs protected, and pinning tokenizer versions.
+  - **Tesseract is removed** as baseline and script detector; a small document-OCR specialist is the cheap baseline.
+  - **New bundled files:** `scripts/triage.py` (inventory, contact sheets, script and language profile), `scripts/ocr_client.py` (resumable page OCR against any OpenAI-compatible endpoint; a page counts as done only under the same model, prompt, dpi and decoding settings, and the exit status separates failed pages from pages to review), `reference/model-routing.md` (dated model shortlist by script and hardware tier), and a production book-page prompt in `reference/prompt-and-schema.md`.
+- **New skill `vlm-ocr-alice`**, on both platforms. It covers running the GPU part of a `vlm-ocr` pipeline on Leiden University's ALICE cluster:
+  - when a corpus needs ALICE, and which partition fits which model, with measured pages per hour;
+  - storage, a pinned vLLM environment, and offline weights;
+  - staging, a gate job with chained bulk jobs, and monitoring by email rather than polling;
+  - the cluster's failure modes (port collisions, stale compile caches, MIG device counting, slow model loads).
+
+  It ships `scripts/serve_and_ocr.slurm`. Counts: 43 Claude skills, 42 Codex skills.
+
 ## [2.35.1] — 2026-10-08
 
 - `conjoint-design` gave a Type S risk of about 1 in 18 and an exaggeration ratio of 1.5 at 50% power. Gelman and Carlin's design calculation puts the sign risk at 50% power near zero and the exaggeration at about 1.4 times; the bullet now gives the calculation at 50%, 17%, and 8% power and asks for the design analysis to rest on a plausible effect size rather than a pilot estimate.
