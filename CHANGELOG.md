@@ -2,6 +2,17 @@
 
 Versions are the `version` field shared by `plugin/.claude-plugin/plugin.json` and `.claude-plugin/marketplace.json`; `plugin/scripts/check.sh` fails if they differ or if this file has no entry for the current version. Earlier history is in commit subjects and in `AUDITS.md`.
 
+## [2.36.1] — 2026-10-17
+
+- **`vlm-ocr` and `vlm-ocr-alice` take in the Polish gate** (48 pages of history textbooks 1948–2003, four open models).
+  - `vlm-ocr` adds three methods. When neither twins nor human transcriptions exist, build a checked model read: blind readers before any candidate runs, then a scan check of every word two or more models agree against. Check the language of every document, not of the collection. Drop lines a model repeats within a page.
+  - `reference/model-routing.md` gets the measured Polish results: Gemma 4 31B best (0.19 % mean CER after post-processing, FP8 equal to BF16), Qwen3.6-35B second, Chandra OCR 2 well behind.
+  - `vlm-ocr-alice` adds the ALICE lessons from that run:
+    - a second vLLM environment for CUDA 13 builds, with the `uv` index flags, and `pymupdf` installed for the client;
+    - `VLLM_USE_FLASHINFER_SAMPLER=0`, since FlashInfer's start-up compile needs an `nvcc` that ALICE lacks;
+    - client exit code 2 shown by SLURM as FAILED;
+    - measured FP8 throughput for a dense 31B model on A40s and A100s.
+
 ## [2.36.0] — 2026-10-17
 
 - **`vlm-ocr` gains a `triage` phase and the lessons of a production run.** The skill now starts by inventorying the scans and establishing script and language before any model is compared. Its sources are a 2026 run of about 36,600 pages of Korean school textbooks (1950s–2010s) with Qwen3.6-35B-A3B-FP8 on Leiden's ALICE cluster, the earlier 9-model comparison, and a literature sweep of current models and per-script evidence.
