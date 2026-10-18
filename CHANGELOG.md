@@ -2,6 +2,15 @@
 
 Versions are the `version` field shared by `plugin/.claude-plugin/plugin.json` and `.claude-plugin/marketplace.json`; `plugin/scripts/check.sh` fails if they differ or if this file has no entry for the current version. Earlier history is in commit subjects and in `AUDITS.md`.
 
+## [2.36.2] — 2026-10-18
+
+- **`vlm-ocr` takes in the rest of the Polish run** (the corpus build after the bulk OCR; completes 2.36.1, which was tagged before these came up):
+  - `triage`: read every unique scan and keep scope as metadata columns;
+  - `evaluate`: store the adjudicated reference as page files;
+  - `run`: write a page index of character offsets when pages are joined, which figure extraction and correction links need; give human checkers a page pack (sample design, contents, a full-correction subset);
+  - `clean`: check each corpus build against expected counts by category, keep existing rows byte-identical, rebuild from one entry point that reads every row source, and store whole-number columns with blanks as nullable integers;
+  - two checklist items for the page index and the build checks.
+
 ## [2.36.1] — 2026-10-18
 
 - **`vlm-ocr` and `vlm-ocr-alice` take in the Polish gate** (48 pages of history textbooks 1948–2003, four open models).
