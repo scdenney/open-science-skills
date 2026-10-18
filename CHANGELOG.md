@@ -2,7 +2,7 @@
 
 Versions are the `version` field shared by `plugin/.claude-plugin/plugin.json` and `.claude-plugin/marketplace.json`; `plugin/scripts/check.sh` fails if they differ or if this file has no entry for the current version. Earlier history is in commit subjects and in `AUDITS.md`.
 
-## [2.36.1] — 2026-10-17
+## [2.36.1] — 2026-10-18
 
 - **`vlm-ocr` and `vlm-ocr-alice` take in the Polish gate** (48 pages of history textbooks 1948–2003, four open models).
   - `vlm-ocr` adds three methods. When neither twins nor human transcriptions exist, build a checked model read: blind readers before any candidate runs, then a scan check of every word two or more models agree against. Check the language of every document, not of the collection. Drop lines a model repeats within a page.
@@ -12,6 +12,11 @@ Versions are the `version` field shared by `plugin/.claude-plugin/plugin.json` a
     - `VLLM_USE_FLASHINFER_SAMPLER=0`, since FlashInfer's start-up compile needs an `nvcc` that ALICE lacks;
     - client exit code 2 shown by SLURM as FAILED;
     - measured FP8 throughput for a dense 31B model on A40s and A100s.
+- **And the Polish bulk run** (Gemma 4 31B FP8, 48,390 pages, 17–18 Oct 2026):
+  - `vlm-ocr` `run`: re-read pages still cut off after the retry at 300 dpi, and what that yielded (21 of 91).
+  - `vlm-ocr` `clean`: trim sentence-length loops by period, with the three variants that escaped exact matching (counting-up numbers, a case switch, one garbled copy) and the adjacency rule that keeps legitimately repeated sources.
+  - `vlm-ocr-alice`: the two-GPU-per-user limit on the public A100s; moving a slow retry pass from the A40s to an A100; bulk throughput.
+  - `reference/model-routing.md`: the gate pages re-scored from the bulk output.
 
 ## [2.36.0] — 2026-10-17
 
