@@ -1,5 +1,4 @@
 ---
-disable-model-invocation: true
 name: advisor
 description: Consults Fable as an independent, read-only reviewer at an effort the caller matches to the question. The calling session (usually Opus, or Haiku) holds the task and escalates one decision point. Use before committing to an interpretation or a substantial piece of writing or analysis, when stuck or not converging, when changing approach, or as a final check on a finished task. Fallback for when the native advisor tool is unavailable. Not for a session already running Fable.
 allowed-tools:

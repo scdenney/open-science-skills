@@ -3,4 +3,4 @@ interface:
   short_description: "Audit methods against reporting standards"
   default_prompt: "Use $methods-reporting to audit or revise this methods section."
 policy:
-  allow_implicit_invocation: false
+  allow_implicit_invocation: true

@@ -1,5 +1,4 @@
 ---
-disable-model-invocation: true
 name: replication-package
 description: Scaffolds or audits a social-science replication package and evaluates the manuscript and archived research objects against FAIR principles. Scaffold mode writes the folder structure, README, master.R, figure-table crosswalk, codebook, LICENSE placeholder, and .gitignore; audit mode grades the package against a pre-release checklist and audits data, code, materials, identifiers, licenses, access restrictions, and availability statements. Use when setting up or repairing a package, checking one before submission, auditing FAIR compliance, or drafting availability statements. Adapted from Yusaku Horiuchi’s replication-package-guide.
 argument-hint: '[path to replication folder, plus manuscript path or availability statements when auditing; package path defaults to ./replication]'

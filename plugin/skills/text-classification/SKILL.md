@@ -1,5 +1,4 @@
 ---
-disable-model-invocation: true
 name: text-classification
 description: Advises on setting up LLM-based text classification as a validated measurement design. Covers codebook construction, learning-regime and model choice, prompt construction, validation against human coding with kappa and F1, hybrid human-LLM review, downstream measurement error, and reporting, plus a short resumable batch pattern with a rule-based baseline for repeated free text against a closed codebook. Use when the user wants to classify, code, or label text at scale. Category discovery goes to topic-modeling.
 argument-hint: '[describe your text data and classification task]'

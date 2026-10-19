@@ -1,5 +1,4 @@
 ---
-disable-model-invocation: true
 name: topic-modeling
 description: Advises on setting up and validating topic models for survey and experimental text. Covers the discovery-versus-measurement question, choosing STM, LDA, or BERTopic, preprocessing consequences, prevalence and content formulas, topic-count selection across coherence, exclusivity and FREX, held-out likelihood, and residuals, validation of topics against human judgment, robustness, and DA-RT-compliant reporting. Use when the user has open-ended responses or another corpus and asks what topics are present, how many topics to use, about STM, searchK, coherence, or FREX, or wants topic prevalence compared across treatment arms or countries. Fixed-codebook coding goes to text-classification.
 argument-hint: '[describe your corpus and research question]'

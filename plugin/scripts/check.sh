@@ -6,6 +6,11 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 cd "$ROOT"
 
+# Skills that other skills invoke by name. They stay model-invocable on both
+# sides, since disable-model-invocation rejects a parent skill's call too.
+CALLABLE="advisor citation-check conjoint-diagnostics list-experiment methods-reporting replication-package text-classification topic-modeling vlm-ocr"
+is_callable() { [[ " $CALLABLE " == *" $1 "* ]]; }
+
 python3 - <<'PY'
 import json
 import subprocess
@@ -146,9 +151,15 @@ while IFS= read -r skill; do
     echo "missing description: $skill" >&2
     exit 1
   fi
-  # Every skill is on demand. Implicit invocation costs context in every session
-  # whether or not the skill is used; a name is the cheaper trigger.
-  if ! sed -n '1,8p' "$src" | grep -q "^disable-model-invocation: true$"; then
+  # Every skill is on demand except those another skill invokes: the flag also
+  # blocks Skill-tool calls made from inside a parent skill. Implicit invocation
+  # costs context in every session, so keep CALLABLE to real call targets.
+  if is_callable "$skill"; then
+    if sed -n '1,8p' "$src" | grep -q "^disable-model-invocation:"; then
+      echo "callable skill must not set disable-model-invocation: $skill" >&2
+      exit 1
+    fi
+  elif ! sed -n '1,8p' "$src" | grep -q "^disable-model-invocation: true$"; then
     echo "skill is not on-demand (missing disable-model-invocation): $skill" >&2
     exit 1
   fi
@@ -157,7 +168,12 @@ done < "$tmpdir/skills"
 # The Codex library states the same policy in its own dialect.
 while IFS= read -r skill; do
   yml="codex/$skill/agents/openai.yaml"
-  if ! grep -q "allow_implicit_invocation: false" "$yml"; then
+  if is_callable "$skill"; then
+    if ! grep -q "allow_implicit_invocation: true" "$yml"; then
+      echo "callable codex skill must allow implicit invocation: $skill" >&2
+      exit 1
+    fi
+  elif ! grep -q "allow_implicit_invocation: false" "$yml"; then
     echo "codex skill is not on-demand: $skill" >&2
     exit 1
   fi

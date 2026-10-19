@@ -2,6 +2,10 @@
 
 Versions are the `version` field shared by `plugin/.claude-plugin/plugin.json` and `.claude-plugin/marketplace.json`; `plugin/scripts/check.sh` fails if they differ or if this file has no entry for the current version. Earlier history is in commit subjects and in `AUDITS.md`.
 
+## [2.37.0] — 2026-10-19
+
+- **Skills that other skills call are model-invocable again.** `disable-model-invocation: true` also rejects a Skill-tool call made from inside a parent skill, so `paper-review-lite` could never reach `methods-reporting` or its design-family siblings. The flag is off for `advisor`, `citation-check`, `conjoint-diagnostics`, `list-experiment`, `methods-reporting`, `replication-package`, `text-classification`, `topic-modeling` and `vlm-ocr`, and their Codex twins allow implicit invocation. `check.sh` keeps the list in `CALLABLE` and fails if either side drifts from it.
+
 ## [2.36.2] — 2026-10-18
 
 - **`vlm-ocr` takes in the rest of the Polish run** (the corpus build after the bulk OCR; completes 2.36.1, which was tagged before these came up):

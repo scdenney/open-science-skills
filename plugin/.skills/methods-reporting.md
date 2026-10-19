@@ -1,5 +1,4 @@
 ---
-disable-model-invocation: true
 name: methods-reporting
 description: Audits a methods section against a 45-item reporting checklist synthesized from the APSA Experimental Section rubric, JARS-Quant, CONSORT, and DA-RT, covering pre-registration, recruitment, randomization and treatments, sample flow and attrition, sample-size justification, three-tier results labeling, conjoint reporting, validity, and open-science infrastructure. Use when checking whether a methods section reports enough, preparing a submission or replication archive, asking what CONSORT, JARS, or DA-RT require, or documenting a deviation from a pre-analysis plan. Writing that plan before data collection goes to pre-registration-writing.
 argument-hint: '[paste your methods section or describe what to audit]'

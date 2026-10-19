@@ -1,5 +1,4 @@
 ---
-disable-model-invocation: true
 name: vlm-ocr
 description: OCRs scanned or image-only corpora with vision-language models in four phases. Triage inventories the scans, identifies script and language, and shortlists models by script, hardware, and data constraints. Evaluate selects a system by measured CER or WER against ground truth, using born-digital twins, a second reader, and decision rules set in advance. Run builds the production pipeline. Clean removes model artifacts, audits what every cleaning rule deletes, corrects with rule-based and LLM passes, and records provenance. Use when choosing an OCR model for a corpus, measuring OCR accuracy, transcribing scans at scale, or correcting raw OCR. Born-digital documents with text layers go to doc-to-markdown; runs on Leiden's ALICE cluster add vlm-ocr-alice.
 argument-hint: '[triage|evaluate|run|clean] [describe your corpus, languages, candidate or chosen models, and compute environment]'

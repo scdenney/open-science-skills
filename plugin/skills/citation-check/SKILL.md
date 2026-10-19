@@ -1,5 +1,4 @@
 ---
-disable-model-invocation: true
 name: citation-check
 description: Audits a manuscript's citations for fabricated or nonexistent sources, DOIs that resolve to a different work, mismatches between in-text citations and the reference list, APA 7 or journal style, and whether each source supports the claim it is attached to. Checks entries against Crossref, OpenAlex, and DataCite and labels anything it could not verify NOT CHECKED. Use to check citations, references, a .bib file, or DOIs, or when a source may be AI-invented. Figures and tables go to figure-table-audit.
 argument-hint: '[path to manuscript and bibliography, or paste citation list; include target style/journal if known]'

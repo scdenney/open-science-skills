@@ -1,5 +1,4 @@
 ---
-disable-model-invocation: true
 name: conjoint-diagnostics
 description: Reviews an existing conjoint study for threats to inference and returns severity-ranked findings on design integrity, estimation, measurement error, external validity, and interpretation, including the guardrail against reading an AMCE as majority preference. Use when the user asks whether a conjoint design or analysis holds up, has referee comments on a conjoint, or wants a second opinion on estimation or interpretation. New designs go to conjoint-design, reshaping to conjoint-cleaning.
 argument-hint: '[describe your conjoint study or paste analysis code]'
