@@ -2,6 +2,10 @@
 
 Versions are the `version` field shared by `plugin/.claude-plugin/plugin.json` and `.claude-plugin/marketplace.json`; `plugin/scripts/check.sh` fails if they differ or if this file has no entry for the current version. Earlier history is in commit subjects and in `AUDITS.md`.
 
+## [2.37.2] — 2026-10-22
+
+- **`research-repo`'s `sources/inbox/` is read as context.** 2.37.1 told agents never to read it, which left notes parked there invisible to work on the knowledge base. The inbox now feeds the knowledge base and wiki as scaffolding that later work builds on; `process-source` still never converts or moves its files.
+
 ## [2.37.1] — 2026-10-22
 
 - **`research-repo` adds `sources/inbox/`**, a folder for material to keep but not process (notes, links, screenshots, PDFs not yet worth filing). `process-source` empties `unprocessed/`, so nothing could be parked there. The scaffold tree, `sources/README.md` and `CLAUDE.md` templates, and audit checklist include it. Unlike a deliverable's `inbox/`, which `deliverable-intake` processes, this one is never read.
