@@ -16,7 +16,7 @@ allowed-tools:
 
 This skill sets up a new research repository, or audits an existing one, around a single organizing principle: **the source library is the spine of the project, and everything else grows from it.**
 
-`sources/og/` holds the original PDFs and documents — archival, **gitignored** (size + copyright), rarely read directly. `sources/md/` holds their Markdown conversions, **tracked in git**: this is the LLM-readable knowledge base, and *sources are always read from here, not from the PDFs*. `sources/unprocessed/` is the drop zone where new PDFs land until they are named, converted, and filed. `sources/references.bib` keys the corpus to the manuscript — one entry per source, author+year resolvable to its `md/` file, so a `\cite` key maps to a document actually read. A conversion script (`scripts/convert-sources.sh`, OpenDataLoader PDF) and a `process-source` intake command keep the three in sync. Get that spine wrong — PDFs scattered, no Markdown, a bib that does not match what was read — and every downstream skill (`literature-review`, `citation-check`, `fact-check`, `paper-tex`) is working on sand.
+`sources/og/` holds the original PDFs and documents — archival, **gitignored** (size + copyright), rarely read directly. `sources/md/` holds their Markdown conversions, **tracked in git**: this is the LLM-readable knowledge base, and *sources are always read from here, not from the PDFs*. `sources/unprocessed/` is the drop zone where new PDFs land until they are named, converted, and filed. `sources/inbox/` sits beside it for material that should be kept but not processed — notes, links, screenshots, a PDF not yet worth filing; nothing reads it until the author moves a file into `unprocessed/`. `sources/references.bib` keys the corpus to the manuscript — one entry per source, author+year resolvable to its `md/` file, so a `\cite` key maps to a document actually read. A conversion script (`scripts/convert-sources.sh`, OpenDataLoader PDF) and a `process-source` intake command keep the three in sync. Get that spine wrong — PDFs scattered, no Markdown, a bib that does not match what was read — and every downstream skill (`literature-review`, `citation-check`, `fact-check`, `paper-tex`) is working on sand.
 
 Everything else — `data/`, analysis `scripts/`, `manuscript/` or `paper/`, `review/` + `codebook/`, `figures/`, `tables/`, `replication/` — grows outward from that spine, conditioned on what kind of project this is.
 
@@ -55,6 +55,7 @@ For any project that reads and archives a literature, this is the core. (For a c
 │   ├── og/                 # original PDFs/docs — gitignored
 │   ├── md/                 # Markdown conversions — tracked
 │   ├── unprocessed/        # drop zone for new PDFs
+│   ├── inbox/              # kept but never processed
 │   ├── references.bib      # bibliography (one entry per source)
 │   └── README.md           # the convention, written down
 ├── scripts/
@@ -140,7 +141,7 @@ The bibliography — `sources/references.bib`, or wherever the project keeps it 
 Read the existing repo and report each item as **present / partial / missing**. If the repo keeps no PDF corpus by design (the lightweight/theory archetype), mark the PDF-corpus items **n/a for this archetype**, not *missing*, and audit the bibliography wherever it actually lives — discover it with `find . -name '*.bib' -not -path './.venv/*' -not -path './.git/*'`.
 
 **Spine**
-- [ ] `sources/og/`, `sources/md/`, `sources/unprocessed/` all exist.
+- [ ] `sources/og/`, `sources/md/`, `sources/unprocessed/`, `sources/inbox/` all exist.
 - [ ] `sources/og/` is gitignored; `sources/md/` is tracked (the LLM-readable corpus must be in git).
 - [ ] Every `og/*.pdf` has a matching `md/*.md` (no unconverted sources). List the orphans.
 - [ ] Every `md/*.md` has a `references.bib` entry, and every bib entry resolves to a source (flag bib entries with no file and files with no bib — *drift in either direction*).
@@ -201,6 +202,7 @@ The source library is the spine of this project. Read sources from `md/`, never 
 - `md/` — LLM-readable Markdown conversions (tracked in git)
   - `<name>_images/` folders hold figures/tables extracted from the PDF
 - `unprocessed/` — drop zone for new PDFs awaiting intake
+- `inbox/` — material to keep but not process (notes, links, screenshots, PDFs not yet worth filing); no script or skill reads it. Move a file to `unprocessed/` when it should enter the corpus
 - `references.bib` — bibliography (one entry per source)
 - `missing.bib` — cited works with no PDF available (paywalled, books, web resources)
 
@@ -363,6 +365,7 @@ The source library is the spine. See `sources/README.md` for the intake conventi
 
 - `sources/md/` — LLM-readable Markdown corpus. **Always read sources from here, not the PDFs.**
 - `sources/unprocessed/` — drop zone for new PDFs.
+- `sources/inbox/` — kept but never processed; leave it alone unless asked.
 - `sources/references.bib` — bibliography; the citation contract for the manuscript.
 - `scripts/` — conversion and analysis code.
 - <archetype folders: review/ + codebook/  |  data/ + paper/ + figures/ + tables/ + replication/>
