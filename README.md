@@ -238,9 +238,9 @@ Skills are grouped by their role in a research project. Unless the Platform colu
 | Skill | Platform | Command | What it does |
 |---|---|---|---|
 | [paper-review-lite](plugin/skills/paper-review-lite/SKILL.md) | Both | `/oss:paper-review-lite` · `/oss:paper-review-lite-codex` | Run a pre-submission self-audit of your manuscript across argument, numbers, references, writing, figures, and replication. `--codex` (or the alias) runs Claude and Codex (GPT-6 Astra) independently and cross-checks findings with a confidence column. |
-| [presubmit](plugin/skills/presubmit/SKILL.md) | Claude Code | `/oss:presubmit` | Set up and run the standalone [presubmit CLI](https://github.com/scdenney/presubmit), a 30-plus-stage adversarial review pipeline driven by the Anthropic API. |
+| [presubmit](plugin/skills/presubmit/SKILL.md) | Claude Code | `/oss:presubmit` | Set up and run the standalone [presubmit CLI](https://github.com/scdenney/presubmit), a 40-plus-stage adversarial review pipeline driven by the Anthropic API, ported from reviewer2 v2.0.0. |
 | [referee-response](plugin/skills/referee-response/SKILL.md) | Both | `/oss:referee-response` | Organize and format a response to reviewers. Extract each referee point with severity and type, order revisions by dependency, flag defensible pushbacks as questions, and build the response letter with substantive answers left to you. Never writes the science. |
-| [journal-review](plugin/skills/journal-review/SKILL.md) | Both | `/oss:journal-review` | Draft a senior referee report on someone else's manuscript. Uses parallel finder agents and a chief-reviewer synthesis to produce a structured report. |
+| [journal-review](plugin/skills/journal-review/SKILL.md) | Both | `/oss:journal-review` | Draft a senior referee report on someone else's manuscript. Builds a ledger of the paper's claims, runs parallel finder agents against it, tests their evidence in both directions, and ties each major concern to the claim it reaches. |
 ### Deliverable pipeline (experimental)
 
 These three skills stand apart from the rest of the library.

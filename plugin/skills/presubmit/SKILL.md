@@ -1,7 +1,7 @@
 ---
 disable-model-invocation: true
 name: presubmit
-description: Launches and configures the standalone presubmit CLI, an API-driven adversarial peer-review pipeline with 30-plus stages, including Red Team finders, Blue Team defence, verification cascade, legal pass, and copyedit, producing one consolidated report on disk. Verifies installation and API key, chooses the output location and smoke, standard, or custom mode, launches the run, and reports the result path. Use when the user asks to run presubmit, wants a deep unattended pre-submission audit, or needs a math or replication-code audit. Everyday self-audits go to paper-review-lite, and external refereeing to journal-review.
+description: Launches and configures the standalone presubmit CLI, an API-driven adversarial peer-review pipeline with 40-plus stages, including Red Team finders, Blue Team defence, proportionality, verification cascade, reference check, legal pass, and copyedit, producing one consolidated report on disk. Verifies installation and API key, chooses the output location and smoke, standard, or custom mode, launches the run, and reports the result path. Use when the user asks to run presubmit, wants a deep unattended pre-submission audit, or needs a math or replication-code audit. Everyday self-audits go to paper-review-lite, and external refereeing to journal-review.
 argument-hint: '[path to your draft to review, or describe the setup task]'
 ---
 
@@ -10,6 +10,8 @@ argument-hint: '[path to your draft to review, or describe the setup task]'
 A launcher and setup wizard for the [`presubmit`](https://github.com/scdenney/presubmit) Python CLI — the standalone, API-driven adversarial peer-review pipeline that writes a consolidated review report to disk. The review itself happens in the CLI against the Anthropic API (~30 stages, ~$5–10 per full run on a typical manuscript); this skill verifies the install and the key, settles where output lands, launches the run, and reports where the report ended up.
 
 This is for self-audit of your own drafts pre-submission. Refereeing someone else's manuscript goes to `journal-review`.
+
+Since presubmit 0.2.0 the CLI ports reviewer2 v2.0.0, upstream's final release: finder personas raise issues, a Blue Team defends the paper, proportionality stages demote objections the paper's own text answers, an assessment audits each defence, and a reference check looks up every bibliography entry. It adds four prompt rules from the same author's successor suite, [`research_skills`](https://github.com/isitcredible/research_skills) (robustness sentences, a defence counts only if its test could have failed, and the burden kept on the paper). It has no claim ledger; `journal-review` and `paper-review-lite` do.
 
 ## Setup phase (run once per machine)
 
@@ -37,9 +39,9 @@ python3 -m venv .venv
 source .venv/bin/activate
 
 # Install — first time pulls marker-pdf + PyTorch, ~5–10 min.
-# pyproject.toml pins anthropic>=0.60 directly; verify the resolver honored it:
+# pyproject.toml pins anthropic>=0.97; verify the resolver honored it:
 pip install -e .
-pip show anthropic | head -2     # must be >= 0.60; if not: pip install -U 'anthropic>=0.60'
+pip show anthropic | head -2     # must be >= 0.97; if not: pip install -U 'anthropic>=0.97'
 ```
 
 Confirm with `"$PRESUBMIT_DIR/.venv/bin/presubmit" --help | head -3`. The CLI lives in the venv: either source the venv each session (`source "$PRESUBMIT_DIR/.venv/bin/activate"`) or invoke the absolute binary path.
@@ -101,7 +103,7 @@ Each mode spends API credit, so ask which one to run (`AskUserQuestion`) unless 
 
 - **Smoke** — `--stop-stage 2.0`. Metadata extraction + Red Team + numbers auditor. ~15–25 min on a 70-page paper, ~$1–2. Useful for verifying setup or catching show-stoppers fast.
 - **Standard** — full pipeline. ~30–90 min, ~$2–4 on a 70–80-page paper (a short article of a few thousand words runs well under $2). The default for a real audit.
-- **Custom** — ask for additional flags (`--code-dir`, `--math`, `--supp`, `--no-copyedit`, `--no-editor-note`, `--start-stage`, `--stop-stage`, `--skip-size-check`).
+- **Custom** — ask for additional flags (`--code-dir`, `--math`, `--supp`, `--note` / `--note-file` for instructions to the reviewer, `--no-references` to skip the bibliography lookups, `--no-copyedit`, `--no-editor-note`, `--start-stage`, `--stop-stage`, `--skip-size-check`).
 
 Cost depends on which of four model tiers (mechanical/forensic/adversarial/synthesis, mapped to Haiku/Sonnet/Opus/Fable) each stage routes to — see the upstream repo's README "Model tier mapping" section for the full breakdown. These are estimates, not a guarantee. The end-of-run cost report has the real total.
 
@@ -129,7 +131,8 @@ Launch with the Bash tool's `run_in_background: true` and stream the log to a fi
 
 If the run failed:
 
-- **`Messages.create() got an unexpected keyword argument 'thinking'`** — anthropic SDK is < 0.60. Fix: `pip install -U 'anthropic>=0.60'` in the venv.
+- **`Messages.create() got an unexpected keyword argument 'thinking'`** — anthropic SDK is < 0.60. Fix: `pip install -U 'anthropic>=0.97'` in the venv.
+- **`Messages.create() got an unexpected keyword argument 'temperature'`** — the checkout predates presubmit 0.2.0 and the SDK is 2.x, which no longer accepts sampling parameters. Fix: `git -C "$PRESUBMIT_DIR" pull && pip install -e .`.
 - **`FATAL: Claude refused the request (likely safety policy)`** — a Red Team prompt tripped Claude's safety filters. The message does not name the stage; find the last `► Executing <stage>` line above it in the log, then locate that stage's prompt under `$PRESUBMIT_DIR/src/presubmit/prompts/`. Soften it to attack the manuscript's claims, not the authors. Re-run; the pipeline is resumable.
 - **Marker conversion failure** — surface the specific PipelineError. Common cause: marker-pdf install incomplete; verify `pip show marker-pdf` succeeds in the venv.
 - **Out-of-credit** — top up at <https://console.anthropic.com/>, then re-run. The pipeline picks up where it stopped.
@@ -148,6 +151,7 @@ $OUTPUT_BASE/                                            (from config; user-chos
         ├── metadata.json
         ├── pipeline_execution.log
         ├── 00a_metadata.txt … 09c_copyedit.txt          (intermediate per-stage outputs)
+        ├── page_map.json · reference_check.txt          (printed-page map; bibliography lookups)
         └── 10_latex_body.txt                            (body without LaTeX framing)
 ```
 
@@ -160,7 +164,7 @@ $OUTPUT_BASE/                                            (from config; user-chos
 | Where the work happens | Outside Claude Code — Python CLI calls Anthropic API | Inside Claude Code — parallel sub-agents read the paper |
 | Cost | Per-token, billed to your API key (~$5–10/run) | Subscription only (no per-token bill) |
 | Wall time | 30–90 min unattended | Minutes; you control each pass |
-| Depth | 30+ stages: Red Team (Breaker, Butcher, Shredder, Collector, Void) + Blue Team defence + verification cascade + legal pass + copyedit + Writer Mode | ~11 sub-agents: content/argument, numbers, references, DOIs, writing, CONSORT, pre-reg, figures, archive, plus 2 cross-checkers |
+| Depth | 40+ stages: Red Team (Breaker, Butcher, Shredder, Collector, Void) + Blue Team defence + proportionality + verification cascade + reference check + legal pass + copyedit + Writer Mode | ~11 sub-agents: content/argument, numbers, references, DOIs, writing, CONSORT, pre-reg, figures, archive, plus 2 cross-checkers |
 | Output | Single consolidated `.txt` deliverable + ~30 intermediate files | Structured pre-submit report in-conversation + `.review-tmp/` scratch files |
 | Resumable | Yes — checkpointed per stage to disk | No — single conversation pass |
 | Math audit | Yes (`--math`, requires Mathpix) | No |
@@ -170,8 +174,8 @@ $OUTPUT_BASE/                                            (from config; user-chos
 
 `paper-review-lite` is the everyday tool; `presubmit` is the heavy-artillery final pass before submission.
 
-## Known gotchas (current as of 2026-06)
+## Known gotchas (current as of 2026-10)
 
 1. **anthropic SDK version conflict.** presubmit's `pyproject.toml` pins `anthropic>=0.60` directly (core.py's `Messages.create(thinking=…)` needs it), but `marker-pdf 1.10.x` transitively caps anthropic at `<0.47`. pip resolves the conflict by backtracking marker-pdf to an older release, or by warning. After install, check `pip show anthropic marker-pdf`; if anthropic landed below 0.60, force it with `pip install -U 'anthropic>=0.60'` — runtime is unaffected, since presubmit doesn't use marker's optional anthropic-LLM mode.
-2. **`use_search=True` is a no-op.** Stage 00a (metadata) silently degrades for published papers needing a citation lookup; fine for unpublished manuscripts.
+2. **Web searches are billed outside the cost report.** Metadata lookup and the reference check use Anthropic's server-side web search, charged per search on top of tokens; the end-of-run dollar total omits it, so check the Anthropic console. `--no-references` removes most of them.
 3. **Older checkouts exit 1 on intentional `--stop-stage` runs.** Current presubmit exits 0 with `Stopped at stage N as requested`; if you see exit 1 with "did not produce a final report" after a smoke run, the install predates the fix — `git pull && pip install -e .`.

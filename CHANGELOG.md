@@ -2,6 +2,20 @@
 
 Versions are the `version` field shared by `plugin/.claude-plugin/plugin.json` and `.claude-plugin/marketplace.json`; `plugin/scripts/check.sh` fails if they differ or if this file has no entry for the current version. Earlier history is in commit subjects and in `AUDITS.md`.
 
+## [2.38.0] — 2026-10-28
+
+Lessons from the successor to reviewer2, [`isitcredible/research_skills`](https://github.com/isitcredible/research_skills) v0.9.3 (MIT), applied to the review skills descended from reviewer2.
+
+- **`journal-review` reviews claims, not personas' issue lists.** Setup writes a claim ledger (verbatim claim, page, `headline` / `supporting` / `peripheral`) that every agent receives. Finders tag each issue with the claims it bears on and stop grading severity; the Chief Reviewer weighs issues by the claims they reach, ties each Major Concern to one, and writes `coverage.md`, which holds the final claim rulings and the disposition of every kept issue. The Reject and Minor Revision rubrics read the claim rulings.
+- **The Blue Team tests both directions.** A finder misread is restated when its concern survives the correct reading, not dropped (the old rule dropped any issue with a factual slip in its description, which removed valid attacks with invalid ones). It also enters `ADD` items where the finders erred in the paper's favour, and gives each headline and supporting claim a provisional `holds` / `narrower` / `not established`.
+- **Burden rule.** The strongest critique is that the evidence does not establish a claim; "disappears" or "refuted" needs an estimate that excludes the paper's figure, and balance, placebo, and robustness tests count for a claim only if they could have failed. In `journal-review`'s quality rails and `paper-review-lite`'s posture.
+- **Robustness-sentence ledger.** Butcher (`journal-review`) and Agent 2 (`paper-review-lite`) classify every "robust to X" sentence against every outcome in the exhibit it cites.
+- **Quote check.** `journal-review` extracts the PDF with `pdftotext` and runs an inline script that finds every quoted span of the report in the manuscript text, replacing the manual last-mile lookup.
+- **`paper-review-lite`** gains the claim ledger, the burden rule, Agent 10's two-direction check and claim rulings, and two report sections: Headline Claims and Dropped in Verification. Its cross-model mode marks a misread with a surviving concern `RESTATED`.
+- **reviewer2 v2.0.0 rules.** Upstream reviewer2's final release (2026-10-26) adds checks that suit refereeing too. `journal-review`'s Breaker and `paper-review-lite`'s Agent 1 ask whether the design recovers the parameter the conclusions invoke; the Blue Team and Agent 10 drop cheap shots (attacks the paper's own text deflects in one line), rest a restated concern only on premises the paper establishes, and audit an empirical defence against the specific mechanism the concern names (new Type H in `journal-review`); the Chief Reviewer demotes issues the authors could answer from their own text; page citations use printed page numbers.
+- **`presubmit`** describes CLI 0.2.0, which ports reviewer2 v2.0.0 and four `research_skills` prompt rules: new `--note`, `--note-file`, and `--no-references` flags, web-search billing outside the cost report, and the `temperature` TypeError that pre-0.2.0 checkouts hit on the anthropic 2.x SDK.
+- **Lineage.** `journal-review`, `paper-review-lite`, and `presubmit` credit `research_skills` and reviewer2 v2.0.0. Codex twins match.
+
 ## [2.37.3] — 2026-10-27
 
 - **`journal-review` is model-invocable.** With `disable-model-invocation: true`, a session asked in plain words to referee a manuscript could not start the skill and had to hand the slash command back to the user. The flag is off, the Codex twin allows implicit invocation, and `check.sh` lists it in `CALLABLE`.
