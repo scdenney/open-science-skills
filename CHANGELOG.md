@@ -2,6 +2,10 @@
 
 Versions are the `version` field shared by `plugin/.claude-plugin/plugin.json` and `.claude-plugin/marketplace.json`; `plugin/scripts/check.sh` fails if they differ or if this file has no entry for the current version. Earlier history is in commit subjects and in `AUDITS.md`.
 
+## [2.37.3] — 2026-10-27
+
+- **`journal-review` is model-invocable.** With `disable-model-invocation: true`, a session asked in plain words to referee a manuscript could not start the skill and had to hand the slash command back to the user. The flag is off, the Codex twin allows implicit invocation, and `check.sh` lists it in `CALLABLE`.
+
 ## [2.37.2] — 2026-10-22
 
 - **`research-repo`'s `sources/inbox/` is read as context.** 2.37.1 told agents never to read it, which left notes parked there invisible to work on the knowledge base. The inbox now feeds the knowledge base and wiki as scaffolding that later work builds on; `process-source` still never converts or moves its files.

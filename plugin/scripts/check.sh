@@ -6,9 +6,9 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 cd "$ROOT"
 
-# Skills that other skills invoke by name. They stay model-invocable on both
+# Skills that other skills, or the main session, invoke by name. They stay model-invocable on both
 # sides, since disable-model-invocation rejects a parent skill's call too.
-CALLABLE="advisor citation-check conjoint-diagnostics list-experiment methods-reporting replication-package text-classification topic-modeling vlm-ocr"
+CALLABLE="advisor citation-check conjoint-diagnostics journal-review list-experiment methods-reporting replication-package text-classification topic-modeling vlm-ocr"
 is_callable() { [[ " $CALLABLE " == *" $1 "* ]]; }
 
 python3 - <<'PY'
