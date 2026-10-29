@@ -2,6 +2,10 @@
 
 Versions are the `version` field shared by `plugin/.claude-plugin/plugin.json` and `.claude-plugin/marketplace.json`; `plugin/scripts/check.sh` fails if they differ or if this file has no entry for the current version. Earlier history is in commit subjects and in `AUDITS.md`.
 
+## [2.38.1] — 2026-10-29
+
+- **`deliverable-intake` is model-invocable.** Claude Code now rejects a Skill-tool call to an on-demand skill unless `/name` was typed as a standalone token in the current turn, which broke mid-conversation and dictated requests to intake notes. The skill drops `disable-model-invocation`, joins `CALLABLE` in `check.sh`, and its Codex twin allows implicit invocation.
+
 ## [2.38.0] — 2026-10-28
 
 Lessons from the successor to reviewer2, [`isitcredible/research_skills`](https://github.com/isitcredible/research_skills) v0.9.3 (MIT), applied to the review skills descended from reviewer2.

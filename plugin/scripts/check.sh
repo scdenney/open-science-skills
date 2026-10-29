@@ -8,7 +8,7 @@ cd "$ROOT"
 
 # Skills that other skills, or the main session, invoke by name. They stay model-invocable on both
 # sides, since disable-model-invocation rejects a parent skill's call too.
-CALLABLE="advisor citation-check conjoint-diagnostics journal-review list-experiment methods-reporting replication-package text-classification topic-modeling vlm-ocr"
+CALLABLE="advisor citation-check conjoint-diagnostics deliverable-intake journal-review list-experiment methods-reporting replication-package text-classification topic-modeling vlm-ocr"
 is_callable() { [[ " $CALLABLE " == *" $1 "* ]]; }
 
 python3 - <<'PY'

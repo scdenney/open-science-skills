@@ -1,5 +1,4 @@
 ---
-disable-model-invocation: true
 name: deliverable-intake
 description: Turns raw captures (dictated braindumps in a deliverable's inbox/, or recent macwhspr dictation-log entries) into proposed planning-wiki changes, shown as one unified diff. Classifies each statement as a decision, evidence claim, question, task, or dropped item, traces it to its capture paragraph, tags unconfirmed names, numbers, and citations UNRESOLVED, and writes decisions only with the author's assent. Edits only the planning wiki, never source files. Use when asked to intake, absorb notes, or process the inbox, or after dictating notes from a talk, meeting, or reading session.
 argument-hint: '[inbox file or --all; optionally --from-log N to import the last N dictation-log entries]'
